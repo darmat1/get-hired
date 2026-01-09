@@ -38,7 +38,7 @@ export function AISettingsPanel({ initialServices }: AISettingsPanelProps) {
       {currentService && (
         <Card className="bg-green-50 border-green-200">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-black">
               <Check className="h-5 w-5 text-green-600" />
               {t('ai_settings.active_service')} {currentService.name}
             </CardTitle>
