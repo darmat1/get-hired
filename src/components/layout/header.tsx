@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { LanguageSelector } from '@/components/ui/language-selector'
 import { useTranslation } from '@/lib/translations'
+import Logo from '../ui/icons/logo'
 
 export function Header() {
   const { data: session, status } = useSession()
@@ -16,7 +17,7 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
-              {t('nav.logo')}
+              <Logo />
             </Link>
           </div>
 

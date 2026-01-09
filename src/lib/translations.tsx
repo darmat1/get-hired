@@ -178,13 +178,13 @@ export const translations: Translations = {
   'validation.required': { en: 'This field is required', uk: 'Це поле є обов\'язковим', ru: 'Это поле обязательно' },
   'validation.email': { en: 'Please enter a valid email address', uk: 'Будь ласка, введіть дійсну email адресу', ru: 'Пожалуйста, введите действительный email' },
   'validation.phone': { en: 'Please enter a valid phone number', uk: 'Будь ласка, введіть дійсний номер телефону', ru: 'Пожалуйста, введите действительный номер телефона' },
-  
+
   // AI Services
   'ai_service.groq.description': { en: 'Llama 3.1 - free and very fast', uk: 'Llama 3.1 - безкоштовний і дуже швидкий', ru: 'Llama 3.1 - бесплатный и очень быстрый' },
   'ai_service.openai.description': { en: 'GPT-3.5 Turbo - paid but very high quality', uk: 'GPT-3.5 Turbo - платний, але дуже якісний', ru: 'GPT-3.5 Turbo - платный, но очень качественный' },
   'ai_service.groq.limits': { en: '30 requests per minute for free', uk: '30 запитів на хвилину безкоштовно', ru: '30 запросов в минуту бесплатно' },
   'ai_service.openai.limits': { en: 'Paid usage, but very high quality analysis', uk: 'Платне використання, але дуже якісний аналіз', ru: 'Платное использование, но очень качественный анализ' },
-  
+
   // AI Setup Instructions
   'ai_setup.groq.step1': { en: '1. Go to https://console.groq.com/', uk: '1. Перейдіть на https://console.groq.com/', ru: '1. Перейдите на https://console.groq.com/' },
   'ai_setup.groq.step2': { en: '2. Register (free)', uk: '2. Зареєструйтесь (безкоштовно)', ru: '2. Зарегистрируйтесь (бесплатно)' },
@@ -196,7 +196,7 @@ export const translations: Translations = {
   'ai_setup.openai.step3': { en: '3. Create new API key in "API Keys" section', uk: '3. Створіть новий API ключ у розділі "API Keys"', ru: '3. Создайте новый API ключ в разделе "API Keys"' },
   'ai_setup.openai.step4': { en: '4. Add key to .env.local as OPENAI_API_KEY=your-key-here', uk: '4. Додайте ключ до .env.local як OPENAI_API_KEY=your-key-here', ru: '4. Добавьте ключ в .env.local как OPENAI_API_KEY=your-key-here' },
   'ai_setup.openai.step5': { en: '5. Cost per resume analysis: ~$0.001', uk: '5. Вартість аналізу одного резюме: ~$0.001', ru: '5. Стоимость анализа одного резюме: ~$0.001' },
-  
+
   // AI Analysis Messages
   'ai_analysis.summary_good': { en: 'Professional experience is well described in "About" section', uk: 'Професійний досвід добре описаний у розділі "Про себе"', ru: 'Хорошо описан профессиональный опыт в разделе "О себе"' },
   'ai_analysis.summary_missing': { en: '"About" section is too short or missing', uk: 'Розділ "Про себе" занадто короткий або відсутній', ru: 'Раздел "О себе" слишком короткий или отсутствует' },
@@ -214,7 +214,7 @@ export const translations: Translations = {
   'ai_analysis.softskills_listed': { en: 'Soft skills are listed', uk: 'Soft skills вказані', ru: 'Указаны soft skills' },
   'ai_analysis.softskills_add': { en: 'Add soft skills: communication, teamwork, problem solving', uk: 'Додайте soft skills: комунікація, робота в команді, вирішення проблем', ru: 'Добавьте soft skills: коммуникация, работа в команде, решение проблем' },
   'ai_analysis.general_certificates': { en: 'Consider adding certificates and professional development courses', uk: 'Розгляньте додавання сертифікатів та курсів підвищення кваліфікації', ru: 'Рассмотрите добавление сертификатов и курсов повышения квалификации' },
-  
+
   // AI Improvement Tips
   'ai_tip.poor_score': { en: 'Your resume needs significant improvements to attract recruiters', uk: 'Ваше резюме потребує значних покращень для приваблення рекрутерів', ru: 'Ваше резюме требует значительных улучшений для привлечения внимания рекрутеров' },
   'ai_tip.good_score': { en: 'Good resume, but there are opportunities for improvement', uk: 'Добре резюме, але є можливості для покращення', ru: 'Хорошее резюме, но есть возможности для улучшения' },
@@ -230,29 +230,33 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('cv-maker-language') as Language
-      if (saved && ['en', 'uk', 'ru'].includes(saved)) {
-        return saved
-      }
-      return 'en'
-    }
-    return 'en'
-  })
+  const [language, setLanguage] = useState<Language>('en')
+  const [mounted, setMounted] = useState(false)
 
   const t = (key: string): string => {
+    // Force 'en' during SSR and hydration to prevent mismatch
+    const effectiveLanguage = mounted ? language : 'en'
     const translation = translations[key]
-    if (translation && translation[language]) {
-      return translation[language]
+
+    if (translation) {
+      return translation[effectiveLanguage] || translation['en'] || key
     }
     return key
   }
 
   useEffect(() => {
+    setMounted(true)
+    const saved = localStorage.getItem('cv-maker-language') as Language
+    if (saved && ['en', 'uk', 'ru'].includes(saved)) {
+      setLanguage(saved)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
     localStorage.setItem('cv-maker-language', language)
     document.documentElement.lang = language
-  }, [language])
+  }, [language, mounted])
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

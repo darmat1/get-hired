@@ -11,14 +11,15 @@ interface ThemeToggleProps {
 export function ThemeToggle({ className = '' }: ThemeToggleProps) {
   const { t } = useTranslation()
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const saved = localStorage.getItem('cv-maker-theme') as 'light' | 'dark' | 'system'
     if (saved) {
       setTheme(saved)
       applyTheme(saved)
     } else {
-      setTheme('system')
       applyTheme('system')
     }
 
@@ -31,9 +32,10 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
 
     mediaQuery.addEventListener('change', handleThemeChange)
     return () => mediaQuery.removeEventListener('change', handleThemeChange)
-  }, [theme])
+  }, [])
 
   const applyTheme = (newTheme: 'light' | 'dark' | 'system') => {
+    if (typeof window === 'undefined') return
     const root = document.documentElement
     const body = document.body
 
@@ -74,6 +76,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
   }
 
   const getLabel = () => {
+    if (!mounted) return 'System'
     switch (theme) {
       case 'light':
         return t('theme.light')
@@ -88,10 +91,11 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
     <button
       onClick={toggleTheme}
       className={`inline-flex items-center gap-2 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors ${className}`}
-      title={t('theme.toggle')}
+      title={mounted ? t('theme.toggle') : 'Toggle theme'}
+      suppressHydrationWarning
     >
       {getIcon()}
-      <span className="text-sm">{getLabel()}</span>
+      <span className="text-sm" suppressHydrationWarning>{getLabel()}</span>
     </button>
   )
 }
