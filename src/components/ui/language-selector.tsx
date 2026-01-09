@@ -1,0 +1,63 @@
+'use client'
+
+import React, { useState } from 'react'
+import { ChevronDown, Globe } from 'lucide-react'
+import { useTranslation, Language } from '@/lib/translations'
+
+interface LanguageSelectorProps {
+  className?: string
+}
+
+export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
+  const { language, setLanguage, t } = useTranslation()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const languages: { code: Language; name: string }[] = [
+    { code: 'en', name: t('language.english') },
+    { code: 'uk', name: t('language.ukrainian') },
+    { code: 'ru', name: t('language.russian') }
+  ]
+
+  const currentLanguage = languages.find(l => l.code === language)
+
+  return (
+    <div className={`relative ${className}`}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors"
+        title={t('language.title')}
+      >
+        <Globe className="h-4 w-4" />
+        <span className="text-sm">{currentLanguage?.name}</span>
+        <ChevronDown className="h-3 w-3" />
+      </button>
+
+      {isOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-10" 
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-20 min-w-[120px]">
+            {languages.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => {
+                  setLanguage(lang.code)
+                  setIsOpen(false)
+                }}
+                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                  language === lang.code 
+                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' 
+                    : 'text-gray-700 dark:text-gray-300'
+                }`}
+              >
+                {lang.name}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
