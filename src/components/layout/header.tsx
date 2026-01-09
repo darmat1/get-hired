@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signIn, signOut } from '@/lib/auth-client'
 import Link from 'next/link'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { LanguageSelector } from '@/components/ui/language-selector'
@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/translations'
 import Logo from '../ui/icons/logo'
 
 export function Header() {
-  const { data: session, status } = useSession()
+  const { data: session, isPending } = useSession()
   const { t } = useTranslation()
 
   return (
@@ -27,7 +27,7 @@ export function Header() {
               <LanguageSelector />
             </div>
 
-            {status === 'loading' ? (
+            {isPending ? (
               <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700 rounded"></div>
             ) : session ? (
               <>
@@ -54,7 +54,10 @@ export function Header() {
                     {session.user?.name || session.user?.email}
                   </span>
                   <button
-                    onClick={() => signOut()}
+                    onClick={async () => {
+                      await signOut()
+                      window.location.href = '/'
+                    }}
                     className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                   >
                     {t('nav.sign_out')}
@@ -63,7 +66,10 @@ export function Header() {
               </>
             ) : (
               <button
-                onClick={() => signIn('linkedin')}
+                onClick={() => signIn.social({
+                  provider: 'linkedin',
+                  callbackURL: '/dashboard'
+                })}
                 className="rounded-md bg-blue-700 px-4 py-2 text-white hover:bg-blue-800"
               >
                 {t('nav.sign_in')}

@@ -1,43 +1,40 @@
-import NextAuth from 'next-auth/next'
-import LinkedInProvider from 'next-auth/providers/linkedin'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { prisma } from '@/lib/prisma'
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { nextCookies } from "better-auth/next-js";
+import { prisma } from "@/lib/prisma";
 
-export const authOptions = {
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    LinkedInProvider({
+export const auth = betterAuth({
+  baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
+  plugins: [
+    nextCookies()
+  ],
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: false,
+  },
+  socialProviders: {
+    linkedin: {
       clientId: process.env.LINKEDIN_CLIENT_ID!,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          scope: 'openid profile email r_liteprofile r_emailaddress',
-        },
-      },
-      userinfo: {
-        params: {
-          projection: '(id,firstName,lastName,profilePicture(displayImage~:playableStreams))',
-        },
-      },
-    }),
-  ],
-  callbacks: {
-    async jwt({ token, account }: any) {
-      if (account) {
-        token.accessToken = account.access_token
-        token.refreshToken = account.refresh_token
-      }
-      return token
-    },
-    async session({ session, token }: any) {
-      session.accessToken = token.accessToken as string
-      session.refreshToken = token.refreshToken as string
-      return session
     },
   },
-  pages: {
-    signIn: '/auth/signin',
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    updateAge: 60 * 60 * 24, // 1 day
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // 5 minutes
+    },
   },
-}
-
-export default NextAuth(authOptions)
+  account: {
+    accountLinking: {
+      enabled: true,
+    },
+  },
+  advanced: {
+    // generateId option removed as it is not valid in this version
+  }
+});

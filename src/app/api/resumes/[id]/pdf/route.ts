@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth'
 import { generatePDF } from '@/lib/pdf-generator'
 import { prisma } from '@/lib/prisma'
 
@@ -9,11 +8,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
-  
+
   try {
-    const session = await getServerSession(authOptions) as any
-    
-    if (!session?.user?.id) {
+    const session = await auth.api.getSession({
+      headers: req.headers
+    })
+
+    if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

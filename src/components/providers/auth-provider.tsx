@@ -1,7 +1,17 @@
 'use client'
 
-import { SessionProvider } from 'next-auth/react'
+import { useEffect } from 'react'
+import { authClient } from '@/lib/auth-client'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  return <SessionProvider>{children}</SessionProvider>
+  useEffect(() => {
+    // Initialize Better Auth client
+    authClient.$Infer.Session
+  }, [])
+
+  return (
+    <>
+      {children}
+    </>
+  )
 }

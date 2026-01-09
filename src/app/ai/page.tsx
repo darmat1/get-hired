@@ -1,23 +1,21 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/lib/auth-client'
 import { getCurrentAIService, getAvailableAIServices } from '@/lib/ai-services'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Brain, Zap, DollarSign, Check, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+import { useTranslation } from '@/lib/translations'
 
 export default function AIInfoPage() {
-  const { data: session } = useSession()
-  const [currentService, setCurrentService] = useState<any>(null)
-  const [services, setServices] = useState<any[]>([])
+  const { t } = useTranslation()
+  const [services] = useState<any>(() => getAvailableAIServices());
 
-  useEffect(() => {
-    const current = getCurrentAIService()
-    setCurrentService(current)
-    setServices(getAvailableAIServices())
-  }, [])
+  const [currentService, setCurrentService] = useState<any>(() => {
+    return getCurrentAIService();
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,32 +24,31 @@ export default function AIInfoPage() {
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <Brain className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-gray-900">AI Анализ резюме</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('ai.title')}</h1>
           <p className="mt-2 text-gray-600">
-            Используйте искусственный интеллект для улучшения вашего резюме
+            {t('ai.description')}
           </p>
         </div>
 
-        {/* Текущий статус */}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {currentService ? (
                 <>
                   <Check className="h-5 w-5 text-green-600" />
-                  AI активно: {currentService.name}
+                  {t('ai.active')}: {currentService.name}
                 </>
               ) : (
                 <>
                   <AlertCircle className="h-5 w-5 text-yellow-600" />
-                  AI не настроен
+                  {t('ai.not_configured')}
                 </>
               )}
             </CardTitle>
             <CardDescription>
               {currentService
-                ? `Анализ резюме выполняется с помощью ${currentService.name}`
-                : 'Настройте AI сервис для получения персонализированных рекомендаций'
+                ? t('ai.analysis_with').replace('{service}', currentService.name)
+                : t('ai.setup_required')
               }
             </CardDescription>
           </CardHeader>
@@ -59,7 +56,7 @@ export default function AIInfoPage() {
             <CardContent>
               <div className="flex items-center gap-4">
                 <Badge variant={currentService.isFree ? 'default' : 'secondary'}>
-                  {currentService.isFree ? 'Бесплатный' : 'Платный'}
+                  {currentService.isFree ? t('ai.free') : t('ai.paid')}
                 </Badge>
                 <span className="text-sm text-gray-600">
                   {currentService.description}
@@ -71,7 +68,7 @@ export default function AIInfoPage() {
 
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Как работает AI анализ?</CardTitle>
+            <CardTitle>{t('ai.how_it_works')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-start gap-3">
@@ -79,8 +76,8 @@ export default function AIInfoPage() {
                 <span className="text-blue-600 font-semibold text-sm">1</span>
               </div>
               <div>
-                <h4 className="font-semibold">Анализ структуры</h4>
-                <p className="text-sm text-gray-600">AI проверяет наличие всех необходимых разделов резюме</p>
+                <h4 className="font-semibold">{t('ai.step1_title')}</h4>
+                <p className="text-sm text-gray-600">{t('ai.step1_desc')}</p>
               </div>
             </div>
 
@@ -89,8 +86,8 @@ export default function AIInfoPage() {
                 <span className="text-blue-600 font-semibold text-sm">2</span>
               </div>
               <div>
-                <h4 className="font-semibold">Оценка качества</h4>
-                <p className="text-sm text-gray-600">Анализирует полноту описания опыта и навыков</p>
+                <h4 className="font-semibold">{t('ai.step2_title')}</h4>
+                <p className="text-sm text-gray-600">{t('ai.step2_desc')}</p>
               </div>
             </div>
 
@@ -99,8 +96,8 @@ export default function AIInfoPage() {
                 <span className="text-blue-600 font-semibold text-sm">3</span>
               </div>
               <div>
-                <h4 className="font-semibold">Персональные рекомендации</h4>
-                <p className="text-sm text-gray-600">Дает конкретные советы по улучшению каждого раздела</p>
+                <h4 className="font-semibold">{t('ai.step3_title')}</h4>
+                <p className="text-sm text-gray-600">{t('ai.step3_desc')}</p>
               </div>
             </div>
           </CardContent>
@@ -108,13 +105,13 @@ export default function AIInfoPage() {
 
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Доступные AI сервисы</CardTitle>
+            <CardTitle>{t('ai.available_services')}</CardTitle>
             <CardDescription>
-              Выберите подходящий вам вариант
+              {t('ai.choose_service')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {services.map((service) => (
+            {services.map((service: any) => (
               <div key={service.name} className="border rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -124,10 +121,10 @@ export default function AIInfoPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={service.isFree ? 'default' : 'secondary'}>
-                      {service.isFree ? 'Бесплатный' : 'Платный'}
+                      {service.isFree ? t('ai.free') : t('ai.paid')}
                     </Badge>
                     {service.status === 'connected' && (
-                      <Badge className="bg-green-600">Подключено</Badge>
+                      <Badge className="bg-green-600">{t('ai.connected')}</Badge>
                     )}
                   </div>
                 </div>
@@ -142,16 +139,16 @@ export default function AIInfoPage() {
             <CardContent className="pt-6">
               <div className="text-center">
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                  Готовы улучшить ваше резюме с AI?
+                  {t('ai.ready_to_improve')}
                 </h3>
                 <p className="text-blue-700 mb-4">
-                  Настройте AI сервис и получите персонализированные рекомендации уже сегодня
+                  {t('ai.setup_recommendation')}
                 </p>
                 <Link
                   href="/ai-settings"
                   className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
                 >
-                  Настроить AI
+                  {t('ai.setup')}
                 </Link>
               </div>
             </CardContent>
@@ -164,7 +161,7 @@ export default function AIInfoPage() {
               href="/resume/new"
               className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
             >
-              Протестировать AI анализ
+              {t('ai.test_analysis')}
             </Link>
           </div>
         )}
@@ -174,7 +171,8 @@ export default function AIInfoPage() {
 }
 
 function Header() {
-  const { data: session, status } = useSession()
+  const { data: session, isPending } = useSession()
+  const { t } = useTranslation()
 
   return (
     <header className="border-b border-gray-200 bg-white">
@@ -187,7 +185,7 @@ function Header() {
           </div>
 
           <nav className="flex items-center space-x-4">
-            {status === 'loading' ? (
+            {isPending ? (
               <div className="h-8 w-32 animate-pulse bg-gray-200 rounded"></div>
             ) : session ? (
               <>
@@ -195,19 +193,19 @@ function Header() {
                   href="/dashboard"
                   className="text-gray-700 hover:text-gray-900"
                 >
-                  Мои резюме
+                  {t('nav.my_resumes')}
                 </Link>
                 <Link
                   href="/ai-settings"
                   className="text-gray-700 hover:text-gray-900"
                 >
-                  AI настройки
+                  {t('nav.ai_settings')}
                 </Link>
                 <Link
                   href="/resume/new"
                   className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                  Создать резюме
+                  {t('nav.create_resume')}
                 </Link>
               </>
             ) : (
@@ -215,7 +213,7 @@ function Header() {
                 href="/"
                 className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
               >
-                На главную
+                {t('nav.home')}
               </Link>
             )}
           </nav>

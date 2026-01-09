@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions) as any
-    
-    if (!session?.user?.id) {
+    const session = await auth.api.getSession({
+      headers: request.headers
+    })
+
+    if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -32,17 +33,19 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions) as any
-    
-    if (!session?.user?.id) {
+    const session = await auth.api.getSession({
+      headers: req.headers
+    })
+
+    if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await req.json()
-    
+
     const resume = await prisma.resume.create({
       data: {
-        title: body.personalInfo?.firstName && body.personalInfo?.lastName 
+        title: body.personalInfo?.firstName && body.personalInfo?.lastName
           ? `Резюме ${body.personalInfo.firstName} ${body.personalInfo.lastName}`
           : 'Новое резюме',
         template: body.template || 'modern',

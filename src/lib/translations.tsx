@@ -15,8 +15,10 @@ export const translations: Translations = {
   'nav.dashboard': { en: 'My Resumes', uk: 'Мої резюме', ru: 'Мои резюме' },
   'nav.ai_settings': { en: 'AI Settings', uk: 'Налаштування AI', ru: 'AI настройки' },
   'nav.create_resume': { en: 'Create Resume', uk: 'Створити резюме', ru: 'Создать резюме' },
-  'nav.sign_in': { en: 'Sign in with LinkedIn', uk: 'Увійти через LinkedIn', ru: 'Войти через LinkedIn' },
+  'nav.sign_in': { en: 'Sign In', uk: 'Увійти', ru: 'Войти' },
   'nav.sign_out': { en: 'Sign out', uk: 'Вийти', ru: 'Выйти' },
+  'nav.my_resumes': { en: 'My Resumes', uk: 'Мої резюме', ru: 'Мои резюме' },
+  'nav.home': { en: 'Home', uk: 'Додому', ru: 'Главная' },
 
   'home.title': { en: 'Create a Professional Resume', uk: 'Створіть професійне резюме', ru: 'Создайте профессиональное резюме' },
   'home.subtitle': { en: 'Import data from LinkedIn, use AI recommendations and choose from multiple PDF templates', uk: 'Імпортуйте дані з LinkedIn, використовуйте AI-рекомендації та оберіть з численних PDF-шаблонів', ru: 'Импортируйте данные из LinkedIn, используйте AI-рекомендации и выберите из множества шаблонов PDF' },
@@ -69,6 +71,7 @@ export const translations: Translations = {
   'dashboard.delete_confirm': { en: 'Are you sure you want to delete this resume?', uk: 'Ви впевнені, що хочете видалити це резюме?', ru: 'Вы уверены, что хотите удалить это резюме?' },
 
   'ai.title': { en: 'AI Resume Analysis', uk: 'AI Аналіз резюме', ru: 'AI Анализ резюме' },
+  'ai.description': { en: 'Use artificial intelligence to improve your resume', uk: 'Використовуйте штучний інтелект для покращення вашого резюме', ru: 'Используйте искусственный интеллект для улучшения вашего резюме' },
   'ai.analyzing': { en: 'Analyzing resume...', uk: 'Аналіз резюме...', ru: 'Анализ резюме...' },
   'ai.score': { en: 'Resume score:', uk: 'Оцінка резюме:', ru: 'Оценка резюме:' },
   'ai.excellent': { en: 'Excellent!', uk: 'Чудово!', ru: 'Отлично!' },
@@ -79,6 +82,28 @@ export const translations: Translations = {
   'ai.weaknesses': { en: 'Areas to improve', uk: 'Що можна покращити', ru: 'Что можно улучшить' },
   'ai.recommendations': { en: 'Improvement recommendations', uk: 'Рекомендації щодо покращення', ru: 'Рекомендации по улучшению' },
   'ai.detailed_recommendations': { en: 'Detailed recommendations', uk: 'Детальні рекомендації', ru: 'Детальные рекомендации' },
+
+  // New AI page translations
+  'ai.active': { en: 'AI Active', uk: 'AI Активне', ru: 'AI Активно' },
+  'ai.not_configured': { en: 'AI not configured', uk: 'AI не налаштовано', ru: 'AI не настроен' },
+  'ai.analysis_with': { en: 'Resume analysis is performed using {service}', uk: 'Аналіз резюме виконується за допомогою {service}', ru: 'Анализ резюме выполняется с помощью {service}' },
+  'ai.setup_required': { en: 'Configure AI service to get personalized recommendations', uk: 'Налаштуйте AI сервіс для отримання персоналізованих рекомендацій', ru: 'Настройте AI сервис для получения персонализированных рекомендаций' },
+  'ai.free': { en: 'Free', uk: 'Безкоштовний', ru: 'Бесплатный' },
+  'ai.paid': { en: 'Paid', uk: 'Платний', ru: 'Платный' },
+  'ai.connected': { en: 'Connected', uk: 'Підключено', ru: 'Подключено' },
+  'ai.how_it_works': { en: 'How does AI analysis work?', uk: 'Як працює AI аналіз?', ru: 'Как работает AI анализ?' },
+  'ai.step1_title': { en: 'Structure Analysis', uk: 'Аналіз структури', ru: 'Анализ структуры' },
+  'ai.step1_desc': { en: 'AI checks for all necessary resume sections', uk: 'AI перевіряє наявність усіх необхідних розділів резюме', ru: 'AI проверяет наличие всех необходимых разделов резюме' },
+  'ai.step2_title': { en: 'Quality Assessment', uk: 'Оцінка якості', ru: 'Оценка качества' },
+  'ai.step2_desc': { en: 'Analyzes completeness of experience and skills description', uk: 'Аналізує повноту опису досвіду та навичок', ru: 'Анализирует полноту описания опыта и навыков' },
+  'ai.step3_title': { en: 'Personalized Recommendations', uk: 'Персоналізовані рекомендації', ru: 'Персональные рекомендации' },
+  'ai.step3_desc': { en: 'Provides specific tips for improving each section', uk: 'Надає конкретні поради щодо покращення кожного розділу', ru: 'Дает конкретные советы по улучшению каждого раздела' },
+  'ai.available_services': { en: 'Available AI Services', uk: 'Доступні AI сервіси', ru: 'Доступные AI сервисы' },
+  'ai.choose_service': { en: 'Choose the option that suits you', uk: 'Оберіть підходящий вам варіант', ru: 'Выберите подходящий вам вариант' },
+  'ai.ready_to_improve': { en: 'Ready to improve your resume with AI?', uk: 'Готові покращити ваше резюме з AI?', ru: 'Готовы улучшить ваше резюме с AI?' },
+  'ai.setup_recommendation': { en: 'Configure AI service and get personalized recommendations today', uk: 'Налаштуйте AI сервіс і отримайте персоналізовані рекомендації вже сьогодні', ru: 'Настройте AI сервис и получите персонализированные рекомендации уже сегодня' },
+  'ai.setup': { en: 'Setup AI', uk: 'Налаштувати AI', ru: 'Настроить AI' },
+  'ai.test_analysis': { en: 'Test AI Analysis', uk: 'Протестувати AI аналіз', ru: 'Протестировать AI анализ' },
 
   'ai_settings.title': { en: 'AI Settings', uk: 'Налаштування AI', ru: 'AI настройки' },
   'ai_settings.subtitle': { en: 'Manage AI services for resume analysis', uk: 'Керуйте AI-сервісами для аналізу резюме', ru: 'Управляйте AI сервисами для анализа резюме' },
@@ -234,7 +259,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   const t = (key: string): string => {
-    // Force 'en' during SSR and hydration to prevent mismatch
     const effectiveLanguage = mounted ? language : 'en'
     const translation = translations[key]
 

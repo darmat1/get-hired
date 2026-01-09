@@ -1,16 +1,20 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { getAvailableAIServices, testAIService, getCurrentAIService, AISetupInstructions } from '@/lib/ai-services'
+import { useState } from 'react'
+import { getAvailableAIServices, testAIService, AISetupInstructions, AIService } from '@/lib/ai-services'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Check, X, ExternalLink, Key } from 'lucide-react'
+import { Check, X, Key } from 'lucide-react'
 import { useTranslation } from '@/lib/translations'
 
-export function AISettingsPanel() {
+interface AISettingsPanelProps {
+  initialServices?: AIService[]
+}
+
+export function AISettingsPanel({ initialServices }: AISettingsPanelProps) {
   const { t } = useTranslation()
-  const [services, setServices] = useState(getAvailableAIServices())
+  const [services, setServices] = useState(initialServices || getAvailableAIServices())
   const [isTesting, setIsTesting] = useState<string | null>(null)
   const [showInstructions, setShowInstructions] = useState<string | null>(null)
 
@@ -27,7 +31,7 @@ export function AISettingsPanel() {
     setIsTesting(null)
   }
 
-  const currentService = getCurrentAIService()
+  const currentService = services.find(s => s.status === 'connected') || null
 
   return (
     <div className="space-y-6">
@@ -134,7 +138,6 @@ export function AISettingsPanel() {
         </Card>
       )}
 
-      {/* Статус */}
       {!currentService && (
         <Card className="border-yellow-200 bg-yellow-50">
           <CardContent className="pt-6">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/lib/auth-client'
 import { PersonalInfoForm } from '@/components/resume/personal-info-form'
 import { WorkExperienceForm } from '@/components/resume/work-experience-form'
 import { EducationForm } from '@/components/resume/education-form'
@@ -36,55 +36,6 @@ export default function NewResumePage() {
   })
 
   const [isLoading, setIsLoading] = useState(false)
-
-  const handleLinkedInImport = async () => {
-    if (!(session as any)?.accessToken) return
-
-    setIsLoading(true)
-    try {
-      const profile = await fetchLinkedInProfile((session as any).accessToken)
-
-      setResumeData(prev => ({
-        ...prev,
-        personalInfo: {
-          ...prev.personalInfo!,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          summary: profile.summary,
-          location: profile.location
-        },
-        workExperience: profile.experience.map((exp: any) => ({
-          id: Math.random().toString(36),
-          title: exp.title,
-          company: exp.company,
-          location: exp.location || '',
-          startDate: exp.startDate?.year?.toString() || '',
-          endDate: exp.endDate?.year?.toString(),
-          current: !exp.endDate,
-          description: [exp.description].filter(Boolean)
-        })),
-        education: profile.education.map((edu: any) => ({
-          id: Math.random().toString(36),
-          institution: edu.schoolName,
-          degree: edu.degree,
-          field: edu.fieldOfStudy || '',
-          startDate: edu.startDate?.year?.toString() || '',
-          endDate: edu.endDate?.year?.toString(),
-          current: !edu.endDate
-        })),
-        skills: profile.skills.slice(0, 10).map((skill: any) => ({
-          id: Math.random().toString(36),
-          name: skill.name,
-          category: 'technical' as const,
-          level: 'intermediate' as const
-        }))
-      }))
-    } catch (error) {
-      console.error('Failed to import LinkedIn data:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const updatePersonalInfo = (info: PersonalInfo) => {
     setResumeData(prev => ({ ...prev, personalInfo: info }))
@@ -129,6 +80,22 @@ export default function NewResumePage() {
     console.log('Downloading PDF...')
   }
 
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <Header />
+        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-bold mb-4">Please sign in to create a resume</h2>
+            <Button onClick={() => window.location.href = '/auth/signin'}>
+              Sign In
+            </Button>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
@@ -138,15 +105,7 @@ export default function NewResumePage() {
           <h1 className="text-3xl font-bold">{t('resume_builder.title')}</h1>
 
           <div className="flex gap-4">
-            {session && (
-              <Button
-                variant="outline"
-                onClick={handleLinkedInImport}
-                disabled={isLoading}
-              >
-                {isLoading ? t('form.loading') : t('form.import_linkedin')}
-              </Button>
-            )}
+            {/* LinkedIn import disabled - using Better Auth instead */}
           </div>
         </div>
 

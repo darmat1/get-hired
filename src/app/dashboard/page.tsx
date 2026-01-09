@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/lib/auth-client'
 import { Header } from '@/components/layout/header'
 import { Button } from '@/components/ui/button'
 import { FileText, Edit, Download, Trash2 } from 'lucide-react'
@@ -61,6 +61,22 @@ export default function Dashboard() {
 
   const downloadPDF = (id: string, title: string) => {
     window.open(`/api/resumes/${id}/pdf`, '_blank')
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <Header />
+        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-bold mb-4">Please sign in to view your dashboard</h2>
+            <Button onClick={() => window.location.href = '/auth/signin'}>
+              Sign In
+            </Button>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   if (isLoading) {
