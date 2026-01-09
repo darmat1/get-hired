@@ -37,12 +37,12 @@ export function Header() {
                 >
                   {t('nav.dashboard')}
                 </Link>
-                <Link
+                {/* <Link
                   href="/ai-settings"
                   className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                 >
                   {t('nav.ai_settings')}
-                </Link>
+                </Link> */}
                 <Link
                   href="/resume/new"
                   className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"

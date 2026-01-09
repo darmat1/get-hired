@@ -34,7 +34,7 @@ export async function GET(
     return new NextResponse(pdfBuffer as any, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="resume-${resume.title}.pdf"`
+        'Content-Disposition': `inline; filename="resume-${encodeURIComponent(resume.title)}.pdf"`
       }
     })
   } catch (error) {
