@@ -256,10 +256,10 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('en')
-  const [mounted, setMounted] = useState(false)
+
 
   const t = (key: string): string => {
-    const effectiveLanguage = mounted ? language : 'en'
+    const effectiveLanguage = language
     const translation = translations[key]
 
     if (translation) {
@@ -269,18 +269,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    setMounted(true)
+
     const saved = localStorage.getItem('cv-maker-language') as Language
-    if (saved && ['en', 'uk', 'ru'].includes(saved)) {
+    if (saved && ['en', 'uk', 'ru'].includes(saved) && saved !== 'en') {
+      // eslint-disable-next-line
       setLanguage(saved)
     }
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
+
     localStorage.setItem('cv-maker-language', language)
     document.documentElement.lang = language
-  }, [language, mounted])
+  }, [language])
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

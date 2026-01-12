@@ -5,28 +5,27 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  linkedinId    String?   @unique
-  accessToken   String?
-  refreshToken  String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  linkedinId   String?  @unique
+  accessToken  String?
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
   // Better Auth fields
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean @default(false)
   image         String?
-  
+
   // Relations
-  resumes       Resume[]
-  sessions      Session[]
-  accounts      Account[]
-  
+  resumes  Resume[]
+  sessions Session[]
+  accounts Account[]
+
   @@map("user")
 }
 
@@ -78,19 +77,19 @@ model Verification {
 }
 
 model Resume {
-  id            String    @id @default(cuid())
-  title         String
-  template      String    @default("modern")
-  personalInfo  Json
+  id             String   @id @default(cuid())
+  title          String
+  template       String   @default("modern")
+  personalInfo   Json
   workExperience Json
-  education     Json
-  skills        Json
-  certificates  Json?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  userId        String
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  education      Json
+  skills         Json
+  certificates   Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }
