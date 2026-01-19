@@ -80,7 +80,7 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
   return (
     <button
       onClick={toggleTheme}
-      className={`inline-flex items-center justify-center rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors w-9 h-9 relative ${className}`}
+      className={`inline-flex items-center justify-center rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors w-9 py-1.5 relative ${className}`}
       title={t("theme.toggle")}
       suppressHydrationWarning
     >

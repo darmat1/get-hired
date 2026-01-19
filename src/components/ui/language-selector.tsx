@@ -1,40 +1,42 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { ChevronDown, Globe } from 'lucide-react'
-import { useTranslation, Language } from '@/lib/translations'
+import React, { useState } from "react";
+import { ChevronDown, Globe } from "lucide-react";
+import { useTranslation, Language } from "@/lib/translations";
 
 interface LanguageSelectorProps {
-  className?: string
+  className?: string;
 }
 
-export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
-  const { language, setLanguage, t } = useTranslation()
-  const [isOpen, setIsOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
+export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
+  const { language, setLanguage, t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   React.useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   const languages: { code: Language; name: string }[] = [
-    { code: 'en', name: mounted ? t('language.english') : 'English' },
-    { code: 'uk', name: mounted ? t('language.ukrainian') : 'Ukrainian' },
-    { code: 'ru', name: mounted ? t('language.russian') : 'Russian' }
-  ]
+    { code: "en", name: mounted ? t("language.english") : "English" },
+    { code: "uk", name: mounted ? t("language.ukrainian") : "Ukrainian" },
+    { code: "ru", name: mounted ? t("language.russian") : "Russian" },
+  ];
 
-  const currentLanguage = languages.find(l => l.code === language)
+  const currentLanguage = languages.find((l) => l.code === language);
 
   return (
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors"
-        title={mounted ? t('language.title') : 'Language'}
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors"
+        title={mounted ? t("language.title") : "Language"}
         suppressHydrationWarning
       >
-        <Globe className="h-4 w-4" />
-        <span className="text-sm" suppressHydrationWarning>{mounted ? currentLanguage?.name : '...'}</span>
+        <Globe className="h-5 w-5" />
+        <span className="text-sm" suppressHydrationWarning>
+          {mounted ? currentLanguage?.name : "..."}
+        </span>
         <ChevronDown className="h-3 w-3" />
       </button>
 
@@ -49,13 +51,14 @@ export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
               <button
                 key={lang.code}
                 onClick={() => {
-                  setLanguage(lang.code)
-                  setIsOpen(false)
+                  setLanguage(lang.code);
+                  setIsOpen(false);
                 }}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${language === lang.code
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                  : 'text-gray-700 dark:text-gray-300'
-                  }`}
+                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                  language === lang.code
+                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                    : "text-gray-700 dark:text-gray-300"
+                }`}
               >
                 {lang.name}
               </button>
@@ -64,5 +67,5 @@ export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
         </>
       )}
     </div>
-  )
+  );
 }
