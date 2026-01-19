@@ -20,6 +20,10 @@ export const auth = betterAuth({
       clientId: process.env.LINKEDIN_CLIENT_ID!,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
     },
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
   },
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
@@ -33,8 +37,5 @@ export const auth = betterAuth({
     accountLinking: {
       enabled: true,
     },
-  },
-  advanced: {
-    // generateId option removed as it is not valid in this version
   }
 });
