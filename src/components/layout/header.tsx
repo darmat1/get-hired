@@ -1,22 +1,25 @@
-'use client'
+"use client";
 
-import { useSession, signIn, signOut } from '@/lib/auth-client'
-import Link from 'next/link'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
-import { LanguageSelector } from '@/components/ui/language-selector'
-import { useTranslation } from '@/lib/translations'
-import Logo from '../ui/icons/logo'
+import { useSession, signOut } from "@/lib/auth-client";
+import Link from "next/link";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { LanguageSelector } from "@/components/ui/language-selector";
+import { useTranslation } from "@/lib/translations";
+import Logo from "../ui/icons/logo";
 
 export function Header() {
-  const { data: session, isPending } = useSession()
-  const { t } = useTranslation()
+  const { data: session, isPending } = useSession();
+  const { t } = useTranslation();
 
   return (
     <header className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
+            <Link
+              href="/"
+              className="text-xl font-bold text-gray-900 dark:text-white"
+            >
               <Logo />
             </Link>
           </div>
@@ -35,7 +38,7 @@ export function Header() {
                   href="/dashboard"
                   className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                 >
-                  {t('nav.dashboard')}
+                  {t("nav.dashboard")}
                 </Link>
                 {/* <Link
                   href="/ai-settings"
@@ -47,7 +50,7 @@ export function Header() {
                   href="/resume/new"
                   className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                  {t('nav.create_resume')}
+                  {t("nav.create_resume")}
                 </Link>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -55,29 +58,26 @@ export function Header() {
                   </span>
                   <button
                     onClick={async () => {
-                      await signOut()
-                      window.location.href = '/'
+                      await signOut();
+                      window.location.href = "/";
                     }}
                     className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                   >
-                    {t('nav.sign_out')}
+                    {t("nav.sign_out")}
                   </button>
                 </div>
               </>
             ) : (
-              <button
-                onClick={() => signIn.social({
-                  provider: 'linkedin',
-                  callbackURL: '/dashboard'
-                })}
+              <Link
+                href="/auth/signin"
                 className="rounded-md bg-blue-700 px-4 py-2 text-white hover:bg-blue-800"
               >
-                {t('nav.sign_in')}
-              </button>
+                {t("nav.sign_in")}
+              </Link>
             )}
           </nav>
         </div>
       </div>
     </header>
-  )
+  );
 }
