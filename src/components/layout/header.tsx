@@ -1,13 +1,13 @@
 "use client";
 
-import { useSession, signOut } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LanguageSelector } from "@/components/ui/language-selector";
+import { UserMenu } from "@/components/ui/user-menu";
 import { useTranslation } from "@/lib/translations";
 import Logo from "../ui/icons/logo";
 
-import { LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { MD5 } from "crypto-js";
 
@@ -46,32 +46,12 @@ export function Header() {
             {isPending ? (
               <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700 rounded"></div>
             ) : session ? (
-              <>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={session.user?.image || gravatarUrl}
-                      alt={session.user?.name || "User"}
-                      className="h-8 w-8 rounded-full border border-gray-200 dark:border-gray-700 object-cover"
-                    />
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline-block">
-                      {session.user?.name || session.user?.email}
-                    </span>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      await signOut();
-                      window.location.href = "/";
-                    }}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors text-sm font-medium text-gray-700 dark:text-gray-200"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span className="hidden sm:inline">
-                      {t("nav.sign_out")}
-                    </span>
-                  </button>
-                </div>
-              </>
+              <UserMenu
+                userName={session.user?.name || ""}
+                userEmail={session.user?.email || ""}
+                userImage={session.user?.image}
+                gravatarUrl={gravatarUrl}
+              />
             ) : (
               <Link
                 href="/auth/signin"
