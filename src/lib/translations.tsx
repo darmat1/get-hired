@@ -244,6 +244,26 @@ export const translations: Translations = {
   'ai_tip.poor_score': { en: 'Your resume needs significant improvements to attract recruiters', uk: 'Ваше резюме потребує значних покращень для приваблення рекрутерів', ru: 'Ваше резюме требует значительных улучшений для привлечения внимания рекрутеров' },
   'ai_tip.good_score': { en: 'Good resume, but there are opportunities for improvement', uk: 'Добре резюме, але є можливості для покращення', ru: 'Хорошее резюме, но есть возможности для улучшения' },
   'ai_tip.excellent_score': { en: 'Excellent resume! Consider fine-tuning for each specific position', uk: 'Чудове резюме! Розгляньте тонке налаштування для кожної конкретної позиції', ru: 'Отличное резюме! Рассмотрите тонкую настройку для каждой конкретной позиции' },
+
+  // Profile Page
+  'nav.profile': { en: 'Profile', uk: 'Профіль', ru: 'Профиль' },
+  'profile.title': { en: 'Profile', uk: 'Профіль', ru: 'Профиль' },
+  'profile.subtitle': { en: 'Manage your account settings', uk: 'Керуйте параметрами вашого облікового запису', ru: 'Управляйте параметрами вашего аккаунта' },
+  'profile.current_name': { en: 'Current name', uk: 'Поточне ім\'я', ru: 'Текущее имя' },
+  'profile.change_name': { en: 'Change name', uk: 'Змінити ім\'я', ru: 'Изменить имя' },
+  'profile.new_name': { en: 'New name', uk: 'Нове ім\'я', ru: 'Новое имя' },
+  'profile.update_name': { en: 'Update name', uk: 'Оновити ім\'я', ru: 'Обновить имя' },
+  'profile.change_password': { en: 'Change password', uk: 'Змінити пароль', ru: 'Изменить пароль' },
+  'profile.current_password': { en: 'Current password', uk: 'Поточний пароль', ru: 'Текущий пароль' },
+  'profile.new_password': { en: 'New password', uk: 'Новий пароль', ru: 'Новый пароль' },
+  'profile.confirm_password': { en: 'Confirm password', uk: 'Підтвердіть пароль', ru: 'Подтвердите пароль' },
+  'profile.update_password': { en: 'Change password', uk: 'Змінити пароль', ru: 'Изменить пароль' },
+  'profile.error.enter_name': { en: 'Please enter a new name', uk: 'Будь ласка, введіть нове ім\'я', ru: 'Пожалуйста, введите новое имя' },
+  'profile.error.fill_fields': { en: 'Please fill in all fields', uk: 'Будь ласка, заповніть усі поля', ru: 'Пожалуйста, заполните все поля' },
+  'profile.error.passwords_mismatch': { en: 'Passwords do not match', uk: 'Паролі не збігаються', ru: 'Пароли не совпадают' },
+  'profile.error.password_too_short': { en: 'Password must be at least 8 characters', uk: 'Пароль повинен містити щонайменше 8 символів', ru: 'Пароль должен быть не менее 8 символов' },
+  'profile.success.name_updated': { en: 'Name updated successfully', uk: 'Ім\'я успішно оновлено', ru: 'Имя успешно обновлено' },
+  'profile.success.password_changed': { en: 'Password changed successfully', uk: 'Пароль успішно змінено', ru: 'Пароль успешно изменён' },
 }
 
 interface LanguageContextType {

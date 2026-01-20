@@ -15,9 +15,9 @@ export function Sidebar() {
   return (
     <aside className="w-64 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-full flex flex-col">
       <div className="px-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-        <div className="h-16 flex items-center">
+        <Link href="/" className="h-16 flex items-center justify-center">
           <Logo />
-        </div>
+        </Link>
       </div>
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-2">

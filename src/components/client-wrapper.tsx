@@ -4,9 +4,20 @@ import { Header } from '@/components/layout/header'
 import { User, FileText, Sparkles, Download } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslation } from '@/lib/translations'
+import { useSession } from '@/lib/auth-client'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export function ClientWrapper() {
   const { t } = useTranslation()
+  const { data: session } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (session) {
+      router.push('/dashboard')
+    }
+  }, [session, router])
   
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

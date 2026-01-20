@@ -49,7 +49,7 @@ export function Header() {
               <UserMenu
                 userName={session.user?.name || ""}
                 userEmail={session.user?.email || ""}
-                userImage={session.user?.image}
+                userImage={session.user?.image || undefined}
                 gravatarUrl={gravatarUrl}
               />
             ) : (

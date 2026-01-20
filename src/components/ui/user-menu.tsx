@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { signOut } from "@/lib/auth-client";
-import { LogOut, User } from "lucide-react";
+import Link from "next/link";
+import { LogOut, User, Settings } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 
 interface UserMenuProps {
@@ -71,6 +72,15 @@ export function UserMenu({
               {userEmail}
             </p>
           </div>
+
+          <Link
+            href="/dashboard/profile"
+            onClick={() => setIsOpen(false)}
+            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            <Settings className="h-4 w-4" />
+            {t("nav.profile")}
+          </Link>
 
           <button
             onClick={handleSignOut}
