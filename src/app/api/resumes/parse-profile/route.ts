@@ -25,60 +25,98 @@ export async function POST(request: Request) {
       );
     }
 
-    const systemPrompt = `You are an expert at parsing professional profiles and resumes. 
-Your task is to extract information from the provided text and format it into a structured JSON object.
+    // Text normalization to handle PDF artifacts
+    const cleanText = (input: string) => {
+      let text = input;
+      
+      // Fix spaced-out letters (e.g., "S e n i o r" -> "Senior")
+      // Matches sequences of 3+ single letters separated by single spaces
+      const spacingPattern = /(?:[A-Za-z]\s){2,}[A-Za-z]/g;
+      text = text.replace(spacingPattern, (match) => match.replace(/\s/g, ''));
+      
+      return text
+        .replace(/[•●▪◦▸►→✓✔]/g, '-')      // Convert bullets to dashes
+        .replace(/[\t\r]/g, ' ')             // Tabs/returns to spaces  
+        .replace(/\s{3,}/g, '  ')            // Max 2 consecutive spaces
+        .replace(/\n{4,}/g, '\n\n\n')        // Max 3 consecutive newlines
+        .trim();
+    };
 
-Rules:
-1. Return ONLY a valid JSON object.
-2. If information is missing, use empty strings or empty arrays.
-3. The JSON structure MUST match this exactly:
+    const normalizedText = cleanText(text);
+
+    // Helper: Extract JSON from potentially messy AI output
+    const parseAIJSON = (content: string): any => {
+      try {
+        return JSON.parse(content);
+      } catch (e) {
+        // Find balanced JSON object
+        const startIndices: number[] = [];
+        for (let i = 0; i < content.length; i++) {
+          if (content[i] === '{') startIndices.push(i);
+        }
+
+        for (const startIndex of startIndices) {
+          let depth = 0;
+          let endIndex = -1;
+          for (let i = startIndex; i < content.length; i++) {
+            if (content[i] === '{') depth++;
+            if (content[i] === '}') depth--;
+            if (depth === 0) {
+              endIndex = i;
+              break;
+            }
+          }
+
+          if (endIndex !== -1) {
+            try {
+              const candidate = content.substring(startIndex, endIndex + 1);
+              const parsed = JSON.parse(candidate);
+              if (parsed && parsed.personalInfo) {
+                return parsed;
+              }
+            } catch {
+              // Continue to next start point
+            }
+          }
+        }
+        throw e;
+      }
+    };
+
+    const systemPrompt = `You are a TEXT EXTRACTION tool, NOT a resume enhancer.
+
+CRITICAL RULE: You must ONLY extract text that is LITERALLY written in the input. 
+Do NOT add, invent, assume, or enhance ANY information.
+If something is not explicitly stated, use empty string "" or empty array [].
+
+Output format: Valid JSON matching this schema:
 {
   "personalInfo": {
-    "firstName": "string",
-    "lastName": "string",
-    "email": "string",
-    "phone": "string",
-    "location": "string",
-    "website": "string",
-    "summary": "string"
+    "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "summary": ""
   },
   "workExperience": [
     {
-      "title": "string",
-      "company": "string",
-      "location": "string",
-      "startDate": "YYYY-MM",
-      "endDate": "YYYY-MM",
-      "current": boolean,
-      "description": ["string"]
+      "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false,
+      "description": []
     }
   ],
   "education": [
     {
-      "institution": "string",
-      "degree": "string",
-      "field": "string",
-      "startDate": "YYYY-MM",
-      "endDate": "YYYY-MM",
-      "current": boolean,
-      "gpa": "string"
+      "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false, "gpa": ""
     }
   ],
   "skills": [
-    {
-      "name": "string",
-      "category": "technical" | "soft" | "language",
-      "level": "beginner" | "intermediate" | "advanced" | "expert"
-    }
+    { "name": "", "category": "technical", "level": "advanced" }
   ]
 }
 
-Specific Instructions:
-- Dates: Dates MUST be in YYYY-MM format. If you see "Present", set current to true and leave endDate empty.
-- Descriptions: Capture ALL responsibilities and achievements. Include bullet points like "Key Achievements" as separate items in the description array.
-- Experience mapping: Use "title" (NOT "position").
-- Multi-role: If a person has multiple roles in the same company (e.g., Senior Developer then Lead Developer), create SEPARATE entries for each role.
-- Skills: Categorize skills accurately. Level is mandatory, use "advanced" as default if unclear.`;
+Rules:
+- COPY text exactly as written. Do not rephrase.
+- NO hallucinations. If text says "Next.js", write "Next.js", not "Next.js and React".
+- Each job = exactly ONE entry. Do not split or duplicate.
+- Dates: "11/2022" = "2022-11", "Present" = current:true + endDate:"".
+- Skills: Extract ONLY skills listed in the SKILLS section. Category: technical/soft/language.
+- Languages section: category = "language".`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -95,10 +133,11 @@ Specific Instructions:
           },
           {
             role: "user",
-            content: text,
+            content: normalizedText,
           },
         ],
-        temperature: 0.1, // Low temperature for consistent JSON
+        temperature: 0.1,
+        max_tokens: 4096,
         response_format: { type: "json_object" },
       }),
     });
@@ -110,11 +149,57 @@ Specific Instructions:
         statusText: response.statusText,
         body: errorText,
       });
+
+      // Fallback: Try to extract JSON from failed_generation field
+      if (errorText.includes("json_validate_failed")) {
+        try {
+          const errorBody = JSON.parse(errorText);
+          const failedGeneration = errorBody?.error?.failed_generation;
+          if (failedGeneration) {
+            const fallbackData = parseAIJSON(failedGeneration);
+            
+            // Process and save (inline to avoid duplication issues)
+            const processItem = (item: any) => ({ ...item, id: crypto.randomUUID() });
+            
+            const resume = await prisma.resume.create({
+              data: {
+                userId: session.user.id,
+                title: `Imported Profile - ${new Date().toLocaleDateString()}`,
+                template: "modern",
+                personalInfo: fallbackData.personalInfo || {},
+                workExperience: (fallbackData.workExperience || []).map((exp: any) => ({
+                  ...processItem(exp),
+                  title: exp.title || exp.position || "",
+                  description: Array.isArray(exp.description) ? exp.description : [],
+                  current: !!exp.current || (!exp.endDate && exp.startDate),
+                })),
+                education: (fallbackData.education || []).map((edu: any) => ({
+                  ...processItem(edu),
+                  current: !!edu.current || (!edu.endDate && edu.startDate),
+                })),
+                skills: (fallbackData.skills || []).map((skill: any) => ({
+                  ...processItem(skill),
+                  category: skill.category || "technical",
+                  level: skill.level || "advanced",
+                })),
+                certificates: [],
+              },
+            });
+            
+            return NextResponse.json({ success: true, resume });
+          }
+        } catch (fallbackError) {
+          console.error("Fallback extraction failed:", fallbackError);
+        }
+      }
+
+
       throw new Error(`Failed to parse profile with Groq: ${response.status} ${response.statusText}`);
     }
 
     const groqData = await response.json();
-    const parsedData = JSON.parse(groqData.choices?.[0]?.message?.content || "{}");
+    const parsedData = parseAIJSON(groqData.choices?.[0]?.message?.content || "{}");
+
 
     // Post-processing to ensure IDs and data integrity
     const processItem = (item: any) => ({

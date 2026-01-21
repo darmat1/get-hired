@@ -183,6 +183,23 @@ export const translations: Translations = {
     uk: "Ви впевнені, що хочете видалити це резюме?",
     ru: "Вы уверены, что хотите удалить это резюме?",
   },
+  "dashboard.delete_modal_title": {
+    en: "Delete Resume",
+    uk: "Видалити резюме",
+    ru: "Удалить резюме",
+  },
+  "dashboard.delete_confirm_title": {
+    en: "Are you sure?",
+    uk: "Ви впевнені?",
+    ru: "Вы уверены?",
+  },
+  "dashboard.delete_confirm_desc": {
+    en: "This action cannot be undone. This will permanently delete your resume.",
+    uk: "Цю дію неможливо скасувати. Це назавжди видалить ваше резюме.",
+    ru: "Это действие нельзя отменить. Это навсегда удалит ваше резюме.",
+  },
+  "common.cancel": { en: "Cancel", uk: "Скасувати", ru: "Отмена" },
+  "common.delete": { en: "Delete", uk: "Видалити", ru: "Удалить" },
 
   "ai.title": {
     en: "AI Resume Analysis",
