@@ -1,18 +1,20 @@
 "use client";
 
-import { Header } from "@/components/layout/header";
-import { Sidebar } from "@/components/layout/sidebar";
 import { CoverLetterForm } from "@/components/cover-letter/cover-letter-form";
 import { useTranslation } from "@/lib/translations";
+
+import { Header } from "@/components/layout/header";
+import { Sidebar } from "@/components/layout/sidebar";
 
 export default function CoverLetterPage() {
   const { t } = useTranslation();
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+      <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-y-auto p-8">
           <div className="py-8">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="mb-8">

@@ -19,6 +19,7 @@ export const auth = betterAuth({
     linkedin: {
       clientId: process.env.LINKEDIN_CLIENT_ID!,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
+      scope: ["openid", "profile", "email"],
     },
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,

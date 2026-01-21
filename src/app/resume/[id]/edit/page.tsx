@@ -1,256 +1,292 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useSession } from '@/lib/auth-client'
-import { PersonalInfoForm } from '@/components/resume/personal-info-form'
-import { WorkExperienceForm } from '@/components/resume/work-experience-form'
-import { EducationForm } from '@/components/resume/education-form'
-import { SkillsForm } from '@/components/resume/skills-form'
-import { TemplateSelector } from '@/components/resume/template-selector'
-import { ResumePreview } from '@/components/resume/resume-preview'
-import { AIAnalysisPanel } from '@/components/resume/ai-analysis-panel'
-import { PersonalInfo, WorkExperience, Education, Skill, Resume } from '@/types/resume'
-import { Header } from '@/components/layout/header'
-import { Button } from '@/components/ui/button'
-import { Download, Save, Loader2, ChevronLeft } from 'lucide-react'
-import { useTranslation } from '@/lib/translations'
-import { useParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useState, useEffect } from "react";
+import { useSession } from "@/lib/auth-client";
+import { PersonalInfoForm } from "@/components/resume/personal-info-form";
+import { WorkExperienceForm } from "@/components/resume/work-experience-form";
+import { EducationForm } from "@/components/resume/education-form";
+import { SkillsForm } from "@/components/resume/skills-form";
+import { TemplateSelector } from "@/components/resume/template-selector";
+import { ResumePreview } from "@/components/resume/resume-preview";
+import { AIAnalysisPanel } from "@/components/resume/ai-analysis-panel";
+import {
+  PersonalInfo,
+  WorkExperience,
+  Education,
+  Skill,
+  Resume,
+} from "@/types/resume";
+import { Button } from "@/components/ui/button";
+import { Download, Save, Loader2, ChevronLeft } from "lucide-react";
+import { useTranslation } from "@/lib/translations";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+
+import { Header } from "@/components/layout/header";
+import { Sidebar } from "@/components/layout/sidebar";
 
 export default function EditResumePage() {
-  const { t } = useTranslation()
-  const { data: session } = useSession()
-  const params = useParams()
-  const router = useRouter()
-  const id = params?.id as string
+  const { t } = useTranslation();
+  const { data: session } = useSession();
+  const params = useParams();
+  const id = params?.id as string;
 
-  const [step, setStep] = useState(1)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
+  const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [resumeData, setResumeData] = useState<Partial<Resume>>({
     personalInfo: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      location: '',
-      summary: ''
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      location: "",
+      summary: "",
     },
     workExperience: [],
     education: [],
     skills: [],
-    template: 'modern'
-  })
+    template: "modern",
+  });
 
   useEffect(() => {
     if (session?.user && id) {
-      fetchResume()
+      fetchResume();
     } else if (session === null) {
-        setIsLoading(false) // Stop loading if definitely not logged in
+      setIsLoading(false); // Stop loading if definitely not logged in
     }
-  }, [session, id])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, id]);
 
   const fetchResume = async () => {
     try {
-      const response = await fetch(`/api/resumes/${id}`)
+      const response = await fetch(`/api/resumes/${id}`);
       if (response.ok) {
-        const data = await response.json()
-        setResumeData(data)
+        const data = await response.json();
+        setResumeData(data);
       } else {
-        console.error('Failed to fetch resume')
-        // router.push('/dashboard') // Optional: redirect on error
+        console.error("Failed to fetch resume");
       }
     } catch (error) {
-      console.error('Error fetching resume:', error)
+      console.error("Error fetching resume:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const updatePersonalInfo = (info: PersonalInfo) => {
-    setResumeData(prev => ({ ...prev, personalInfo: info }))
-  }
+    setResumeData((prev) => ({ ...prev, personalInfo: info }));
+  };
 
   const updateWorkExperience = (experience: WorkExperience[]) => {
-    setResumeData(prev => ({ ...prev, workExperience: experience }))
-  }
+    setResumeData((prev) => ({ ...prev, workExperience: experience }));
+  };
 
   const updateEducation = (education: Education[]) => {
-    setResumeData(prev => ({ ...prev, education }))
-  }
+    setResumeData((prev) => ({ ...prev, education }));
+  };
 
   const updateSkills = (skills: Skill[]) => {
-    setResumeData(prev => ({ ...prev, skills }))
-  }
+    setResumeData((prev) => ({ ...prev, skills }));
+  };
 
   const updateTemplate = (template: string) => {
-    setResumeData(prev => ({ ...prev, template }))
-  }
+    setResumeData((prev) => ({ ...prev, template }));
+  };
 
   const saveResume = async () => {
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       const response = await fetch(`/api/resumes/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(resumeData)
-      })
+        body: JSON.stringify(resumeData),
+      });
 
       if (response.ok) {
-        // Show success message or toast?
+        // Handle success
       } else {
-        console.error('Failed to update resume')
+        console.error("Failed to update resume");
       }
     } catch (error) {
-      console.error('Failed to save resume:', error)
+      console.error("Failed to save resume:", error);
     } finally {
-        setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const downloadPDF = () => {
-     window.open(`/api/resumes/${id}/pdf`, '_blank')
-  }
+    window.open(`/api/resumes/${id}/pdf`, "_blank");
+  };
 
   if (isLoading) {
-      return (
-          <div className="min-h-screen bg-background flex items-center justify-center">
+    return (
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <Sidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-8">
+            <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-      )
+            </div>
+          </main>
+        </div>
+      </div>
+    );
   }
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-background text-foreground">
-        <Header />
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold mb-4">Please sign in to edit your resume</h2>
-            <Button onClick={() => window.location.href = '/auth/signin'}>
-              Sign In
-            </Button>
-          </div>
-        </main>
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-8">
+            <div className="text-center py-12">
+              <h2 className="text-2xl font-bold mb-4">
+                Please sign in to edit your resume
+              </h2>
+              <Button onClick={() => (window.location.href = "/auth/signin")}>
+                Sign In
+              </Button>
+            </div>
+          </main>
+        </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
-      
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Editor Column */}
-          <div className="flex-1">
-            <div className="mb-6 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
-                    <ChevronLeft className="h-6 w-6" />
-                </Link>
-                <h1 className="text-2xl font-bold">{t('nav.create_resume')}</h1>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={saveResume} disabled={isSaving}>
-                  {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-                  {t('form.save')}
-                </Button>
-                <Button onClick={downloadPDF}>
-                  <Download className="h-4 w-4 mr-2" />
-                  {t('form.download_pdf')}
-                </Button>
-              </div>
-            </div>
-
-            {/* Steps */}
-            <div className="mb-8 flex justify-between items-center border-b pb-4">
-              {[
-                t('form.personal_info'),
-                t('form.work_experience'),
-                t('form.education'),
-                t('form.skills'),
-                t('dashboard.template')
-              ].map((label, index) => (
-                <button
-                  key={index}
-                  onClick={() => setStep(index + 1)}
-                  className={`text-sm font-medium transition-colors ${
-                    step === index + 1
-                      ? 'text-primary border-b-2 border-primary -mb-[17px] pb-4'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            <div className="bg-card rounded-lg border shadow-sm p-6">
-              {step === 1 && (
-                <PersonalInfoForm
-                  data={resumeData.personalInfo as PersonalInfo}
-                  onChange={updatePersonalInfo}
-                  onNext={() => setStep(2)}
-                />
-              )}
-              {step === 2 && (
-                <WorkExperienceForm
-                  data={resumeData.workExperience as WorkExperience[]}
-                  onChange={updateWorkExperience}
-                  onBack={() => setStep(1)}
-                  onNext={() => setStep(3)}
-                />
-              )}
-              {step === 3 && (
-                <EducationForm
-                  data={resumeData.education as Education[]}
-                  onChange={updateEducation}
-                  onBack={() => setStep(2)}
-                  onNext={() => setStep(4)}
-                />
-              )}
-              {step === 4 && (
-                <SkillsForm
-                  data={resumeData.skills as Skill[]}
-                  onChange={updateSkills}
-                  onBack={() => setStep(3)}
-                  onNext={() => setStep(5)}
-                />
-              )}
-              {step === 5 && (
-                <>
-                  <TemplateSelector
-                    selectedTemplate={resumeData.template || 'modern'}
-                    onChange={updateTemplate}
-                  />
-                  <div className="mt-6 flex justify-between">
-                    <Button variant="outline" onClick={() => setStep(4)}>
-                      {t('form.back')}
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-y-auto p-8">
+          <div className="space-y-6 text-foreground">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Editor Column */}
+              <div className="flex-1">
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Link
+                      href="/dashboard"
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <ChevronLeft className="h-6 w-6" />
+                    </Link>
+                    <h1 className="text-2xl font-bold">
+                      {t("nav.create_resume")}
+                    </h1>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={saveResume}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Save className="h-4 w-4 mr-2" />
+                      )}
+                      {t("form.save")}
+                    </Button>
+                    <Button onClick={downloadPDF}>
+                      <Download className="h-4 w-4 mr-2" />
+                      {t("form.download_pdf")}
                     </Button>
                   </div>
-                </>
-              )}
-            </div>
-            
-            <div className="mt-8">
-              <AIAnalysisPanel resume={resumeData as Resume} />
-            </div>
-          </div>
+                </div>
 
-          {/* Preview Column */}
-          <div className="hidden lg:block w-[400px] xl:w-[500px]">
-            <div className="sticky top-24">
-              <h2 className="text-lg font-semibold mb-4">Preview</h2>
-              <div className="border rounded-lg shadow-sm overflow-hidden bg-white">
-                <ResumePreview data={resumeData as Resume} />
+                {/* Steps */}
+                <div className="mb-8 flex justify-between items-center border-b pb-4">
+                  {[
+                    t("form.personal_info"),
+                    t("form.work_experience"),
+                    t("form.education"),
+                    t("form.skills"),
+                    t("dashboard.template"),
+                  ].map((label, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setStep(index + 1)}
+                      className={`text-sm font-medium transition-colors ${
+                        step === index + 1
+                          ? "text-primary border-b-2 border-primary -mb-[17px] pb-4"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="bg-card rounded-lg border shadow-sm p-6">
+                  {step === 1 && (
+                    <PersonalInfoForm
+                      data={resumeData.personalInfo as PersonalInfo}
+                      onChange={updatePersonalInfo}
+                      onNext={() => setStep(2)}
+                    />
+                  )}
+                  {step === 2 && (
+                    <WorkExperienceForm
+                      data={resumeData.workExperience as WorkExperience[]}
+                      onChange={updateWorkExperience}
+                      onBack={() => setStep(1)}
+                      onNext={() => setStep(3)}
+                    />
+                  )}
+                  {step === 3 && (
+                    <EducationForm
+                      data={resumeData.education as Education[]}
+                      onChange={updateEducation}
+                      onBack={() => setStep(2)}
+                      onNext={() => setStep(4)}
+                    />
+                  )}
+                  {step === 4 && (
+                    <SkillsForm
+                      data={resumeData.skills as Skill[]}
+                      onChange={updateSkills}
+                      onBack={() => setStep(3)}
+                      onNext={() => setStep(5)}
+                    />
+                  )}
+                  {step === 5 && (
+                    <>
+                      <TemplateSelector
+                        selectedTemplate={resumeData.template || "modern"}
+                        onChange={updateTemplate}
+                      />
+                      <div className="mt-6 flex justify-between">
+                        <Button variant="outline" onClick={() => setStep(4)}>
+                          {t("form.back")}
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="mt-8">
+                  <AIAnalysisPanel resume={resumeData as Resume} />
+                </div>
+              </div>
+
+              {/* Preview Column */}
+              <div className="hidden lg:block w-[400px] xl:w-[500px]">
+                <div className="sticky top-24">
+                  <h2 className="text-lg font-semibold mb-4">Preview</h2>
+                  <div className="border rounded-lg shadow-sm overflow-hidden bg-white">
+                    <ResumePreview data={resumeData as Resume} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
-  )
+  );
 }

@@ -14,7 +14,7 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-full flex flex-col">
-      <div className="px-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+      <div className="px-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
         <Link href="/" className="h-16 flex items-center justify-center">
           <Logo />
         </Link>

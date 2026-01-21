@@ -7,7 +7,6 @@ import { LanguageSelector } from "@/components/ui/language-selector";
 import { UserMenu } from "@/components/ui/user-menu";
 import { useTranslation } from "@/lib/translations";
 import Logo from "../ui/icons/logo";
-
 import { usePathname } from "next/navigation";
 import { MD5 } from "crypto-js";
 
@@ -15,7 +14,8 @@ export function Header() {
   const { data: session, isPending } = useSession();
   const { t } = useTranslation();
   const pathname = usePathname();
-  const isDashboard = pathname?.startsWith("/dashboard");
+  const isAppRoute =
+    pathname?.startsWith("/dashboard") || pathname?.startsWith("/resume");
 
   const emailHash = session?.user?.email
     ? MD5(session.user.email.toLowerCase().trim()).toString()
@@ -27,7 +27,7 @@ export function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            {!isDashboard && (
+            {!isAppRoute && (
               <Link
                 href="/"
                 className="text-xl font-bold text-gray-900 dark:text-white"

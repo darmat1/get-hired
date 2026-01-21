@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useSession } from "@/lib/auth-client";
-import { User, Lock, AlertCircle, CheckCircle, Loader } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSession, linkSocial, unlinkAccount } from "@/lib/auth-client";
+import { User, AlertCircle, CheckCircle, Loader, Linkedin } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 
 export function ProfileForm() {
@@ -66,8 +66,7 @@ export function ProfileForm() {
     } catch (error) {
       setMessage({
         type: "error",
-        text:
-          error instanceof Error ? error.message : "Error updating name",
+        text: error instanceof Error ? error.message : "Error updating name",
       });
     } finally {
       setLoading(false);
@@ -124,7 +123,10 @@ export function ProfileForm() {
         throw new Error(data.error || "Ошибка при изменении пароля");
       }
 
-      setMessage({ type: "success", text: t("profile.success.password_changed") });
+      setMessage({
+        type: "success",
+        text: t("profile.success.password_changed"),
+      });
       setFormData((prev) => ({
         ...prev,
         currentPassword: "",
@@ -135,7 +137,64 @@ export function ProfileForm() {
       setMessage({
         type: "error",
         text:
-          error instanceof Error ? error.message : "Ошибка при изменении пароля",
+          error instanceof Error
+            ? error.message
+            : "Ошибка при изменении пароля",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const [hasLinkedIn, setHasLinkedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    checkLinkedInStatus();
+  }, []);
+
+  const checkLinkedInStatus = async () => {
+    try {
+      const response = await fetch("/api/resumes/linkedin-status");
+      const data = await response.json();
+      setHasLinkedIn(data.hasLinkedIn);
+    } catch (error) {
+      console.error("Error checking LinkedIn status:", error);
+    }
+  };
+
+  const handleLinkLinkedIn = async () => {
+    try {
+      setLoading(true);
+      await linkSocial({
+        provider: "linkedin",
+        callbackURL: window.location.href,
+      });
+    } catch (error) {
+      console.error("LinkedIn link error:", error);
+      setMessage({ type: "error", text: t("message.error") });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUnlinkLinkedIn = async () => {
+    try {
+      setLoading(true);
+      const result = await unlinkAccount({
+        providerId: "linkedin",
+      });
+
+      if (result.error) {
+        throw new Error(result.error.message || "Error unlinking account");
+      }
+
+      setMessage({ type: "success", text: t("profile.success.name_updated") }); // Generic success for now or add specific
+      await checkLinkedInStatus();
+    } catch (error) {
+      console.error("LinkedIn unlink error:", error);
+      setMessage({
+        type: "error",
+        text: error instanceof Error ? error.message : t("message.error"),
       });
     } finally {
       setLoading(false);
@@ -144,6 +203,47 @@ export function ProfileForm() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          {t("profile.social_connections")}
+        </h3>
+        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+          <div className="flex items-center gap-3">
+            <div
+              className={`p-2 rounded-full ${hasLinkedIn ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600" : "bg-gray-100 dark:bg-gray-700 text-gray-400"}`}
+            >
+              <Linkedin className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                LinkedIn
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {hasLinkedIn
+                  ? t("profile.linkedin_connected")
+                  : t("profile.linkedin_not_connected")}
+              </p>
+            </div>
+          </div>
+          {hasLinkedIn ? (
+            <button
+              onClick={handleUnlinkLinkedIn}
+              disabled={loading}
+              className="text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+            >
+              {t("profile.unlink_linkedin")}
+            </button>
+          ) : (
+            <button
+              onClick={handleLinkLinkedIn}
+              disabled={loading}
+              className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+            >
+              {t("profile.link_linkedin")}
+            </button>
+          )}
+        </div>
+      </div>
       {message && (
         <div
           className={`flex items-center gap-3 p-4 rounded-lg border ${
