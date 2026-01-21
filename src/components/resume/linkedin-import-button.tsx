@@ -32,7 +32,6 @@ export function LinkedInImportButton({
 
   const extractTextFromPDF = async (file: File): Promise<string> => {
     try {
-      // Dynamic import to avoid SSR issues
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -83,7 +82,6 @@ export function LinkedInImportButton({
         text: t("resume.message.pdf_extracted"),
       });
 
-      // Auto-trigger calculation after extraction
       handleImport(text);
     } catch (error) {
       setMessage({

@@ -117,9 +117,7 @@ export default function NewResumePage() {
                 {t("resume_builder.title")}
               </h1>
 
-              <div className="flex gap-4">
-                {/* LinkedIn import disabled - using Better Auth instead */}
-              </div>
+              <div className="flex gap-4">{/* LinkedIn import disabled */}</div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

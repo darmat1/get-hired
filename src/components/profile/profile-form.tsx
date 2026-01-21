@@ -188,7 +188,7 @@ export function ProfileForm() {
         throw new Error(result.error.message || "Error unlinking account");
       }
 
-      setMessage({ type: "success", text: t("profile.success.name_updated") }); // Generic success for now or add specific
+      setMessage({ type: "success", text: t("profile.success.name_updated") });
       await checkLinkedInStatus();
     } catch (error) {
       console.error("LinkedIn unlink error:", error);
