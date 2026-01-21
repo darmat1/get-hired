@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from '@/lib/auth-client'
 import { Header } from '@/components/layout/header'
+import { LinkedInImportButton } from '@/components/resume/linkedin-import-button'
 import { Button } from '@/components/ui/button'
 import { FileText, Edit, Download, Trash2 } from 'lucide-react'
 import { useTranslation } from '@/lib/translations'
@@ -112,10 +113,13 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <Button onClick={() => window.location.href = '/resume/new'}>
-            <FileText className="h-4 w-4 mr-2" />
-            {t('nav.create_resume')}
-          </Button>
+          <div className="flex gap-3">
+            <LinkedInImportButton onImportSuccess={fetchResumes} />
+            <Button onClick={() => window.location.href = '/resume/new'}>
+              <FileText className="h-4 w-4 mr-2" />
+              {t('nav.create_resume')}
+            </Button>
+          </div>
         </div>
 
         {resumes.length === 0 ? (

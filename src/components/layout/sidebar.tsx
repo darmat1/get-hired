@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslation } from "@/lib/translations";
-import { FileText, PlusCircle } from "lucide-react";
+import { FileText, PlusCircle, FileCheck } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Logo from "../ui/icons/logo";
 
@@ -45,6 +45,19 @@ export function Sidebar() {
             >
               <FileText className="mr-3 h-5 w-5 flex-shrink-0" />
               {t("nav.dashboard")}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/dashboard/cover-letter"
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
+                isActive("/dashboard/cover-letter")
+                  ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-400"
+                  : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              <FileCheck className="mr-3 h-5 w-5 flex-shrink-0" />
+              {t("nav.cover_letter")}
             </Link>
           </li>
         </ul>

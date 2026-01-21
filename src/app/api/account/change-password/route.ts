@@ -33,7 +33,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get user account with password
     const account = await prisma.account.findFirst({
       where: { userId: session.user.id },
     });

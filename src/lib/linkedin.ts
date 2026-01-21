@@ -48,6 +48,8 @@ export async function fetchLinkedInProfile(accessToken: string) {
       headline: profile.headline,
       summary: profile.summary || '',
       location: profile.localizedName || '',
+      phone: '',
+      website: '',
       experience: experienceData.elements || [],
       education: educationData.elements || [],
       skills: skillsData.elements || []
