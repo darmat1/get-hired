@@ -15,6 +15,32 @@ interface SmartImportButtonProps {
   onImportSuccess: () => void;
 }
 
+export const extractTextFromPDF = async (
+  file: File,
+  t: (key: string) => string,
+): Promise<string> => {
+  try {
+    const pdfjs = await import("pdfjs-dist");
+    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+    let fullText = "";
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items.map((item: any) => item.str).join(" ");
+      fullText += pageText + "\n";
+    }
+
+    return fullText;
+  } catch (error) {
+    console.error("Error extracting PDF text:", error);
+    throw new Error(t("resume.error.pdf_read_failed"));
+  }
+};
+
 export function LinkedInImportButton({
   onImportSuccess,
 }: SmartImportButtonProps) {
@@ -29,31 +55,6 @@ export function LinkedInImportButton({
   } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const extractTextFromPDF = async (file: File): Promise<string> => {
-    try {
-      const pdfjs = await import("pdfjs-dist");
-      pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
-      let fullText = "";
-
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items
-          .map((item: any) => item.str)
-          .join(" ");
-        fullText += pageText + "\n";
-      }
-
-      return fullText;
-    } catch (error) {
-      console.error("Error extracting PDF text:", error);
-      throw new Error(t("resume.error.pdf_read_failed"));
-    }
-  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -75,7 +76,7 @@ export function LinkedInImportButton({
     });
 
     try {
-      const text = await extractTextFromPDF(file);
+      const text = await extractTextFromPDF(file, t);
       setProfileText(text);
       setMessage({
         type: "success",

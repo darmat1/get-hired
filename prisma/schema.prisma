@@ -25,6 +25,7 @@ model User {
   resumes  Resume[]
   sessions Session[]
   accounts Account[]
+  profile  UserProfile?
 
   @@map("user")
 }
@@ -92,4 +93,38 @@ model Resume {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model UserProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  personalInfo   Json // firstName, lastName, email, phone, etc.
+  workExperience Json // Array of all work experience entries
+  education      Json // Array of all education entries  
+  skills         Json // Array of all skills
+  certificates   Json? // Array of all certificates
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  resumeVariants ResumeVariant[]
+
+  @@map("user_profile")
+}
+
+model ResumeVariant {
+  id             String      @id @default(cuid())
+  profileId      String
+  profile        UserProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  title          String // e.g., "Senior Frontend Developer"
+  targetRole     String // e.g., "senior_frontend"
+  seniority      String // junior, middle, senior
+  matchScore     Int // 0-100 confidence score
+  reasoning      String // AI explanation of why this role fits
+  selectedSkills Json // Subset of skills relevant to this role
+  selectedExp    Json // Indices or IDs of work experience to include
+  createdAt      DateTime    @default(now())
+
+  @@index([profileId])
+  @@map("resume_variant")
 }

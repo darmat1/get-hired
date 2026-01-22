@@ -32,7 +32,98 @@ export const translations: Translations = {
   "nav.sign_in": { en: "Sign In", uk: "Увійти", ru: "Войти" },
   "nav.sign_out": { en: "Sign out", uk: "Вийти", ru: "Выйти" },
   "nav.my_resumes": { en: "My Resumes", uk: "Мої резюме", ru: "Мои резюме" },
+  "nav.my_experience": {
+    en: "My Experience",
+    uk: "Мій досвід",
+    ru: "Мой опыт",
+  },
   "nav.home": { en: "Home", uk: "Додому", ru: "Главная" },
+  "profile.unified_desc": {
+    en: "Your unified experience profile for creating perfect resumes",
+    uk: "Ваш єдиний профіль досвіду для створення ідеальних резюме",
+    ru: "Ваш единый профиль опыта для создания идеальных резюме",
+  },
+  "profile.suggest_btn": {
+    en: "Suggest Resumes",
+    uk: "Запропонувати резюме",
+    ru: "Предложить резюме",
+  },
+  "profile.import_data": {
+    en: "Import Data",
+    uk: "Імпорт даних",
+    ru: "Импорт данных",
+  },
+  "profile.upload_pdf_desc": {
+    en: "Click to upload your resume in PDF",
+    uk: "Натисніть для завантаження резюме в PDF",
+    ru: "Нажмите для загрузки резюме в PDF",
+  },
+  "profile.paste_text_placeholder": {
+    en: "Paste your profile or resume text here...",
+    uk: "Вставте текст вашого профілю або резюме тут...",
+    ru: "Вставьте текст вашего профиля или резюме здесь...",
+  },
+  "profile.ai_parse_btn": {
+    en: "Recognize via AI",
+    uk: "Розпізнати через ШІ",
+    ru: "Распознать через ИИ",
+  },
+  "profile.loading_profile": {
+    en: "Loading profile...",
+    uk: "Завантаження профілю...",
+    ru: "Загрузка профиля...",
+  },
+  "profile.load_error": {
+    en: "Failed to load profile data. Please try again later.",
+    uk: "Не вдалося завантажити дані профілю. Будь ласка, спробуйте пізніше.",
+    ru: "Не удалось загрузить данные профиля. Пожалуйста, попробуйте позже.",
+  },
+  "profile.tab_personal": {
+    en: "Personal Info",
+    uk: "Особисті дані",
+    ru: "Личные данные",
+  },
+  "profile.tab_experience": {
+    en: "Experience",
+    uk: "Досвід роботи",
+    ru: "Опыт работы",
+  },
+  "profile.tab_education": {
+    en: "Education",
+    uk: "Освіта",
+    ru: "Образование",
+  },
+  "profile.tab_skills": { en: "Skills", uk: "Навички", ru: "Навыки" },
+  "profile.save_success": {
+    en: "Profile saved successfully!",
+    uk: "Профіль успішно збережено!",
+    ru: "Профиль успешно сохранен!",
+  },
+  "profile.save_error": {
+    en: "Error saving profile",
+    uk: "Помилка при збереженні профілю",
+    ru: "Ошибка при сохранении профиля",
+  },
+  "profile.import_success": {
+    en: "Profile successfully updated!",
+    uk: "Профіль успішно оновлено!",
+    ru: "Профиль успешно обновлен!",
+  },
+  "profile.import_error": {
+    en: "Import error",
+    uk: "Помилка імпорту",
+    ru: "Ошибка импорта",
+  },
+  "profile.pdf_processing": {
+    en: "Processing PDF...",
+    uk: "Обробка PDF...",
+    ru: "Обработка PDF...",
+  },
+  "profile.pdf_success": {
+    en: "Text extracted successfully!",
+    uk: "Текст успішно вилучено!",
+    ru: "Текст извлечен успешно!",
+  },
 
   "home.title": {
     en: "Create a Professional Resume",
@@ -1289,6 +1380,11 @@ export const translations: Translations = {
     en: "We may update this Cookie Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We will notify you of any material changes by updating the date of this policy.",
     uk: "Ми можемо оновлювати цю Політику щодо печива час від часу, щоб відобразити зміни в наших практиках або з інших операційних, юридичних чи нормативних причин. Ми повідомимо вас про будь-які матеріальні зміни, оновивши дату цієї політики.",
     ru: "Мы можем обновлять данную Политику в отношении печенья время от времени, чтобы отразить изменения в нашей практике или по другим операционным, юридическим или нормативным причинам. Мы уведомим вас о любых существенных изменениях, обновив дату этой политики.",
+  },
+  "work.add_description_point": {
+    en: "Add description point",
+    uk: "Додати пункт опису",
+    ru: "Добавить пункт описания",
   },
 };
 

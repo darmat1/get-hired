@@ -39,22 +39,26 @@ export async function POST(request: Request) {
 
     const normalizedText = cleanText(text);
 
-    const systemPrompt = `You are a Resume Parsing Engine.
-INPUT: Raw text from a PDF.
-WARNING: The text is SCRAMBLED because the PDF had 2 COLUMNS.
-The text lines from the Left column (Contact/Skills) are interleaved with the Right column (Experience).
+    const systemPrompt = `You are a Resume Parsing & Merging Engine.
+INPUT: 
+1. Raw text from a PDF or pasted text (New Data).
+2. JSON of the user's EXISTING profile (Context Data).
 
 YOUR GOAL:
-1. Untangle the text logically.
-2. Extract data into the JSON schema below.
-3. STRICTLY FOLLOW JSON SYNTAX.
+1. Extract data from the New Data.
+2. INTELLIGENTLY MERGE it into the Context Data.
+3. If a work experience entry in New Data refers to the same company and role as an entry in Context Data, MERGE them:
+   - Combine description bullet points (remove duplicates).
+   - Use the most complete dates.
+   - Normalize company names (e.g., "Boarding" and "b0arding.com" should be merged).
+4. deduplicate skills and education entries similarly.
+5. Return the FINAL, consolidated profile in the schema below.
 
-RULES:
+STRICT RULES:
 - Return ONLY valid JSON.
-- Do NOT include markdown formatting like \`\`\`json.
-- Do NOT write Python code or explanations. Just the data object.
-- If a location is not explicitly stated next to a University, return "" (empty string).
+- Do NOT include markdown formatting.
 - Do NOT invent data.
+- If New Data is more detailed than Context Data for the same entry, prefer New Data.
 
 JSON Schema:
 {
@@ -98,16 +102,29 @@ JSON Schema:
       }
     };
 
+    // Find existing profile
+    const existingProfile = await prisma.userProfile.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    const userPrompt = `EXISTING PROFILE (JSON):
+${JSON.stringify(existingProfile || {}, null, 2)}
+
+NEW DATA TO PARSE:
+${normalizedText}`;
+
     let aiContent = "";
 
     if (process.env.OPENROUTER_API_KEY) {
-      console.log(`Attempting OpenRouter ${process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL}`);
+      console.log(
+        `Attempting OpenRouter ${process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL}`,
+      );
 
       const payload = {
         model: process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL,
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: normalizedText },
+          { role: "user", content: userPrompt },
         ],
         temperature: 0, // Deterministic output
       };
@@ -156,7 +173,7 @@ JSON Schema:
               model: "llama-3.3-70b-versatile",
               messages: [
                 { role: "system", content: systemPrompt },
-                { role: "user", content: normalizedText },
+                { role: "user", content: userPrompt },
               ],
               temperature: 0,
               response_format: { type: "json_object" },
@@ -180,51 +197,72 @@ JSON Schema:
     const parsedData = parseAIJSON(aiContent);
     const safeStr = (val: any) => (typeof val === "string" ? val : "");
 
-    const resume = await prisma.resume.create({
-      data: {
-        userId: session.user.id,
-        title: `Imported Profile - ${new Date().toLocaleDateString()}`,
-        template: "modern",
-        personalInfo: {
-          firstName: safeStr(parsedData.personalInfo?.firstName),
-          lastName: safeStr(parsedData.personalInfo?.lastName),
-          email: safeStr(parsedData.personalInfo?.email),
-          phone: safeStr(parsedData.personalInfo?.phone),
-          location: safeStr(parsedData.personalInfo?.location),
-          summary: safeStr(parsedData.personalInfo?.summary),
-        },
-        workExperience: (parsedData.workExperience || []).map((exp: any) => ({
-          id: crypto.randomUUID(),
-          title: exp.title || "Position",
-          company: exp.company || "Company",
-          location: exp.location || "",
-          startDate: exp.startDate || "",
-          endDate: exp.endDate || "",
-          current: !!exp.current,
-          description: Array.isArray(exp.description)
-            ? exp.description
-            : [safeStr(exp.description)],
-        })),
-        education: (parsedData.education || []).map((edu: any) => ({
-          id: crypto.randomUUID(),
-          institution: edu.institution || "Institution",
-          degree: edu.degree || "",
-          field: edu.field || "",
-          startDate: edu.startDate || "",
-          endDate: edu.endDate || "",
-          current: !!edu.current,
-        })),
-        skills: (parsedData.skills || []).map((skill: any) => ({
-          id: crypto.randomUUID(),
-          name: typeof skill === "string" ? skill : skill.name,
-          category: skill.category || "technical",
-          level: skill.level || "advanced",
-        })),
-        certificates: [],
-      },
-    });
+    // Prepare combined data (trusting AI to have merged, but ensuring structure/IDs)
+    const finalPersonalInfo = {
+      firstName: safeStr(parsedData.personalInfo?.firstName),
+      lastName: safeStr(parsedData.personalInfo?.lastName),
+      email: safeStr(parsedData.personalInfo?.email),
+      phone: safeStr(parsedData.personalInfo?.phone),
+      location: safeStr(parsedData.personalInfo?.location),
+      summary: safeStr(parsedData.personalInfo?.summary),
+    };
 
-    return NextResponse.json({ success: true, resume });
+    const finalWorkExperience = (parsedData.workExperience || []).map(
+      (exp: any) => ({
+        id: exp.id || crypto.randomUUID(),
+        title: exp.title || "Position",
+        company: exp.company || "Company",
+        location: exp.location || "",
+        startDate: exp.startDate || "",
+        endDate: exp.endDate || "",
+        current: !!exp.current,
+        description: Array.isArray(exp.description)
+          ? exp.description
+          : [safeStr(exp.description)],
+      }),
+    );
+
+    const finalEducation = (parsedData.education || []).map((edu: any) => ({
+      id: edu.id || crypto.randomUUID(),
+      institution: edu.institution || "Institution",
+      degree: edu.degree || "",
+      field: edu.field || "",
+      startDate: edu.startDate || "",
+      endDate: edu.endDate || "",
+      current: !!edu.current,
+    }));
+
+    const finalSkills = (parsedData.skills || []).map((skill: any) => ({
+      id: skill.id || crypto.randomUUID(),
+      name: typeof skill === "string" ? skill : skill.name,
+      category: skill.category || "technical",
+      level: skill.level || "advanced",
+    }));
+
+    if (existingProfile) {
+      await prisma.userProfile.update({
+        where: { userId: session.user.id },
+        data: {
+          personalInfo: finalPersonalInfo,
+          workExperience: finalWorkExperience,
+          education: finalEducation,
+          skills: finalSkills,
+        },
+      });
+    } else {
+      await prisma.userProfile.create({
+        data: {
+          userId: session.user.id,
+          personalInfo: finalPersonalInfo,
+          workExperience: finalWorkExperience,
+          education: finalEducation,
+          skills: finalSkills,
+          certificates: [],
+        },
+      });
+    }
+
+    return NextResponse.json({ success: true, message: "Profile updated" });
   } catch (error: any) {
     console.error("CRITICAL ERROR:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
