@@ -104,10 +104,10 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
             >
               <div className="flex-1">
                 <h3 className="font-medium">
-                  {exp.title || "Новая должность"}
+                  {exp.title || t("work.new_position")}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {exp.company || "Компания"}
+                  {exp.company || t("work.company")}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -135,7 +135,7 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-muted-foreground mb-1">
-                      {t("work.title")}
+                      {t("work.position")}
                     </label>
                     <input
                       type="text"
@@ -174,7 +174,7 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-muted-foreground mb-1">
-                      Период
+                      {t("work.period")}
                     </label>
                     <div className="flex items-center gap-2">
                       <input

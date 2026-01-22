@@ -69,7 +69,7 @@ export function EducationEditor({ data, onChange }: EducationEditorProps) {
             >
               <div className="flex-1">
                 <h3 className="font-medium">
-                  {edu.institution || "Учебное заведение"}
+                  {edu.institution || t("education.institution")}
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   {edu.degree} {edu.field ? `— ${edu.field}` : ""}
@@ -186,7 +186,7 @@ export function EducationEditor({ data, onChange }: EducationEditorProps) {
                         className="accent-primary"
                       />
                       <span className="text-sm text-muted-foreground">
-                        Учусь сейчас
+                        {t("education.currently_studying")}
                       </span>
                     </label>
                   </div>

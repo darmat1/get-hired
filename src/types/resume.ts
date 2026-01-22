@@ -54,6 +54,7 @@ export interface Resume {
   skills: Skill[];
   certificates: Certificate[];
   template: string;
+  language: string;
   createdAt: string;
   updatedAt: string;
 }

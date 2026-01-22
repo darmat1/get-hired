@@ -1,10 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, BadgeCheck, Target, FileText } from "lucide-react";
+import {
+  Loader2,
+  BadgeCheck,
+  Target,
+  FileText,
+  AlertCircle,
+} from "lucide-react";
 import { Modal } from "@/components/ui/modal";
+import { useTranslation } from "@/lib/translations";
 
 interface ResumeVariant {
   id: string;
@@ -22,13 +29,33 @@ interface ResumeSuggestionsProps {
 }
 
 export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
+  const { t } = useTranslation();
   const [variants, setVariants] = useState<ResumeVariant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState<string | null>(null);
+  const [resumesCount, setResumesCount] = useState(0);
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
+    if (hasLoadedRef.current) {
+      return;
+    }
+    hasLoadedRef.current = true;
     generateSuggestions();
+    fetchResumesCount();
   }, []);
+
+  const fetchResumesCount = async () => {
+    try {
+      const response = await fetch("/api/resumes");
+      if (response.ok) {
+        const data = await response.json();
+        setResumesCount(data.length);
+      }
+    } catch (error) {
+      console.error("Failed to fetch resumes count:", error);
+    }
+  };
 
   const generateSuggestions = async () => {
     setIsLoading(true);
@@ -86,22 +113,41 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
     }
   };
 
+  const isLimitReached = resumesCount >= 4;
+
   return (
-    <Modal isOpen={true} onClose={onClose} title="ИИ Предложения для Резюме">
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title={t("profile.resume_suggestions_title")}
+      maxWidth="4xl"
+    >
       <div className="space-y-6">
+        {isLimitReached && (
+          <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg text-sm flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-amber-900">
+                {t("profile.suggest_limit_title")}
+              </p>
+              <p className="text-amber-800/80">
+                {t("profile.suggest_limit_desc")}
+              </p>
+            </div>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-4">
             <Loader2 className="h-12 w-12 text-primary animate-spin" />
             <p className="text-muted-foreground animate-pulse">
-              Анализируем ваш опыт...
+              {t("profile.loading_suggestions")}
             </p>
           </div>
         ) : variants.length === 0 ? (
           <div className="text-center py-12">
             <Target className="h-12 w-12 text-muted/30 mx-auto mb-4" />
-            <p>
-              Не удалось сгенерировать варианты. Попробуйте обновить профиль.
-            </p>
+            <p>{t("profile.no_suggestions")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -134,12 +180,12 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
                     {variant.reasoning}
                   </p>
 
-                  <div className="space-y-3 mb-6">
+                  <div className="space-y-3 mb-4">
                     <div className="flex flex-wrap gap-1">
-                      {variant.selectedSkills.slice(0, 8).map((skill) => (
+                      {variant.selectedSkills.slice(0, 10).map((skill) => (
                         <span
                           key={skill}
-                          className="text-[11px] bg-background border border-border px-1.5 py-0.5 rounded"
+                          className="text-[10px] bg-background border border-border px-1.5 py-0.5 rounded text-muted-foreground"
                         >
                           {skill}
                         </span>
@@ -149,16 +195,17 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
                 </div>
 
                 <Button
-                  className="w-full"
+                  className="w-full mt-auto"
                   onClick={() => createResumeFromVariant(variant)}
-                  disabled={!!isCreating}
+                  disabled={!!isCreating || isLimitReached}
+                  variant={isLimitReached ? "outline" : "default"}
                 >
                   {isCreating === variant.id ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   ) : (
                     <FileText className="h-4 w-4 mr-2" />
                   )}
-                  Создать резюме
+                  {t("profile.create_resume_btn")}
                 </Button>
               </Card>
             ))}

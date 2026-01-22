@@ -8,6 +8,8 @@ interface ModalProps {
   title: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  className?: string;
 }
 
 export function Modal({
@@ -16,6 +18,8 @@ export function Modal({
   title,
   children,
   footer,
+  maxWidth = "md",
+  className,
 }: ModalProps) {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -42,7 +46,25 @@ export function Modal({
       />
 
       {/* Modal */}
-      <div className="relative z-10 w-full max-w-md mx-4 bg-white dark:bg-gray-800 rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div
+        className={`relative z-10 w-full mx-4 bg-white dark:bg-gray-800 rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[90vh] ${
+          maxWidth === "sm"
+            ? "max-w-sm"
+            : maxWidth === "lg"
+              ? "max-w-lg"
+              : maxWidth === "xl"
+                ? "max-w-xl"
+                : maxWidth === "2xl"
+                  ? "max-w-2xl"
+                  : maxWidth === "3xl"
+                    ? "max-w-3xl"
+                    : maxWidth === "4xl"
+                      ? "max-w-4xl"
+                      : maxWidth === "5xl"
+                        ? "max-w-5xl"
+                        : "max-w-md"
+        } ${className || ""}`}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -69,7 +91,7 @@ export function Modal({
         </div>
 
         {/* Content */}
-        <div className="p-4">{children}</div>
+        <div className="p-4 overflow-y-auto">{children}</div>
 
         {/* Footer */}
         {footer && (

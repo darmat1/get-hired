@@ -24,6 +24,16 @@ export const translations: Translations = {
     uk: "Налаштування AI",
     ru: "AI настройки",
   },
+  "common.auth_required": {
+    en: "Authorization required",
+    uk: "Потрібна авторизація",
+    ru: "Требуется авторизация",
+  },
+  "profile.error.upload_pdf": {
+    en: "Please upload a PDF file",
+    uk: "Будь ласка, завантажте PDF-файл",
+    ru: "Пожалуйста, загрузите PDF-файл",
+  },
   "nav.create_resume": {
     en: "Create Resume",
     uk: "Створити резюме",
@@ -123,6 +133,141 @@ export const translations: Translations = {
     en: "Text extracted successfully!",
     uk: "Текст успішно вилучено!",
     ru: "Текст извлечен успешно!",
+  },
+  "profile.resume_suggestions_title": {
+    en: "AI Resume Suggestions",
+    uk: "AI Пропозиції для резюме",
+    ru: "ИИ Предложения для резюме",
+  },
+  "profile.loading_suggestions": {
+    en: "Analyzing your experience...",
+    uk: "Аналізуємо ваш досвід...",
+    ru: "Анализируем ваш опыт...",
+  },
+  "profile.suggest_limit_title": {
+    en: "Resume limit reached",
+    uk: "Ліміт резюме досягнуто",
+    ru: "Лимит резюме достигнут",
+  },
+  "profile.suggest_limit_desc": {
+    en: "You can save up to 4 resumes. Delete unnecessary ones to create a new one.",
+    uk: "Ви можете зберегти не більше 4 резюме. Видаліть непотрібні, щоб створити нове.",
+    ru: "Вы можете сохранить не более 4 резюме. Удалите ненужные, чтобы создать новое.",
+  },
+  "profile.no_suggestions": {
+    en: "Failed to generate suggestions. Try updating your profile.",
+    uk: "Не вдалося згенерувати варіанти. Спробуйте оновити профіль.",
+    ru: "Не удалось сгенерировать варианты. Попробуйте обновить профиль.",
+  },
+  "profile.create_resume_btn": {
+    en: "Create Resume",
+    uk: "Створити резюме",
+    ru: "Создать резюме",
+  },
+  "profile.social_connections": {
+    en: "Social Connections",
+    uk: "Соціальні мережі",
+    ru: "Социальные сети",
+  },
+  "profile.linkedin_connected": {
+    en: "Connected",
+    uk: "Підключено",
+    ru: "Подключено",
+  },
+  "profile.linkedin_not_connected": {
+    en: "Not connected",
+    uk: "Не підключено",
+    ru: "Не подключено",
+  },
+  "profile.unlink_linkedin": {
+    en: "Unlink",
+    uk: "Відключити",
+    ru: "Отключить",
+  },
+  "profile.link_linkedin": {
+    en: "Link LinkedIn",
+    uk: "Підключити LinkedIn",
+    ru: "Подключить LinkedIn",
+  },
+  "profile.current_name": {
+    en: "Current Name",
+    uk: "Поточне ім'я",
+    ru: "Текущее имя",
+  },
+  "profile.change_name": {
+    en: "Change Name",
+    uk: "Змінити ім'я",
+    ru: "Изменить имя",
+  },
+  "profile.new_name": {
+    en: "New Name",
+    uk: "Нове ім'я",
+    ru: "Новое имя",
+  },
+  "profile.update_name": {
+    en: "Update Name",
+    uk: "Оновити ім'я",
+    ru: "Обновить имя",
+  },
+  "profile.change_password": {
+    en: "Change Password",
+    uk: "Змінити пароль",
+    ru: "Изменить пароль",
+  },
+  "profile.current_password": {
+    en: "Current Password",
+    uk: "Поточний пароль",
+    ru: "Текущий пароль",
+  },
+  "profile.new_password": {
+    en: "New Password",
+    uk: "Новий пароль",
+    ru: "Новый пароль",
+  },
+  "profile.confirm_password": {
+    en: "Confirm Password",
+    uk: "Підтвердіть пароль",
+    ru: "Подтвердите пароль",
+  },
+  "profile.update_password": {
+    en: "Update Password",
+    uk: "Оновити пароль",
+    ru: "Обновить пароль",
+  },
+  "profile.error.enter_name": {
+    en: "Please enter a name",
+    uk: "Будь ласка, введіть ім'я",
+    ru: "Пожалуйста, введите имя",
+  },
+  "profile.success.name_updated": {
+    en: "Name updated successfully",
+    uk: "Ім'я успішно оновлено",
+    ru: "Имя успешно обновлено",
+  },
+  "profile.success.password_changed": {
+    en: "Password changed successfully",
+    uk: "Пароль успішно змінено",
+    ru: "Пароль успешно изменен",
+  },
+  "profile.error.fill_fields": {
+    en: "Please fill in all fields",
+    uk: "Будь ласка, заповніть всі поля",
+    ru: "Пожалуйста, заполните все поля",
+  },
+  "profile.error.passwords_mismatch": {
+    en: "Passwords do not match",
+    uk: "Паролі не співпадають",
+    ru: "Пароли не совпадают",
+  },
+  "profile.error.password_too_short": {
+    en: "Password must be at least 8 characters long",
+    uk: "Пароль має бути не менше 8 символів",
+    ru: "Пароль должен быть не менее 8 символов",
+  },
+  "profile.error.password_change_failed": {
+    en: "Failed to change password",
+    uk: "Не вдалося змінити пароль",
+    ru: "Ошибка при изменении пароля",
   },
 
   "home.title": {
@@ -291,6 +436,7 @@ export const translations: Translations = {
   },
   "common.cancel": { en: "Cancel", uk: "Скасувати", ru: "Отмена" },
   "common.delete": { en: "Delete", uk: "Видалити", ru: "Удалить" },
+  "common.save": { en: "Save", uk: "Зберегти", ru: "Сохранить" },
 
   "ai.title": {
     en: "AI Resume Analysis",
@@ -586,6 +732,16 @@ export const translations: Translations = {
     uk: "Опишіть ваші обов'язки та досягнення...",
     ru: "Опишите ваши обязанности и достижения...",
   },
+  "work.new_position": {
+    en: "New position",
+    uk: "Нова посада",
+    ru: "Новая должность",
+  },
+  "work.company_placeholder": {
+    en: "Company",
+    uk: "Компанія",
+    ru: "Компания",
+  },
 
   "skills.technical": {
     en: "Technical skills",
@@ -658,6 +814,11 @@ export const translations: Translations = {
     ru: "Computer Science",
   },
   "education.placeholder.gpa": { en: "3.8", uk: "3.8", ru: "3.8" },
+  "education.currently_studying": {
+    en: "Currently studying",
+    uk: "Навчаюсь зараз",
+    ru: "Учусь сейчас",
+  },
 
   "preview.title": {
     en: "Resume preview",
@@ -983,108 +1144,6 @@ export const translations: Translations = {
     en: "Cover letter generated successfully",
     uk: "Супровідний лист успішно згенерований",
     ru: "Сопроводительное письмо успешно сгенерировано",
-  },
-  "profile.title": { en: "Profile", uk: "Профіль", ru: "Профиль" },
-  "profile.subtitle": {
-    en: "Manage your account settings",
-    uk: "Керуйте параметрами вашого облікового запису",
-    ru: "Управляйте параметрами вашего аккаунта",
-  },
-  "profile.current_name": {
-    en: "Current name",
-    uk: "Поточне ім'я",
-    ru: "Текущее имя",
-  },
-  "profile.change_name": {
-    en: "Change name",
-    uk: "Змінити ім'я",
-    ru: "Изменить имя",
-  },
-  "profile.new_name": { en: "New name", uk: "Нове ім'я", ru: "Новое имя" },
-  "profile.update_name": {
-    en: "Update name",
-    uk: "Оновити ім'я",
-    ru: "Обновить имя",
-  },
-  "profile.change_password": {
-    en: "Change password",
-    uk: "Змінити пароль",
-    ru: "Изменить пароль",
-  },
-  "profile.current_password": {
-    en: "Current password",
-    uk: "Поточний пароль",
-    ru: "Текущий пароль",
-  },
-  "profile.new_password": {
-    en: "New password",
-    uk: "Новий пароль",
-    ru: "Новый пароль",
-  },
-  "profile.confirm_password": {
-    en: "Confirm password",
-    uk: "Підтвердіть пароль",
-    ru: "Подтвердите пароль",
-  },
-  "profile.update_password": {
-    en: "Change password",
-    uk: "Змінити пароль",
-    ru: "Изменить пароль",
-  },
-  "profile.error.enter_name": {
-    en: "Please enter a new name",
-    uk: "Будь ласка, введіть нове ім'я",
-    ru: "Пожалуйста, введите новое имя",
-  },
-  "profile.error.fill_fields": {
-    en: "Please fill in all fields",
-    uk: "Будь ласка, заповніть усі поля",
-    ru: "Пожалуйста, заполните все поля",
-  },
-  "profile.error.passwords_mismatch": {
-    en: "Passwords do not match",
-    uk: "Паролі не збігаються",
-    ru: "Пароли не совпадают",
-  },
-  "profile.error.password_too_short": {
-    en: "Password must be at least 8 characters",
-    uk: "Пароль повинен містити щонайменше 8 символів",
-    ru: "Пароль должен быть не менее 8 символов",
-  },
-  "profile.success.name_updated": {
-    en: "Name updated successfully",
-    uk: "Ім'я успішно оновлено",
-    ru: "Имя успешно обновлено",
-  },
-  "profile.success.password_changed": {
-    en: "Password changed successfully",
-    uk: "Пароль успішно змінено",
-    ru: "Пароль успешно изменён",
-  },
-  "profile.social_connections": {
-    en: "Social Connections",
-    uk: "Соціальні мережі",
-    ru: "Социальные сети",
-  },
-  "profile.linkedin_connected": {
-    en: "LinkedIn Connected",
-    uk: "LinkedIn підключено",
-    ru: "LinkedIn подключен",
-  },
-  "profile.linkedin_not_connected": {
-    en: "LinkedIn not connected",
-    uk: "LinkedIn не підключено",
-    ru: "LinkedIn не подключен",
-  },
-  "profile.link_linkedin": {
-    en: "Link LinkedIn",
-    uk: "Прив'язати LinkedIn",
-    ru: "Привязать LinkedIn",
-  },
-  "profile.unlink_linkedin": {
-    en: "Unlink",
-    uk: "Від'єднати",
-    ru: "Отсоединить",
   },
 
   // LinkedIn Import

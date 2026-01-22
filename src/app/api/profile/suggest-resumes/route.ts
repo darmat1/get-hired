@@ -3,30 +3,60 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST() {
+  const requestStart = Date.now();
+  const logWithTime = (message: string, data?: unknown) => {
+    const elapsed = Date.now() - requestStart;
+    if (data !== undefined) {
+      console.log(`[suggest-resumes +${elapsed}ms] ${message}`, data);
+    } else {
+      console.log(`[suggest-resumes +${elapsed}ms] ${message}`);
+    }
+  };
+
   try {
+    logWithTime("Request started");
     const session = await auth.api.getSession({
       headers: await headers(),
     });
 
     if (!session) {
+      logWithTime("Unauthorized - no session");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    logWithTime("Session resolved", { userId: session.user.id });
 
     const profile = await prisma.userProfile.findUnique({
       where: { userId: session.user.id },
     });
 
     if (!profile) {
+      logWithTime("Profile not found");
       return NextResponse.json(
         { error: "User profile not found. Please add your experience first." },
         { status: 400 },
       );
     }
 
+    logWithTime("Profile loaded", { profileId: profile.id });
+
+    const existingResumes = await prisma.resume.findMany({
+      where: { userId: session.user.id },
+      select: { title: true },
+    });
+    const existingTitles = existingResumes.map((r) => r.title);
+    logWithTime("Existing resumes fetched", { count: existingTitles.length });
+
     const systemPrompt = `You are a Career Expert AI.
 Analyze the user's work experience, education, and skills.
-Suggest up to 4 different resume variants (career directions) the user can pursue based on their background.
+Suggest all different resume variants (career directions) the user can pursue based on their background.
+Suggest up to 8 variants if they fit.
+
+The following resume titles already exist for this user: ${existingTitles.length > 0 ? existingTitles.join(", ") : "None"}.
+CRITICAL RULE: Do NOT suggest a role with a title that exactly matches any of the existing titles.
+Suggest NEW roles that would be beneficial for the user's career growth.
+All content (title, reasoning, skills) MUST be in English language.
 
 For example, if someone has mix of Frontend and Backend, suggest:
 1. Senior Frontend Developer (focusing on UI/UX and React)
@@ -51,9 +81,10 @@ Each suggestion MUST follow this JSON schema:
 RULES:
 - Return ONLY valid JSON.
 - Do NOT include markdown formatting.
-- Maximum 4 variants.
+- Maximum 8 variants.
 - Be realistic based on years of experience and skill levels.
-- Provide selectedSkills and selectedExpIds that BEST fit each specific role.`;
+- Provide selectedSkills and selectedExpIds that BEST fit each specific role.
+- All content (title, reasoning, etc.) MUST be in English language.`;
 
     const profileData = {
       personalInfo: profile.personalInfo,
@@ -64,40 +95,71 @@ RULES:
 
     let aiContent = "";
 
-    // Try OpenRouter first
     if (process.env.OPENROUTER_API_KEY) {
-      try {
-        const response = await fetch(
-          "https://openrouter.ai/api/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL,
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: JSON.stringify(profileData) },
-              ],
-              temperature: 0.7,
-            }),
-          },
-        );
+      const modelEnv =
+        process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL ||
+        "google/gemini-2.0-flash-exp:free";
+      const models = modelEnv
+        .split(",")
+        .map((m) => m.trim())
+        .filter(Boolean);
 
-        if (response.ok) {
-          const data = await response.json();
-          aiContent = data.choices?.[0]?.message?.content || "";
+      logWithTime("OpenRouter enabled", { models });
+
+      for (const model of models) {
+        try {
+          const modelStart = Date.now();
+          const response = await fetch(
+            "https://openrouter.ai/api/v1/chat/completions",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: model,
+                messages: [
+                  { role: "system", content: systemPrompt },
+                  { role: "user", content: JSON.stringify(profileData) },
+                ],
+                temperature: 0.7,
+              }),
+            },
+          );
+
+          logWithTime("OpenRouter response received", {
+            model,
+            status: response.status,
+            durationMs: Date.now() - modelStart,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            aiContent = data.choices?.[0]?.message?.content || "";
+            logWithTime("OpenRouter content parsed", {
+              model,
+              contentLength: aiContent.length,
+            });
+            if (aiContent) break; // Success!
+          } else {
+            const errorText = await response.text();
+            console.warn(
+              `OpenRouter model ${model} failed (${response.status}):`,
+              errorText,
+            );
+          }
+        } catch (err) {
+          console.error(`OpenRouter fetch failed for model ${model}:`, err);
         }
-      } catch (err) {
-        console.error("OpenRouter fetch failed:", err);
       }
     }
 
-    // Fallback to Groq
+    // Fallback to Groq if OpenRouter failed or no key
     if (!aiContent && process.env.GROQ_API_KEY) {
       try {
+        const groqStart = Date.now();
+        logWithTime("Groq fallback enabled");
         const response = await fetch(
           "https://api.groq.com/openai/v1/chat/completions",
           {
@@ -118,9 +180,17 @@ RULES:
           },
         );
 
+        logWithTime("Groq response received", {
+          status: response.status,
+          durationMs: Date.now() - groqStart,
+        });
+
         if (response.ok) {
           const data = await response.json();
           aiContent = data.choices?.[0]?.message?.content || "";
+          logWithTime("Groq content parsed", {
+            contentLength: aiContent.length,
+          });
         }
       } catch (e) {
         console.error("Groq fallback failed:", e);
@@ -128,23 +198,49 @@ RULES:
     }
 
     if (!aiContent) {
+      logWithTime("AI content empty - giving up");
       return NextResponse.json(
-        { error: "Failed to generate suggestions" },
+        {
+          error:
+            "Failed to generate suggestions. Please check AI API configuration or try again later.",
+        },
         { status: 500 },
       );
     }
 
-    // Clean up AI response (extract JSON if it includes markdown)
+    logWithTime("AI content received", { contentLength: aiContent.length });
+
+    // Clean up AI response
     const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
     const cleanJSON = jsonMatch ? jsonMatch[0] : aiContent;
-    const parsed = JSON.parse(cleanJSON);
+    
+    let parsed;
+    try {
+      parsed = JSON.parse(cleanJSON);
+    } catch (parseError) {
+      console.error("JSON Parse Error:", parseError);
+      logWithTime("JSON parse failed", { error: String(parseError) });
+      return NextResponse.json(
+        { error: "Failed to parse AI response" },
+        { status: 500 },
+      );
+    }
+
+    logWithTime("JSON parsed", {
+      variantsCount: parsed?.variants?.length || 0,
+    });
 
     // Save suggestions to database for the user (optional, but requested in schema)
     // We can clear old variants and save new ones
+    const deleteStart = Date.now();
     await prisma.resumeVariant.deleteMany({
       where: { profileId: profile.id },
     });
+    logWithTime("Old variants deleted", {
+      durationMs: Date.now() - deleteStart,
+    });
 
+    const createStart = Date.now();
     const savedVariants = await Promise.all(
       (parsed.variants || []).map((v: any) =>
         prisma.resumeVariant.create({
@@ -161,10 +257,19 @@ RULES:
         }),
       ),
     );
+    logWithTime("Variants saved", {
+      count: savedVariants.length,
+      durationMs: Date.now() - createStart,
+    });
 
+    logWithTime("Request completed", { totalMs: Date.now() - requestStart });
     return NextResponse.json({ variants: savedVariants });
   } catch (error: any) {
     console.error("Suggest Resumes Error:", error);
+    logWithTime("Request failed", {
+      error: error?.message || String(error),
+      totalMs: Date.now() - requestStart,
+    });
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

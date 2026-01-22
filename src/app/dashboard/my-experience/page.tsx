@@ -97,7 +97,7 @@ export default function MyExperiencePage() {
     if (!file) return;
 
     if (file.type !== "application/pdf") {
-      setMessage({ type: "error", text: "Please upload a PDF file" });
+      setMessage({ type: "error", text: t("profile.error.upload_pdf") });
       return;
     }
 
@@ -157,7 +157,7 @@ export default function MyExperiencePage() {
     }
   };
 
-  if (!session) return <div>Auth required</div>;
+  if (!session) return <div>{t("common.auth_required")}</div>;
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
