@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { jobDescription, language } = await request.json();
+    const { jobDescription } = await request.json();
 
     if (!jobDescription) {
       return NextResponse.json(
@@ -23,195 +23,129 @@ export async function POST(request: Request) {
       );
     }
 
-    const lang = language || "en";
-
-    // Get all user's resumes
-    const resumes = await prisma.resume.findMany({
+    // Get user profile (not resumes)
+    const profile = await prisma.userProfile.findUnique({
       where: { userId: session.user.id },
     });
 
-    if (!resumes || resumes.length === 0) {
+    if (!profile) {
       return NextResponse.json(
-        { error: "No resumes found. Please create a resume first." },
+        { error: "No profile found. Please add your experience first." },
         { status: 400 },
       );
     }
 
-    // Encode resume data as TOON for token efficiency
-    const resumeDataForToon = resumes.map((resume) => {
-      const personalInfo = resume.personalInfo as Record<string, unknown>;
-      const workExperience = resume.workExperience as Array<
-        Record<string, unknown>
-      >;
-      const education = resume.education as Array<Record<string, unknown>>;
-      const skills = resume.skills as Array<Record<string, unknown>>;
-      return {
-        personalInfo,
-        workExperience,
-        education,
-        skills,
-      };
-    });
-    const resumeToon = encode({ resumes: resumeDataForToon });
+    // Encode profile data as TOON for token efficiency
+    const profileData = {
+      personalInfo: profile.personalInfo,
+      workExperience: profile.workExperience,
+      education: profile.education,
+      skills: profile.skills,
+    };
+    const profileToon = encode(profileData);
 
-    // Generate cover letter using AI
-    const aiService = process.env.AI_SERVICE || "groq";
+    // System prompt focused on factual achievements with metrics
+    const systemPrompt = `You are a professional cover letter writer.
 
-    let systemPrompt = "";
-    let userPrompt = "";
+STRICT RULES:
+1. Detect the language of the job description and write the cover letter in THE SAME LANGUAGE.
+2. Write ONLY the body (no greeting, no signature, no "Dear Hiring Manager").
+3. Include ONLY dry facts: specific achievements with numbers, percentages, metrics.
+4. Match candidate's experience directly to job requirements.
+5. NO generic phrases like "I'm excited", "I'm passionate", "your innovative company".
+6. Maximum 3 short paragraphs.
+7. Each paragraph should contain at least one measurable achievement.
+8. Use active voice and strong verbs.
 
-    if (lang === "uk") {
-      systemPrompt = `Ви експерт з написання професійних супровідних листів. Ваше завдання — писати переконливі, засновані на даних супровідні листи, які висвітлюють кількісні досягнення та безпосередньо розглядають вимоги вакансії.
+INPUT FORMAT: Candidate profile is in TOON format (compact token-optimized notation).
+OUTPUT: Professional cover letter body matching the job description language.`;
 
-Правила:
-- Напишіть ТІЛЬКИ основне тіло супровідного листа (без привітання та завершення)
-- Сконцентруйтесь на кількісних досягненнях, метриках та конкретних результатах
-- Зіставте ключові вимоги з опису вакансії
-- Використовуйте конкретні цифри, відсотки та вимірювані результати
-- НЕ використовуйте універсальні фрази на кшталт "я завжди мріяв", "я стежу за вашою компанією", "ваші інноваційні продукти" тощо
-- Зберіжіть лаконічність та впливовість - максимум 3-4 абзаци
-- Використовуйте активний голос та сильні дієслова
-- Покажіть прямий зв'язок між навичками кандидата та вимогами вакансії
-- Висвітліть відповідні технології, методології та досягнення
-
-Напишіть професійний супровідний лист, який виділить кандидата перед рекрутерами.`;
-      userPrompt = `Опис вакансії:
+    const userPrompt = `JOB DESCRIPTION:
 ${jobDescription}
 
-Профіль кандидата з резюме (у форматі TOON):
-${resumeToon}
+CANDIDATE PROFILE (TOON format):
+${profileToon}
 
-Напишіть переконливий супровідний лист, який безпосередньо розглядає вимоги вакансії, використовуючи доведені досягнення та навички кандидата.`;
-    } else if (lang === "ru") {
-      systemPrompt = `Вы эксперт по написанию профессиональных сопроводительных писем. Ваша задача — писать убедительные, основанные на данных сопроводительные письма, которые освещают количественные достижения и напрямую решают требования вакансии.
+Write a selling cover letter with only factual achievements and metrics that match this job.`;
 
-Правила:
-- Напишите ТОЛЬКО основное тело сопроводительного письма (без приветствия и заключения)
-- Сосредоточьтесь на количественных достижениях, метриках и конкретных результатах
-- Сопоставьте ключевые требования из описания вакансии
-- Используйте конкретные цифры, проценты и измеримые результаты
-- НЕ используйте универсальные фразы вроде "я всегда мечтал", "я слежу за вашей компанией", "ваши инновационные продукты" и т.д.
-- Сохраняйте лаконичность и влиятельность - максимум 3-4 абзаца
-- Используйте активный голос и сильные глаголы
-- Покажите прямую связь между навыками кандидата и требованиями вакансии
-- Выделите соответствующие технологии, методологии и достижения
+    let aiContent = "";
 
-Напишите профессиональное сопроводительное письмо, которое выделит кандидата перед рекрутерами.`;
-      userPrompt = `Описание вакансии:
-${jobDescription}
+    // Try OpenRouter first
+    if (process.env.OPENROUTER_API_KEY) {
+      const modelEnv =
+        process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL ||
+        "google/gemini-2.0-flash-exp:free";
+      const models = modelEnv
+        .split(",")
+        .map((m) => m.trim())
+        .filter(Boolean);
 
-Профиль кандидата из резюме (в формате TOON):
-${resumeToon}
+      for (const model of models) {
+        try {
+          const response = await fetch(
+            "https://openrouter.ai/api/v1/chat/completions",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: model,
+                messages: [
+                  { role: "system", content: systemPrompt },
+                  { role: "user", content: userPrompt },
+                ],
+                temperature: 0.5,
+                max_tokens: 1000,
+              }),
+            },
+          );
 
-Напишите убедительное сопроводительное письмо, которое напрямую решает требования вакансии, используя доказанные достижения и навыки кандидата.`;
-    } else {
-      systemPrompt = `You are an expert professional cover letter writer. Your task is to write compelling, data-driven cover letters that highlight quantifiable achievements and directly address job requirements.
-
-Rules:
-- Write ONLY the cover letter body (no salutation or closing)
-- Focus on quantifiable achievements, metrics, and specific accomplishments
-- Match key requirements from the job description
-- Use specific numbers, percentages, and measurable results
-- Do NOT include generic phrases like "I have always dreamed", "I have been following your company", "your innovative products", etc.
-- Keep it concise and impactful - maximum 3-4 paragraphs
-- Use active voice and strong action verbs
-- Show direct alignment between candidate skills and job requirements
-- Highlight relevant technologies, methodologies, and achievements
-
-Generate a professional cover letter that will make the candidate stand out to recruiters.`;
-      userPrompt = `Job Description:
-${jobDescription}
-
-Candidate Profile from Resumes (in TOON format):
-${resumeToon}
-
-Generate a compelling cover letter that directly addresses the job requirements using the candidate's proven achievements and skills.`;
+          if (response.ok) {
+            const data = await response.json();
+            aiContent = data.choices?.[0]?.message?.content || "";
+            if (aiContent) break;
+          }
+        } catch (err) {
+          console.error(`OpenRouter model ${model} failed:`, err);
+        }
+      }
     }
 
-    let coverLetter = "";
-
-    if (aiService === "groq") {
-      const response = await fetch(
-        "https://api.groq.com/openai/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-            "Content-Type": "application/json",
+    // Fallback to Groq
+    if (!aiContent && process.env.GROQ_API_KEY) {
+      try {
+        const response = await fetch(
+          "https://api.groq.com/openai/v1/chat/completions",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: "llama-3.3-70b-versatile",
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt },
+              ],
+              temperature: 0.5,
+              max_tokens: 1000,
+            }),
           },
-          body: JSON.stringify({
-            model: "mixtral-8x7b-32768",
-            messages: [
-              {
-                role: "system",
-                content: systemPrompt,
-              },
-              {
-                role: "user",
-                content: userPrompt,
-              },
-            ],
-            temperature: 0.7,
-            max_tokens: 1000,
-          }),
-        },
-      );
+        );
 
-      if (!response.ok) {
-        throw new Error("Failed to generate cover letter with Groq");
+        if (response.ok) {
+          const data = await response.json();
+          aiContent = data.choices?.[0]?.message?.content || "";
+        }
+      } catch (err) {
+        console.error("Groq fallback failed:", err);
       }
-
-      const data = await response.json();
-      coverLetter = data.choices?.[0]?.message?.content || "";
-    } else if (aiService === "openai") {
-      const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [
-              {
-                role: "system",
-                content: `You are an expert professional cover letter writer. Your task is to write compelling, data-driven cover letters that highlight quantifiable achievements and directly address job requirements.
-
-Rules:
-- Write ONLY the cover letter body (no salutation or closing)
-- Focus on quantifiable achievements, metrics, and specific accomplishments
-- Match key requirements from the job description
-- Use specific numbers, percentages, and measurable results
-- Do NOT include generic phrases like "I have always dreamed", "I have been following your company", "your innovative products", etc.
-- Keep it concise and impactful - maximum 3-4 paragraphs
-- Use active voice and strong action verbs
-- Show direct alignment between candidate skills and job requirements
-- Highlight relevant technologies, methodologies, and achievements
-
-Generate a professional cover letter that will make the candidate stand out to recruiters.`,
-              },
-              {
-                role: "user",
-                content: userPrompt,
-              },
-            ],
-            temperature: 0.7,
-            max_tokens: 1000,
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to generate cover letter with OpenAI");
-      }
-
-      const data = await response.json();
-      coverLetter = data.choices?.[0]?.message?.content || "";
     }
 
-    if (!coverLetter) {
+    if (!aiContent) {
       return NextResponse.json(
         { error: "Failed to generate cover letter" },
         { status: 500 },
@@ -220,7 +154,7 @@ Generate a professional cover letter that will make the candidate stand out to r
 
     return NextResponse.json({
       success: true,
-      coverLetter: coverLetter.trim(),
+      coverLetter: aiContent.trim(),
     });
   } catch (error) {
     console.error("Error generating cover letter:", error);
