@@ -9,6 +9,8 @@ import {
   Target,
   FileText,
   AlertCircle,
+  RefreshCw,
+  CheckCircle,
 } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { useTranslation } from "@/lib/translations";
@@ -32,8 +34,9 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
   const { t } = useTranslation();
   const [variants, setVariants] = useState<ResumeVariant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRegenerating, setIsRegenerating] = useState(false);
   const [isCreating, setIsCreating] = useState<string | null>(null);
-  const [resumesCount, setResumesCount] = useState(0);
+  const [existingResumes, setExistingResumes] = useState<string[]>([]);
   const hasLoadedRef = useRef(false);
 
   useEffect(() => {
@@ -41,25 +44,43 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
       return;
     }
     hasLoadedRef.current = true;
-    generateSuggestions();
-    fetchResumesCount();
+    loadSuggestions();
+    fetchExistingResumes();
   }, []);
 
-  const fetchResumesCount = async () => {
+  const fetchExistingResumes = async () => {
     try {
       const response = await fetch("/api/resumes");
       if (response.ok) {
         const data = await response.json();
-        setResumesCount(data.length);
+        setExistingResumes(data.map((r: any) => r.title));
       }
     } catch (error) {
-      console.error("Failed to fetch resumes count:", error);
+      console.error("Failed to fetch resumes:", error);
     }
   };
 
-  const generateSuggestions = async () => {
+  const loadSuggestions = async (force: boolean = false) => {
     setIsLoading(true);
+    if (force) {
+      setIsRegenerating(true);
+    }
     try {
+      if (!force) {
+        // Try to fetch existing first
+        const response = await fetch("/api/profile/suggest-resumes", {
+          method: "GET",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.variants && data.variants.length > 0) {
+            setVariants(data.variants);
+            setIsLoading(false);
+            return;
+          }
+        }
+      }
+
       const response = await fetch("/api/profile/suggest-resumes", {
         method: "POST",
       });
@@ -71,6 +92,7 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
       console.error("Failed to generate suggestions:", error);
     } finally {
       setIsLoading(false);
+      setIsRegenerating(false);
     }
   };
 
@@ -113,7 +135,7 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
     }
   };
 
-  const isLimitReached = resumesCount >= 4;
+  const isLimitReached = existingResumes.length >= 4;
 
   return (
     <Modal
@@ -148,68 +170,114 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
           <div className="text-center py-12">
             <Target className="h-12 w-12 text-muted/30 mx-auto mb-4" />
             <p>{t("profile.no_suggestions")}</p>
+            <Button
+              variant="outline"
+              onClick={() => loadSuggestions(true)}
+              disabled={isLoading || isRegenerating}
+              className="mt-4"
+            >
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${isRegenerating ? "animate-spin" : ""}`}
+              />
+              {t("ai.regenerate_suggestions")}
+            </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {variants.map((variant) => (
-              <Card
-                key={variant.id}
-                className="p-4 flex flex-col justify-between border-2 hover:border-primary/50 transition-all group"
+          <>
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => loadSuggestions(true)}
+                disabled={isLoading || isRegenerating}
               >
-                <div>
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
-                      {variant.title}
-                    </h3>
-                    <div className="flex items-center text-green-600 font-bold bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-sm">
-                      <BadgeCheck className="h-3 w-3 mr-1" />
-                      {variant.matchScore}%
-                    </div>
-                  </div>
+                <RefreshCw
+                  className={`h-4 w-4 mr-2 ${isRegenerating ? "animate-spin" : ""}`}
+                />
+                {t("ai.regenerate_suggestions")}
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {variants.map((variant) => {
+                const isCreated = existingResumes.includes(variant.title);
+                return (
+                  <Card
+                    key={variant.id}
+                    className={`p-4 flex flex-col justify-between border-2 transition-all group ${
+                      isCreated
+                        ? "bg-muted/30 border-muted"
+                        : "hover:border-primary/50"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
+                          {variant.title}
+                        </h3>
+                        {isCreated ? (
+                          <div className="flex items-center text-muted-foreground font-bold bg-muted px-2 py-0.5 rounded text-sm">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            {t("profile.resume_exists")}
+                          </div>
+                        ) : (
+                          <div className="flex items-center text-green-600 font-bold bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-sm">
+                            <BadgeCheck className="h-3 w-3 mr-1" />
+                            {variant.matchScore}%
+                          </div>
+                        )}
+                      </div>
 
-                  <div className="flex gap-2 mb-4">
-                    <span className="text-[10px] uppercase tracking-wider font-bold bg-muted px-2 py-0.5 rounded text-muted-foreground">
-                      {variant.seniority}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-wider font-bold bg-blue-50 text-blue-600 dark:bg-blue-900/20 px-2 py-0.5 rounded">
-                      {variant.targetRole.replace("_", " ")}
-                    </span>
-                  </div>
-
-                  <p className="text-sm text-secondary-foreground/80 mb-4 italic">
-                    {variant.reasoning}
-                  </p>
-
-                  <div className="space-y-3 mb-4">
-                    <div className="flex flex-wrap gap-1">
-                      {variant.selectedSkills.slice(0, 10).map((skill) => (
-                        <span
-                          key={skill}
-                          className="text-[10px] bg-background border border-border px-1.5 py-0.5 rounded text-muted-foreground"
-                        >
-                          {skill}
+                      <div className="flex gap-2 mb-4">
+                        <span className="text-[10px] uppercase tracking-wider font-bold bg-muted px-2 py-0.5 rounded text-muted-foreground">
+                          {variant.seniority}
                         </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                        <span className="text-[10px] uppercase tracking-wider font-bold bg-blue-50 text-blue-600 dark:bg-blue-900/20 px-2 py-0.5 rounded">
+                          {variant.targetRole.replace("_", " ")}
+                        </span>
+                      </div>
 
-                <Button
-                  className="w-full mt-auto"
-                  onClick={() => createResumeFromVariant(variant)}
-                  disabled={!!isCreating || isLimitReached}
-                  variant={isLimitReached ? "outline" : "default"}
-                >
-                  {isCreating === variant.id ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <FileText className="h-4 w-4 mr-2" />
-                  )}
-                  {t("profile.create_resume_btn")}
-                </Button>
-              </Card>
-            ))}
-          </div>
+                      <p className="text-sm text-secondary-foreground/80 mb-4 italic">
+                        {variant.reasoning}
+                      </p>
+
+                      <div className="space-y-3 mb-4">
+                        <div className="flex flex-wrap gap-1">
+                          {variant.selectedSkills.slice(0, 10).map((skill) => (
+                            <span
+                              key={skill}
+                              className="text-[10px] bg-background border border-border px-1.5 py-0.5 rounded text-muted-foreground"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button
+                      className="w-full mt-auto"
+                      onClick={() => createResumeFromVariant(variant)}
+                      disabled={!!isCreating || isLimitReached || isCreated}
+                      variant={
+                        isLimitReached || isCreated ? "outline" : "default"
+                      }
+                    >
+                      {isCreating === variant.id ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : isCreated ? (
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                      ) : (
+                        <FileText className="h-4 w-4 mr-2" />
+                      )}
+                      {isCreated
+                        ? t("profile.resume_exists")
+                        : t("profile.create_resume_btn")}
+                    </Button>
+                  </Card>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
     </Modal>

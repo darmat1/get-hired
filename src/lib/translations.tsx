@@ -139,6 +139,11 @@ export const translations: Translations = {
     uk: "AI Пропозиції для резюме",
     ru: "ИИ Предложения для резюме",
   },
+  "profile.resume_exists": {
+    en: "Resume Created",
+    uk: "Резюме створено",
+    ru: "Резюме создано",
+  },
   "profile.loading_suggestions": {
     en: "Analyzing your experience...",
     uk: "Аналізуємо ваш досвід...",
@@ -485,6 +490,11 @@ export const translations: Translations = {
     en: "Detailed recommendations",
     uk: "Детальні рекомендації",
     ru: "Детальные рекомендации",
+  },
+  "ai.regenerate_suggestions": {
+    en: "Regenerate Suggestions",
+    uk: "Згенерувати нові варіанти",
+    ru: "Сгенерировать новые варианты",
   },
 
   // New AI page translations

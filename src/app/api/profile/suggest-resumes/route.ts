@@ -213,7 +213,7 @@ RULES:
     // Clean up AI response
     const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
     const cleanJSON = jsonMatch ? jsonMatch[0] : aiContent;
-    
+
     let parsed;
     try {
       parsed = JSON.parse(cleanJSON);
@@ -270,6 +270,37 @@ RULES:
       error: error?.message || String(error),
       totalMs: Date.now() - requestStart,
     });
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const profile = await prisma.userProfile.findUnique({
+      where: { userId: session.user.id },
+      include: {
+        resumeVariants: true,
+      },
+    });
+
+    if (!profile) {
+      return NextResponse.json(
+        { error: "User profile not found" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({ variants: profile.resumeVariants });
+  } catch (error: any) {
+    console.error("Fetch Suggestions Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
