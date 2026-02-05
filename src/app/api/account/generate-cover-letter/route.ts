@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { encode } from "@toon-format/toon";
 
 export async function POST(request: Request) {
   try {
@@ -10,10 +11,7 @@ export async function POST(request: Request) {
     });
 
     if (!session) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { jobDescription, language } = await request.json();
@@ -21,7 +19,7 @@ export async function POST(request: Request) {
     if (!jobDescription) {
       return NextResponse.json(
         { error: "Job description is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -35,51 +33,26 @@ export async function POST(request: Request) {
     if (!resumes || resumes.length === 0) {
       return NextResponse.json(
         { error: "No resumes found. Please create a resume first." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Parse resume data
-    const resumeTexts = resumes.map((resume) => {
+    // Encode resume data as TOON for token efficiency
+    const resumeDataForToon = resumes.map((resume) => {
       const personalInfo = resume.personalInfo as Record<string, unknown>;
-      const workExperience = resume.workExperience as Array<Record<string, unknown>>;
+      const workExperience = resume.workExperience as Array<
+        Record<string, unknown>
+      >;
       const education = resume.education as Array<Record<string, unknown>>;
       const skills = resume.skills as Array<Record<string, unknown>>;
-      return `
-Name: ${personalInfo.name || ""}
-Email: ${personalInfo.email || ""}
-Phone: ${personalInfo.phone || ""}
-Location: ${personalInfo.location || ""}
-Summary: ${personalInfo.summary || ""}
-
-Work Experience:
-${Array.isArray(workExperience)
-  ? workExperience
-      .map(
-        (work) =>
-          `${work.company} - ${work.position} (${work.startDate} to ${work.endDate || "Present"})\n${work.description}`
-      )
-      .join("\n\n")
-  : ""}
-
-Education:
-${Array.isArray(education)
-  ? education
-      .map(
-        (edu) =>
-          `${edu.degree} in ${edu.field} from ${edu.institution} (${edu.startDate} to ${edu.endDate})`
-      )
-      .join("\n\n")
-  : ""}
-
-Skills:
-${Array.isArray(skills)
-  ? skills
-      .map((skill) => `${skill.name} (${skill.level})`)
-      .join("\n")
-  : ""}
-`;
+      return {
+        personalInfo,
+        workExperience,
+        education,
+        skills,
+      };
     });
+    const resumeToon = encode({ resumes: resumeDataForToon });
 
     // Generate cover letter using AI
     const aiService = process.env.AI_SERVICE || "groq";
@@ -105,8 +78,8 @@ ${Array.isArray(skills)
       userPrompt = `Опис вакансії:
 ${jobDescription}
 
-Профіль кандидата з резюме:
-${resumeTexts.join("\n---\n")}
+Профіль кандидата з резюме (у форматі TOON):
+${resumeToon}
 
 Напишіть переконливий супровідний лист, який безпосередньо розглядає вимоги вакансії, використовуючи доведені досягнення та навички кандидата.`;
     } else if (lang === "ru") {
@@ -127,8 +100,8 @@ ${resumeTexts.join("\n---\n")}
       userPrompt = `Описание вакансии:
 ${jobDescription}
 
-Профиль кандидата из резюме:
-${resumeTexts.join("\n---\n")}
+Профиль кандидата из резюме (в формате TOON):
+${resumeToon}
 
 Напишите убедительное сопроводительное письмо, которое напрямую решает требования вакансии, используя доказанные достижения и навыки кандидата.`;
     } else {
@@ -149,37 +122,40 @@ Generate a professional cover letter that will make the candidate stand out to r
       userPrompt = `Job Description:
 ${jobDescription}
 
-Candidate Profile from Resumes:
-${resumeTexts.join("\n---\n")}
+Candidate Profile from Resumes (in TOON format):
+${resumeToon}
 
 Generate a compelling cover letter that directly addresses the job requirements using the candidate's proven achievements and skills.`;
     }
-    
+
     let coverLetter = "";
 
     if (aiService === "groq") {
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "mixtral-8x7b-32768",
+            messages: [
+              {
+                role: "system",
+                content: systemPrompt,
+              },
+              {
+                role: "user",
+                content: userPrompt,
+              },
+            ],
+            temperature: 0.7,
+            max_tokens: 1000,
+          }),
         },
-        body: JSON.stringify({
-          model: "mixtral-8x7b-32768",
-          messages: [
-            {
-              role: "system",
-              content: systemPrompt,
-            },
-            {
-              role: "user",
-              content: userPrompt,
-            },
-          ],
-          temperature: 0.7,
-          max_tokens: 1000,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to generate cover letter with Groq");
@@ -188,18 +164,20 @@ Generate a compelling cover letter that directly addresses the job requirements 
       const data = await response.json();
       coverLetter = data.choices?.[0]?.message?.content || "";
     } else if (aiService === "openai") {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: `You are an expert professional cover letter writer. Your task is to write compelling, data-driven cover letters that highlight quantifiable achievements and directly address job requirements.
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [
+              {
+                role: "system",
+                content: `You are an expert professional cover letter writer. Your task is to write compelling, data-driven cover letters that highlight quantifiable achievements and directly address job requirements.
 
 Rules:
 - Write ONLY the cover letter body (no salutation or closing)
@@ -213,29 +191,30 @@ Rules:
 - Highlight relevant technologies, methodologies, and achievements
 
 Generate a professional cover letter that will make the candidate stand out to recruiters.`,
-            },
-        {
-          role: "user",
-          content: userPrompt,
+              },
+              {
+                role: "user",
+                content: userPrompt,
+              },
+            ],
+            temperature: 0.7,
+            max_tokens: 1000,
+          }),
         },
-      ],
-      temperature: 0.7,
-      max_tokens: 1000,
-    }),
-  });
+      );
 
-  if (!response.ok) {
-    throw new Error("Failed to generate cover letter with OpenAI");
-  }
+      if (!response.ok) {
+        throw new Error("Failed to generate cover letter with OpenAI");
+      }
 
-  const data = await response.json();
-  coverLetter = data.choices?.[0]?.message?.content || "";
-}
+      const data = await response.json();
+      coverLetter = data.choices?.[0]?.message?.content || "";
+    }
 
-if (!coverLetter) {
+    if (!coverLetter) {
       return NextResponse.json(
         { error: "Failed to generate cover letter" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -247,7 +226,7 @@ if (!coverLetter) {
     console.error("Error generating cover letter:", error);
     return NextResponse.json(
       { error: "Error generating cover letter" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { encode } from "@toon-format/toon";
 
 export async function POST() {
   const requestStart = Date.now();
@@ -49,7 +50,7 @@ export async function POST() {
     logWithTime("Existing resumes fetched", { count: existingTitles.length });
 
     const systemPrompt = `You are a Career Expert AI.
-Analyze the user's work experience, education, and skills.
+Analyze the user's work experience, education, and skills provided in TOON format (compact token-optimized notation).
 Suggest all different resume variants (career directions) the user can pursue based on their background.
 Suggest up to 8 variants if they fit.
 
@@ -93,6 +94,8 @@ RULES:
       skills: profile.skills,
     };
 
+    const profileToon = encode(profileData);
+
     let aiContent = "";
 
     if (process.env.OPENROUTER_API_KEY) {
@@ -121,7 +124,7 @@ RULES:
                 model: model,
                 messages: [
                   { role: "system", content: systemPrompt },
-                  { role: "user", content: JSON.stringify(profileData) },
+                  { role: "user", content: profileToon },
                 ],
                 temperature: 0.7,
               }),

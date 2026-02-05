@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { encode } from "@toon-format/toon";
 
 export async function POST(request: Request) {
   try {
@@ -107,8 +108,12 @@ JSON Schema:
       where: { userId: session.user.id },
     });
 
-    const userPrompt = `EXISTING PROFILE (JSON):
-${JSON.stringify(existingProfile || {}, null, 2)}
+    const existingProfileToon = existingProfile
+      ? encode(existingProfile)
+      : "{}";
+
+    const userPrompt = `EXISTING PROFILE (in TOON format):
+${existingProfileToon}
 
 NEW DATA TO PARSE:
 ${normalizedText}`;
