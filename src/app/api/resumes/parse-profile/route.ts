@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { encode } from "@toon-format/toon";
+import { encode, decode } from "@toon-format/toon";
 
 export async function POST(request: Request) {
   try {
@@ -41,63 +41,65 @@ export async function POST(request: Request) {
     const normalizedText = cleanText(text);
 
     const systemPrompt = `You are a Resume Parsing & Merging Engine.
-INPUT: 
-1. Raw text from a PDF or pasted text (New Data).
-2. JSON of the user's EXISTING profile (Context Data).
+INPUT: Existing profile in TOON format + raw text from PDF/paste.
 
-YOUR GOAL:
-1. Extract data from the New Data.
-2. INTELLIGENTLY MERGE it into the Context Data.
-3. If a work experience entry in New Data refers to the same company and role as an entry in Context Data, MERGE them:
-   - Combine description bullet points (remove duplicates).
-   - Use the most complete dates.
-   - Normalize company names (e.g., "Boarding" and "b0arding.com" should be merged).
-4. deduplicate skills and education entries similarly.
-5. Return the FINAL, consolidated profile in the schema below.
+GOAL: Extract and merge data. Return consolidated profile in TOON format.
 
-STRICT RULES:
-- Return ONLY valid JSON.
-- Do NOT include markdown formatting.
-- Do NOT invent data.
-- If New Data is more detailed than Context Data for the same entry, prefer New Data.
+MERGE RULES:
+- Same company+role = combine descriptions, use best dates
+- Normalize company names ("Boarding" = "b0arding.com")
+- Deduplicate skills and education
+- Prefer more detailed data
 
-JSON Schema:
-{
-  "personalInfo": {
-    "firstName": "string", "lastName": "string", "email": "string", "phone": "string", "location": "string", "summary": "string"
-  },
-  "workExperience": [
-    {
-      "title": "string", "company": "string", "location": "string", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": boolean, "description": ["string"]
-    }
-  ],
-  "education": [
-    {
-      "institution": "string", "degree": "string", "field": "string", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": boolean
-    }
-  ],
-  "skills": [
-    { "name": "string", "category": "technical", "level": "advanced" }
-  ]
-}`;
+RETURN IN TOON FORMAT:
+personalInfo:
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  location: string
+  summary: string
+workExperience[N]{title,company,location,startDate,endDate,current,description}:
+  Title,Company,Location,YYYY-MM,YYYY-MM,true/false,Description text
+  ...
+education[N]{institution,degree,field,startDate,endDate,current}:
+  Institution,Degree,Field,YYYY-MM,YYYY-MM,true/false
+  ...
+skills[N]{name,category,level}:
+  Skill Name,technical,advanced
+  ...
 
-    const parseAIJSON = (content: string): any => {
+RULES:
+- Return ONLY valid TOON format (no JSON, no markdown)
+- Do NOT invent data
+- Dates in YYYY-MM format`;
+
+    const parseAIResponse = (content: string): any => {
       if (!content) throw new Error("Empty AI Content");
 
-      // Locate the JSON object strictly
-      const firstBrace = content.indexOf("{");
-      const lastBrace = content.lastIndexOf("}");
-
-      if (firstBrace === -1 || lastBrace === -1) {
-        throw new Error("AI response did not contain valid JSON brackets");
+      // Try TOON first
+      try {
+        const decoded = decode(content, { strict: false }) as Record<
+          string,
+          unknown
+        >;
+        if (decoded.personalInfo || decoded.workExperience || decoded.skills) {
+          return decoded;
+        }
+      } catch (e) {
+        console.log("TOON parse failed, trying JSON fallback");
       }
 
+      // Fallback to JSON
+      const firstBrace = content.indexOf("{");
+      const lastBrace = content.lastIndexOf("}");
+      if (firstBrace === -1 || lastBrace === -1) {
+        throw new Error("AI response did not contain valid data");
+      }
       const jsonString = content.substring(firstBrace, lastBrace + 1);
-
       try {
         return JSON.parse(jsonString);
       } catch (e) {
-        console.error("JSON Parse Error. Raw string:", jsonString);
         const fixed = jsonString.replace(/,\s*}/g, "}").replace(/,\s*]/g, "]");
         return JSON.parse(fixed);
       }
@@ -181,7 +183,6 @@ ${normalizedText}`;
                 { role: "user", content: userPrompt },
               ],
               temperature: 0,
-              response_format: { type: "json_object" },
             }),
           },
         );
@@ -199,7 +200,7 @@ ${normalizedText}`;
       return NextResponse.json({ error: "AI Parsing Failed" }, { status: 500 });
     }
 
-    const parsedData = parseAIJSON(aiContent);
+    const parsedData = parseAIResponse(aiContent);
     const safeStr = (val: any) => (typeof val === "string" ? val : "");
 
     // Prepare combined data (trusting AI to have merged, but ensuring structure/IDs)

@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { encode } from "@toon-format/toon";
+import { encode, decode } from "@toon-format/toon";
 
 export async function POST() {
   const requestStart = Date.now();
@@ -50,42 +50,25 @@ export async function POST() {
     logWithTime("Existing resumes fetched", { count: existingTitles.length });
 
     const systemPrompt = `You are a Career Expert AI.
-Analyze the user's work experience, education, and skills provided in TOON format (compact token-optimized notation).
-Suggest all different resume variants (career directions) the user can pursue based on their background.
-Suggest up to 8 variants if they fit.
+Analyze the user's work experience, education, and skills provided in TOON format.
+Suggest up to 8 different resume variants (career directions) based on their background.
 
-The following resume titles already exist for this user: ${existingTitles.length > 0 ? existingTitles.join(", ") : "None"}.
-CRITICAL RULE: Do NOT suggest a role with a title that exactly matches any of the existing titles.
-Suggest NEW roles that would be beneficial for the user's career growth.
-All content (title, reasoning, skills) MUST be in English language.
+Existing resume titles (DO NOT suggest duplicates): ${existingTitles.length > 0 ? existingTitles.join(", ") : "None"}.
 
-For example, if someone has mix of Frontend and Backend, suggest:
-1. Senior Frontend Developer (focusing on UI/UX and React)
-2. Fullstack Engineer (balanced view)
-3. Lead Developer (focusing on management/architecture if experience exists)
+RETURN YOUR RESPONSE IN TOON FORMAT:
+variant[N]{title,targetRole,seniority,matchScore,reasoning,selectedSkills,selectedExpIds}:
+  Role Title,snake_case_slug,senior,85,Brief explanation,[skill1;skill2],[exp_id1;exp_id2]
+  ...
 
-Each suggestion MUST follow this JSON schema:
-{
-  "variants": [
-    {
-      "title": "Role Title (e.g. Senior Node.js Developer)",
-      "targetRole": "snake_case_slug",
-      "seniority": "junior | middle | senior | lead",
-      "matchScore": 0-100,
-      "reasoning": "Brief explanation of why this role fits the experience",
-      "selectedSkills": ["skill_name_1", "skill_name_2"],
-      "selectedExpIds": ["exp_id_1", "exp_id_2"]
-    }
-  ]
-}
+Seniority values: junior | middle | senior | lead
+matchScore: 0-100
+selectedSkills: semicolon-separated list of skill names
+selectedExpIds: semicolon-separated list of experience IDs
 
 RULES:
-- Return ONLY valid JSON.
-- Do NOT include markdown formatting.
+- Return ONLY valid TOON format (no JSON, no markdown).
 - Maximum 8 variants.
-- Be realistic based on years of experience and skill levels.
-- Provide selectedSkills and selectedExpIds that BEST fit each specific role.
-- All content (title, reasoning, etc.) MUST be in English language.`;
+- All content MUST be in English.`;
 
     const profileData = {
       personalInfo: profile.personalInfo,
@@ -175,10 +158,9 @@ RULES:
               model: "llama-3.3-70b-versatile",
               messages: [
                 { role: "system", content: systemPrompt },
-                { role: "user", content: JSON.stringify(profileData) },
+                { role: "user", content: profileToon },
               ],
               temperature: 0.7,
-              response_format: { type: "json_object" },
             }),
           },
         );
@@ -213,20 +195,62 @@ RULES:
 
     logWithTime("AI content received", { contentLength: aiContent.length });
 
-    // Clean up AI response
-    const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
-    const cleanJSON = jsonMatch ? jsonMatch[0] : aiContent;
-
-    let parsed;
+    // Parse TOON response, with JSON fallback for backward compatibility
+    let parsed: { variants?: any[] };
     try {
-      parsed = JSON.parse(cleanJSON);
-    } catch (parseError) {
-      console.error("JSON Parse Error:", parseError);
-      logWithTime("JSON parse failed", { error: String(parseError) });
-      return NextResponse.json(
-        { error: "Failed to parse AI response" },
-        { status: 500 },
-      );
+      // First try to parse as TOON
+      const decoded = decode(aiContent, { strict: false }) as Record<
+        string,
+        unknown
+      >;
+      if (decoded.variant && Array.isArray(decoded.variant)) {
+        // Convert TOON variant array to expected format
+        parsed = {
+          variants: decoded.variant.map((v: any) => ({
+            title: v.title,
+            targetRole: v.targetRole,
+            seniority: v.seniority,
+            matchScore:
+              typeof v.matchScore === "number"
+                ? v.matchScore
+                : parseInt(v.matchScore) || 0,
+            reasoning: v.reasoning,
+            selectedSkills:
+              typeof v.selectedSkills === "string"
+                ? v.selectedSkills
+                    .split(";")
+                    .map((s: string) => s.trim())
+                    .filter(Boolean)
+                : v.selectedSkills || [],
+            selectedExpIds:
+              typeof v.selectedExpIds === "string"
+                ? v.selectedExpIds
+                    .split(";")
+                    .map((s: string) => s.trim())
+                    .filter(Boolean)
+                : v.selectedExpIds || [],
+          })),
+        };
+      } else {
+        throw new Error("TOON response did not contain variant array");
+      }
+    } catch (toonError) {
+      // Fallback to JSON parsing
+      logWithTime("TOON parse failed, trying JSON", {
+        error: String(toonError),
+      });
+      const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
+      const cleanJSON = jsonMatch ? jsonMatch[0] : aiContent;
+      try {
+        parsed = JSON.parse(cleanJSON);
+      } catch (parseError) {
+        console.error("JSON Parse Error:", parseError);
+        logWithTime("JSON parse also failed", { error: String(parseError) });
+        return NextResponse.json(
+          { error: "Failed to parse AI response" },
+          { status: 500 },
+        );
+      }
     }
 
     logWithTime("JSON parsed", {
