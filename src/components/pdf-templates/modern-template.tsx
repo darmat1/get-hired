@@ -32,169 +32,174 @@ Font.register({
   ],
 });
 
-const styles = StyleSheet.create({
-  page: {
-    fontFamily: "Roboto",
-    fontSize: 9,
-    flexDirection: "row",
-    backgroundColor: "#ffffff",
-  },
-  // Sidebar (Left - 35%)
-  sidebar: {
-    width: "35%",
-    backgroundColor: "#2e3a4e", // Dark Blue/Slate
-    padding: 20,
-    color: "#ffffff",
-    height: "100%",
-  },
-  avatarContainer: {
-    alignItems: "center",
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    objectFit: "cover",
-  },
-  sidebarSection: {
-    marginBottom: 25,
-  },
-  sidebarTitle: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textTransform: "capitalize",
-    color: "#ffffff",
-    borderBottom: "1pt solid #4a5568",
-    paddingBottom: 5,
-  },
-  contactItem: {
-    fontSize: 9,
-    marginBottom: 6,
-    color: "#cbd5e0",
-  },
-  contactLabel: {
-    fontSize: 10,
-    fontWeight: "bold",
-    color: "#ffffff",
-    marginBottom: 1,
-  },
-  skillItem: {
-    fontSize: 9,
-    marginBottom: 4,
-    color: "#cbd5e0",
-  },
-  // Main Content (Right - 65%)
-  main: {
-    width: "65%",
-    padding: 30,
-    paddingTop: 50,
-    color: "#1f2937",
-  },
-  headerName: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#2e3a4e",
-    marginBottom: 5,
-    textTransform: "capitalize",
-  },
-  headerTitle: {
-    fontSize: 11,
-    letterSpacing: 2,
-    textTransform: "uppercase",
-    color: "#4b5563",
-    marginBottom: 20,
-  },
-  summaryText: {
-    fontSize: 9,
-    lineHeight: 1.5,
-    color: "#4b5563",
-    marginBottom: 30,
-    textAlign: "justify",
-  },
-  mainSectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2e3a4e",
-    marginBottom: 15,
-    textTransform: "capitalize",
-  },
-  // Timeline Experience
-  experienceIten: {
-    flexDirection: "row",
-    marginBottom: 15,
-  },
-  timelineColumn: {
-    width: 15,
-    alignItems: "center",
-  },
-  timelineDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#2e3a4e", // Empty circle: transparent
-    border: "2pt solid #2e3a4e",
-    marginBottom: 0,
-    zIndex: 10,
-    backgroundColor: "white",
-  },
-  timelineLine: {
-    position: "absolute",
-    top: 8,
-    bottom: -20,
-    width: 1,
-    backgroundColor: "#e2e8f0",
-    left: 3.5,
-  },
-  contentColumn: {
-    flex: 1,
-    paddingLeft: 10,
-    paddingBottom: 5,
-  },
-  dateRange: {
-    fontSize: 9,
-    fontWeight: "bold",
-    color: "#2e3a4e",
-    marginBottom: 2,
-  },
-  expCompany: {
-    fontSize: 9,
-    color: "#718096",
-    marginBottom: 2,
-  },
-  expTitle: {
-    fontSize: 11, // "Job position here"
-    fontWeight: "bold",
-    color: "#2d3748",
-    marginBottom: 4,
-  },
-  expDesc: {
-    fontSize: 9,
-    lineHeight: 1.4,
-    color: "#4a5568",
-  },
-  referenceBlock: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-});
-
 interface ModernTemplateProps {
   resume: Resume;
 }
 
 export function ModernTemplate({ resume }: ModernTemplateProps) {
-  const { personalInfo, workExperience, education, skills } = resume;
+  const { personalInfo, workExperience, education, skills, customization } =
+    resume;
+
+  const sidebarColor = customization?.sidebarColor || "#2e3a4e";
+  const showAvatar = customization?.showAvatar !== false;
+  const showPhone = customization?.showPhone !== false;
+  const showEmail = customization?.showEmail !== false;
+  const showAddress = customization?.showAddress !== false;
+  const showLinkedin = customization?.showLinkedin !== false;
+  const showTelegram = customization?.showTelegram !== false;
+
+  const styles = StyleSheet.create({
+    page: {
+      fontFamily: "Roboto",
+      fontSize: 9,
+      flexDirection: "row",
+      backgroundColor: "#ffffff",
+    },
+    // Sidebar (Left - 35%)
+    sidebar: {
+      width: "35%",
+      backgroundColor: sidebarColor, // Dynamic Color
+      padding: 20,
+      color: "#ffffff",
+      height: "100%",
+    },
+    avatarContainer: {
+      alignItems: "center",
+      marginTop: 20,
+      marginBottom: 30,
+    },
+    avatar: {
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+      objectFit: "cover",
+      border: "3pt solid rgba(255,255,255,0.2)",
+    },
+    sidebarSection: {
+      marginBottom: 25,
+    },
+    sidebarTitle: {
+      fontSize: 14,
+      fontWeight: "bold",
+      marginBottom: 10,
+      textTransform: "capitalize",
+      color: "#ffffff",
+      borderBottom: "1pt solid rgba(255,255,255,0.2)",
+      paddingBottom: 5,
+    },
+    contactItem: {
+      fontSize: 9,
+      marginBottom: 6,
+      color: "rgba(255,255,255,0.9)",
+    },
+    contactLabel: {
+      fontSize: 10,
+      fontWeight: "bold",
+      color: "rgba(255,255,255,0.6)",
+      marginBottom: 1,
+      textTransform: "uppercase",
+    },
+    skillItem: {
+      fontSize: 9,
+      marginBottom: 4,
+      color: "rgba(255,255,255,0.8)",
+    },
+    // Main Content (Right - 65%)
+    main: {
+      width: "65%",
+      padding: 30,
+      paddingTop: 50,
+      color: "#1f2937",
+    },
+    headerName: {
+      fontSize: 32,
+      fontWeight: "bold",
+      color: sidebarColor, // Dynamic Color
+      marginBottom: 5,
+      textTransform: "capitalize",
+    },
+    headerTitle: {
+      fontSize: 11,
+      letterSpacing: 2,
+      textTransform: "uppercase",
+      color: "#4b5563",
+      marginBottom: 20,
+    },
+    summaryText: {
+      fontSize: 9,
+      lineHeight: 1.5,
+      color: "#4b5563",
+      marginBottom: 30,
+      textAlign: "justify",
+    },
+    mainSectionTitle: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: sidebarColor, // Dynamic Color
+      marginBottom: 15,
+      textTransform: "capitalize",
+    },
+    // Timeline Experience
+    experienceIten: {
+      flexDirection: "row",
+      marginBottom: 15,
+    },
+    timelineColumn: {
+      width: 15,
+      alignItems: "center",
+    },
+    timelineDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: "#ffffff",
+      border: `2pt solid ${sidebarColor}`, // Dynamic Color
+      marginBottom: 0,
+      zIndex: 10,
+    },
+    timelineLine: {
+      position: "absolute",
+      top: 8,
+      bottom: -20,
+      width: 1,
+      backgroundColor: "#e2e8f0",
+      left: 3.5,
+    },
+    contentColumn: {
+      flex: 1,
+      paddingLeft: 10,
+      paddingBottom: 5,
+    },
+    dateRange: {
+      fontSize: 9,
+      fontWeight: "bold",
+      color: sidebarColor, // Dynamic Color
+      marginBottom: 2,
+    },
+    expCompany: {
+      fontSize: 9,
+      color: "#718096",
+      marginBottom: 2,
+    },
+    expTitle: {
+      fontSize: 11, // "Job position here"
+      fontWeight: "bold",
+      color: "#2d3748",
+      marginBottom: 4,
+    },
+    expDesc: {
+      fontSize: 9,
+      lineHeight: 1.4,
+      color: "#4a5568",
+    },
+  });
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         {/* LEFT SIDEBAR */}
         <View style={styles.sidebar}>
-          {personalInfo.avatarUrl && (
+          {showAvatar && personalInfo.avatarUrl && (
             <View style={styles.avatarContainer}>
               <Image src={personalInfo.avatarUrl} style={styles.avatar} />
             </View>
@@ -203,24 +208,59 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarTitle}>Contact</Text>
 
-            <View style={{ marginBottom: 8 }}>
-              <Text style={styles.contactLabel}>Phone</Text>
-              <Text style={styles.contactItem}>{personalInfo.phone}</Text>
-            </View>
-            <View style={{ marginBottom: 8 }}>
-              <Text style={styles.contactLabel}>Email</Text>
-              <Text style={styles.contactItem}>{personalInfo.email}</Text>
-            </View>
-            <View style={{ marginBottom: 8 }}>
-              <Text style={styles.contactLabel}>Address</Text>
-              <Text style={styles.contactItem}>{personalInfo.location}</Text>
-            </View>
+            {showPhone && (
+              <View style={{ marginBottom: 8 }}>
+                <Text style={styles.contactLabel}>Phone</Text>
+                <Text style={styles.contactItem}>{personalInfo.phone}</Text>
+              </View>
+            )}
+            {showEmail && (
+              <View style={{ marginBottom: 8 }}>
+                <Text style={styles.contactLabel}>Email</Text>
+                <Text style={styles.contactItem}>{personalInfo.email}</Text>
+              </View>
+            )}
+            {showAddress && (
+              <View style={{ marginBottom: 8 }}>
+                <Text style={styles.contactLabel}>Address</Text>
+                <Text style={styles.contactItem}>{personalInfo.location}</Text>
+              </View>
+            )}
             {personalInfo.website && (
               <View style={{ marginBottom: 8 }}>
                 <Text style={styles.contactLabel}>Website</Text>
                 <Text style={styles.contactItem}>{personalInfo.website}</Text>
               </View>
             )}
+
+            {/* Socials */}
+            {(showLinkedin || showTelegram) &&
+              (personalInfo.linkedin || personalInfo.telegram) && (
+                <View
+                  style={{
+                    marginTop: 10,
+                    paddingTop: 10,
+                    borderTop: "0.5pt solid rgba(255,255,255,0.2)",
+                  }}
+                >
+                  {showLinkedin && personalInfo.linkedin && (
+                    <View style={{ marginBottom: 8 }}>
+                      <Text style={styles.contactLabel}>LinkedIn</Text>
+                      <Text style={styles.contactItem}>
+                        {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                      </Text>
+                    </View>
+                  )}
+                  {showTelegram && personalInfo.telegram && (
+                    <View style={{ marginBottom: 8 }}>
+                      <Text style={styles.contactLabel}>Telegram</Text>
+                      <Text style={styles.contactItem}>
+                        {personalInfo.telegram}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              )}
           </View>
 
           {education.length > 0 && (
@@ -232,11 +272,21 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                     {edu.startDate?.split("-")[0] || ""}
                   </Text>
                   <Text
-                    style={{ fontSize: 10, fontWeight: "bold", color: "white" }}
+                    style={{
+                      fontSize: 10,
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
                   >
                     {edu.degree}
                   </Text>
-                  <Text style={{ fontSize: 9, color: "#cbd5e0" }}>
+                  <Text
+                    style={{
+                      fontSize: 9,
+                      color: "rgba(255,255,255,0.7)",
+                      fontStyle: "italic",
+                    }}
+                  >
                     {edu.institution}
                   </Text>
                 </View>
@@ -260,7 +310,7 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                     style={{
                       width: 4,
                       height: 4,
-                      backgroundColor: "white",
+                      backgroundColor: "rgba(255,255,255,0.6)",
                       borderRadius: 2,
                       marginRight: 8,
                     }}
@@ -276,19 +326,6 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
         <View style={styles.main}>
           <Text style={styles.headerName}>
             {personalInfo.firstName} {personalInfo.lastName}
-          </Text>
-          {/* We assume the first job title or a hardcoded one if not available in personalInfo. 
-              The schema has title in resume? No, checking type... Partial<Resume>. 
-              Usually summary or first job title is used. using "Frontend Developer" as placeholder if not found? 
-              Actually let's omit title if not stored, but ideally we should have a "Title" field in PersonalInfo.
-              For now I'll skip it or hardcode if I can find it.
-              Let's assume the user wants the design structure.
-          */}
-          <Text style={styles.headerTitle}>
-            {/* Using summary first sentence or just "Professional" if unknown? 
-                Actually, the designs usually have a "Title" field. I don't see one in my `PersonalInfo` type view.
-                I will skip it to avoid hallucinating data.
-            */}
           </Text>
 
           {personalInfo.summary && (
@@ -330,10 +367,6 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
               ))}
             </View>
           )}
-
-          {/* Reference Section - Placeholder if data existed, but we don't have references in our schema. 
-               The image shows it, but I cannot invent data. Skipping. 
-           */}
         </View>
       </Page>
     </Document>

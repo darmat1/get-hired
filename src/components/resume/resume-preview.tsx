@@ -9,9 +9,15 @@ import { MinimalPreview } from "@/components/resume/previews/minimal-preview";
 
 interface ResumePreviewProps {
   data: Partial<Resume>;
+  onChange?: (data: Partial<Resume>) => void;
+  isEditing?: boolean;
 }
 
-export function ResumePreview({ data }: ResumePreviewProps) {
+export function ResumePreview({
+  data,
+  onChange,
+  isEditing = false,
+}: ResumePreviewProps) {
   const { t } = useTranslation();
   const template = data.template || "modern";
 
@@ -24,7 +30,13 @@ export function ResumePreview({ data }: ResumePreviewProps) {
       case "minimal":
         return <MinimalPreview data={data} />;
       default:
-        return <ModernPreview data={data} />;
+        return (
+          <ModernPreview
+            data={data}
+            onChange={onChange}
+            isEditing={isEditing}
+          />
+        );
     }
   };
 
@@ -41,13 +53,13 @@ export function ResumePreview({ data }: ResumePreviewProps) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto bg-muted/40 p-4 custom-scrollbar">
+      <div className="flex-1 overflow-auto bg-muted/40 p-6 custom-scrollbar">
         <div
-          className="mx-auto relative w-full"
-          style={{ aspectRatio: "1 / 1.414" }}
+          className="mx-auto relative"
+          style={{ width: "100%", aspectRatio: "1 / 1.414" }}
         >
           <div
-            className="absolute top-0 left-0 origin-top-left transition-transform duration-300 scale-[0.46] xl:scale-[0.60]"
+            className="absolute top-0 left-1/2 -translate-x-1/2 origin-top transition-transform duration-300 scale-[0.72]"
             style={{ width: "210mm", height: "297mm" }}
           >
             <div className="resume-paper shadow-2xl ring-1 ring-black/10 h-full w-full">

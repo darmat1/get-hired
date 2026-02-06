@@ -6,6 +6,7 @@ export interface PersonalInfo {
   location: string;
   website?: string;
   linkedin?: string;
+  telegram?: string;
   avatarUrl?: string;
   summary: string;
 }
@@ -55,6 +56,15 @@ export interface Resume {
   skills: Skill[];
   certificates: Certificate[];
   template: string;
+  customization?: {
+    sidebarColor?: string;
+    showAvatar?: boolean;
+    showPhone?: boolean;
+    showEmail?: boolean;
+    showAddress?: boolean;
+    showLinkedin?: boolean;
+    showTelegram?: boolean;
+  };
   language: string;
   createdAt: string;
   updatedAt: string;

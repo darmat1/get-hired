@@ -103,6 +103,32 @@ export function PersonalInfoForm({
             placeholder={t("placeholder.website")}
           />
         </div>
+
+        <div>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
+            LinkedIn
+          </label>
+          <input
+            type="url"
+            value={data.linkedin || ""}
+            onChange={(e) => updateField("linkedin", e.target.value)}
+            className="w-full px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            placeholder="https://linkedin.com/in/..."
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
+            Telegram
+          </label>
+          <input
+            type="text"
+            value={data.telegram || ""}
+            onChange={(e) => updateField("telegram", e.target.value)}
+            className="w-full px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            placeholder="@username"
+          />
+        </div>
       </div>
 
       <div className="mt-4">
