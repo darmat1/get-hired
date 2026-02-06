@@ -22,8 +22,8 @@ export function PersonalInfoForm({
   };
 
   return (
-    <div className="bg-card text-card-foreground rounded-lg border border-border shadow-sm p-6">
-      <h2 className="text-xl font-semibold mb-6">{t("form.personal_info")}</h2>
+    <div className="">
+      <h2 className="text-xl font-semibold mb-4">{t("form.personal_info")}</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>

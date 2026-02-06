@@ -164,7 +164,7 @@ export default function EditResumePage() {
         <Header />
         <main className="flex-1 overflow-y-auto p-8">
           <div className="space-y-6 text-foreground">
-            <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex flex-col lg:flex-row items-start gap-8">
               {/* Editor Column */}
               <div className="flex-1">
                 <div className="mb-6 flex items-center justify-between">
@@ -276,11 +276,8 @@ export default function EditResumePage() {
 
               {/* Preview Column */}
               <div className="hidden lg:block w-[400px] xl:w-[500px]">
-                <div className="sticky top-24">
-                  <h2 className="text-lg font-semibold mb-4">Preview</h2>
-                  <div className="border rounded-lg shadow-sm overflow-hidden bg-white">
-                    <ResumePreview data={resumeData as Resume} />
-                  </div>
+                <div className="sticky top-6">
+                  <ResumePreview data={resumeData as Resume} />
                 </div>
               </div>
             </div>

@@ -78,7 +78,7 @@ export function WorkExperienceForm({
   };
 
   return (
-    <div className="bg-card text-card-foreground rounded-lg border border-border shadow-sm p-6">
+    <div className="">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">{t("form.work_experience")}</h2>
         <Button onClick={addExperience} variant="outline" size="sm">
@@ -89,10 +89,7 @@ export function WorkExperienceForm({
 
       <div className="space-y-6">
         {data.map((exp, index) => (
-          <div
-            key={exp.id}
-            className="border border-border rounded-lg p-4 bg-background/50"
-          >
+          <div key={exp.id} className="">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-lg font-medium">
                 {t("form.work_experience")} #{index + 1}

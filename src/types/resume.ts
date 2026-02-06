@@ -6,6 +6,7 @@ export interface PersonalInfo {
   location: string;
   website?: string;
   linkedin?: string;
+  avatarUrl?: string;
   summary: string;
 }
 
@@ -34,8 +35,8 @@ export interface Education {
 export interface Skill {
   id: string;
   name: string;
-  category: 'technical' | 'soft' | 'language';
-  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  category: "technical" | "soft" | "language";
+  level: "beginner" | "intermediate" | "advanced" | "expert";
 }
 
 export interface Certificate {
