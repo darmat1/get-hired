@@ -87,6 +87,7 @@ model Resume {
   education      Json
   skills         Json
   certificates   Json?
+  customization  Json? // Added customization field
   language       String   @default("en")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

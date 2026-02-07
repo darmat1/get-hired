@@ -140,6 +140,7 @@ export async function PUT(
         education: body.education,
         skills: body.skills,
         certificates: body.certificates,
+        customization: body.customization,
         updatedAt: new Date(),
       },
     });
