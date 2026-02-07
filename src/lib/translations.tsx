@@ -1455,6 +1455,16 @@ export const translations: Translations = {
     uk: "Додати пункт опису",
     ru: "Добавить пункт описания",
   },
+  "skill.level.elementary": {
+    en: "Elementary",
+    uk: "Елементарний",
+    ru: "Элементарный",
+  },
+  "form.experience": {
+    en: "Experience",
+    uk: "Досвід",
+    ru: "Опыт",
+  },
 };
 
 interface LanguageContextType {

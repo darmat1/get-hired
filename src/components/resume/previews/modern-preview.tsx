@@ -257,10 +257,20 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                 <div key={edu.id}>
                   <div className="text-[10px] font-bold text-white/95 mb-0.5">
                     {edu.startDate?.split("-")[0]}
+                    {edu.endDate || edu.current
+                      ? ` - ${
+                          edu.current ? "Present" : edu.endDate?.split("-")[0]
+                        }`
+                      : ""}
                   </div>
                   <div className="text-[11px] font-bold text-white/90 leading-tight mb-0.5">
                     {edu.degree}
                   </div>
+                  {edu.field && (
+                    <div className="text-[10px] text-white/80 font-medium mb-0.5">
+                      {edu.field}
+                    </div>
+                  )}
                   <div className="text-[10px] text-white/70 italic">
                     {edu.institution}
                   </div>
@@ -270,23 +280,97 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
           </div>
         )}
 
-        {/* Skills (Expertise) */}
+        {/* Skills & Languages */}
         {skills && skills.length > 0 && (
-          <div>
-            <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
-              Expertise
-            </h3>
-            <ul className="space-y-1.5">
-              {skills.map((skill) => (
-                <li
-                  key={skill.id}
-                  className="flex items-center text-[10px] text-white/80"
-                >
-                  <span className="w-1 h-1 bg-white/60 rounded-full mr-2"></span>
-                  {skill.name}
-                </li>
-              ))}
-            </ul>
+          <div className="space-y-6">
+            {/* Technical Skills */}
+            {skills.some((s) => s.category === "technical") && (
+              <div>
+                <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
+                  Technical Skills
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {skills
+                    .filter((s) => s.category === "technical")
+                    .map((skill) => (
+                      <span
+                        key={skill.id}
+                        className="text-[10px] bg-white/10 px-2 py-1 rounded text-white/90"
+                      >
+                        {skill.name}
+                      </span>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {/* Soft Skills */}
+            {skills.some((s) => s.category === "soft") && (
+              <div>
+                <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
+                  Soft Skills
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {skills
+                    .filter((s) => s.category === "soft")
+                    .map((skill) => (
+                      <span
+                        key={skill.id}
+                        className="text-[10px] bg-white/10 px-2 py-1 rounded text-white/90"
+                      >
+                        {skill.name}
+                      </span>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {/* Languages */}
+            {skills.some((s) => s.category === "language") && (
+              <div>
+                <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
+                  Languages
+                </h3>
+                <div className="space-y-3">
+                  {skills
+                    .filter((s) => s.category === "language")
+                    .map((skill) => {
+                      // Calculate dots (1-5) based on level
+                      const levelMap: Record<string, number> = {
+                        beginner: 1,
+                        elementary: 2,
+                        intermediate: 3,
+                        advanced: 4,
+                        expert: 5,
+                      };
+                      const dots = levelMap[skill.level || "intermediate"] || 3;
+
+                      return (
+                        <div key={skill.id}>
+                          <div className="flex justify-between items-end mb-1">
+                            <span className="text-[10px] font-bold text-white/90">
+                              {skill.name}
+                            </span>
+                            <span className="text-[9px] text-white/60 capitalize">
+                              {skill.level}
+                            </span>
+                          </div>
+                          <div className="flex gap-1">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div
+                                key={i}
+                                className={`h-1.5 flex-1 rounded-full ${
+                                  i <= dots ? "bg-white/80" : "bg-white/20"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

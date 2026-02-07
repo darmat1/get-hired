@@ -37,7 +37,7 @@ export interface Skill {
   id: string;
   name: string;
   category: "technical" | "soft" | "language";
-  level: "beginner" | "intermediate" | "advanced" | "expert";
+  level: "beginner" | "elementary" | "intermediate" | "advanced" | "expert";
 }
 
 export interface Certificate {

@@ -149,7 +149,7 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
     },
     timelineColumn: {
       width: 15,
-      alignItems: "center",
+      // alignItems: "center", // Removed to left-align dots (matches line at 3.5px)
     },
     timelineDot: {
       width: 8,
@@ -270,6 +270,11 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                 <View key={idx} style={{ marginBottom: 10 }}>
                   <Text style={{ fontSize: 9, fontWeight: "bold" }}>
                     {edu.startDate?.split("-")[0] || ""}
+                    {edu.endDate || edu.current
+                      ? ` - ${
+                          edu.current ? "Present" : edu.endDate?.split("-")[0]
+                        }`
+                      : ""}
                   </Text>
                   <Text
                     style={{
@@ -280,6 +285,17 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                   >
                     {edu.degree}
                   </Text>
+                  {edu.field && (
+                    <Text
+                      style={{
+                        fontSize: 9,
+                        color: "rgba(255,255,255,0.9)",
+                        marginBottom: 1,
+                      }}
+                    >
+                      {edu.field}
+                    </Text>
+                  )}
                   <Text
                     style={{
                       fontSize: 9,
@@ -295,30 +311,146 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
           )}
 
           {skills.length > 0 && (
-            <View style={styles.sidebarSection}>
-              <Text style={styles.sidebarTitle}>Expertise</Text>
-              <View style={styles.sidebarSeparator} />
-              {skills.map((skill, idx) => (
-                <View
-                  key={idx}
-                  style={{
-                    flexDirection: "row",
-                    marginBottom: 4,
-                    alignItems: "center",
-                  }}
-                >
+            <View style={{ marginBottom: 25 }}>
+              {/* Technical Skills */}
+              {skills.some((s) => s.category === "technical") && (
+                <View style={{ marginBottom: 20 }}>
+                  <Text style={styles.sidebarTitle}>Technical Skills</Text>
+                  <View style={styles.sidebarSeparator} />
                   <View
                     style={{
-                      width: 4,
-                      height: 4,
-                      backgroundColor: "rgba(255,255,255,0.6)",
-                      borderRadius: 2,
-                      marginRight: 8,
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      gap: 4,
                     }}
-                  />
-                  <Text style={styles.skillItem}>{skill.name}</Text>
+                  >
+                    {skills
+                      .filter((s) => s.category === "technical")
+                      .map((skill, idx) => (
+                        <View
+                          key={idx}
+                          style={{
+                            backgroundColor: "rgba(255,255,255,0.1)",
+                            padding: "3px 6px",
+                            borderRadius: 3,
+                            marginBottom: 4,
+                            marginRight: 4,
+                          }}
+                        >
+                          <Text style={{ fontSize: 9, color: "white" }}>
+                            {skill.name}
+                          </Text>
+                        </View>
+                      ))}
+                  </View>
                 </View>
-              ))}
+              )}
+
+              {/* Soft Skills */}
+              {skills.some((s) => s.category === "soft") && (
+                <View style={{ marginBottom: 20 }}>
+                  <Text style={styles.sidebarTitle}>Soft Skills</Text>
+                  <View style={styles.sidebarSeparator} />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      gap: 4,
+                    }}
+                  >
+                    {skills
+                      .filter((s) => s.category === "soft")
+                      .map((skill, idx) => (
+                        <View
+                          key={idx}
+                          style={{
+                            backgroundColor: "rgba(255,255,255,0.1)",
+                            padding: "3px 6px",
+                            borderRadius: 3,
+                            marginBottom: 4,
+                            marginRight: 4,
+                          }}
+                        >
+                          <Text style={{ fontSize: 9, color: "white" }}>
+                            {skill.name}
+                          </Text>
+                        </View>
+                      ))}
+                  </View>
+                </View>
+              )}
+
+              {/* Languages */}
+              {skills.some((s) => s.category === "language") && (
+                <View>
+                  <Text style={styles.sidebarTitle}>Languages</Text>
+                  <View style={styles.sidebarSeparator} />
+                  <View>
+                    {skills
+                      .filter((s) => s.category === "language")
+                      .map((skill, idx) => {
+                        const levelMap: Record<string, number> = {
+                          beginner: 1,
+                          elementary: 2,
+                          intermediate: 3,
+                          advanced: 4,
+                          expert: 5,
+                        };
+                        const dots =
+                          levelMap[skill.level || "intermediate"] || 3;
+
+                        return (
+                          <View key={idx} style={{ marginBottom: 8 }}>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "flex-end",
+                                marginBottom: 2,
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 9,
+                                  fontWeight: "bold",
+                                  color: "rgba(255,255,255,0.9)",
+                                }}
+                              >
+                                {skill.name}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 8,
+                                  color: "rgba(255,255,255,0.6)",
+                                  textTransform: "capitalize",
+                                }}
+                              >
+                                {skill.level}
+                              </Text>
+                            </View>
+                            <View style={{ flexDirection: "row", gap: 2 }}>
+                              {[1, 2, 3, 4, 5].map((i) => (
+                                <View
+                                  key={i}
+                                  style={{
+                                    height: 3,
+                                    flex: 1,
+                                    backgroundColor:
+                                      i <= dots
+                                        ? "rgba(255,255,255,0.8)"
+                                        : "rgba(255,255,255,0.2)",
+                                    borderRadius: 1.5,
+                                    marginRight: 2,
+                                  }}
+                                />
+                              ))}
+                            </View>
+                          </View>
+                        );
+                      })}
+                  </View>
+                </View>
+              )}
             </View>
           )}
         </View>
