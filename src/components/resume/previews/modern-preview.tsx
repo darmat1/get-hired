@@ -1,15 +1,7 @@
 import { Resume } from "@/types/resume";
 import { useTranslation } from "@/lib/translations";
 import { useState } from "react";
-import {
-  Settings2,
-  Palette,
-  Eye,
-  EyeOff,
-  Github,
-  Linkedin,
-  Send,
-} from "lucide-react";
+import { Settings2, Palette, Eye, EyeOff, Linkedin, Send } from "lucide-react";
 
 interface Props {
   data: Partial<Resume>;
@@ -17,8 +9,38 @@ interface Props {
   isEditing?: boolean;
 }
 
+interface SidebarToggleProps {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  icon?: any;
+}
+
+const SidebarToggle = ({
+  label,
+  checked,
+  onChange,
+  icon: Icon,
+}: SidebarToggleProps) => (
+  <div className="flex items-center justify-between py-1 px-2 hover:bg-white/10 rounded cursor-pointer group">
+    <div className="flex items-center gap-2 text-xs text-white/90">
+      {Icon && <Icon size={12} />}
+      <span>{label}</span>
+    </div>
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onChange(!checked);
+      }}
+      className="text-white/70 hover:text-white"
+    >
+      {checked ? <Eye size={12} /> : <EyeOff size={12} />}
+    </button>
+  </div>
+);
+
 export function ModernPreview({ data, onChange, isEditing }: Props) {
-  const { t } = useTranslation();
+  // const { t } = useTranslation(); // Unused
   const { personalInfo, workExperience, education, skills, customization } =
     data;
 
@@ -45,34 +67,6 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
       },
     });
   };
-
-  const SidebarToggle = ({
-    label,
-    checked,
-    onChange,
-    icon: Icon,
-  }: {
-    label: string;
-    checked: boolean;
-    onChange: (checked: boolean) => void;
-    icon?: any;
-  }) => (
-    <div className="flex items-center justify-between py-1 px-2 hover:bg-white/10 rounded cursor-pointer group">
-      <div className="flex items-center gap-2 text-xs text-white/90">
-        {Icon && <Icon size={12} />}
-        <span>{label}</span>
-      </div>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onChange(!checked);
-        }}
-        className="text-white/70 hover:text-white"
-      >
-        {checked ? <Eye size={12} /> : <EyeOff size={12} />}
-      </button>
-    </div>
-  );
 
   return (
     <div className="flex h-full min-h-[800px] w-full bg-white shadow-sm overflow-hidden font-sans relative group/preview">
@@ -185,17 +179,6 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
             Contact
           </h3>
 
-          {showPhone && (
-            <div className="mb-3">
-              <div className="text-[10px] font-bold text-white/60 uppercase">
-                Phone
-              </div>
-              <div className="text-[10px] text-white/90">
-                {personalInfo.phone}
-              </div>
-            </div>
-          )}
-
           {showEmail && (
             <div className="mb-3">
               <div className="text-[10px] font-bold text-white/60 uppercase">
@@ -207,13 +190,35 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
             </div>
           )}
 
-          {showAddress && (
+          {showPhone && (
             <div className="mb-3">
               <div className="text-[10px] font-bold text-white/60 uppercase">
-                Address
+                Phone
               </div>
               <div className="text-[10px] text-white/90">
-                {personalInfo.location}
+                {personalInfo.phone}
+              </div>
+            </div>
+          )}
+
+          {showTelegram && personalInfo.telegram && (
+            <div className="mb-3">
+              <div className="text-[10px] font-bold text-white/60 uppercase flex items-center gap-1">
+                <Send size={10} /> Telegram
+              </div>
+              <div className="text-[10px] text-white/90 break-words">
+                {personalInfo.telegram}
+              </div>
+            </div>
+          )}
+
+          {showLinkedin && personalInfo.linkedin && (
+            <div className="mb-3">
+              <div className="text-[10px] font-bold text-white/60 uppercase flex items-center gap-1">
+                <Linkedin size={10} /> LinkedIn
+              </div>
+              <div className="text-[10px] text-white/90 break-words">
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </div>
             </div>
           )}
@@ -229,32 +234,16 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
             </div>
           )}
 
-          {/* Socials */}
-          {(showLinkedin || showTelegram) &&
-            (personalInfo.linkedin || personalInfo.telegram) && (
-              <div className="mt-4 pt-4 border-t border-white/20">
-                {showLinkedin && personalInfo.linkedin && (
-                  <div className="mb-3">
-                    <div className="text-[10px] font-bold text-white/60 uppercase flex items-center gap-1">
-                      <Linkedin size={10} /> LinkedIn
-                    </div>
-                    <div className="text-[10px] text-white/90 break-words">
-                      {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-                    </div>
-                  </div>
-                )}
-                {showTelegram && personalInfo.telegram && (
-                  <div className="mb-3">
-                    <div className="text-[10px] font-bold text-white/60 uppercase flex items-center gap-1">
-                      <Send size={10} /> Telegram
-                    </div>
-                    <div className="text-[10px] text-white/90 break-words">
-                      {personalInfo.telegram}
-                    </div>
-                  </div>
-                )}
+          {showAddress && (
+            <div className="mb-3">
+              <div className="text-[10px] font-bold text-white/60 uppercase">
+                Address
               </div>
-            )}
+              <div className="text-[10px] text-white/90">
+                {personalInfo.location}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Education */}

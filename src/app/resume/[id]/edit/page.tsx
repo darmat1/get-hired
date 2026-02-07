@@ -276,7 +276,7 @@ export default function EditResumePage() {
 
               {/* Preview Column */}
               <div className="hidden lg:block w-[600px]">
-                <div className="sticky top-6">
+                <div className="sticky top-0">
                   <ResumePreview
                     data={resumeData as Resume}
                     onChange={setResumeData}

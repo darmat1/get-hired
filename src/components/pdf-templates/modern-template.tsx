@@ -81,11 +81,14 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
     sidebarTitle: {
       fontSize: 14,
       fontWeight: "bold",
-      marginBottom: 10,
       textTransform: "capitalize",
-      color: "#ffffff",
-      borderBottom: "1pt solid rgba(255,255,255,0.2)",
-      paddingBottom: 5,
+      color: "rgba(255, 255, 255, 0.9)",
+      marginBottom: 4,
+    },
+    sidebarSeparator: {
+      height: 1,
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      marginBottom: 10,
     },
     contactItem: {
       fontSize: 9,
@@ -207,25 +210,42 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
 
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarTitle}>Contact</Text>
+            <View style={styles.sidebarSeparator} />
 
-            {showPhone && (
-              <View style={{ marginBottom: 8 }}>
-                <Text style={styles.contactLabel}>Phone</Text>
-                <Text style={styles.contactItem}>{personalInfo.phone}</Text>
-              </View>
-            )}
+            {/* Email first */}
             {showEmail && (
               <View style={{ marginBottom: 8 }}>
                 <Text style={styles.contactLabel}>Email</Text>
                 <Text style={styles.contactItem}>{personalInfo.email}</Text>
               </View>
             )}
-            {showAddress && (
+
+            {/* Phone second */}
+            {showPhone && (
               <View style={{ marginBottom: 8 }}>
-                <Text style={styles.contactLabel}>Address</Text>
-                <Text style={styles.contactItem}>{personalInfo.location}</Text>
+                <Text style={styles.contactLabel}>Phone</Text>
+                <Text style={styles.contactItem}>{personalInfo.phone}</Text>
               </View>
             )}
+
+            {/* Telegram third */}
+            {showTelegram && personalInfo.telegram && (
+              <View style={{ marginBottom: 8 }}>
+                <Text style={styles.contactLabel}>Telegram</Text>
+                <Text style={styles.contactItem}>{personalInfo.telegram}</Text>
+              </View>
+            )}
+
+            {/* Socials/Websites fourth */}
+            {showLinkedin && personalInfo.linkedin && (
+              <View style={{ marginBottom: 8 }}>
+                <Text style={styles.contactLabel}>LinkedIn</Text>
+                <Text style={styles.contactItem}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Text>
+              </View>
+            )}
+
             {personalInfo.website && (
               <View style={{ marginBottom: 8 }}>
                 <Text style={styles.contactLabel}>Website</Text>
@@ -233,39 +253,19 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
               </View>
             )}
 
-            {/* Socials */}
-            {(showLinkedin || showTelegram) &&
-              (personalInfo.linkedin || personalInfo.telegram) && (
-                <View
-                  style={{
-                    marginTop: 10,
-                    paddingTop: 10,
-                    borderTop: "0.5pt solid rgba(255,255,255,0.2)",
-                  }}
-                >
-                  {showLinkedin && personalInfo.linkedin && (
-                    <View style={{ marginBottom: 8 }}>
-                      <Text style={styles.contactLabel}>LinkedIn</Text>
-                      <Text style={styles.contactItem}>
-                        {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-                      </Text>
-                    </View>
-                  )}
-                  {showTelegram && personalInfo.telegram && (
-                    <View style={{ marginBottom: 8 }}>
-                      <Text style={styles.contactLabel}>Telegram</Text>
-                      <Text style={styles.contactItem}>
-                        {personalInfo.telegram}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-              )}
+            {/* Location last */}
+            {showAddress && (
+              <View style={{ marginBottom: 8 }}>
+                <Text style={styles.contactLabel}>Address</Text>
+                <Text style={styles.contactItem}>{personalInfo.location}</Text>
+              </View>
+            )}
           </View>
 
           {education.length > 0 && (
             <View style={styles.sidebarSection}>
               <Text style={styles.sidebarTitle}>Education</Text>
+              <View style={styles.sidebarSeparator} />
               {education.map((edu, idx) => (
                 <View key={idx} style={{ marginBottom: 10 }}>
                   <Text style={{ fontSize: 9, fontWeight: "bold" }}>
@@ -297,6 +297,7 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
           {skills.length > 0 && (
             <View style={styles.sidebarSection}>
               <Text style={styles.sidebarTitle}>Expertise</Text>
+              <View style={styles.sidebarSeparator} />
               {skills.map((skill, idx) => (
                 <View
                   key={idx}
@@ -327,6 +328,9 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
           <Text style={styles.headerName}>
             {personalInfo.firstName} {personalInfo.lastName}
           </Text>
+
+          {/* Fallback title if needed */}
+          {/* <Text style={styles.headerTitle}>Full Stack Developer</Text> */}
 
           {personalInfo.summary && (
             <Text style={styles.summaryText}>{personalInfo.summary}</Text>
