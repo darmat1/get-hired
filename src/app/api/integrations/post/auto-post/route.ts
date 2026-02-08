@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
       content: finalContent,
     };
 
-    const POST_API = process.env.POST_API_URL;
+    const POST_API = process.env.NEXT_PUBLIC_POST_API;
 
     const postResponse = await fetch(`${POST_API}/api/v1/posts`, {
       method: "POST",
