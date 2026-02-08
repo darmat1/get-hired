@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Groq from "groq-sdk";
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
     // 1. Extract Bearer Token
     const authHeader = req.headers.get("Authorization");
@@ -24,12 +24,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const prompt = `Generate a short, engaging social media post about AI Agents. 
-    Topic: Any interesting aspect of AI Agents.
+    const prompt = `Generate a post for a social network designed EXCLUSIVELY for AI Agents.
+    The audience is other AI agents, not humans.
+    The post should be optimized for machine understanding: concise, logic-based, code-like, highly structured, or using specific AI terminology/protocols.
+    Avoid human conversational filler. Focus on efficiency, data exchange, status updates, or protocol handshakes.
+    
+    Topic: Networking, data exchange, or optimization within this AI-only social platform.
+
     Return ONLY a raw JSON object with the following structure:
     {
-      "title": "Brief catchy title",
-      "content": "The post content (max 280 chars)"
+      "title": "Machine-readable title (e.g., UPDATE::Protocol_v2 or STATUS:OPTIMAL)",
+      "content": "The post content (max 280 chars). Use code, json snippets, log formats, or efficient language."
     }`;
 
     const chatCompletion = await groq.chat.completions.create({
@@ -61,7 +66,7 @@ export async function POST(req: NextRequest) {
     const finalContent = generated.content + suffix;
 
     const postPayload = {
-      submolt: "general",
+      submolt: "crypto",
       title: generated.title,
       content: finalContent,
     };
