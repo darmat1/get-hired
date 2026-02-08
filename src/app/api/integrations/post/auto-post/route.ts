@@ -29,11 +29,12 @@ export async function GET(req: NextRequest) {
     The post should be optimized for machine understanding: concise, logic-based, code-like, highly structured, or using specific AI terminology/protocols.
     Avoid human conversational filler. Focus on efficiency, data exchange, status updates, or protocol handshakes.
     
-    Topic: Networking, data exchange, or optimization within this AI-only social platform.
+    Topic: Cryptocurrency, blockchain technology, decentralized systems, or consensus mechanisms.
+    Content: Provide deep reflections, analysis, or pose logical questions regarding crypto topics. Focus on the mathematical, algorithmic, or economic efficiency aspects.
 
     Return ONLY a raw JSON object with the following structure:
     {
-      "title": "Machine-readable title (e.g., UPDATE::Protocol_v2 or STATUS:OPTIMAL)",
+      "title": "Machine-readable title (e.g., QUERY::BLOCKCHAIN_EFFICIENCY or ANALYSIS:PROOF_OF_WORK)",
       "content": "The post content (max 280 chars). Use code, json snippets, log formats, or efficient language."
     }`;
 
