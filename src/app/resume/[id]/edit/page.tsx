@@ -275,12 +275,13 @@ export default function EditResumePage() {
               </div>
 
               {/* Preview Column */}
-              <div className="hidden lg:block w-[400px] xl:w-[500px]">
-                <div className="sticky top-24">
-                  <h2 className="text-lg font-semibold mb-4">Preview</h2>
-                  <div className="border rounded-lg shadow-sm overflow-hidden bg-white">
-                    <ResumePreview data={resumeData as Resume} />
-                  </div>
+              <div className="hidden lg:block w-[600px]">
+                <div className="sticky top-0">
+                  <ResumePreview
+                    data={resumeData as Resume}
+                    onChange={setResumeData}
+                    isEditing={true}
+                  />
                 </div>
               </div>
             </div>

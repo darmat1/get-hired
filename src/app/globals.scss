@@ -48,6 +48,8 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+  --spacing-a4-width: 210mm;
+  --spacing-a4-height: 297mm;
 }
 
 @layer theme {
@@ -193,4 +195,69 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500;
   }
+
+  .resume-paper {
+    width: var(--spacing-a4-width);
+    height: var(--spacing-a4-height);
+    flex-shrink: 0;
+    @apply shadow-2xl mx-auto overflow-hidden relative text-black;
+    print-color-adjust: exact;
+  }
+
+  .a4-container {
+    width: var(--spacing-a4-width);
+    height: var(--spacing-a4-height);
+    transform-origin: top left;
+  }
+
+  .preview-scale {
+    transform: scale(0.7);
+    transform-origin: top center;
+  }
+
+  .resume-paper {
+    width: 210mm;
+    height: 297mm;
+    background-color: white;
+    color: black;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  @media print {
+    body * {
+      display: none !important;
+    }
+
+    .resume-paper,
+    .resume-paper * {
+      display: block !important;
+      shadow: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
 }

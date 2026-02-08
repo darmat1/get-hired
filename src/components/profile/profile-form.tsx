@@ -120,7 +120,9 @@ export function ProfileForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Ошибка при изменении пароля");
+        throw new Error(
+          data.error || t("profile.error.password_change_failed"),
+        );
       }
 
       setMessage({
@@ -139,7 +141,7 @@ export function ProfileForm() {
         text:
           error instanceof Error
             ? error.message
-            : "Ошибка при изменении пароля",
+            : t("profile.error.password_change_failed"),
       });
     } finally {
       setLoading(false);

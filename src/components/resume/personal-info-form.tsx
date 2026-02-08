@@ -22,8 +22,8 @@ export function PersonalInfoForm({
   };
 
   return (
-    <div className="bg-card text-card-foreground rounded-lg border border-border shadow-sm p-6">
-      <h2 className="text-xl font-semibold mb-6">{t("form.personal_info")}</h2>
+    <div className="">
+      <h2 className="text-xl font-semibold mb-4">{t("form.personal_info")}</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -101,6 +101,32 @@ export function PersonalInfoForm({
             onChange={(e) => updateField("website", e.target.value)}
             className="w-full px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             placeholder={t("placeholder.website")}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
+            LinkedIn
+          </label>
+          <input
+            type="url"
+            value={data.linkedin || ""}
+            onChange={(e) => updateField("linkedin", e.target.value)}
+            className="w-full px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            placeholder="https://linkedin.com/in/..."
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
+            Telegram
+          </label>
+          <input
+            type="text"
+            value={data.telegram || ""}
+            onChange={(e) => updateField("telegram", e.target.value)}
+            className="w-full px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            placeholder="@username"
           />
         </div>
       </div>

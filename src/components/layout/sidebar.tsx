@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslation } from "@/lib/translations";
-import { FileText, PlusCircle, FileCheck } from "lucide-react";
+import { FileText, PlusCircle, FileCheck, Briefcase } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Logo from "../ui/icons/logo";
 
@@ -21,7 +21,7 @@ export function Sidebar() {
       </div>
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-2">
-          <li>
+          {/* <li>
             <Link
               href="/resume/new"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
@@ -33,7 +33,7 @@ export function Sidebar() {
               <PlusCircle className="mr-3 h-5 w-5 flex-shrink-0" />
               {t("nav.create_resume")}
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link
               href="/dashboard"
@@ -43,8 +43,21 @@ export function Sidebar() {
                   : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
               }`}
             >
+              <Briefcase className="mr-3 h-5 w-5 flex-shrink-0" />
+              {t("nav.my_experience")}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/dashboard/my-resumes"
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
+                isActive("/dashboard/my-resumes")
+                  ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-400"
+                  : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
               <FileText className="mr-3 h-5 w-5 flex-shrink-0" />
-              {t("nav.dashboard")}
+              {t("nav.my_resumes")}
             </Link>
           </li>
           <li>

@@ -45,10 +45,11 @@ export async function POST(req: NextRequest) {
 
     const resume = await prisma.resume.create({
       data: {
-        title: body.personalInfo?.firstName && body.personalInfo?.lastName
-          ? `Резюме ${body.personalInfo.firstName} ${body.personalInfo.lastName}`
-          : 'Новое резюме',
+        title: body.title || (body.personalInfo?.firstName && body.personalInfo?.lastName
+          ? `Resume ${body.personalInfo.firstName} ${body.personalInfo.lastName}`
+          : 'New Resume'),
         template: body.template || 'modern',
+        language: body.language || 'en',
         personalInfo: body.personalInfo || {},
         workExperience: body.workExperience || [],
         education: body.education || [],

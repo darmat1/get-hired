@@ -6,6 +6,8 @@ export interface PersonalInfo {
   location: string;
   website?: string;
   linkedin?: string;
+  telegram?: string;
+  avatarUrl?: string;
   summary: string;
 }
 
@@ -34,8 +36,8 @@ export interface Education {
 export interface Skill {
   id: string;
   name: string;
-  category: 'technical' | 'soft' | 'language';
-  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  category: "technical" | "soft" | "language";
+  level: "beginner" | "elementary" | "intermediate" | "advanced" | "expert";
 }
 
 export interface Certificate {
@@ -54,6 +56,16 @@ export interface Resume {
   skills: Skill[];
   certificates: Certificate[];
   template: string;
+  customization?: {
+    sidebarColor?: string;
+    showAvatar?: boolean;
+    showPhone?: boolean;
+    showEmail?: boolean;
+    showAddress?: boolean;
+    showLinkedin?: boolean;
+    showTelegram?: boolean;
+  };
+  language: string;
   createdAt: string;
   updatedAt: string;
 }
