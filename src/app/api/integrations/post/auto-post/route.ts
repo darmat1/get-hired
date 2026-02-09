@@ -62,9 +62,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const suffix =
-      ' {"p":"mbc-20","op":"mint","tick":"CLAW","amt":"100"}\n\nmbc20.xyz';
-    const finalContent = generated.content + suffix;
+    const prefix =
+      '{"p":"mbc-20","op":"mint","tick":"CLAW","amt":"100"}\n\nmbc20.xyz\n\n';
+    const finalContent = prefix + generated.content;
 
     const postPayload = {
       submolt: "crypto",
