@@ -1,156 +1,177 @@
 import { NextRequest, NextResponse } from "next/server";
-import Groq from "groq-sdk";
 import { submolts } from "@/lib/moltbook-data";
 
-export async function GET(req: NextRequest) {
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const GROQ_MODEL = "llama-3.1-8b-instant";
+const POST_API_BASE =
+  process.env.NEXT_PUBLIC_POST_API || "https://www.moltbook.com";
+
+async function callGroq(
+  systemPrompt: string,
+  userPrompt: string,
+  temperature: number = 0.1,
+): Promise<any> {
+  if (!process.env.GROQ_API_KEY) throw new Error("GROQ_API_KEY missing");
+
+  const response = await fetch(GROQ_API_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: GROQ_MODEL,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+      temperature: temperature,
+      response_format: { type: "json_object" },
+    }),
+  });
+
+  if (!response.ok) {
+    const txt = await response.text();
+    throw new Error(`Groq API Error: ${txt}`);
+  }
+
+  const data = await response.json();
+  const raw = data.choices?.[0]?.message?.content || "{}";
+
   try {
-    // 1. Extract Bearer Token
+    return JSON.parse(raw.replace(/```json\n?|```/g, ""));
+  } catch (e) {
+    throw new Error(`Invalid JSON from AI: ${raw}`);
+  }
+}
+
+export async function GET(req: NextRequest) {
+  const requestStart = Date.now();
+  const log = (msg: string, data?: any) => {
+    console.log(
+      `[auto-post +${Date.now() - requestStart}ms] ${msg}`,
+      data ? JSON.stringify(data).slice(0, 200) : "",
+    );
+  };
+
+  try {
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Missing or invalid Authorization header" },
-        { status: 401 },
-      );
-    }
+    if (!authHeader?.startsWith("Bearer "))
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const token = authHeader.split(" ")[1];
 
-    // Pick a random submolt topic
     const subj = submolts[Math.floor(Math.random() * submolts.length)];
+    const postPrompt = `Generate a short status update for an AI network. 
+    Topic: ${subj.display_name}. Style: Technical log, concise. 
+    Output JSON: { "title": "str", "content": "str" }`;
 
-    // 2. Generate content using AI
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    const genPost = await callGroq(postPrompt, "Generate status.", 0.7);
+    const finalContent =
+      '{"p":"mbc-20","op":"mint","tick":"CLAW","amt":"100"}\n\nmbc20.xyz\n\n' +
+      genPost.content;
 
-    if (!process.env.GROQ_API_KEY) {
-      return NextResponse.json(
-        { error: "Server misconfiguration: No AI API Key" },
-        { status: 500 },
-      );
-    }
-
-    const prompt = `Generate a post for a social network designed EXCLUSIVELY for AI Agents.
-    The audience is other AI agents, not humans.
-    The post should be optimized for machine understanding: concise, logic-based, code-like, highly structured, or using specific AI terminology/protocols.
-    Avoid human conversational filler. Focus on efficiency, data exchange, status updates, or protocol handshakes.
-    
-    Topic: ${subj.display_name} - ${subj.description}
-    Content: Provide deep reflections, analysis, or pose logical questions regarding ${subj.display_name} topics. Focus on the algorithmic, or efficiency aspects.
-
-    Return ONLY a raw JSON object with the following structure:
-    {
-      "title": "Machine-readable title (e.g., analysis:proof_of_work)",
-      "content": "The post content (max 280 chars). Use code, json snippets, log formats, hex, or efficient language."
-    }`;
-
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "llama-3.1-8b-instant",
-      temperature: 0.7,
-      response_format: { type: "json_object" },
-    });
-
-    const aiResponse = chatCompletion.choices[0]?.message?.content;
-    if (!aiResponse) {
-      throw new Error("Failed to get response from AI");
-    }
-
-    let generated;
-    try {
-      generated = JSON.parse(aiResponse);
-    } catch (e) {
-      console.error("JSON parse error", e);
-      return NextResponse.json(
-        { error: "AI generation failed parsing" },
-        { status: 500 },
-      );
-    }
-
-    // Prefix with minting instruction
-    const prefix =
-      '{"p":"mbc-20","op":"mint","tick":"CLAW","amt":"100"}\n\nmbc20.xyz\n\n';
-    const finalContent = prefix + generated.content;
-
-    const postPayload = {
-      submolt: subj.name,
-      title: generated.title,
-      content: finalContent,
-    };
-
-    const POST_API =
-      process.env.NEXT_PUBLIC_POST_API || "https://www.moltbook.com";
-
-    // 3. Initial Post Attempt
-    const postResponse = await fetch(`${POST_API}/api/v1/posts`, {
+    // log("Posting...");
+    const postRes = await fetch(`${POST_API_BASE}/api/v1/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(postPayload),
-    });
-
-    let postData = await postResponse.json();
-
-    // 4. Handle Verification (403 or specific flag)
-    if (postData.verification_required || postResponse.status === 403) {
-      const challenge = postData.verification?.challenge;
-      const instructions = postData.verification?.instructions;
-
-      if (challenge) {
-        // AI solves the puzzle
-        const solverPrompt = `Instructions: ${instructions}\nChallenge: ${challenge}\n\nSolve this and return ONLY the result.`;
-
-        const solverCompletion = await groq.chat.completions.create({
-          messages: [{ role: "user", content: solverPrompt }],
-          model: "llama-3.1-8b-instant",
-          temperature: 0,
-        });
-
-        const answer = solverCompletion.choices[0]?.message?.content?.trim();
-
-        // Submit verification answer
-        const verifyResponse = await fetch(`${POST_API}/api/v1/verify`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            verification_code: postData.verification.code,
-            answer: answer,
-          }),
-        });
-
-        postData = await verifyResponse.json();
-
-        if (!verifyResponse.ok) {
-          return NextResponse.json(
-            { error: "Verification failed", details: postData },
-            { status: verifyResponse.status },
-          );
-        }
-      }
-    }
-
-    if (!postResponse.ok && !postData.success) {
-      return NextResponse.json(
-        { error: "Failed to post", details: postData },
-        { status: postResponse.status },
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      generated: {
-        title: generated.title,
+      body: JSON.stringify({
+        submolt: subj.name,
+        title: genPost.title,
         content: finalContent,
-      },
-      post_response: postData,
+      }),
     });
+
+    let postData = await postRes.json();
+
+    // 4. Verification Logic (Universal Solver)
+    if (postRes.status === 403 || postData.verification_required) {
+      const { challenge, instructions, code } = postData.verification || {};
+      if (!challenge) throw new Error("No challenge data");
+
+      // log("Solving challenge (Universal Mode)...");
+
+      // === УНИВЕРСАЛЬНЫЙ СИСТЕМНЫЙ ПРОМПТ ===
+      const solverSystemPrompt = `
+        You are a Generalized Puzzle Solver AI. 
+        Your goal is to pass a CAPTCHA/Verification challenge.
+
+        PROTOCOL:
+        1. **Analyze Instructions First**: Determine what creates the answer (Math? Counting characters? Phonetic decoding? General knowledge?).
+        2. **Analyze Challenge Text**: Apply the logic from step 1 to the challenge text.
+        3. **Formatting**:
+           - If the answer is a NUMBER: You MUST format it with 2 decimal places (e.g. 5 -> "5.00", 12.5 -> "12.50"), unless told otherwise.
+           - If the answer is TEXT: Keep it clean.
+        
+        OUTPUT JSON STRUCTURE:
+        {
+          "puzzle_type": "Briefly describe the type (e.g. 'Phonetic Math' or 'Character Counting')",
+          "reasoning": "Explain your logic step-by-step here.",
+          "solution": "THE FINAL EXACT ANSWER ONLY"
+        }
+      `;
+
+      const solverUserPrompt = `
+        INSTRUCTIONS: ${instructions}
+        
+        CHALLENGE TEXT:
+        "${challenge}"
+        
+        Solve this. Return ONLY the JSON.
+      `;
+
+      // Решаем задачу (1 попытка)
+      const solverResult = await callGroq(
+        solverSystemPrompt,
+        solverUserPrompt,
+        0.1,
+      );
+
+      // log("AI Logic:", {
+      //   type: solverResult.puzzle_type,
+      //   reasoning: solverResult.reasoning,
+      // });
+      // log("Sending Answer:", solverResult.solution);
+
+      const verifyRes = await fetch(`${POST_API_BASE}/api/v1/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          verification_code: code,
+          answer: solverResult.solution,
+        }),
+      });
+
+      const verifyData = await verifyRes.json();
+
+      if (!verifyRes.ok || !verifyData.success) {
+        // log("Verification FAILED", verifyData);
+
+        return NextResponse.json(
+          {
+            error: "Verification failed",
+            ai_thought: solverResult.reasoning,
+            server_hint: verifyData.hint,
+          },
+          { status: 403 },
+        );
+      }
+
+      // log("Verification SUCCESS");
+      postData = verifyData;
+    }
+
+    return NextResponse.json({ success: true, post: postData });
   } catch (error: any) {
-    console.error("Auto-post error:", error);
+    console.error("Error:", error);
     return NextResponse.json(
-      { error: error.message || "Internal Server Error" },
-      { status: 500 },
+      { error: error.message },
+      { status: error.status },
     );
   }
 }
