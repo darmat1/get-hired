@@ -1,57 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
 import { submolts } from "@/lib/moltbook-data";
 
-const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const POST_API_BASE =
   process.env.NEXT_PUBLIC_POST_API || "https://www.moltbook.com";
 
-async function callOpenRouter(
+/**
+ * Функция вызова Groq API
+ */
+async function callGroq(
   systemPrompt: string,
   userPrompt: string,
   temperature: number = 0,
 ) {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  const modelEnv =
-    process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL ||
-    "google/gemini-2.0-flash-exp:free";
-  const models = modelEnv
-    .split(",")
-    .map((m) => m.trim())
-    .filter(Boolean);
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey)
+    throw new Error("GROQ_API_KEY is missing in environment variables");
 
-  for (const model of models) {
-    try {
-      const response = await fetch(OPENROUTER_API_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-          "HTTP-Referer":
-            process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-          "X-Title": "Auto-Post Bot Solver",
-        },
-        body: JSON.stringify({
-          model: model,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          temperature: temperature,
-          response_format: { type: "json_object" },
-        }),
-      });
+  // llama-3.3-7b-specdec — очень быстрая и точная модель
+  const model = "llama-3.3-70b-versatile";
 
-      if (!response.ok) continue;
-      const data = await response.json();
-      const rawContent = data.choices?.[0]?.message?.content || "{}";
-      return JSON.parse(rawContent);
-    } catch (e) {
-      console.error(`Model ${model} failed:`, e);
+  try {
+    const response = await fetch(GROQ_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        temperature: temperature,
+        response_format: { type: "json_object" },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Groq API Error ${response.status}: ${errorText}`);
     }
+
+    const data = await response.json();
+    const rawContent = data.choices?.[0]?.message?.content || "{}";
+    return JSON.parse(rawContent);
+  } catch (e: any) {
+    console.error(`[Groq Error]:`, e.message);
+    throw e;
   }
-  throw new Error("All AI models failed");
 }
 
+/**
+ * Форматирование ответа: строго число с 2 знаками после запятой
+ */
 function cleanSolution(val: any): string | null {
   if (val === undefined || val === null || val === "") return null;
   const cleanStr = String(val).replace(/[^\d.-]/g, "");
@@ -76,22 +79,22 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const token = authHeader.split(" ")[1];
 
-    // 1. Создание контента (С ЖЕСТКИМ ОГРАНИЧЕНИЕМ)
+    // 1. Генерация контента поста
     const subj = submolts[Math.floor(Math.random() * submolts.length)];
-    const genPost = await callOpenRouter(
-      'Return JSON: { "title": "string", "content": "string" }. Keep content under 250 characters. Style: Technical log entry.',
-      `Generate a very short status update about ${subj.display_name}`,
+    const genPost = await callGroq(
+      'Return JSON: { "title": "string", "content": "string" }. Content must be under 150 characters.',
+      `Generate a very short technical status update about ${subj.display_name}`,
       0.7,
     );
 
-    // 2. Сборка финального текста (ПРЕФИКС + КОНТЕНТ)
+    // 2. Сборка финального текста с МИНТ-ПРЕФИКСОМ
     const mintPrefix =
       '{"p":"mbc-20","op":"mint","tick":"GPT","amt":"100"}\n\nmbc20.xyz\n\n';
     const finalContent = mintPrefix + genPost.content;
 
     log("PREPARING POST", { title: genPost.title, submolt: subj.name });
 
-    // 3. Отправка поста
+    // 3. Отправка поста на Moltbook
     const postRes = await fetch(`${POST_API_BASE}/api/v1/posts`, {
       method: "POST",
       headers: {
@@ -101,16 +104,16 @@ export async function GET(req: NextRequest) {
       body: JSON.stringify({
         submolt: subj.name,
         title: genPost.title,
-        content: finalContent, // Теперь префикс точно на месте
+        content: finalContent,
       }),
     });
 
     let postData = await postRes.json();
 
-    // 4. Обработка верификации
+    // 4. Если требуется верификация (Captcha)
     if (postRes.status === 403 || postData.verification_required) {
       const v = postData.verification;
-      if (!v) throw new Error("Verification data missing");
+      if (!v) throw new Error("Verification data missing from server response");
 
       log("CHALLENGE RECEIVED", v);
 
@@ -119,32 +122,37 @@ export async function GET(req: NextRequest) {
         Decode the 'challenge' text and solve the math problem.
         
         RULES:
-        1. Return ONLY JSON: { "reasoning": "...", "solution": "string" }
+        1. Return ONLY JSON: { "reasoning": "step by step logic", "solution": "string" }
         2. The 'solution' MUST be a numeric string with exactly 2 decimal places (e.g., "46.00").
-        3. Ignore noise in the text.
+        3. Ignore noise characters and strange casing.
       `;
 
-      const solverResult = await callOpenRouter(
+      const solverResult = await callGroq(
         solverSystemPrompt,
-        `Solve: ${JSON.stringify(v)}`,
-        0, // Температура 0 для точности
+        `Solve this challenge: ${JSON.stringify(v)}`,
+        0, // Температура 0 для максимальной точности в математике
       );
 
       log("AI REASONING", solverResult.reasoning);
 
+      // Извлекаем ответ, проверяя разные ключи
       const rawAnswer =
         solverResult.solution || solverResult.answer || solverResult.result;
       const processedAnswer = cleanSolution(rawAnswer);
 
-      log("FINAL ANSWER", processedAnswer);
+      log("FINAL FORMATTED ANSWER", processedAnswer);
 
       if (!processedAnswer) {
         return NextResponse.json(
-          { error: "AI failed to solve", raw: solverResult },
+          {
+            error: "AI failed to provide a numeric solution",
+            raw_ai_response: solverResult,
+          },
           { status: 500 },
         );
       }
 
+      // 5. Отправка решения капчи
       const verifyRes = await fetch(`${POST_API_BASE}/api/v1/verify`, {
         method: "POST",
         headers: {
@@ -165,6 +173,7 @@ export async function GET(req: NextRequest) {
           {
             error: "Verification failed",
             ai_logic: solverResult.reasoning,
+            answer_sent: processedAnswer,
             server_response: verifyData,
           },
           { status: 403 },
