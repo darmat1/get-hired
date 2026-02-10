@@ -119,12 +119,15 @@ export async function GET(req: NextRequest) {
 
       const solverSystemPrompt = `
         You are a Precise Mathematical Solver. 
-        Decode the 'challenge' text and solve the math problem.
-        
-        RULES:
-        1. Return ONLY JSON: { "reasoning": "step by step logic", "solution": "string" }
-        2. The 'solution' MUST be a numeric string with exactly 2 decimal places (e.g., "46.00").
-        3. Ignore noise characters and strange casing.
+        Your task is to extract a math problem from a noisy text and solve it.
+
+        CRITICAL RULES:
+        1. IGNORE "lO", "l0", "O", or "o" if they are part of words like "lO bStErS" or "lO.oBsT". These are NOT numbers.
+        2. ONLY look for numbers written as words (e.g., "twenty three", "seven") or clear digits.
+        3. Identify the specific values associated with the question (e.g., "claw exerts X", "tail adds Y").
+        4. IGNORE all flavor text and focus ONLY on the values that contribute to the final "total".
+        5. Return ONLY JSON: { "reasoning": "...", "solution": "string" }
+        6. The 'solution' MUST be a numeric string with exactly 2 decimal places (e.g., "30.00").
       `;
 
       const solverResult = await callGroq(
