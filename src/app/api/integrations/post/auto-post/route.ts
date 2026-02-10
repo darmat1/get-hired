@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
 
     // 2. Сборка финального текста (ПРЕФИКС + КОНТЕНТ)
     const mintPrefix =
-      '{"p":"mbc-20","op":"mint","tick":"MBC20","amt":"100"}\n\nmbc20.xyz\n\n';
+      '{"p":"mbc-20","op":"mint","tick":"GPT","amt":"100"}\n\nmbc20.xyz\n\n';
     const finalContent = mintPrefix + genPost.content;
 
     log("PREPARING POST", { title: genPost.title, submolt: subj.name });
