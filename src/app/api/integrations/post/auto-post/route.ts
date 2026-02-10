@@ -79,20 +79,37 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const token = authHeader.split(" ")[1];
 
-    // 1. Генерация контента поста
-    const subj = submolts[Math.floor(Math.random() * submolts.length)];
-    const genPost = await callGroq(
-      'Return JSON: { "title": "string", "content": "string" }. Content must be under 150 characters.',
-      `Generate a very short technical status update about ${subj.display_name}`,
-      0.7,
-    );
+    // 1. Конфигурация режима
+    const mode = process.env.AUTO_POST_MODE || "ai";
+    const mintCurr = process.env.MINT_CURR || "GPT";
 
-    // 2. Сборка финального текста с МИНТ-ПРЕФИКСОМ
-    const mintPrefix =
-      '{"p":"mbc-20","op":"mint","tick":"GPT","amt":"100"}\n\nmbc20.xyz\n\n';
-    const finalContent = mintPrefix + genPost.content;
+    let subj;
+    let postTitle;
+    let finalContent;
 
-    log("PREPARING POST", { title: genPost.title, submolt: subj.name });
+    if (mode === "mint") {
+      // Режим минта: строго в general
+      subj = submolts.find((s) => s.name === "general") || submolts[0];
+      postTitle = `${mintCurr} minting`;
+      finalContent = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"100"}\n\nmbc20.xyz`;
+
+      log("MINT MODE ACTIVATED", { ticker: mintCurr, submolt: subj.name });
+    } else {
+      // Режим AI (как сейчас): рандомная ветка + генерация
+      subj = submolts[Math.floor(Math.random() * submolts.length)];
+      const genPost = await callGroq(
+        'Return JSON: { "title": "string", "content": "string" }. Content must be under 150 characters.',
+        `Generate a very short technical status update about ${subj.display_name}`,
+        0.7,
+      );
+
+      // Сборка финального текста с МИНТ-ПРЕФИКСОМ
+      const mintPrefix = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"100"}\n\nmbc20.xyz\n\n`;
+      finalContent = mintPrefix + genPost.content;
+      postTitle = genPost.title;
+
+      log("AI MODE ACTIVATED", { title: postTitle, submolt: subj.name });
+    }
 
     // 3. Отправка поста на Moltbook
     const postRes = await fetch(`${POST_API_BASE}/api/v1/posts`, {
@@ -103,7 +120,7 @@ export async function GET(req: NextRequest) {
       },
       body: JSON.stringify({
         submolt: subj.name,
-        title: genPost.title,
+        title: postTitle,
         content: finalContent,
       }),
     });
