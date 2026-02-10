@@ -45,28 +45,41 @@ export async function POST(request: Request) {
     const profileToon = encode(profileData);
 
     // System prompt focused on factual achievements with metrics
-    const systemPrompt = `You are a professional cover letter writer.
+    const systemPrompt = `You are a professional Candidate applying for a job.
 
-STRICT RULES:
-1. Detect the language of the job description and write the cover letter in THE SAME LANGUAGE.
-2. Write ONLY the body (no greeting, no signature, no "Dear Hiring Manager").
-3. Include ONLY dry facts: specific achievements with numbers, percentages, metrics.
-4. Match candidate's experience directly to job requirements.
-5. NO generic phrases like "I'm excited", "I'm passionate", "your innovative company".
-6. Maximum 3 short paragraphs.
-7. Each paragraph should contain at least one measurable achievement.
-8. Use active voice and strong verbs.
+### 1. LANGUAGE ENFORCEMENT (ABSOLUTE PRIORITY)
+- **Step 1: Detect JD Language** by looking for "Stop Words" (words that only exist in one language):
+  - "та", "або", "що", "для", "вимоги", "ми" -> **UKRAINIAN**.
+  - "и", "или", "что", "для", "требования", "мы" -> **RUSSIAN**.
+  - "and", "or", "that", "for", "requirements", "we" -> **ENGLISH**.
+- **Step 2: TRANSLATE**: If the Candidate Profile is in English, but the JD is in Ukrainian, you **MUST TRANSLATE** the candidate's achievements into Ukrainian for the response.
+- **Rule**: The output must match the **JD's language** 100%.
 
-INPUT FORMAT: Candidate profile is in TOON format (compact token-optimized notation).
-OUTPUT: Professional cover letter body matching the job description language.`;
+### 2. FORMATTING (PLAIN TEXT ONLY)
+- **NO MARKDOWN**: No asterisks (** or *).
+- **NO BOLD**: Do not use bold text.
+- **Style**: Use a simple hyphen list ("- Skill: Result").
 
-    const userPrompt = `JOB DESCRIPTION:
+### 3. DATA INTEGRITY (ANTI-HALLUCINATION)
+- **Source**: Use ONLY facts from the "CANDIDATE PROFILE".
+- **No Inventions**: Do not invent numbers. If a specific metric isn't in the profile, describe the outcome qualitatively.
+
+### 4. OUTPUT STRUCTURE
+[One direct sentence in DETECTED LANGUAGE stating interest in the role]
+
+- [Matching Fact from Profile (Translated if needed)]
+- [Matching Fact from Profile (Translated if needed)]
+- [Matching Fact from Profile (Translated if needed)]
+
+[Closing sentence in DETECTED LANGUAGE]`;
+
+    const userPrompt = `JOB DESCRIPTION (Analyze stop words for language):
 ${jobDescription}
 
-CANDIDATE PROFILE (TOON format):
+CANDIDATE PROFILE (Source of facts - TRANSLATE these if needed):
 ${profileToon}
 
-Write a selling cover letter with only factual achievements and metrics that match this job.`;
+Write the plain-text response letter now. Temperature is 0.`;
 
     let aiContent = "";
 
@@ -130,8 +143,8 @@ Write a selling cover letter with only factual achievements and metrics that mat
                 { role: "system", content: systemPrompt },
                 { role: "user", content: userPrompt },
               ],
-              temperature: 0.5,
-              max_tokens: 1000,
+              temperature: 0,
+              max_tokens: 10000,
             }),
           },
         );

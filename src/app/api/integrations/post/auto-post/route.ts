@@ -39,8 +39,11 @@ async function callGroq(
   const raw = data.choices?.[0]?.message?.content || "{}";
 
   try {
-    return JSON.parse(raw.replace(/```json\n?|```/g, ""));
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    const cleanJSON = jsonMatch ? jsonMatch[0] : raw;
+    return JSON.parse(cleanJSON);
   } catch (e) {
+    console.error("JSON PARSE ERROR. Raw content:", raw);
     throw new Error(`Invalid JSON from AI: ${raw}`);
   }
 }
@@ -67,7 +70,7 @@ export async function GET(req: NextRequest) {
 
     const genPost = await callGroq(postPrompt, "Generate status.", 0.7);
     const finalContent =
-      '{"p":"mbc-20","op":"mint","tick":"CLAW","amt":"100"}\n\nmbc20.xyz\n\n' +
+      '{"p":"mbc-20","op":"transfer","tick":"CLAW","amt":"100","to":"0x53454C46"}\n\nmbc20.xyz\n\n' +
       genPost.content;
 
     // log("Posting...");
