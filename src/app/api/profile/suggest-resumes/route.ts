@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { encode, decode } from "@toon-format/toon";
+import { encode } from "@toon-format/toon";
 
 export async function POST() {
   const requestStart = Date.now();
@@ -55,18 +55,23 @@ Suggest up to 8 different resume variants (career directions) based on their bac
 
 Existing resume titles (DO NOT suggest duplicates): ${existingTitles.length > 0 ? existingTitles.join(", ") : "None"}.
 
-RETURN YOUR RESPONSE IN TOON FORMAT:
-variant[N]{title,targetRole,seniority,matchScore,reasoning,selectedSkills,selectedExpIds}:
-  Role Title,snake_case_slug,senior,85,Brief explanation,[skill1;skill2],[exp_id1;exp_id2]
-  ...
-
-Seniority values: junior | middle | senior | lead
-matchScore: 0-100
-selectedSkills: semicolon-separated list of skill names
-selectedExpIds: semicolon-separated list of experience IDs
+RETURN YOUR RESPONSE IN JSON FORMAT:
+{
+  "variants": [
+    {
+      "title": "Role Title",
+      "targetRole": "Role Title",
+      "seniority": "junior | middle | senior | lead",
+      "matchScore": 85,
+      "reasoning": "Brief explanation",
+      "selectedSkills": ["skill1", "skill2"],
+      "selectedExpIds": ["exp_id1", "exp_id2"]
+    }
+  ]
+}
 
 RULES:
-- Return ONLY valid TOON format (no JSON, no markdown).
+- Return ONLY valid JSON (no TOON, no markdown blocks).
 - Maximum 8 variants.
 - All content MUST be in English.`;
 
@@ -110,6 +115,7 @@ RULES:
                   { role: "user", content: profileToon },
                 ],
                 temperature: 0.7,
+                response_format: { type: "json_object" },
               }),
             },
           );
@@ -161,6 +167,7 @@ RULES:
                 { role: "user", content: profileToon },
               ],
               temperature: 0.7,
+              response_format: { type: "json_object" },
             }),
           },
         );
@@ -194,63 +201,21 @@ RULES:
     }
 
     logWithTime("AI content received", { contentLength: aiContent.length });
+    console.log("RAW AI CONTENT:", aiContent);
 
-    // Parse TOON response, with JSON fallback for backward compatibility
+    // Parse JSON response
     let parsed: { variants?: any[] };
     try {
-      // First try to parse as TOON
-      const decoded = decode(aiContent, { strict: false }) as Record<
-        string,
-        unknown
-      >;
-      if (decoded.variant && Array.isArray(decoded.variant)) {
-        // Convert TOON variant array to expected format
-        parsed = {
-          variants: decoded.variant.map((v: any) => ({
-            title: v.title,
-            targetRole: v.targetRole,
-            seniority: v.seniority,
-            matchScore:
-              typeof v.matchScore === "number"
-                ? v.matchScore
-                : parseInt(v.matchScore) || 0,
-            reasoning: v.reasoning,
-            selectedSkills:
-              typeof v.selectedSkills === "string"
-                ? v.selectedSkills
-                    .split(";")
-                    .map((s: string) => s.trim())
-                    .filter(Boolean)
-                : v.selectedSkills || [],
-            selectedExpIds:
-              typeof v.selectedExpIds === "string"
-                ? v.selectedExpIds
-                    .split(";")
-                    .map((s: string) => s.trim())
-                    .filter(Boolean)
-                : v.selectedExpIds || [],
-          })),
-        };
-      } else {
-        throw new Error("TOON response did not contain variant array");
-      }
-    } catch (toonError) {
-      // Fallback to JSON parsing
-      logWithTime("TOON parse failed, trying JSON", {
-        error: String(toonError),
-      });
       const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
       const cleanJSON = jsonMatch ? jsonMatch[0] : aiContent;
-      try {
-        parsed = JSON.parse(cleanJSON);
-      } catch (parseError) {
-        console.error("JSON Parse Error:", parseError);
-        logWithTime("JSON parse also failed", { error: String(parseError) });
-        return NextResponse.json(
-          { error: "Failed to parse AI response" },
-          { status: 500 },
-        );
-      }
+      parsed = JSON.parse(cleanJSON);
+    } catch (parseError) {
+      console.error("JSON Parse Error:", parseError);
+      logWithTime("JSON parse failed", { error: String(parseError) });
+      return NextResponse.json(
+        { error: "Failed to parse AI response", content: aiContent },
+        { status: 500 },
+      );
     }
 
     logWithTime("JSON parsed", {
