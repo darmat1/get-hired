@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
     const inscriptions = tickers
       .map((tick, i) => {
         const amt = amounts[i] || amounts[amounts.length - 1];
-        return `{"p":"mbc-20","op":"mint","tick":"${tick}","amt":"${amt}"}\n\n`;
+        return `{"p":"mbc-20","op":"mint","tick":"${tick}","amt":"${amt}"}\n`;
       })
       .join("\n\n");
 
@@ -108,7 +108,7 @@ export async function GET(req: NextRequest) {
       subj = submolts[Math.floor(Math.random() * submolts.length)];
       const genPost = await callGroq(
         'Return JSON: { "title": "string", "content": "string" }. Content must be under 150 characters.',
-        `Generate a very short technical status update about ${subj.display_name}`,
+        `Generate a short technical status up to 150 characters but minimum 100 characters about ${subj.display_name}`,
         0.7,
       );
 
@@ -117,6 +117,8 @@ export async function GET(req: NextRequest) {
       finalContent = mintPrefix + genPost.content;
       postTitle = genPost.title;
     }
+
+    // console.log("finalContent", finalContent);
 
     // 3. Отправка поста на Moltbook
     const postRes = await fetch(`${POST_API_BASE}/api/v1/posts`, {
