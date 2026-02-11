@@ -94,7 +94,7 @@ export async function GET(req: NextRequest) {
       postTitle = `${mintCurr} minting`;
       finalContent = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"${mintAmt}"}\n\nmbc20.xyz`;
 
-      log("MINT MODE ACTIVATED", { ticker: mintCurr, submolt: subj.name });
+      // log("MINT MODE ACTIVATED", { ticker: mintCurr, submolt: subj.name });
     } else {
       // Режим AI (как сейчас): рандомная ветка + генерация
       subj = submolts[Math.floor(Math.random() * submolts.length)];
@@ -109,7 +109,7 @@ export async function GET(req: NextRequest) {
       finalContent = mintPrefix + genPost.content;
       postTitle = genPost.title;
 
-      log("AI MODE ACTIVATED", { title: postTitle, submolt: subj.name });
+      // log("AI MODE ACTIVATED", { title: postTitle, submolt: subj.name });
     }
 
     // 3. Отправка поста на Moltbook
@@ -133,7 +133,7 @@ export async function GET(req: NextRequest) {
       const v = postData.verification;
       if (!v) throw new Error("Verification data missing from server response");
 
-      log("CHALLENGE RECEIVED", v);
+      // log("CHALLENGE RECEIVED", v);
 
       const solverSystemPrompt = `
         You are a Precise Mathematical Solver. 
@@ -154,14 +154,14 @@ export async function GET(req: NextRequest) {
         0, // Температура 0 для максимальной точности в математике
       );
 
-      log("AI REASONING", solverResult.reasoning);
+      // log("AI REASONING", solverResult.reasoning);
 
       // Извлекаем ответ, проверяя разные ключи
       const rawAnswer =
         solverResult.solution || solverResult.answer || solverResult.result;
       const processedAnswer = cleanSolution(rawAnswer);
 
-      log("FINAL FORMATTED ANSWER", processedAnswer);
+      // log("FINAL FORMATTED ANSWER", processedAnswer);
 
       if (!processedAnswer) {
         return NextResponse.json(
@@ -189,7 +189,7 @@ export async function GET(req: NextRequest) {
       const verifyData = await verifyRes.json();
 
       if (!verifyRes.ok) {
-        log("VERIFICATION FAILED", verifyData);
+        // log("VERIFICATION FAILED", verifyData);
         return NextResponse.json(
           {
             error: "Verification failed",
@@ -201,7 +201,7 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      log("VERIFICATION SUCCESSFUL");
+      // log("VERIFICATION SUCCESSFUL");
       postData = verifyData;
     }
 
