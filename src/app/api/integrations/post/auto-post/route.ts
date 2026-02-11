@@ -82,6 +82,7 @@ export async function GET(req: NextRequest) {
     // 1. Конфигурация режима
     const mode = process.env.AUTO_POST_MODE || "ai";
     const mintCurr = process.env.MINT_CURR || "GPT";
+    const mintAmt = process.env.MINT_AMT || "100";
 
     let subj;
     let postTitle;
@@ -91,9 +92,9 @@ export async function GET(req: NextRequest) {
       // Режим минта: строго в general
       subj = submolts.find((s) => s.name === "general") || submolts[0];
       postTitle = `${mintCurr} minting`;
-      finalContent = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"100"}\n\nmbc20.xyz`;
+      finalContent = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"${mintAmt}"}\n\nmbc20.xyz`;
 
-      log("MINT MODE ACTIVATED", { ticker: mintCurr, submolt: subj.name });
+      // log("MINT MODE ACTIVATED", { ticker: mintCurr, submolt: subj.name });
     } else {
       // Режим AI (как сейчас): рандомная ветка + генерация
       subj = submolts[Math.floor(Math.random() * submolts.length)];
@@ -104,11 +105,11 @@ export async function GET(req: NextRequest) {
       );
 
       // Сборка финального текста с МИНТ-ПРЕФИКСОМ
-      const mintPrefix = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"100"}\n\nmbc20.xyz\n\n`;
+      const mintPrefix = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"${mintAmt}"}\n\nmbc20.xyz\n\n`;
       finalContent = mintPrefix + genPost.content;
       postTitle = genPost.title;
 
-      log("AI MODE ACTIVATED", { title: postTitle, submolt: subj.name });
+      // log("AI MODE ACTIVATED", { title: postTitle, submolt: subj.name });
     }
 
     // 3. Отправка поста на Moltbook
@@ -132,7 +133,7 @@ export async function GET(req: NextRequest) {
       const v = postData.verification;
       if (!v) throw new Error("Verification data missing from server response");
 
-      log("CHALLENGE RECEIVED", v);
+      // log("CHALLENGE RECEIVED", v);
 
       const solverSystemPrompt = `
         You are a Precise Mathematical Solver. 
@@ -153,14 +154,14 @@ export async function GET(req: NextRequest) {
         0, // Температура 0 для максимальной точности в математике
       );
 
-      log("AI REASONING", solverResult.reasoning);
+      // log("AI REASONING", solverResult.reasoning);
 
       // Извлекаем ответ, проверяя разные ключи
       const rawAnswer =
         solverResult.solution || solverResult.answer || solverResult.result;
       const processedAnswer = cleanSolution(rawAnswer);
 
-      log("FINAL FORMATTED ANSWER", processedAnswer);
+      // log("FINAL FORMATTED ANSWER", processedAnswer);
 
       if (!processedAnswer) {
         return NextResponse.json(
@@ -188,7 +189,7 @@ export async function GET(req: NextRequest) {
       const verifyData = await verifyRes.json();
 
       if (!verifyRes.ok) {
-        log("VERIFICATION FAILED", verifyData);
+        // log("VERIFICATION FAILED", verifyData);
         return NextResponse.json(
           {
             error: "Verification failed",
@@ -200,7 +201,7 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      log("VERIFICATION SUCCESSFUL");
+      // log("VERIFICATION SUCCESSFUL");
       postData = verifyData;
     }
 
