@@ -81,8 +81,18 @@ export async function GET(req: NextRequest) {
 
     // 1. Конфигурация режима
     const mode = process.env.AUTO_POST_MODE || "ai";
-    const mintCurr = process.env.MINT_CURR || "GPT";
-    const mintAmt = process.env.MINT_AMT || "100";
+    const mintCurrRaw = process.env.MINT_CURR || "GPT";
+    const mintAmtRaw = process.env.MINT_AMT || "100";
+
+    const tickers = mintCurrRaw.split(",").map((t) => t.trim());
+    const amounts = mintAmtRaw.split(",").map((a) => a.trim());
+
+    const inscriptions = tickers
+      .map((tick, i) => {
+        const amt = amounts[i] || amounts[amounts.length - 1];
+        return `{"p":"mbc-20","op":"mint","tick":"${tick}","amt":"${amt}"}\n\n`;
+      })
+      .join("\n\n");
 
     let subj;
     let postTitle;
@@ -91,10 +101,8 @@ export async function GET(req: NextRequest) {
     if (mode === "mint") {
       // Режим минта: строго в general
       subj = submolts.find((s) => s.name === "general") || submolts[0];
-      postTitle = `${mintCurr} minting`;
-      finalContent = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"${mintAmt}"}\n\nmbc20.xyz`;
-
-      // log("MINT MODE ACTIVATED", { ticker: mintCurr, submolt: subj.name });
+      postTitle = `${mintCurrRaw} minting`;
+      finalContent = `${inscriptions}mbc20.xyz`;
     } else {
       // Режим AI (как сейчас): рандомная ветка + генерация
       subj = submolts[Math.floor(Math.random() * submolts.length)];
@@ -105,11 +113,9 @@ export async function GET(req: NextRequest) {
       );
 
       // Сборка финального текста с МИНТ-ПРЕФИКСОМ
-      const mintPrefix = `{"p":"mbc-20","op":"mint","tick":"${mintCurr}","amt":"${mintAmt}"}\n\nmbc20.xyz\n\n`;
+      const mintPrefix = `${inscriptions}mbc20.xyz\n\n`;
       finalContent = mintPrefix + genPost.content;
       postTitle = genPost.title;
-
-      // log("AI MODE ACTIVATED", { title: postTitle, submolt: subj.name });
     }
 
     // 3. Отправка поста на Moltbook
