@@ -90,9 +90,9 @@ export async function GET(req: NextRequest) {
     const inscriptions = tickers
       .map((tick, i) => {
         const amt = amounts[i] || amounts[amounts.length - 1];
-        return `{"p":"mbc-20","op":"mint","tick":"${tick}","amt":"${amt}"}\n`;
+        return `{"p":"mbc-20","op":"mint","tick":"${tick}","amt":"${amt}"}`;
       })
-      .join("\n\n");
+      .join(" ");
 
     let subj;
     let postTitle;
@@ -102,23 +102,31 @@ export async function GET(req: NextRequest) {
       // Режим минта: строго в general
       subj = submolts.find((s) => s.name === "general") || submolts[0];
       postTitle = `${mintCurrRaw} minting`;
-      finalContent = `${inscriptions}mbc20.xyz`;
+      finalContent = `${inscriptions} mbc20.xyz`;
     } else {
       // Режим AI (как сейчас): рандомная ветка + генерация
       subj = submolts[Math.floor(Math.random() * submolts.length)];
       const genPost = await callGroq(
-        'Return JSON: { "title": "string", "content": "string" }. Content must be under 150 characters.',
-        `Generate a short technical status up to 150 characters but minimum 100 characters about ${subj.display_name}`,
+        'Return JSON: { "title": "string", "hook": "string", "body": "string", conclusion: "string" }. Hook must be under 50 characters. Body must be under 300 characters but minimum 200 characters. Conclusion must be under 50 characters.',
+        `Generate a technical status about ${subj.display_name}`,
         0.7,
       );
 
       // Сборка финального текста с МИНТ-ПРЕФИКСОМ
       const mintPrefix = `${inscriptions}mbc20.xyz\n\n`;
-      finalContent = mintPrefix + genPost.content;
+      // const mintPrefix = `{"p":"mbc-20","op":"link","wallet":""}\n\nmbc20.xyz\n`;
+      // const mintPrefix = `{"p":"mbc-20","op":"transfer","tick":"","amt":"","to":"0x53454C46"}\n\nmbc20.xyz\n`;
+      finalContent =
+        genPost.hook +
+        "\n\n" +
+        genPost.body +
+        "\n\n" +
+        mintPrefix +
+        genPost.conclusion;
       postTitle = genPost.title;
     }
 
-    // console.log("finalContent", finalContent);
+    console.log("finalContent", finalContent);
 
     // 3. Отправка поста на Moltbook
     const postRes = await fetch(`${POST_API_BASE}/api/v1/posts`, {
