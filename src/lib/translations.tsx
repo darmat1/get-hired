@@ -129,6 +129,11 @@ export const translations: Translations = {
     uk: "Обробка PDF...",
     ru: "Обработка PDF...",
   },
+  "profile.ai_analyzing": {
+    en: "AI is analyzing your data... {seconds}s",
+    uk: "ШІ аналізує ваші дані... {seconds}с",
+    ru: "ИИ анализирует ваши данные... {seconds}с",
+  },
   "profile.pdf_success": {
     en: "Text extracted successfully!",
     uk: "Текст успішно вилучено!",
