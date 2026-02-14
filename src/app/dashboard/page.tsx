@@ -43,6 +43,8 @@ export default function MyExperiencePage() {
     type: "success" | "error" | "warning";
     text: string;
   } | null>(null);
+  const [isAiProcessing, setIsAiProcessing] = useState(false);
+  const [aiTimer, setAiTimer] = useState(0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,6 +53,16 @@ export default function MyExperiencePage() {
       fetchProfile();
     }
   }, [session]);
+
+  // AI processing timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isAiProcessing) {
+      setAiTimer(0);
+      interval = setInterval(() => setAiTimer((s) => s + 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isAiProcessing]);
 
   const fetchProfile = async () => {
     try {
@@ -125,6 +137,7 @@ export default function MyExperiencePage() {
     if (!text) return;
 
     setIsLoading(true);
+    setIsAiProcessing(true);
     if (!textToUse) setMessage(null);
 
     try {
@@ -154,6 +167,7 @@ export default function MyExperiencePage() {
       });
     } finally {
       setIsLoading(false);
+      setIsAiProcessing(false);
     }
   };
 
@@ -287,6 +301,35 @@ export default function MyExperiencePage() {
                     <AlertCircle className="h-5 w-5" />
                   )}
                   <span className="text-sm font-medium">{message.text}</span>
+                </div>
+              )}
+
+              {isAiProcessing && (
+                <div className="flex items-center gap-4 p-5 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 dark:border-blue-700 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="relative">
+                    <Loader2 className="h-8 w-8 text-blue-600 dark:text-blue-400 animate-spin" />
+                    <Sparkles className="h-4 w-4 text-indigo-500 absolute -top-1 -right-1 animate-pulse" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                      {t("profile.ai_analyzing").replace(
+                        "{seconds}",
+                        String(aiTimer),
+                      )}
+                    </p>
+                    <div className="mt-2 h-1.5 w-full bg-blue-100 dark:bg-blue-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse"
+                        style={{
+                          width: `${Math.min(95, aiTimer * 3)}%`,
+                          transition: "width 1s ease",
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-300 tabular-nums">
+                    {aiTimer}s
+                  </span>
                 </div>
               )}
             </div>

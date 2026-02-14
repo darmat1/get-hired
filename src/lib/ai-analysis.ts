@@ -1,6 +1,6 @@
 import { Resume } from "@/types/resume";
 import { encode, decode } from "@toon-format/toon";
-import Groq from "groq-sdk";
+import { aiComplete, getAvailableProviders } from "@/lib/ai";
 
 export interface AIAnalysis {
   score: number;
@@ -23,18 +23,12 @@ export async function analyzeResume(
   resume: Resume,
   language: string = "en",
 ): Promise<AIAnalysis> {
-  // Try to use real AI if API key is available, otherwise fall back to mock
-  if (process.env.OPENAI_API_KEY) {
+  // Try real AI if any provider is available
+  if (getAvailableProviders().length > 0) {
     try {
-      return await analyzeWithOpenAI(resume, language);
+      return await analyzeWithAI(resume, language);
     } catch (error) {
-      console.warn("OpenAI analysis failed, falling back to mock:", error);
-    }
-  } else if (process.env.GROQ_API_KEY) {
-    try {
-      return await analyzeWithGroq(resume, language);
-    } catch (error) {
-      console.warn("Groq analysis failed, falling back to mock:", error);
+      console.warn("AI analysis failed, falling back to mock:", error);
     }
   }
 
@@ -165,84 +159,10 @@ function calculateResumeScore(resume: Resume): number {
   return Math.min(score, maxScore);
 }
 
-async function analyzeWithOpenAI(
+async function analyzeWithAI(
   resume: Resume,
   language: string,
 ): Promise<AIAnalysis> {
-  const resumeToon = encode(resume);
-
-  const prompt = `Analyze this resume and provide evaluation.
-Language: ${language}
-
-Resume (TOON format):
-${resumeToon}
-
-RETURN IN TOON FORMAT:
-analysis:
-  score: 0-100
-  strengths[N]: strength1,strength2,...
-  weaknesses[N]: weakness1,weakness2,...
-  suggestions[N]: suggestion1,suggestion2,...
-  recommendations[N]{section,suggestion,priority}:
-    Section Name,Specific recommendation,high/medium/low
-    ...
-
-Return ONLY valid TOON format.`;
-
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.3,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`OpenAI API error: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  const content = data.choices[0].message.content;
-
-  // Try TOON first, fallback to JSON
-  try {
-    const decoded = decode(content, { strict: false }) as Record<
-      string,
-      unknown
-    >;
-    if (decoded.analysis) {
-      const a = decoded.analysis as Record<string, unknown>;
-      return {
-        score: Number(a.score) || 0,
-        strengths: Array.isArray(a.strengths) ? a.strengths : [],
-        weaknesses: Array.isArray(a.weaknesses) ? a.weaknesses : [],
-        suggestions: Array.isArray(a.suggestions) ? a.suggestions : [],
-        recommendations: Array.isArray(a.recommendations)
-          ? a.recommendations.map((r: any) => ({
-              section: r.section || "",
-              suggestion: r.suggestion || "",
-              priority: r.priority || "medium",
-            }))
-          : [],
-      };
-    }
-  } catch {
-    // Fallback to JSON
-  }
-
-  return JSON.parse(content);
-}
-
-async function analyzeWithGroq(
-  resume: Resume,
-  language: string,
-): Promise<AIAnalysis> {
-  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
   const resumeToon = encode(resume);
 
   const prompt = `Analyze this resume and provide evaluation.
@@ -263,16 +183,13 @@ analysis:
 
 Return ONLY valid TOON format (no JSON, no markdown).`;
 
-  const chatCompletion = await groq.chat.completions.create({
-    messages: [{ role: "user", content: prompt }],
-    model: "llama-3.1-8b-instant",
+  const response = await aiComplete({
+    systemPrompt: "You are a professional resume analyst.",
+    userPrompt: prompt,
     temperature: 0.3,
   });
 
-  const content = chatCompletion.choices[0]?.message?.content;
-  if (!content) {
-    throw new Error("No content from Groq API");
-  }
+  const content = response.content;
 
   // Try TOON first, fallback to JSON
   try {

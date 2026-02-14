@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
+import { aiComplete } from "@/lib/ai";
 
 export async function POST() {
   const requestStart = Date.now();
@@ -84,124 +85,21 @@ RULES:
 
     const profileToon = encode(profileData);
 
-    let aiContent = "";
+    const aiStart = Date.now();
+    const response = await aiComplete({
+      systemPrompt,
+      userPrompt: profileToon,
+      temperature: 0.7,
+      responseFormat: { type: "json_object" },
+    });
 
-    if (process.env.OPENROUTER_API_KEY) {
-      const modelEnv =
-        process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL ||
-        "google/gemini-2.0-flash-exp:free";
-      const models = modelEnv
-        .split(",")
-        .map((m) => m.trim())
-        .filter(Boolean);
-
-      logWithTime("OpenRouter enabled", { models });
-
-      for (const model of models) {
-        try {
-          const modelStart = Date.now();
-          const response = await fetch(
-            "https://openrouter.ai/api/v1/chat/completions",
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                model: model,
-                messages: [
-                  { role: "system", content: systemPrompt },
-                  { role: "user", content: profileToon },
-                ],
-                temperature: 0.7,
-                response_format: { type: "json_object" },
-              }),
-            },
-          );
-
-          logWithTime("OpenRouter response received", {
-            model,
-            status: response.status,
-            durationMs: Date.now() - modelStart,
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            aiContent = data.choices?.[0]?.message?.content || "";
-            logWithTime("OpenRouter content parsed", {
-              model,
-              contentLength: aiContent.length,
-            });
-            if (aiContent) break; // Success!
-          } else {
-            const errorText = await response.text();
-            console.warn(
-              `OpenRouter model ${model} failed (${response.status}):`,
-              errorText,
-            );
-          }
-        } catch (err) {
-          console.error(`OpenRouter fetch failed for model ${model}:`, err);
-        }
-      }
-    }
-
-    // Fallback to Groq if OpenRouter failed or no key
-    if (!aiContent && process.env.GROQ_API_KEY) {
-      try {
-        const groqStart = Date.now();
-        logWithTime("Groq fallback enabled");
-        const response = await fetch(
-          "https://api.groq.com/openai/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: "llama-3.3-70b-versatile",
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: profileToon },
-              ],
-              temperature: 0.7,
-              response_format: { type: "json_object" },
-            }),
-          },
-        );
-
-        logWithTime("Groq response received", {
-          status: response.status,
-          durationMs: Date.now() - groqStart,
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          aiContent = data.choices?.[0]?.message?.content || "";
-          logWithTime("Groq content parsed", {
-            contentLength: aiContent.length,
-          });
-        }
-      } catch (e) {
-        console.error("Groq fallback failed:", e);
-      }
-    }
-
-    if (!aiContent) {
-      logWithTime("AI content empty - giving up");
-      return NextResponse.json(
-        {
-          error:
-            "Failed to generate suggestions. Please check AI API configuration or try again later.",
-        },
-        { status: 500 },
-      );
-    }
-
-    logWithTime("AI content received", { contentLength: aiContent.length });
-    console.log("RAW AI CONTENT:", aiContent);
+    const aiContent = response.content;
+    logWithTime("AI response received", {
+      provider: response.provider,
+      model: response.model,
+      contentLength: aiContent.length,
+      durationMs: Date.now() - aiStart,
+    });
 
     // Parse JSON response
     let parsed: { variants?: any[] };

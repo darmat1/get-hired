@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { encode, decode } from "@toon-format/toon";
+import { aiComplete } from "@/lib/ai";
 
 export async function POST(request: Request) {
   try {
@@ -41,9 +41,9 @@ export async function POST(request: Request) {
     const normalizedText = cleanText(text);
 
     const systemPrompt = `You are a Resume Parsing & Merging Engine.
-INPUT: Existing profile in TOON format + raw text from PDF/paste.
+INPUT: Existing profile as JSON + raw text from PDF/paste.
 
-GOAL: Extract and merge data. Return consolidated profile in TOON format.
+GOAL: Extract and merge data. Return consolidated profile as strict JSON.
 
 MERGE RULES:
 - Same company+role = combine descriptions, use best dates
@@ -51,52 +51,66 @@ MERGE RULES:
 - Deduplicate skills and education
 - Prefer more detailed data
 
-RETURN IN TOON FORMAT:
-personalInfo:
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  location: string
-  summary: string
-workExperience[N]{title,company,location,startDate,endDate,current,description}:
-  Title,Company,Location,YYYY-MM,YYYY-MM,true/false,Description text
-  ...
-education[N]{institution,degree,field,startDate,endDate,current}:
-  Institution,Degree,Field,YYYY-MM,YYYY-MM,true/false
-  ...
-skills[N]{name,category,level}:
-  Skill Name,technical,advanced
-  ...
+RETURN STRICT JSON:
+{
+  "personalInfo": {
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "phone": "string",
+    "location": "string",
+    "summary": "string",
+    "linkedin": "string (full URL like https://linkedin.com/in/username)",
+    "telegram": "string (username like @username or t.me/username)"
+  },
+  "workExperience": [
+    {
+      "title": "string",
+      "company": "string",
+      "location": "string",
+      "startDate": "YYYY-MM",
+      "endDate": "YYYY-MM",
+      "current": false,
+      "description": "string"
+    }
+  ],
+  "education": [
+    {
+      "institution": "string",
+      "degree": "string",
+      "field": "string",
+      "startDate": "YYYY-MM",
+      "endDate": "YYYY-MM",
+      "current": false
+    }
+  ],
+  "skills": [
+    {
+      "name": "string",
+      "category": "technical",
+      "level": "advanced"
+    }
+  ]
+}
 
 RULES:
-- Return ONLY valid TOON format (no JSON, no markdown)
+- Return ONLY valid JSON (no markdown, no code fences, no extra text)
 - Do NOT invent data
 - Dates in YYYY-MM format`;
 
     const parseAIResponse = (content: string): any => {
       if (!content) throw new Error("Empty AI Content");
 
-      // Try TOON first
-      try {
-        const decoded = decode(content, { strict: false }) as Record<
-          string,
-          unknown
-        >;
-        if (decoded.personalInfo || decoded.workExperience || decoded.skills) {
-          return decoded;
-        }
-      } catch (e) {
-        console.log("TOON parse failed, trying JSON fallback");
-      }
+      // Extract JSON from response (strip markdown fences if present)
+      let cleaned = content.trim();
+      cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "");
 
-      // Fallback to JSON
-      const firstBrace = content.indexOf("{");
-      const lastBrace = content.lastIndexOf("}");
+      const firstBrace = cleaned.indexOf("{");
+      const lastBrace = cleaned.lastIndexOf("}");
       if (firstBrace === -1 || lastBrace === -1) {
-        throw new Error("AI response did not contain valid data");
+        throw new Error("AI response did not contain valid JSON");
       }
-      const jsonString = content.substring(firstBrace, lastBrace + 1);
+      const jsonString = cleaned.substring(firstBrace, lastBrace + 1);
       try {
         return JSON.parse(jsonString);
       } catch (e) {
@@ -110,97 +124,23 @@ RULES:
       where: { userId: session.user.id },
     });
 
-    const existingProfileToon = existingProfile
-      ? encode(existingProfile)
+    const existingProfileJson = existingProfile
+      ? JSON.stringify(existingProfile)
       : "{}";
 
-    const userPrompt = `EXISTING PROFILE (in TOON format):
-${existingProfileToon}
+    const userPrompt = `EXISTING PROFILE (as JSON):
+${existingProfileJson}
 
 NEW DATA TO PARSE:
 ${normalizedText}`;
 
-    let aiContent = "";
+    const response = await aiComplete({
+      systemPrompt,
+      userPrompt,
+      temperature: 0,
+    });
 
-    if (process.env.OPENROUTER_API_KEY) {
-      console.log(
-        `Attempting OpenRouter ${process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL}`,
-      );
-
-      const payload = {
-        model: process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        temperature: 0, // Deterministic output
-      };
-      //
-      try {
-        const response = await fetch(
-          "https://openrouter.ai/api/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-              "Content-Type": "application/json",
-              "HTTP-Referer":
-                process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-              "X-Title": "Resume Parser",
-            },
-            body: JSON.stringify(payload),
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          aiContent = data.choices?.[0]?.message?.content || "";
-          console.log("OpenRouter Success. Content extracted.");
-        } else {
-          const errorText = await response.text();
-          console.error(`OpenRouter Error (${response.status}):`, errorText);
-        }
-      } catch (err) {
-        console.error("OpenRouter fetch failed:", err);
-      }
-    }
-
-    if (!aiContent && process.env.GROQ_API_KEY) {
-      console.log("Falling back to Groq...");
-      try {
-        const response = await fetch(
-          "https://api.groq.com/openai/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: "llama-3.3-70b-versatile",
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userPrompt },
-              ],
-              temperature: 0,
-            }),
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          aiContent = data.choices?.[0]?.message?.content || "";
-        }
-      } catch (e) {
-        console.error("Groq fallback failed:", e);
-      }
-    }
-
-    if (!aiContent) {
-      return NextResponse.json({ error: "AI Parsing Failed" }, { status: 500 });
-    }
-
-    const parsedData = parseAIResponse(aiContent);
+    const parsedData = parseAIResponse(response.content);
     const safeStr = (val: any) => (typeof val === "string" ? val : "");
 
     // Prepare combined data (trusting AI to have merged, but ensuring structure/IDs)
@@ -211,6 +151,8 @@ ${normalizedText}`;
       phone: safeStr(parsedData.personalInfo?.phone),
       location: safeStr(parsedData.personalInfo?.location),
       summary: safeStr(parsedData.personalInfo?.summary),
+      linkedin: safeStr(parsedData.personalInfo?.linkedin),
+      telegram: safeStr(parsedData.personalInfo?.telegram),
     };
 
     const finalWorkExperience = (parsedData.workExperience || []).map(

@@ -129,6 +129,11 @@ export const translations: Translations = {
     uk: "Обробка PDF...",
     ru: "Обработка PDF...",
   },
+  "profile.ai_analyzing": {
+    en: "AI is analyzing your data... {seconds}s",
+    uk: "ШІ аналізує ваші дані... {seconds}с",
+    ru: "ИИ анализирует ваши данные... {seconds}с",
+  },
   "profile.pdf_success": {
     en: "Text extracted successfully!",
     uk: "Текст успішно вилучено!",
@@ -594,6 +599,24 @@ export const translations: Translations = {
     uk: "Активний AI сервіс:",
     ru: "Активный AI сервис:",
   },
+  "ai_settings.active": { en: "Active", uk: "Активний", ru: "Активный" },
+  "ai_settings.set_active": {
+    en: "Set as active",
+    uk: "Зробити активним",
+    ru: "Сделать активным",
+  },
+  "ai_settings.unlink": {
+    en: "Remove key",
+    uk: "Видалити ключ",
+    ru: "Удалить ключ",
+  },
+  "ai_settings.test_success": { en: "Success", uk: "Успішно", ru: "Успешно" },
+  "ai_settings.test_failed": { en: "Failed", uk: "Помилка", ru: "Ошибка" },
+  "ai_settings.key_hidden": {
+    en: "Key is encrypted and hidden",
+    uk: "Ключ зашифрований та прихований",
+    ru: "Ключ зашифрован и скрыт",
+  },
   "ai_settings.analysis_using": {
     en: "Resume analysis is performed using",
     uk: "Аналіз резюме виконується за допомогою",
@@ -924,9 +947,9 @@ export const translations: Translations = {
     ru: "Llama 3.1 - бесплатный и очень быстрый",
   },
   "ai_service.openai.description": {
-    en: "GPT-3.5 Turbo - paid but very high quality",
-    uk: "GPT-3.5 Turbo - платний, але дуже якісний",
-    ru: "GPT-3.5 Turbo - платный, но очень качественный",
+    en: "Leading AI models like GPT-4o and o1 by OpenAI.",
+    uk: "Провідні AI-моделі такі як GPT-4o та o1 від OpenAI.",
+    ru: "Ведущие AI-модели, такие как GPT-4o и o1 от OpenAI.",
   },
   "ai_service.groq.limits": {
     en: "30 requests per minute for free",
@@ -937,6 +960,26 @@ export const translations: Translations = {
     en: "Paid usage, but very high quality analysis",
     uk: "Платне використання, але дуже якісний аналіз",
     ru: "Платное использование, но очень качественный анализ",
+  },
+  "ai_service.claude.description": {
+    en: "Powerful models by Anthropic, great for creative writing and coding.",
+    uk: "Потужні моделі від Anthropic, чудові для творчого письма та програмування.",
+    ru: "Мощные модели от Anthropic, отлично подходят для творческого письма и программирования.",
+  },
+  "ai_service.gemini.description": {
+    en: "Google's most capable AI models with large context windows.",
+    uk: "Найпотужніші моделі від Google з величезними вікнами контексту.",
+    ru: "Самые мощные модели от Google с огромными окнами контекста.",
+  },
+  "ai_service.grok.description": {
+    en: "xAI's latest models with a focus on real-time info and reasoning.",
+    uk: "Останні моделі від xAI з фокусом на актуальну інформацію та логіку.",
+    ru: "Последние модели от xAI с фокусом на актуальную информацию и логику.",
+  },
+  "ai_service.openrouter.description": {
+    en: "Access multiple models (GPT-4, Claude, Llama) through a single API.",
+    uk: "Доступ до безлічі моделей (GPT-4, Claude, Llama) через єдиний API.",
+    ru: "Доступ ко многим моделям (GPT-4, Claude, Llama) через единый API.",
   },
 
   // AI Setup Instructions
@@ -989,6 +1032,69 @@ export const translations: Translations = {
     en: "5. Cost per resume analysis: ~$0.001",
     uk: "5. Вартість аналізу одного резюме: ~$0.001",
     ru: "5. Стоимость анализа одного резюме: ~$0.001",
+  },
+  "ai_setup.claude.step1": {
+    en: "1. Go to https://console.anthropic.com/",
+    uk: "1. Перейдіть на https://console.anthropic.com/",
+    ru: "1. Перейдите на https://console.anthropic.com/",
+  },
+  "ai_setup.claude.step2": {
+    en: "2. Register",
+    uk: "2. Зареєструйтесь",
+    ru: "2. Зарегистрируйтесь",
+  },
+  "ai_setup.claude.step3": {
+    en: "3. Create API Keys",
+    uk: "3. Створіть API ключі",
+    ru: "3. Создайте API ключи",
+  },
+  "ai_setup.claude.step4": {
+    en: "4. Add payment method (credits)",
+    uk: "4. Додайте метод оплати",
+    ru: "4. Добавьте метод оплаты",
+  },
+  "ai_setup.claude.step5": {
+    en: "5. Highly recommended for parsing",
+    uk: "5. Рекомендовано для парсингу",
+    ru: "5. Рекомендуется для парсинга",
+  },
+
+  "ai_setup.gemini.step1": {
+    en: "1. Go to https://aistudio.google.com/",
+    uk: "1. Перейдіть на https://aistudio.google.com/",
+    ru: "1. Перейдите на https://aistudio.google.com/",
+  },
+  "ai_setup.gemini.step2": {
+    en: "2. Create free API key",
+    uk: "2. Створіть безкоштовний API ключ",
+    ru: "2. Создайте бесплатный API ключ",
+  },
+  "ai_setup.gemini.step3": {
+    en: "3. Fast and large context window",
+    uk: "3. Швидкий та велике вікно контексту",
+    ru: "3. Быстрый и большое окно контекста",
+  },
+
+  "ai_setup.grok.step1": {
+    en: "1. Go to https://console.x.ai/",
+    uk: "1. Перейдіть на https://console.x.ai/",
+    ru: "1. Перейдите на https://console.x.ai/",
+  },
+  "ai_setup.grok.step2": {
+    en: "2. Create API key",
+    uk: "2. Створіть API ключ",
+    ru: "2. Создайте API ключ",
+  },
+
+  "ai_setup.openrouter.step1": {
+    en: "1. Go to https://openrouter.ai/",
+    uk: "1. Перейдіть на https://openrouter.ai/",
+    ru: "1. Перейдите на https://openrouter.ai/",
+  },
+  "ai_setup.openrouter.step2": {
+    en: "2. Single key for all models",
+    uk: "2. Один ключ для всіх моделей",
+    ru: "2. Один ключ для всех моделей",
   },
 
   // AI Analysis Messages

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
+import { aiComplete } from "@/lib/ai";
 
 export async function POST(request: Request) {
   try {
@@ -81,93 +82,16 @@ ${profileToon}
 
 Write the plain-text response letter now. Temperature is 0.`;
 
-    let aiContent = "";
-
-    // Try OpenRouter first
-    if (process.env.OPENROUTER_API_KEY) {
-      const modelEnv =
-        process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL ||
-        "google/gemini-2.0-flash-exp:free";
-      const models = modelEnv
-        .split(",")
-        .map((m) => m.trim())
-        .filter(Boolean);
-
-      for (const model of models) {
-        try {
-          const response = await fetch(
-            "https://openrouter.ai/api/v1/chat/completions",
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                model: model,
-                messages: [
-                  { role: "system", content: systemPrompt },
-                  { role: "user", content: userPrompt },
-                ],
-                temperature: 0.5,
-                max_tokens: 1000,
-              }),
-            },
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            aiContent = data.choices?.[0]?.message?.content || "";
-            if (aiContent) break;
-          }
-        } catch (err) {
-          console.error(`OpenRouter model ${model} failed:`, err);
-        }
-      }
-    }
-
-    // Fallback to Groq
-    if (!aiContent && process.env.GROQ_API_KEY) {
-      try {
-        const response = await fetch(
-          "https://api.groq.com/openai/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: "llama-3.3-70b-versatile",
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userPrompt },
-              ],
-              temperature: 0,
-              max_tokens: 10000,
-            }),
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          aiContent = data.choices?.[0]?.message?.content || "";
-        }
-      } catch (err) {
-        console.error("Groq fallback failed:", err);
-      }
-    }
-
-    if (!aiContent) {
-      return NextResponse.json(
-        { error: "Failed to generate cover letter" },
-        { status: 500 },
-      );
-    }
+    const response = await aiComplete({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.5,
+      maxTokens: 1000,
+    });
 
     return NextResponse.json({
       success: true,
-      coverLetter: aiContent.trim(),
+      coverLetter: response.content.trim(),
     });
   } catch (error) {
     console.error("Error generating cover letter:", error);
