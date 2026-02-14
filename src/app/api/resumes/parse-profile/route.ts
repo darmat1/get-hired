@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { aiComplete } from "@/lib/ai";
 
 export async function POST(request: Request) {
   try {
@@ -133,89 +134,13 @@ ${existingProfileJson}
 NEW DATA TO PARSE:
 ${normalizedText}`;
 
-    let aiContent = "";
+    const response = await aiComplete({
+      systemPrompt,
+      userPrompt,
+      temperature: 0,
+    });
 
-    if (process.env.GROQ_API_KEY) {
-      console.log("Attempting Groq...");
-      try {
-        const response = await fetch(
-          "https://api.groq.com/openai/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: "llama-3.3-70b-versatile",
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userPrompt },
-              ],
-              temperature: 0,
-            }),
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          aiContent = data.choices?.[0]?.message?.content || "";
-          console.log("Groq Success. Content extracted.");
-        } else {
-          const errorText = await response.text();
-          console.error(`Groq Error (${response.status}):`, errorText);
-        }
-      } catch (e) {
-        console.error("Groq fetch failed:", e);
-      }
-    }
-
-    if (!aiContent && process.env.OPENROUTER_API_KEY) {
-      console.log(
-        `Falling back to OpenRouter ${process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL}`,
-      );
-
-      try {
-        const response = await fetch(
-          "https://openrouter.ai/api/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-              "Content-Type": "application/json",
-              "HTTP-Referer":
-                process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-              "X-Title": "Resume Parser",
-            },
-            body: JSON.stringify({
-              model: process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL,
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userPrompt },
-              ],
-              temperature: 0,
-            }),
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          aiContent = data.choices?.[0]?.message?.content || "";
-          console.log("OpenRouter Success. Content extracted.");
-        } else {
-          const errorText = await response.text();
-          console.error(`OpenRouter Error (${response.status}):`, errorText);
-        }
-      } catch (err) {
-        console.error("OpenRouter fetch failed:", err);
-      }
-    }
-
-    if (!aiContent) {
-      return NextResponse.json({ error: "AI Parsing Failed" }, { status: 500 });
-    }
-
-    const parsedData = parseAIResponse(aiContent);
+    const parsedData = parseAIResponse(response.content);
     const safeStr = (val: any) => (typeof val === "string" ? val : "");
 
     // Prepare combined data (trusting AI to have merged, but ensuring structure/IDs)
