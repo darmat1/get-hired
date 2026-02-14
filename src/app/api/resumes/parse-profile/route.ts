@@ -58,7 +58,9 @@ RETURN STRICT JSON:
     "email": "string",
     "phone": "string",
     "location": "string",
-    "summary": "string"
+    "summary": "string",
+    "linkedin": "string (full URL like https://linkedin.com/in/username)",
+    "telegram": "string (username like @username or t.me/username)"
   },
   "workExperience": [
     {
@@ -224,6 +226,8 @@ ${normalizedText}`;
       phone: safeStr(parsedData.personalInfo?.phone),
       location: safeStr(parsedData.personalInfo?.location),
       summary: safeStr(parsedData.personalInfo?.summary),
+      linkedin: safeStr(parsedData.personalInfo?.linkedin),
+      telegram: safeStr(parsedData.personalInfo?.telegram),
     };
 
     const finalWorkExperience = (parsedData.workExperience || []).map(
