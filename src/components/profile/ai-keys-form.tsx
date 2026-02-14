@@ -9,7 +9,6 @@ import {
   Loader,
   Trash2,
   Zap,
-  Settings,
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { AIService, getAvailableAIServices } from "@/lib/ai-services";
@@ -37,6 +36,13 @@ export function AIKeysForm() {
   } | null>(null);
 
   console.log("[AIKeysForm] Rendered. Services scope:", services.length);
+
+  // Generate stable random suffix for input names to prevent autocomplete after client mount
+  const [randomSuffix, setRandomSuffix] = useState("");
+
+  useEffect(() => {
+    setRandomSuffix(Math.random().toString(36).substring(7));
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -98,7 +104,7 @@ export function AIKeysForm() {
       });
 
       if (res.ok) {
-        setMessage({ type: "success", text: t("message.resume_saved") });
+        setMessage({ type: "success", text: t("ai_settings.key_saved") });
         setInputKeys((prev) => {
           const next = { ...prev };
           delete next[serviceId];
@@ -145,20 +151,20 @@ export function AIKeysForm() {
     }
   };
 
-  const handleUpdatePreferences = async (prefs: {
-    preferredAIProvider?: string | null;
-    preferredAIModel?: string | null;
-  }) => {
-    try {
-      await fetch("/api/account/ai-keys", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(prefs),
-      });
-    } catch (err) {
-      console.error("[AI] Error updating preference:", err);
-    }
-  };
+  // const handleUpdatePreferences = async (prefs: {
+  //   preferredAIProvider?: string | null;
+  //   preferredAIModel?: string | null;
+  // }) => {
+  //   try {
+  //     await fetch("/api/account/ai-keys", {
+  //       method: "PATCH",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(prefs),
+  //     });
+  //   } catch (err) {
+  //     console.error("[AI] Error updating preference:", err);
+  //   }
+  // };
 
   const handleSetPreferred = async (serviceId: string) => {
     setLoading(true);
@@ -288,10 +294,15 @@ export function AIKeysForm() {
                     <div className="relative">
                       <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <input
-                        type="password"
+                        type="text"
+                        name={`${service.id}_new_key_${randomSuffix}`}
                         placeholder={`${service.name} API Key`}
                         className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
                         value={inputKeys[service.id] || ""}
+                        autoComplete="new-password"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
                         onChange={(e) =>
                           setInputKeys((prev) => ({
                             ...prev,
@@ -348,7 +359,7 @@ export function AIKeysForm() {
                       </p>
                     </div>
 
-                    {isPreferred && (
+                    {/* {isPreferred && (
                       <div className="mt-2 pt-2 border-t border-blue-100 dark:border-blue-800">
                         <label className="block text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-1">
                           Default Model
@@ -374,7 +385,7 @@ export function AIKeysForm() {
                           />
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 )}
               </div>

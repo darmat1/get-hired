@@ -4,6 +4,7 @@ import "./globals.scss";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { LanguageProvider } from "@/lib/translations";
 import { Footer } from "@/components/layout/footer";
+import { AIKeyWarning } from "@/components/layout/ai-key-warning";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "CV Maker - Create Professional Resumes",
-  description: "Create professional resumes with LinkedIn data integration and AI recommendations",
+  description:
+    "Create professional resumes with LinkedIn data integration and AI recommendations",
 };
 
 const themeScript = `
@@ -51,6 +53,7 @@ export default function RootLayout({
         <AuthProvider>
           <LanguageProvider>
             {children}
+            <AIKeyWarning />
             <Footer />
           </LanguageProvider>
         </AuthProvider>
