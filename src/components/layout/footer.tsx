@@ -1,11 +1,19 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { useTranslation } from '@/lib/translations'
+import Link from "next/link";
+import { useTranslation } from "@/lib/translations";
+
+import { usePathname } from "next/navigation";
 
 export function Footer() {
-  const { t } = useTranslation()
-  const currentYear = new Date().getFullYear()
+  const { t } = useTranslation();
+  const pathname = usePathname();
+  const currentYear = new Date().getFullYear();
+
+  // Hide footer on dashboard and resume builder pages
+  if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/resume")) {
+    return null;
+  }
 
   return (
     <footer className="border-t border-border bg-background/50">
@@ -13,38 +21,38 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Column 1: About */}
           <div>
-            <h3 className="font-semibold mb-4">{t('footer.about')}</h3>
+            <h3 className="font-semibold mb-4">{t("footer.about")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t('footer.about_text')}
+              {t("footer.about_text")}
             </p>
           </div>
 
           {/* Column 2: Legal */}
           <div>
-            <h3 className="font-semibold mb-4">{t('footer.legal')}</h3>
+            <h3 className="font-semibold mb-4">{t("footer.legal")}</h3>
             <ul className="space-y-2">
               <li>
-                <Link 
+                <Link
                   href="/privacy-policy"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {t('footer.privacy_policy')}
+                  {t("footer.privacy_policy")}
                 </Link>
               </li>
               <li>
-                <Link 
+                <Link
                   href="/terms-of-service"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {t('footer.terms_of_service')}
+                  {t("footer.terms_of_service")}
                 </Link>
               </li>
               <li>
-                <Link 
+                <Link
                   href="/cookie-policy"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {t('footer.cookie_policy')}
+                  {t("footer.cookie_policy")}
                 </Link>
               </li>
             </ul>
@@ -52,9 +60,9 @@ export function Footer() {
 
           {/* Column 3: Contact */}
           <div>
-            <h3 className="font-semibold mb-4">{t('footer.contact')}</h3>
+            <h3 className="font-semibold mb-4">{t("footer.contact")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t('footer.contact_email')}
+              {t("footer.contact_email")}
             </p>
           </div>
         </div>
@@ -62,10 +70,10 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="border-t border-border pt-8">
           <p className="text-center text-sm text-muted-foreground">
-            &copy; {currentYear} {t('footer.copyright')}
+            &copy; {currentYear} {t("footer.copyright")}
           </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }

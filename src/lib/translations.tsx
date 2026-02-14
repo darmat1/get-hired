@@ -48,6 +48,16 @@ export const translations: Translations = {
     ru: "Мой опыт",
   },
   "nav.home": { en: "Home", uk: "Додому", ru: "Главная" },
+  "profile.title": {
+    en: "My Profile",
+    uk: "Мій профіль",
+    ru: "Мой профиль",
+  },
+  "profile.subtitle": {
+    en: "Manage your personal information",
+    uk: "Керуйте особистою інформацією",
+    ru: "Управляйте личной информацией",
+  },
   "profile.unified_desc": {
     en: "Your unified experience profile for creating perfect resumes",
     uk: "Ваш єдиний профіль досвіду для створення ідеальних резюме",
@@ -604,6 +614,11 @@ export const translations: Translations = {
     en: "Set as active",
     uk: "Зробити активним",
     ru: "Сделать активным",
+  },
+  "ai_settings.key_saved": {
+    en: "API Key saved successfully",
+    uk: "API ключ успішно збережено",
+    ru: "API ключ успешно сохранен",
   },
   "ai_settings.unlink": {
     en: "Remove key",
@@ -1570,6 +1585,27 @@ export const translations: Translations = {
     en: "Experience",
     uk: "Досвід",
     ru: "Опыт",
+  },
+
+  "ai_warning.title": {
+    en: "AI Configuration Required",
+    uk: "Налаштування AI",
+    ru: "Настройка AI",
+  },
+  "ai_warning.description": {
+    en: "To use AI features, please connect at least one AI provider. Groq offers free models for testing.",
+    uk: "Для використання AI функцій, додайте хоча б один ключ. Groq надає безкоштовні моделі.",
+    ru: "Для использования AI функций добавьте хотя бы один ключ. Groq предоставляет бесплатные модели.",
+  },
+  "ai_warning.setup_link": {
+    en: "Setup Keys",
+    uk: "Налаштувати",
+    ru: "Настроить",
+  },
+  "ai_warning.get_groq": {
+    en: "Get Free Groq Key",
+    uk: "Отримати ключ Groq",
+    ru: "Получить ключ Groq",
   },
 };
 
