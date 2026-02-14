@@ -14,8 +14,8 @@ export function AIKeyWarning() {
   const [hasKeys, setHasKeys] = useState<boolean | null>(null);
   const [isVisible, setIsVisible] = useState(true);
 
-  // Don't show on profile page where user adds keys
-  const isProfilePage = pathname === "/dashboard/profile";
+  // Don't show on profile pages where user adds keys
+  const isProfilePage = pathname?.startsWith("/dashboard/profile");
 
   useEffect(() => {
     if (!session?.user) return;
@@ -71,7 +71,7 @@ export function AIKeyWarning() {
             </p>
             <div className="flex gap-2">
               <Link
-                href="/dashboard/profile"
+                href="/dashboard/profile/ai"
                 className="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors"
                 onClick={() => setIsVisible(false)}
               >

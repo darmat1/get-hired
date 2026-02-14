@@ -48,6 +48,16 @@ export const translations: Translations = {
     ru: "Мой опыт",
   },
   "nav.home": { en: "Home", uk: "Додому", ru: "Главная" },
+  "profile.title": {
+    en: "My Profile",
+    uk: "Мій профіль",
+    ru: "Мой профиль",
+  },
+  "profile.subtitle": {
+    en: "Manage your personal information",
+    uk: "Керуйте особистою інформацією",
+    ru: "Управляйте личной информацией",
+  },
   "profile.unified_desc": {
     en: "Your unified experience profile for creating perfect resumes",
     uk: "Ваш єдиний профіль досвіду для створення ідеальних резюме",
