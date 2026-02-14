@@ -1,6 +1,7 @@
-import { getAllProviders } from "@/lib/ai";
+import { getAllProviders } from "./ai/registry";
 
 export interface AIService {
+  id: string;
   name: string;
   descriptionKey: string;
   isFree: boolean;
@@ -9,29 +10,40 @@ export interface AIService {
 }
 
 export function getAvailableAIServices(): AIService[] {
-  const services: AIService[] = [
-    {
-      name: "Groq",
-      descriptionKey: "ai_service.groq.description",
-      isFree: true,
-      status: process.env.GROQ_API_KEY ? "connected" : "disconnected",
-      apiKey: process.env.GROQ_API_KEY,
-    },
-    {
-      name: "OpenAI",
-      descriptionKey: "ai_service.openai.description",
-      isFree: false,
-      status: process.env.OPENAI_API_KEY ? "connected" : "disconnected",
-      apiKey: process.env.OPENAI_API_KEY,
-    },
-    {
-      name: "OpenRouter",
-      descriptionKey: "ai_service.openrouter.description",
-      isFree: true,
-      status: process.env.OPENROUTER_API_KEY ? "connected" : "disconnected",
-      apiKey: process.env.OPENROUTER_API_KEY,
-    },
-  ];
+  const providers = getAllProviders();
+
+  const services: AIService[] = providers.map((p) => {
+    let envKey = "";
+    switch (p.id) {
+      case "groq":
+        envKey = process.env.GROQ_API_KEY || "";
+        break;
+      case "openai":
+        envKey = process.env.OPENAI_API_KEY || "";
+        break;
+      case "openrouter":
+        envKey = process.env.OPENROUTER_API_KEY || "";
+        break;
+      case "claude":
+        envKey = process.env.ANTHROPIC_API_KEY || "";
+        break;
+      case "gemini":
+        envKey = process.env.GOOGLE_API_KEY || "";
+        break;
+      case "grok":
+        envKey = process.env.XAI_API_KEY || "";
+        break;
+    }
+
+    return {
+      id: p.id,
+      name: p.name,
+      descriptionKey: `ai_service.${p.id}.description`,
+      isFree: p.id === "groq" || p.id === "openrouter" || p.id === "gemini",
+      status: envKey ? "connected" : "disconnected",
+      apiKey: envKey,
+    };
+  });
 
   return services.sort((a, b) => {
     if (a.isFree !== b.isFree) {
@@ -56,29 +68,55 @@ export function getProviderOrder(): string[] {
   return getAllProviders().map((p) => p.name);
 }
 
-export async function testAIService(service: AIService): Promise<boolean> {
+export async function testAIService(
+  service: AIService | { name: string; apiKey: string; id: string },
+): Promise<boolean> {
   try {
-    if (service.name === "OpenAI") {
-      const response = await fetch("https://api.openai.com/v1/models", {
-        headers: {
-          Authorization: `Bearer ${service.apiKey}`,
-        },
+    if (service.id === "openai") {
+      const res = await fetch("https://api.openai.com/v1/models", {
+        headers: { Authorization: `Bearer ${service.apiKey}` },
       });
-      return response.ok;
-    } else if (service.name === "Groq") {
-      const response = await fetch("https://api.groq.com/openai/v1/models", {
-        headers: {
-          Authorization: `Bearer ${service.apiKey}`,
-        },
+      return res.ok;
+    } else if (service.id === "groq") {
+      const res = await fetch("https://api.groq.com/openai/v1/models", {
+        headers: { Authorization: `Bearer ${service.apiKey}` },
       });
-      return response.ok;
-    } else if (service.name === "OpenRouter") {
-      const response = await fetch("https://openrouter.ai/api/v1/models", {
-        headers: {
-          Authorization: `Bearer ${service.apiKey}`,
-        },
+      return res.ok;
+    } else if (service.id === "openrouter") {
+      const res = await fetch("https://openrouter.ai/api/v1/models", {
+        headers: { Authorization: `Bearer ${service.apiKey}` },
       });
-      return response.ok;
+      return res.ok;
+    } else if (service.id === "claude") {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "x-api-key": service.apiKey!,
+          "anthropic-version": "2023-06-01",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "claude-3-haiku-20240307",
+          max_tokens: 1,
+          messages: [{ role: "user", content: "Hi" }],
+        }),
+      });
+      return res.ok;
+    } else if (service.id === "gemini") {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${service.apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: "Hi" }] }] }),
+        },
+      );
+      return res.ok;
+    } else if (service.id === "grok") {
+      const res = await fetch("https://api.x.ai/v1/models", {
+        headers: { Authorization: `Bearer ${service.apiKey}` },
+      });
+      return res.ok;
     }
   } catch (error) {
     console.error(`${service.name} test failed:`, error);
@@ -86,7 +124,7 @@ export async function testAIService(service: AIService): Promise<boolean> {
   return false;
 }
 
-export const AISetupInstructions = {
+export const AISetupInstructions: Record<string, any> = {
   groq: {
     name: "Groq",
     stepKeys: [
@@ -96,7 +134,6 @@ export const AISetupInstructions = {
       "ai_setup.groq.step4",
       "ai_setup.groq.step5",
     ],
-    limitsKey: "ai_service.groq.limits",
   },
   openai: {
     name: "OpenAI",
@@ -107,6 +144,31 @@ export const AISetupInstructions = {
       "ai_setup.openai.step4",
       "ai_setup.openai.step5",
     ],
-    limitsKey: "ai_service.openai.limits",
+  },
+  claude: {
+    name: "Claude",
+    stepKeys: [
+      "ai_setup.claude.step1",
+      "ai_setup.claude.step2",
+      "ai_setup.claude.step3",
+      "ai_setup.claude.step4",
+      "ai_setup.claude.step5",
+    ],
+  },
+  gemini: {
+    name: "Gemini",
+    stepKeys: [
+      "ai_setup.gemini.step1",
+      "ai_setup.gemini.step2",
+      "ai_setup.gemini.step3",
+    ],
+  },
+  grok: {
+    name: "Grok",
+    stepKeys: ["ai_setup.grok.step1", "ai_setup.grok.step2"],
+  },
+  openrouter: {
+    name: "OpenRouter",
+    stepKeys: ["ai_setup.openrouter.step1", "ai_setup.openrouter.step2"],
   },
 };

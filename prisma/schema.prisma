@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/client"
 }
 
 datasource db {
@@ -27,8 +28,27 @@ model User {
   sessions Session[]
   accounts Account[]
   profile  UserProfile?
+  aiKeys   AiCredential[]
+
+  // AI Preferences
+  preferredAIProvider String?
+  preferredAIModel    String?
 
   @@map("user")
+}
+
+model AiCredential {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider  String // groq, openrouter, openai, anthropic, google, xai
+  key       String // encrypted key
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, provider])
+  @@index([userId])
+  @@map("user_ai_key")
 }
 
 model Session {

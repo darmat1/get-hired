@@ -1,20 +1,10 @@
 import { AIProvider, AICompletionRequest, AICompletionResponse } from "./types";
-import { GroqProvider, OpenRouterProvider, OpenAIProvider } from "./providers";
-
-/**
- * All registered AI providers.
- * To add a new provider, just create a class implementing AIProvider
- * and add it to this array.
- */
-const ALL_PROVIDERS: AIProvider[] = [
-  new OpenRouterProvider(),
-  new GroqProvider(),
-  new OpenAIProvider(),
-];
+import { prisma } from "@/lib/prisma";
+import { decrypt } from "@/lib/encryption";
+import { ALL_PROVIDERS } from "./registry";
 
 /**
  * Default provider priority order.
- * Can be overridden via AI_PROVIDER_ORDER env variable (comma-separated IDs).
  */
 function getProviderOrder(): string[] {
   const envOrder = process.env.AI_PROVIDER_ORDER;
@@ -28,7 +18,7 @@ function getProviderOrder(): string[] {
 }
 
 /**
- * Get providers ordered by priority, filtered to only available ones.
+ * Get providers ordered by priority.
  */
 export function getAvailableProviders(): AIProvider[] {
   const order = getProviderOrder();
@@ -39,56 +29,102 @@ export function getAvailableProviders(): AIProvider[] {
     .filter((p): p is AIProvider => p !== undefined && p.isAvailable());
 }
 
-/**
- * Get the list of all registered providers (available or not).
- */
-export function getAllProviders(): AIProvider[] {
-  return [...ALL_PROVIDERS];
-}
+export { getAllProviders } from "./registry";
 
 /**
- * Unified AI completion function.
+ * Unified AI completion function with user key/preference support.
  *
- * Tries each available provider in priority order until one succeeds.
- * Routes/services should ONLY use this function — no direct LLM calls.
- *
- * @example
- * ```ts
- * import { aiComplete } from "@/lib/ai";
- *
- * const response = await aiComplete({
- *   systemPrompt: "You are a helpful assistant.",
- *   userPrompt: "Hello!",
- *   temperature: 0.7,
- * });
- * console.log(response.content); // AI response
- * console.log(response.provider); // "openrouter" | "groq" | "openai"
- * ```
+ * Tries:
+ * 1. User's preferred provider (if specified and key available)
+ * 2. User's other providers (if they added their own keys)
+ * 3. System's available providers (Groq, OpenRouter, OpenAI via env keys)
  */
 export async function aiComplete(
   request: AICompletionRequest,
+  userId?: string,
 ): Promise<AICompletionResponse> {
-  const providers = getAvailableProviders();
+  const errors: string[] = [];
 
-  if (providers.length === 0) {
+  // 1. Try User's specific keys/preferences if userId provided
+  if (userId) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { aiKeys: true },
+      });
+
+      if (user && user.aiKeys.length > 0) {
+        // Sort keys so preferred one comes first
+        const sortedKeys = [...user.aiKeys].sort((a, b) => {
+          if (a.provider === user.preferredAIProvider) return -1;
+          if (b.provider === user.preferredAIProvider) return 1;
+          return 0;
+        });
+
+        for (const userKey of sortedKeys) {
+          const provider = ALL_PROVIDERS.find((p) => p.id === userKey.provider);
+          if (provider) {
+            try {
+              console.log(
+                `[AI] Trying user provider: ${provider.name} (${provider.id})`,
+              );
+              const decryptedKey = decrypt(userKey.key);
+
+              // If this is the preferred provider, use preferred model if set
+              const modelOverride =
+                userKey.provider === user.preferredAIProvider
+                  ? user.preferredAIModel || request.model
+                  : request.model;
+
+              const response = await provider.complete({
+                ...request,
+                apiKey: decryptedKey,
+                model: modelOverride,
+              });
+              console.log(
+                `[AI] Success (User Key): ${provider.name}, model: ${response.model}`,
+              );
+              return response;
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : String(err);
+              console.warn(
+                `[AI] User provider ${userKey.provider} failed: ${msg}`,
+              );
+              errors.push(`User ${userKey.provider}: ${msg}`);
+            }
+          }
+        }
+      }
+    } catch (dbErr) {
+      console.error("[AI] Error fetching user keys:", dbErr);
+    }
+  }
+
+  // 2. Fallback to System Global Providers
+  const systemProviders = getAvailableProviders();
+
+  if (systemProviders.length === 0 && errors.length === 0) {
     throw new Error(
-      "[AI] No AI providers available. Configure at least one API key: " +
-        "OPENROUTER_API_KEY, GROQ_API_KEY, or OPENAI_API_KEY",
+      "[AI] No AI providers available. Please configure an API key in your profile or system .env",
     );
   }
 
-  const errors: string[] = [];
-
-  for (const provider of providers) {
+  for (const provider of systemProviders) {
+    // Skip if we already tried this provider for this user via their own key (avoid duplicate tries)
+    // Actually, maybe the system key works where user key failed? We'll try anyway if system key is available.
     try {
-      console.log(`[AI] Trying provider: ${provider.name} (${provider.id})`);
+      console.log(
+        `[AI] Trying system provider: ${provider.name} (${provider.id})`,
+      );
       const response = await provider.complete(request);
-      console.log(`[AI] Success: ${provider.name}, model: ${response.model}`);
+      console.log(
+        `[AI] Success (System): ${provider.name}, model: ${response.model}`,
+      );
       return response;
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      console.warn(`[AI] ${provider.name} failed: ${message}`);
-      errors.push(`${provider.name}: ${message}`);
+      console.warn(`[AI] System ${provider.name} failed: ${message}`);
+      errors.push(`System ${provider.name}: ${message}`);
     }
   }
 

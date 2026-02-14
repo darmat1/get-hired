@@ -15,16 +15,18 @@ export class OpenRouterProvider implements AIProvider {
   }
 
   async complete(request: AICompletionRequest): Promise<AICompletionResponse> {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) throw new Error("OPENROUTER_API_KEY is not configured");
+    const apiKey = request.apiKey || process.env.OPENROUTER_API_KEY;
+    if (!apiKey) throw new Error("[AI] OpenRouter API key is missing");
 
-    const modelEnv =
-      process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL ||
-      "google/gemini-2.0-flash-exp:free";
-    const models = modelEnv
-      .split(",")
-      .map((m) => m.trim())
-      .filter(Boolean);
+    const models = request.model
+      ? [request.model]
+      : (
+          process.env.NEXT_PUBLIC_OPENROUTER_FREE_MODEL ||
+          "google/gemini-2.0-flash-exp:free"
+        )
+          .split(",")
+          .map((m) => m.trim())
+          .filter(Boolean);
 
     // Try each model in order until one succeeds
     for (const model of models) {

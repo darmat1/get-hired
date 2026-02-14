@@ -15,10 +15,11 @@ export class GroqProvider implements AIProvider {
   }
 
   async complete(request: AICompletionRequest): Promise<AICompletionResponse> {
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) throw new Error("GROQ_API_KEY is not configured");
+    const apiKey = request.apiKey || process.env.GROQ_API_KEY;
+    if (!apiKey) throw new Error("[AI] Groq API key is missing");
 
-    const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+    const model =
+      request.model || process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
     const body: Record<string, unknown> = {
       model,

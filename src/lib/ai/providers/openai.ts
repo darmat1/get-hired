@@ -15,10 +15,10 @@ export class OpenAIProvider implements AIProvider {
   }
 
   async complete(request: AICompletionRequest): Promise<AICompletionResponse> {
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) throw new Error("OPENAI_API_KEY is not configured");
+    const apiKey = request.apiKey || process.env.OPENAI_API_KEY;
+    if (!apiKey) throw new Error("[AI] OpenAI API key is missing");
 
-    const model = process.env.OPENAI_MODEL || "gpt-3.5-turbo";
+    const model = request.model || process.env.OPENAI_MODEL || "gpt-3.5-turbo";
 
     const body: Record<string, unknown> = {
       model,

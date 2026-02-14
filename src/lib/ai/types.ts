@@ -10,6 +10,8 @@ export interface AICompletionRequest {
   temperature?: number;
   maxTokens?: number;
   responseFormat?: { type: "json_object" } | { type: "text" };
+  apiKey?: string; // Optional user-provided API key
+  model?: string; // Optional specific model override
 }
 
 export interface AICompletionResponse {
