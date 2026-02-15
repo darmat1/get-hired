@@ -8,16 +8,11 @@ import { useTranslation } from "@/lib/translations";
 interface EducationFormProps {
   data: Education[];
   onChange: (education: Education[]) => void;
-  onNext: () => void;
-  onBack: () => void;
+  onNext?: () => void;
+  onBack?: () => void;
 }
 
-export function EducationForm({
-  data,
-  onChange,
-  onNext,
-  onBack,
-}: EducationFormProps) {
+export function EducationForm({ data, onChange }: EducationFormProps) {
   const { t } = useTranslation();
   const addEducation = () => {
     const newEducation: Education = {
@@ -187,13 +182,6 @@ export function EducationForm({
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="mt-6 flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          {t("form.back")}
-        </Button>
-        <Button onClick={onNext}>{t("form.next")}</Button>
       </div>
     </div>
   );
