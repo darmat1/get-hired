@@ -9,16 +9,11 @@ import { useState, KeyboardEvent } from "react";
 interface SkillsFormProps {
   data: Skill[];
   onChange: (skills: Skill[]) => void;
-  onNext: () => void;
-  onBack: () => void;
+  onNext?: () => void;
+  onBack?: () => void;
 }
 
-export function SkillsForm({
-  data,
-  onChange,
-  onNext,
-  onBack,
-}: SkillsFormProps) {
+export function SkillsForm({ data, onChange }: SkillsFormProps) {
   const { t } = useTranslation();
 
   // State for input values
@@ -202,13 +197,6 @@ export function SkillsForm({
             setLanguageInput,
           )}
         </div>
-      </div>
-
-      <div className="flex justify-between pt-6">
-        <Button variant="outline" onClick={onBack}>
-          {t("form.back")}
-        </Button>
-        <Button onClick={onNext}>{t("form.next")}</Button>
       </div>
     </div>
   );

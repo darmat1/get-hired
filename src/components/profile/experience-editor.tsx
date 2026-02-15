@@ -225,8 +225,23 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
                         onChange={(e) =>
                           updateDescription(index, dIndex, e.target.value)
                         }
-                        rows={2}
-                        className="flex-1 px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+                        placeholder="Наприклад: Increased conversion rate by 15%..."
+                        className="
+    flex-1 
+    px-3 py-2 
+    rounded-md 
+    text-sm
+    bg-input border border-input-border 
+    text-foreground 
+    placeholder:text-muted-foreground
+    focus:outline-none 
+    focus:ring-2 focus:ring-primary/20 focus:border-primary 
+    transition-colors 
+    [field-sizing:content] 
+    min-h-[42px] 
+    resize-none 
+    overflow-hidden 
+  "
                       />
                       <Button
                         variant="ghost"

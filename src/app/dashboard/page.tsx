@@ -265,8 +265,29 @@ export default function MyExperiencePage() {
                     value={profileText}
                     onChange={(e) => setProfileText(e.target.value)}
                     placeholder={t("profile.paste_text_placeholder")}
-                    rows={6}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="
+    w-full px-4 py-3 
+    rounded-lg 
+    text-sm 
+    transition-all
+    
+    bg-white border border-gray-300 text-gray-900 
+    placeholder:text-gray-400
+
+    dark:bg-[var(--color-input)] 
+    dark:border-[var(--color-border)] 
+    dark:text-[var(--color-foreground)]
+    dark:placeholder:text-[var(--color-muted-foreground)]
+    
+    outline-none
+    focus:ring-2 
+    focus:ring-[var(--color-ring)] 
+    focus:border-transparent
+
+    [field-sizing:content] 
+    min-h-[160px] 
+    resize-none   
+  "
                   />
                   <Button
                     className="w-full"
@@ -362,7 +383,6 @@ export default function MyExperiencePage() {
                   <PersonalInfoForm
                     data={profile.personalInfo || {}}
                     onChange={(val) => updateProfile("personalInfo", val)}
-                    onNext={() => {}}
                   />
                 </TabsContent>
 
@@ -384,8 +404,6 @@ export default function MyExperiencePage() {
                   <SkillsForm
                     data={profile.skills || []}
                     onChange={(val) => updateProfile("skills", val)}
-                    onNext={() => {}}
-                    onBack={() => {}}
                   />
                 </TabsContent>
               </Tabs>

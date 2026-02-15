@@ -7,14 +7,10 @@ import { useTranslation } from "@/lib/translations";
 interface PersonalInfoFormProps {
   data: PersonalInfo;
   onChange: (info: PersonalInfo) => void;
-  onNext: () => void;
+  onNext?: () => void;
 }
 
-export function PersonalInfoForm({
-  data,
-  onChange,
-  onNext,
-}: PersonalInfoFormProps) {
+export function PersonalInfoForm({ data, onChange }: PersonalInfoFormProps) {
   const { t } = useTranslation();
 
   const updateField = (field: keyof PersonalInfo, value: string) => {
@@ -138,14 +134,31 @@ export function PersonalInfoForm({
         <textarea
           value={data.summary || ""}
           onChange={(e) => updateField("summary", e.target.value)}
-          rows={4}
-          className="w-full px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
           placeholder={t("placeholder.summary")}
-        />
-      </div>
+          className="
+    w-full px-4 py-3 
+    rounded-md 
+    text-sm 
+    transition-all
+    
+    bg-white border border-gray-300 text-gray-900
+    placeholder:text-gray-400
 
-      <div className="mt-6 flex justify-end">
-        <Button onClick={onNext}>{t("form.next")}</Button>
+    dark:bg-[var(--color-input)] 
+    dark:border-[var(--color-border)] 
+    dark:text-[var(--color-foreground)]
+    dark:placeholder:text-[var(--color-muted-foreground)]
+    
+    focus:outline-none 
+    focus:ring-2 
+    focus:ring-[var(--color-ring)] 
+    focus:border-transparent
+
+    [field-sizing:content] 
+    min-h-[110px] 
+    resize-none
+  "
+        />
       </div>
     </div>
   );
