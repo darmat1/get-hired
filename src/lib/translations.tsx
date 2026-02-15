@@ -1531,6 +1531,337 @@ export const translations: Translations = {
     uk: "GetHired. Усі права захищені.",
     ru: "GetHired. Все права защищены.",
   },
+  "footer.product": { en: "Product", uk: "Продукт", ru: "Продукт" },
+  "footer.solutions": { en: "Solutions", uk: "Рішення", ru: "Решения" },
+  "footer.ai_analysis": {
+    en: "AI Analysis",
+    uk: "AI аналіз",
+    ru: "AI анализ",
+  },
+  "footer.resume_templates": {
+    en: "Resume Templates",
+    uk: "Шаблони резюме",
+    ru: "Шаблоны резюме",
+  },
+  "footer.pricing": { en: "Pricing", uk: "Ціни", ru: "Цены" },
+  "footer.cover_letter": {
+    en: "Cover Letter",
+    uk: "Супровідний лист",
+    ru: "Сопроводительное письмо",
+  },
+  "footer.linkedin_import": {
+    en: "LinkedIn PDF Import",
+    uk: "Імпорт LinkedIn PDF",
+    ru: "Импорт LinkedIn PDF",
+  },
+
+  // LinkedIn Import Landing Page
+  "li_landing.hero_title": {
+    en: "LinkedIn PDF to Resume Converter",
+    uk: "Конвертер LinkedIn PDF у резюме",
+    ru: "Конвертер LinkedIn PDF в резюме",
+  },
+  "li_landing.hero_subtitle": {
+    en: "Turn your LinkedIn profile export into a polished, professional resume in seconds using AI. No manual data entry required.",
+    uk: "Перетворіть експорт вашого профілю LinkedIn у відшліфоване професійне резюме за лічені секунди за допомогою ШІ. Без ручного введення даних.",
+    ru: "Превратите экспорт вашего профиля LinkedIn в отшлифованное профессиональное резюме за считанные секунды с помощью ИИ. Без ручного ввода данных.",
+  },
+  "li_landing.start_btn": {
+    en: "Get Started Now",
+    uk: "Почати зараз",
+    ru: "Начать сейчас",
+  },
+  "li_landing.how_title": {
+    en: "How It Works",
+    uk: "Як це працює",
+    ru: "Как это работает",
+  },
+  "li_landing.step1_title": {
+    en: "1. Export LinkedIn PDF",
+    uk: "1. Експортуйте PDF з LinkedIn",
+    ru: "1. Экспортируйте PDF из LinkedIn",
+  },
+  "li_landing.step1_desc": {
+    en: "Go to your profile, click 'More', and select 'Save to PDF'. It contains all your experience data.",
+    uk: "Перейдіть у свій профіль, натисніть 'Більше' та оберіть 'Зберегти в PDF'. Він містить усі дані про ваш досвід.",
+    ru: "Перейдите в свой профиль, нажмите 'Больше' и выберите 'Сохранить в PDF'. Он содержит все данные о вашем опыте.",
+  },
+  "li_landing.step2_title": {
+    en: "2. Upload to GetHired",
+    uk: "2. Завантажте в GetHired",
+    ru: "2. Загрузите в GetHired",
+  },
+  "li_landing.step2_desc": {
+    en: "Upload the PDF file to our platform. Our AI will automatically parse and structure your information.",
+    uk: "Завантажте PDF-файл на нашу платформу. Наш ШІ автоматично розпізнає та структурує вашу інформацію.",
+    ru: "Загрузите PDF-файл на нашу платформу. Наш ИИ автоматически распознает и стоит на вашей информации.",
+  },
+  "li_landing.step3_title": {
+    en: "3. Choose Template & Save",
+    uk: "3. Оберіть шаблон та збережіть",
+    ru: "3. Выберите шаблон и сохраните",
+  },
+  "li_landing.step3_desc": {
+    en: "Preview your data in professional layouts. Export a clean, ATS-friendly resume instantly.",
+    uk: "Перегляньте свої дані у професійних макетах. Миттєво експортуйте чисте резюме, сумісне з ATS.",
+    ru: "Просмотрите свои данные в профессиональных макетах. Мгновенно экспортируйте чистое резюме, совместимое с ATS.",
+  },
+  "li_landing.adv_title": {
+    en: "Why Use PDF vs. Direct API?",
+    uk: "Чому PDF краще за прямий API?",
+    ru: "Почему PDF лучше прямого API?",
+  },
+  "li_landing.adv1_title": {
+    en: "Complete Privacy",
+    uk: "Повна приватність",
+    ru: "Полная приватность",
+  },
+  "li_landing.adv1_desc": {
+    en: "We don't need access to your LinkedIn account. You control what data you share by uploading the file.",
+    uk: "Нам не потрібен доступ до вашого облікового запису LinkedIn. Ви самі контролюєте, якими даними ділитися, завантажуючи файл.",
+    ru: "Нам не нужен доступ к вашему аккаунту LinkedIn. Вы сами контролируете, какими данными делиться, загружая файл.",
+  },
+  "li_landing.adv2_title": {
+    en: "No API Limitations",
+    uk: "Без обмежень API",
+    ru: "Без ограничений API",
+  },
+  "li_landing.adv2_desc": {
+    en: "LinkedIn's API often restricts access to full work history. The PDF export always includes your complete record.",
+    uk: "API LinkedIn часто обмежує доступ до повної історії роботи. Експорт PDF завжди містить ваш повний запис.",
+    ru: "API LinkedIn часто ограничивает доступ к полной истории работы. Экспорт PDF всегда содержит вашу полную запись.",
+  },
+  "li_landing.adv3_title": {
+    en: "Rich Formatting",
+    uk: "Багате форматування",
+    ru: "Богатое форматирование",
+  },
+  "li_landing.adv3_desc": {
+    en: "Semantic extraction identifies skills, responsibilities, and dates more accurately than raw API data.",
+    uk: "Семантичний розбір ШІ виділяє навички, обов'язки та дати точніше, ніж сирі дані API.",
+    ru: "Семантический разбор ИИ выделяет навыки, обязанности и даты точнее, чем сырые данные API.",
+  },
+  "li_landing.security_title": {
+    en: "Safe & Secure",
+    uk: "Надійно та безпечно",
+    ru: "Надежно и безопасно",
+  },
+  "li_landing.security_desc": {
+    en: "Your files are processed in real-time and never stored indefinitely. We use industry-standard encryption to protect your data.",
+    uk: "Ваші файли обробляються в реальному часі та ніколи не зберігаються нескінченно. Ми використовуємо галузеві стандарти шифрування.",
+    ru: "Ваши файлы обрабатываются в реальном времени и никогда не хранятся бесконечно. Мы используем отраслевые стандарты шифрования.",
+  },
+
+  // AI Landing Page
+  "ai_landing.badge": {
+    en: "AI Resume Analysis — trusted by professionals",
+    uk: "AI‑аналіз резюме — довіряють професіонали",
+    ru: "AI‑анализ резюме — доверяют профессионалы",
+  },
+  "ai_landing.hero_title": {
+    en: "AI Resume Analysis that helps you get hired",
+    uk: "AI‑аналіз резюме, який допомагає отримати роботу",
+    ru: "AI‑анализ резюме, который помогает получить работу",
+  },
+  "ai_landing.hero_subtitle": {
+    en: "Section-level scoring, ATS keyword recommendations and AI-written bullet rewrites — optimized for recruiters and applicant tracking systems.",
+    uk: "Оцінка по розділах, рекомендації ключових слів для ATS та AI‑переписування пунктів — оптимізовано для рекрутерів та систем відбору.",
+    ru: "Оценка по разделам, рекомендации ключевых слов для ATS и AI‑переписывание пунктов — оптимизировано для рекрутеров и систем отбора.",
+  },
+  "ai_landing.cta_analyze": { en: "Analyze your resume — free", uk: "Проаналізувати резюме — безкоштовно", ru: "Проанализировать резюме — бесплатно" },
+  "ai_landing.cta_pricing": { en: "Compare plans", uk: "Порівняти плани", ru: "Сравнить планы" },
+  "ai_landing.metric_avg_score": { en: "avg score increase", uk: "середнє підвищення балу", ru: "среднее увеличение балла" },
+  "ai_landing.metric_ats_pass": { en: "ATS pass improvement", uk: "покращення проходження ATS", ru: "увеличение прохода ATS" },
+  "ai_landing.metric_resumes_analyzed": { en: "resumes analyzed", uk: "проаналізованих резюме", ru: "проанализированных резюме" },
+  "ai_landing.placeholder_screenshot": { en: "Resume screenshot placeholder", uk: "Заглушка скриншоту резюме", ru: "Заглушка скриншота резюме" },
+  "ai_landing.placeholder_small": { en: "Placeholder", uk: "Заглушка", ru: "Заглушка" },
+
+  "ai_landing.feature_ats_title": { en: "ATS-aware scoring", uk: "Оцінка для ATS", ru: "Оценка с учётом ATS" },
+  "ai_landing.feature_ats_desc": { en: "Detects missing keywords and provides exact phrases to match target roles.", uk: "Виявляє відсутні ключові слова та пропонує точні фрази для відповідних вакансій.", ru: "Определяет отсутствующие ключевые слова и предлагает точные фразы для соответствующих ролей." },
+  "ai_landing.feature_actionable_title": { en: "Actionable edits", uk: "Практичні правки", ru: "Практичные правки" },
+  "ai_landing.feature_actionable_desc": { en: "AI-written bullet rewrites and section-level suggestions you can apply instantly.", uk: "AI‑згенеровані варіанти пунктів і пропозиції по кожному розділу, які можна застосувати одразу.", ru: "AI‑переписанные пункты и рекомендации по разделам, которые можно применить сразу." },
+  "ai_landing.feature_private_title": { en: "Private & exportable", uk: "Приватно та експортовано", ru: "Конфиденциально и экспортируемо" },
+  "ai_landing.feature_private_desc": { en: "Secure processing and polished PDF export ready for applications.", uk: "Безпечна обробка і стильний експорт у PDF, готовий до відправки.", ru: "Безопасная обработка и аккуратный экспорт в PDF, готовый к отправке." },
+
+  "ai_landing.seo_title": { en: "AI Resume Analysis — what to expect", uk: "AI‑аналіз резюме — чого очікувати", ru: "AI‑анализ резюме — чего ожидать" },
+  "ai_landing.seo_paragraph": { en: "Our analysis combines ATS keyword matching, structure checks, and language-quality scoring so you can send resumes that pass automated filters and impress hiring teams. Suggestions are prioritized so small edits have measurable impact.", uk: "Наш аналіз поєднує відповідність ключових слів ATS, перевірки структури та оцінку якості мови, щоб ви могли надсилати резюме, які проходять автоматичні фільтри та справляють враження на рекрутерів. Пропозиції пріоритизовані, тому невеликі правки дають вимірний ефект.", ru: "Наш анализ сочетает соответствие ключевых слов ATS, проверки структуры и оценку качества языка, чтобы вы могли отправлять резюме, которые проходят автоматические фильтры и впечатляют рекрутеров. Предложения приоритизированы, поэтому небольшие правки дают измеримый эффект." },
+  "ai_landing.what_we_evaluate_title": { en: "What we evaluate", uk: "Що ми перевіряємо", ru: "Что мы оцениваем" },
+  "ai_landing.eval_ats_label": { en: "ATS fit:", uk: "ATS відповідність:", ru: "ATS соответствие:" },
+  "ai_landing.eval_ats": { en: "keyword density, role-focused phrasing and suggested terms.", uk: "щільність ключових слів, формулювання, орієнтовані на роль, та рекомендовані терміни.", ru: "плотность ключевых слов, фразы, ориентированные на роль, и предлагаемые термины." },
+  "ai_landing.eval_impact_label": { en: "Impact:", uk: "Вплив:", ru: "Влияние:" },
+  "ai_landing.eval_impact": { en: "stronger action verbs, measurable results and concise bullets.", uk: "сильні дієслова, вимірювані результати та лаконічні пункти.", ru: "сильные глаголы действий, измеримые результаты и лаконичные пункты." },
+  "ai_landing.eval_structure_label": { en: "Structure:", uk: "Структура:", ru: "Структура:" },
+  "ai_landing.eval_structure": { en: "section completeness and readable ordering for recruiters.", uk: "повнота розділів і зрозумілий порядок для рекрутерів.", ru: "полнота разделов и удобный порядок для рекрутеров." },
+  "ai_landing.how_increases_title": { en: "How it increases interview probability", uk: "Як це підвищує ймовірність співбесіди", ru: "Как это повышает вероятность интервью" },
+  "ai_landing.how_increases_desc": { en: "By surfacing recruiter- and ATS-relevant changes, users see higher visibility in applicant pools — focused edits beat random changes.", uk: "Виявляючи зміни, важливі для рекрутерів та ATS, користувачі отримують вищу видимість у пулі кандидатів — цілеспрямовані правки працюють краще за випадкові.", ru: "Выявляя изменения, релевантные для рекрутеров и ATS, пользователи получают большую видимость в пуле соискателей — целевые правки работают лучше случайных." },
+  "ai_landing.metrics_title": { en: "Real results — real metrics", uk: "Реальні результати — реальні метрики", ru: "Реальные результаты — реальные метрики" },
+  "ai_landing.faq_title": { en: "Frequently asked questions", uk: "Поширені запитання", ru: "Часто задаваемые вопросы" },
+  "ai_landing.faq_q1": { en: "How does AI help with ATS?", uk: "Як AI допомагає з ATS?", ru: "Как AI помогает с ATS?" },
+  "ai_landing.faq_a1": { en: "It highlights missing keywords and suggests phrasing aligned with job descriptions so your resume passes automated filters.", uk: "Виділяє відсутні ключові слова та пропонує формулювання відповідно до опису вакансії, щоб ваше резюме проходило автоматичні фільтри.", ru: "Выделяет отсутствующие ключевые слова и предлагает формулировки в соответствии с описанием вакансии, чтобы ваше резюме проходило автоматические фильтры." },
+  "ai_landing.faq_q2": { en: "Is my resume stored?", uk: "Чи зберігається моє резюме?", ru: "Сохраняется ли моё резюме?" },
+  "ai_landing.faq_a2": { en: "No — files are processed securely and not stored indefinitely. Connect your own AI key for maximum control.", uk: "Ні — файли обробляються безпечно і не зберігаються довічно. Підключіть власний AI ключ для повного контролю.", ru: "Нет — файлы обрабатываются безопасно и не хранятся бесконечно. Подключите собственный AI‑ключ для полного контроля." },
+  "ai_landing.cta_try_free": { en: "Try AI Resume Analysis — free", uk: "Спробувати AI‑аналіз резюме — безкоштовно", ru: "Попробовать AI‑анализ резюме — бесплатно" },
+  "ai_landing.cta_subtext": { en: "No credit card required • Export to PDF • Privacy-first", uk: "Без кредитної картки • Експорт у PDF • Приватність насамперед", ru: "Без карты • Экспорт в PDF • Конфиденциальность в приоритете" },
+
+  // Cover Letter Landing Page
+  "cl_landing.hero_title": {
+    en: "AI Cover Letter Generator",
+    uk: "AI генератор супровідних листів",
+    ru: "AI генератор сопроводительных писем",
+  },
+  "cl_landing.hero_subtitle": {
+    en: "Create a professional, high-impact cover letter tailored to any job description in seconds. Stop wasting time on manual writing.",
+    uk: "Створіть професійний супровідний лист, адаптований до будь-якого опису вакансії за лічені секунди. Припиніть витрачати час на написання вручну.",
+    ru: "Создайте профессиональное сопроводительное письмо, адаптированное к любому описанию вакансии за считанные секунды. Перестаньте тратить время на написание вручную.",
+  },
+  "cl_landing.how_title": {
+    en: "The 3-Step Success Path",
+    uk: "3 кроки до успіху",
+    ru: "3 шага к успеху",
+  },
+  "cl_landing.step1_title": {
+    en: "1. Upload Your Resume",
+    uk: "1. Завантажте резюме",
+    ru: "1. Загрузите резюме",
+  },
+  "cl_landing.step1_desc": {
+    en: "Provide your background info or use our LinkedIn PDF import. Our AI needs your experience as a foundation.",
+    uk: "Надайте свою інформацію або скористайтеся імпортом LinkedIn PDF. Наш ШІ потребує вашого досвіду як основи.",
+    ru: "Предоставьте свою информацию или воспользуйтесь импортом LinkedIn PDF. Наш ИИ нуждается в вашем опыте как основе.",
+  },
+  "cl_landing.step2_title": {
+    en: "2. Paste Job Description",
+    uk: "2. Вставте опис вакансії",
+    ru: "2. Вставьте описание вакансии",
+  },
+  "cl_landing.step2_desc": {
+    en: "Copy the job requirements from LinkedIn, Indeed, or any portal. Our AI analyzes what the hiring manager is looking for.",
+    uk: "Скопіюйте вимоги до вакансії з LinkedIn, Indeed або іншого порталу. Наш ШІ аналізує, що шукає менеджер з найму.",
+    ru: "Скопируйте требования к вакансии из LinkedIn, Indeed или любого другого портала. Наш ИИ анализирует, что ищет менеджер по найму.",
+  },
+  "cl_landing.step3_title": {
+    en: "3. Get Your Tailored Letter",
+    uk: "3. Отримайте адаптований лист",
+    ru: "3. Получите адаптированный письмо",
+  },
+  "cl_landing.step3_desc": {
+    en: "Generate a polished letter that highlights your relevant skills and matches the company's tone perfectly.",
+    uk: "Згенеруйте відшліфований лист, який підкреслює ваші відповідні навички та ідеально відповідає тону компанії.",
+    ru: "Сгенерируйте отшлифованное письмо, которое подчеркивает ваши навыки и идеально соответствует тону компании.",
+  },
+  "cl_landing.adv_title": {
+    en: "Why Use AI for Cover Letters?",
+    uk: "Навіщо використовувати ШІ для листів?",
+    ru: "Зачем использовать ИИ для писем?",
+  },
+  "cl_landing.adv1_title": {
+    en: "Highly Personalized",
+    uk: "Висока персоналізація",
+    ru: "Высокая персонализация",
+  },
+  "cl_landing.adv1_desc": {
+    en: "Generic templates don't work. Our AI creates unique content that directly addresses job requirements.",
+    uk: "Шаблонні листи не працюють. Наш ШІ створює унікальний контент, який безпосередньо відповідає вимогам вакансії.",
+    ru: "Шаблонные письма не работают. Наш ИИ создает уникальный контент, который напрямую отвечает требованиям вакансии.",
+  },
+  "cl_landing.adv2_title": {
+    en: "ATS-Friendly Optimization",
+    uk: "Оптимізація під ATS",
+    ru: "Оптимизация под ATS",
+  },
+  "cl_landing.adv2_desc": {
+    en: "We use relevant keywords from the job description to ensure your application passes automated screening.",
+    uk: "Ми використовуємо ключові слова з опису вакансії, щоб ваша заявка пройшла автоматичний відбір.",
+    ru: "Мы используем ключевые слова из описания вакансии, чтобы ваша заявка прошла автоматический отбор.",
+  },
+  "cl_landing.adv3_title": {
+    en: "Massive Time Savings",
+    uk: "Величезна економія часу",
+    ru: "Огромная экономия времени",
+  },
+  "cl_landing.adv3_desc": {
+    en: "Apply to more jobs faster. What used to take hours now takes less than a minute.",
+    uk: "Подавайтеся на більше вакансій швидше. Те, що раніше займало години, тепер займає менше хвилини.",
+    ru: "Подавайтесь на большее количество вакансий быстрее. То, что раньше занимало часы, теперь занимает меньше минуты.",
+  },
+
+  // Pricing Landing Page
+  "pricing_landing.hero_title": {
+    en: "Simple, Value-Driven Pricing",
+    uk: "Проста та вигідна ціна",
+    ru: "Простая и выгодная цена",
+  },
+  "pricing_landing.hero_subtitle": {
+    en: "Choose the plan that's right for your career growth. Start for free and upgrade as you grow.",
+    uk: "Оберіть план, який підходить для вашого кар'єрного зростання. Почніть безкоштовно та переходьте на вищий рівень у міру зростання.",
+    ru: "Выберите план, который подходит для вашего карьерного роста. Начните бесплатно и переходите на новый уровень по мере роста.",
+  },
+  "pricing_landing.free_name": {
+    en: "Starter",
+    uk: "Стартовий",
+    ru: "Стартовый",
+  },
+  "pricing_landing.free_price": {
+    en: "Free",
+    uk: "Безкоштовно",
+    ru: "Бесплатно",
+  },
+  "pricing_landing.pro_name": { en: "Pro", uk: "Про", ru: "Про" },
+  "pricing_landing.pro_tag": {
+    en: "Coming Soon",
+    uk: "Скоро буде",
+    ru: "Скоро будет",
+  },
+  "pricing_landing.feature_resumes": {
+    en: "4 Resumes per account",
+    uk: "4 резюме на акаунт",
+    ru: "4 резюме на аккаунт",
+  },
+  "pricing_landing.feature_template": {
+    en: "1 Basic Template",
+    uk: "1 базовий шаблон",
+    ru: "1 базовый шаблон",
+  },
+  "pricing_landing.feature_ai_cl": {
+    en: "Advanced AI Cover Letters",
+    uk: "Просунуті AI супровідні листи",
+    ru: "Продвинутые AI сопроводительные письма",
+  },
+  "pricing_landing.feature_li": {
+    en: "LinkedIn PDF Import",
+    uk: "Імпорт LinkedIn PDF",
+    ru: "Импорт LinkedIn PDF",
+  },
+  "pricing_landing.feature_ai_resume": {
+    en: "AI Resume Tailoring",
+    uk: "Адаптація резюме за допомогою ШІ",
+    ru: "Адаптация резюме с помощью ИИ",
+  },
+  "pricing_landing.feature_unlimited": {
+    en: "Unlimited Resumes",
+    uk: "Безліміт резюме",
+    ru: "Безлимит резюме",
+  },
+  "pricing_landing.feature_premium_templates": {
+    en: "All Premium Templates",
+    uk: "Усі преміум шаблони",
+    ru: "Все премиум шаблоны",
+  },
+  "pricing_landing.feature_analytics": {
+    en: "Job Application Analytics",
+    uk: "Аналітика відгуків",
+    ru: "Аналитика откликов",
+  },
+  "pricing_landing.seo_title": {
+    en: "Why Invest in Your Career?",
+    uk: "Чому варто інвестувати у свою кар'єру?",
+    ru: "Почему стоит инвестировать в свою карьеру?",
+  },
+  "pricing_landing.seo_desc": {
+    en: "Building a professional resume shouldn't be expensive. We provide high-quality AI tools to help you stand out and land interviews faster.",
+    uk: "Створення професійного резюме не повинно бути дорогим. Ми надаємо високоякісні інструменти ШІ, щоб допомогти вам виділитися та швидше отримувати запрошення на співбесіди.",
+    ru: "Создание профессионального резюме не должно быть дорогим. Мы предоставляем высококачественные инструменты ИИ, чтобы помочь вам выделиться и быстрее получать приглашения на собеседования.",
+  },
 
   // Privacy Policy
   "privacy.section1_title": { en: "Introduction", uk: "Вступ", ru: "Введение" },
@@ -1734,6 +2065,16 @@ export const translations: Translations = {
     en: "Get Free Groq Key",
     uk: "Отримати ключ Groq",
     ru: "Получить ключ Groq",
+  },
+  "ai.analyze_job": {
+    en: "Analyze Job Description",
+    uk: "Аналізувати опис вакансії",
+    ru: "Анализировать описание вакансии",
+  },
+  "ai.generate_cover_letter": {
+    en: "Generate Cover Letter",
+    uk: "Згенерувати супровідний лист",
+    ru: "Сгенерировать сопроводительное письмо",
   },
 };
 

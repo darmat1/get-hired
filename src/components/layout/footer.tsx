@@ -18,7 +18,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-background/50">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Column 1: About */}
           <div>
             <h3 className="font-semibold mb-4">{t("footer.about")}</h3>
@@ -27,7 +27,53 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Column 2: Legal */}
+          {/* Column 2: Product */}
+          <div>
+            <h3 className="font-semibold mb-4">{t("footer.product")}</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="/ai"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.ai_analysis")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/pricing"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.pricing")}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Solutions */}
+          <div>
+            <h3 className="font-semibold mb-4">{t("footer.solutions")}</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="/cover-letter"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.cover_letter")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/linkedin-import"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.linkedin_import")}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Legal */}
           <div>
             <h3 className="font-semibold mb-4">{t("footer.legal")}</h3>
             <ul className="space-y-2">
@@ -56,14 +102,6 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
-
-          {/* Column 3: Contact */}
-          <div>
-            <h3 className="font-semibold mb-4">{t("footer.contact")}</h3>
-            <p className="text-sm text-muted-foreground">
-              {t("footer.contact_email")}
-            </p>
           </div>
         </div>
 
