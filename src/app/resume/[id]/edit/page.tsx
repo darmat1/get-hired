@@ -234,24 +234,18 @@ export default function EditResumePage() {
                     <WorkExperienceForm
                       data={resumeData.workExperience as WorkExperience[]}
                       onChange={updateWorkExperience}
-                      onBack={() => setStep(1)}
-                      onNext={() => setStep(3)}
                     />
                   )}
                   {step === 3 && (
                     <EducationForm
                       data={resumeData.education as Education[]}
                       onChange={updateEducation}
-                      onBack={() => setStep(2)}
-                      onNext={() => setStep(4)}
                     />
                   )}
                   {step === 4 && (
                     <SkillsForm
                       data={resumeData.skills as Skill[]}
                       onChange={updateSkills}
-                      onBack={() => setStep(3)}
-                      onNext={() => setStep(5)}
                     />
                   )}
                   {step === 5 && (
@@ -260,11 +254,6 @@ export default function EditResumePage() {
                         selectedTemplate={resumeData.template || "modern"}
                         onChange={updateTemplate}
                       />
-                      <div className="mt-6 flex justify-between">
-                        <Button variant="outline" onClick={() => setStep(4)}>
-                          {t("form.back")}
-                        </Button>
-                      </div>
                     </>
                   )}
                 </div>

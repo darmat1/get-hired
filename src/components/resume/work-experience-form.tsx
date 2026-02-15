@@ -8,15 +8,13 @@ import { useTranslation } from "@/lib/translations";
 interface WorkExperienceFormProps {
   data: WorkExperience[];
   onChange: (experience: WorkExperience[]) => void;
-  onNext: () => void;
-  onBack: () => void;
+  onNext?: () => void;
+  onBack?: () => void;
 }
 
 export function WorkExperienceForm({
   data,
   onChange,
-  onNext,
-  onBack,
 }: WorkExperienceFormProps) {
   const { t } = useTranslation();
   const addExperience = () => {
@@ -243,13 +241,6 @@ export function WorkExperienceForm({
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="mt-6 flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          {t("form.back")}
-        </Button>
-        <Button onClick={onNext}>{t("form.next")}</Button>
       </div>
     </div>
   );

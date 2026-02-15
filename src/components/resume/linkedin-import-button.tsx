@@ -217,7 +217,23 @@ export function LinkedInImportButton({
                 onChange={(e) => setProfileText(e.target.value)}
                 placeholder={t("resume.paste_placeholder")}
                 rows={6}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className=" w-full px-3 py-3 
+    rounded-lg 
+    text-sm 
+    transition-all
+    bg-white border border-gray-300 text-gray-900
+    placeholder:text-gray-400
+    dark:bg-[var(--color-input)] 
+    dark:border-[var(--color-border)] 
+    dark:text-[var(--color-foreground)]
+    dark:placeholder:text-[var(--color-muted-foreground)]
+    outline-none
+    focus:ring-2 
+    focus:ring-[var(--color-ring)] 
+    focus:border-transparent
+    [field-sizing:content] 
+    min-h-[150px] 
+    resize-none"
               />
             </div>
             <button
