@@ -296,9 +296,9 @@ export const translations: Translations = {
     ru: "Создайте профессиональное резюме",
   },
   "home.subtitle": {
-    en: "Import data from LinkedIn, use AI recommendations and choose from multiple PDF templates",
-    uk: "Імпортуйте дані з LinkedIn, використовуйте AI-рекомендації та оберіть з численних PDF-шаблонів",
-    ru: "Импортируйте данные из LinkedIn, используйте AI-рекомендации и выберите из множества шаблонов PDF",
+    en: "Upload LinkedIn PDF, use AI recommendations and choose from multiple PDF templates",
+    uk: "Завантажте профілю LinkedIn (PDF), використовуйте AI-рекомендації та оберіть з численних PDF-шаблонів",
+    ru: "Загрузите профиль LinkedIn (PDF), используйте AI-рекомендации и выберите из множества шаблонов PDF",
   },
   "home.create_resume_btn": {
     en: "Create Resume",
@@ -307,14 +307,14 @@ export const translations: Translations = {
   },
   "home.sign_in": { en: "Sign in", uk: "Увійти", ru: "Войти" },
   "home.feature.linkedin.title": {
-    en: "LinkedIn Integration",
-    uk: "Інтеграція з LinkedIn",
-    ru: "Интеграция с LinkedIn",
+    en: "LinkedIn PDF Upload",
+    uk: "Завантаження LinkedIn PDF",
+    ru: "Загрузка LinkedIn PDF",
   },
   "home.feature.linkedin.desc": {
-    en: "Import your profile, work experience, education and skills with one click from LinkedIn",
-    uk: "Імпортуйте ваш профіль, досвід роботи, освіту та навички одним кліком з LinkedIn",
-    ru: "Импортируйте ваш профиль, опыт работы, образование и навыки одним кликом из LinkedIn",
+    en: "Easily upload your profile export PDF from LinkedIn to get started in seconds",
+    uk: "Легко завантажте PDF-експорт свого профілю з LinkedIn, щоб почати за лічені секунди",
+    ru: "Легко загрузите PDF-экспорт своего профиля из LinkedIn, чтобы начать за считанные секунды",
   },
   "home.feature.ai.title": {
     en: "AI Recommendations",
@@ -370,10 +370,10 @@ export const translations: Translations = {
     uk: "Завантажити PDF",
     ru: "Скачать PDF",
   },
-  "form.import_linkedin": {
-    en: "Import from LinkedIn",
-    uk: "Імпорт з LinkedIn",
-    ru: "Импорт из LinkedIn",
+  "landing.hero.cta_secondary": {
+    en: "Upload LinkedIn PDF",
+    uk: "Завантажити LinkedIn PDF",
+    ru: "Загрузить LinkedIn PDF",
   },
   "form.loading": {
     en: "Loading...",
@@ -680,6 +680,138 @@ export const translations: Translations = {
     en: "• AI analyzes the structure and content of your resume\n• Identifies strengths and areas for improvement\n• Provides personalized recommendations for each section\n• Helps make your resume more attractive to recruiters",
     uk: "• AI аналізує структуру та зміст вашого резюме\n• Виявляє сильні сторони та області для покращення\n• Надає персоналізовані рекомендації для кожного розділу\n• Допомагає зробити ваше резюме привабливішим для рекрутерів",
     ru: "• AI анализирует структуру и содержание вашего резюме\n• Выявляет сильные стороны и области для улучшения\n• Дает персонализированные рекомендации по каждому разделу\n• Помогает сделать резюме более привлекательным для рекрутеров",
+  },
+
+  // LANDING PAGE TRANSLATIONS
+  "landing.hero.title": {
+    en: "Stop guessing what recruiters want. Let AI do it for you.",
+    uk: "Припиніть вгадувати, чого хочуть рекрутери. Нехай AI зробить це за вас.",
+    ru: "Перестаньте угадывать, что хочет рекрутер. Пусть AI сделает это за вас.",
+  },
+  "landing.hero.subtitle": {
+    en: "Personal AI Career Agent that adapts your experience to any job description in 30 seconds.",
+    uk: "Ваш особистий кар'єрний AI-агент, який адаптує ваш досвід під будь-яку вакансію за 30 секунд.",
+    ru: "Личный AI-агент карьеры, который адаптирует твой опыт под любую вакансию за 30 секунд.",
+  },
+  "landing.hero.cta": {
+    en: "Create Free Profile",
+    uk: "Створити профіль безкоштовно",
+    ru: "Создать профиль бесплатно",
+  },
+  "landing.hero.cta_secondary": {
+    en: "Upload LinkedIn PDF",
+    uk: "Завантажити LinkedIn PDF",
+    ru: "Загрузить LinkedIn PDF",
+  },
+
+  "landing.problem.title": {
+    en: "Why are you being ignored?",
+    uk: "Чому вас ігнорують?",
+    ru: "Почему вас игнорируют?",
+  },
+  "landing.problem.1": {
+    en: "You send the same resume to everyone.",
+    uk: "Ви надсилаєте те саме резюме всім підряд.",
+    ru: "Вы отправляете одно и то же резюме всем подряд.",
+  },
+  "landing.problem.2": {
+    en: "You spend hours rewriting Cover Letters.",
+    uk: "Ви витрачаєте години на переписування супровідних листів.",
+    ru: "Вы тратите часы на переписывание Cover Letter.",
+  },
+  "landing.problem.3": {
+    en: "You forget the numbers ATS is looking for.",
+    uk: "Ви забуваєте вказати цифри, які шукає ATS.",
+    ru: "Вы забываете указать важные цифры, которые ищет ATS.",
+  },
+
+  "landing.solution.title": {
+    en: "One Global Profile — Infinite Resumes",
+    uk: "Один глобальний профіль — нескінченна кількість резюме",
+    ru: "Один «Глобальный профиль» — бесконечное количество резюме",
+  },
+  "landing.solution.step1.title": {
+    en: "Data Collection",
+    uk: "Збір даних",
+    ru: "Сбор данных",
+  },
+  "landing.solution.step1.desc": {
+    en: "Upload your LinkedIn profile PDF once to create your Global Experience.",
+    uk: "Завантажте PDF свого профілю LinkedIn один раз, щоб створити свій глобальний досвід.",
+    ru: "Загрузите PDF своего профиля LinkedIn один раз, чтобы создать «Глобальный опыт».",
+  },
+  "landing.solution.step2.title": {
+    en: "AI Analysis",
+    uk: "Аналіз AI",
+    ru: "Анализ AI",
+  },
+  "landing.solution.step2.desc": {
+    en: "AI analyzes your achievements and skills.",
+    uk: "AI аналізує ваші досягнення та навички.",
+    ru: "AI анализирует твои достижения.",
+  },
+  "landing.solution.step3.title": {
+    en: "Smart Matching",
+    uk: "Розумний підбір",
+    ru: "Мэтчинг",
+  },
+  "landing.solution.step3.desc": {
+    en: "Paste a job link -> AI picks only relevant experience for this position.",
+    uk: "Вставте посилання на вакансію -> AI вибирає лише релевантний досвід.",
+    ru: "Вставляешь ссылку на вакансию → AI выбирает из твоего опыта только то, что релевантно этой позиции.",
+  },
+
+  "landing.features.cover_letter.title": {
+    en: "Cover Letters you're not ashamed to send",
+    uk: "Супровідні листи, які не соромно надіслати",
+    ru: "Сопроводительные письма, которые не стыдно отправить",
+  },
+  "landing.features.cover_letter.desc": {
+    en: "No fluff or templates. AI uses dry facts from your experience to prove you fit.",
+    uk: "Без води та шаблонів. AI використовує сухі факти з вашого досвіду, щоб довести вашу відповідність.",
+    ru: "Никакой «воды» и шаблонных фраз. AI берет сухие факты из твоего опыта и доказывает, почему ты подходишь.",
+  },
+
+  "landing.how_it_works.title": {
+    en: "How it works",
+    uk: "Як це працює",
+    ru: "Как это работает",
+  },
+  "landing.how_it_works.step1": {
+    en: "Upload PDF from LinkedIn",
+    uk: "Завантаження PDF з LinkedIn",
+    ru: "Загрузка PDF с LinkedIn",
+  },
+  "landing.how_it_works.step2": {
+    en: "AI Analysis of Experience",
+    uk: "AI аналіз досвіду",
+    ru: "AI-анализ опыта",
+  },
+  "landing.how_it_works.step3": {
+    en: "Insert Job Description",
+    uk: "Вставте опис вакансії",
+    ru: "Вставка вакансии",
+  },
+  "landing.how_it_works.step4": {
+    en: "Download Tailored PDF",
+    uk: "Завантажте адаптирований PDF",
+    ru: "Скачивание PDF",
+  },
+
+  "landing.seo.faq.title": {
+    en: "Frequently Asked Questions",
+    uk: "Часті запитання",
+    ru: "Часто задаваемые вопросы",
+  },
+  "landing.seo.q1": {
+    en: "How to pass ATS systems?",
+    uk: "Як пройти системи ATS?",
+    ru: "Как пройти системы ATS?",
+  },
+  "landing.seo.a1": {
+    en: "Our templates are 100% ATS-friendly. AI optimizes keywords from the job description directly into your resume.",
+    uk: "Наші шаблони на 100% дружні до ATS. AI оптимізує ключові слова з опису вакансії прямо у ваше резюме.",
+    ru: "Наши шаблоны на 100% ATS-friendly. AI оптимизирует ключевые слова из вакансии прямо в ваше резюме.",
   },
 
   "template.title": {
@@ -1279,9 +1411,9 @@ export const translations: Translations = {
 
   // LinkedIn Import
   "resume.import_from_linkedin": {
-    en: "Import from LinkedIn",
-    uk: "Імпортувати з LinkedIn",
-    ru: "Импортировать из LinkedIn",
+    en: "Upload LinkedIn PDF",
+    uk: "Завантажити LinkedIn PDF",
+    ru: "Загрузить LinkedIn PDF",
   },
   "resume.importing": {
     en: "Importing...",
@@ -1294,14 +1426,14 @@ export const translations: Translations = {
     ru: "LinkedIn не подключен. Пожалуйста, сначала войдите через LinkedIn.",
   },
   "resume.error.linkedin_import_failed": {
-    en: "Failed to import profile from LinkedIn",
-    uk: "Не вдалося імпортувати профіль з LinkedIn",
-    ru: "Не удалось импортировать профиль из LinkedIn",
+    en: "Failed to parse profile from LinkedIn PDF",
+    uk: "Не вдалося обробити профіль з LinkedIn PDF",
+    ru: "Не удалось обработать профиль из LinkedIn PDF",
   },
   "resume.success.linkedin_imported": {
-    en: "Profile imported successfully from LinkedIn",
-    uk: "Профіль успішно імпортовано з LinkedIn",
-    ru: "Профиль успешно импортирован из LinkedIn",
+    en: "Profile uploaded successfully from LinkedIn PDF",
+    uk: "Профіль успішно завантажено з LinkedIn PDF",
+    ru: "Профиль успешно загружен из LinkedIn PDF",
   },
   "resume.linkedin_url": {
     en: "LinkedIn Profile URL",
@@ -1372,9 +1504,9 @@ export const translations: Translations = {
   // Footer
   "footer.about": { en: "About Us", uk: "Про нас", ru: "О нас" },
   "footer.about_text": {
-    en: "GetHired helps you create professional resumes with AI-powered recommendations and LinkedIn integration.",
-    uk: "GetHired допомагає вам створювати професійні резюме за допомогою рекомендацій AI та інтеграції з LinkedIn.",
-    ru: "GetHired помогает вам создавать профессиональные резюме с помощью рекомендаций AI и интеграции с LinkedIn.",
+    en: "GetHired helps you create professional resumes with AI-powered recommendations and LinkedIn PDF integration.",
+    uk: "GetHired допомагає вам створювати професійні резюме за допомогою рекомендацій AI та інтеграції з LinkedIn PDF.",
+    ru: "GetHired помогает вам создавать профессиональные резюме с помощью рекомендаций AI и интеграции с LinkedIn PDF.",
   },
   "footer.legal": { en: "Legal", uk: "Юридичне", ru: "Юридическое" },
   "footer.privacy_policy": {
@@ -1417,9 +1549,9 @@ export const translations: Translations = {
     ru: "Информация, которую мы собираем",
   },
   "privacy.section2_text": {
-    en: "We collect information you provide directly (such as email, resume data, and profile information) and information collected automatically (such as log data and cookies). We may also collect information from LinkedIn when you connect your account.",
-    uk: "Ми збираємо інформацію, яку ви надаєте безпосередньо (наприклад, електронну пошту, дані резюме та інформацію профілю) та інформацію, зібрану автоматично (наприклад, дані журналу та файли cookie). Ми також можемо збирати інформацію з LinkedIn при підключенні вашого облікового запису.",
-    ru: "Мы собираем информацию, которую вы предоставляете напрямую (такую как электронная почта, данные резюме и информацию профиля) и информацию, собранную автоматически (такую как данные журнала и файлы cookie). Мы также можем собирать информацию из LinkedIn при подключении вашего аккаунта.",
+    en: "We collect information you provide directly (such as email, resume data, and profile information) and information collected automatically (such as log data and cookies). We may also process information from your LinkedIn PDF export when you upload it.",
+    uk: "Ми збираємо інформацію, яку ви надаєте безпосередньо (наприклад, електронну пошту, дані резюме та інформацію профілю) та інформацію, зібрану автоматично (наприклад, дані журналу та файли cookie). Ми також можемо обробляти інформацію з вашого експорту LinkedIn PDF, коли ви його завантажуєте.",
+    ru: "Мы собираем информацию, которую вы предоставляете напрямую (такую как электронная почта, данные резюме и информацию профиля) и информацию, собранную автоматически (такую как данные журнала и файлы cookie). Мы также можем обрабатывать информацию из вашего экспорта LinkedIn PDF, когда вы его загружаете.",
   },
   "privacy.section3_title": {
     en: "How We Use Your Information",
