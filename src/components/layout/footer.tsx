@@ -41,14 +41,6 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/templates"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t("footer.resume_templates")}
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/pricing"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >

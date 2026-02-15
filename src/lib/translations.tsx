@@ -1652,6 +1652,57 @@ export const translations: Translations = {
     ru: "Ваши файлы обрабатываются в реальном времени и никогда не хранятся бесконечно. Мы используем отраслевые стандарты шифрования.",
   },
 
+  // AI Landing Page
+  "ai_landing.badge": {
+    en: "AI Resume Analysis — trusted by professionals",
+    uk: "AI‑аналіз резюме — довіряють професіонали",
+    ru: "AI‑анализ резюме — доверяют профессионалы",
+  },
+  "ai_landing.hero_title": {
+    en: "AI Resume Analysis that helps you get hired",
+    uk: "AI‑аналіз резюме, який допомагає отримати роботу",
+    ru: "AI‑анализ резюме, который помогает получить работу",
+  },
+  "ai_landing.hero_subtitle": {
+    en: "Section-level scoring, ATS keyword recommendations and AI-written bullet rewrites — optimized for recruiters and applicant tracking systems.",
+    uk: "Оцінка по розділах, рекомендації ключових слів для ATS та AI‑переписування пунктів — оптимізовано для рекрутерів та систем відбору.",
+    ru: "Оценка по разделам, рекомендации ключевых слов для ATS и AI‑переписывание пунктов — оптимизировано для рекрутеров и систем отбора.",
+  },
+  "ai_landing.cta_analyze": { en: "Analyze your resume — free", uk: "Проаналізувати резюме — безкоштовно", ru: "Проанализировать резюме — бесплатно" },
+  "ai_landing.cta_pricing": { en: "Compare plans", uk: "Порівняти плани", ru: "Сравнить планы" },
+  "ai_landing.metric_avg_score": { en: "avg score increase", uk: "середнє підвищення балу", ru: "среднее увеличение балла" },
+  "ai_landing.metric_ats_pass": { en: "ATS pass improvement", uk: "покращення проходження ATS", ru: "увеличение прохода ATS" },
+  "ai_landing.metric_resumes_analyzed": { en: "resumes analyzed", uk: "проаналізованих резюме", ru: "проанализированных резюме" },
+  "ai_landing.placeholder_screenshot": { en: "Resume screenshot placeholder", uk: "Заглушка скриншоту резюме", ru: "Заглушка скриншота резюме" },
+  "ai_landing.placeholder_small": { en: "Placeholder", uk: "Заглушка", ru: "Заглушка" },
+
+  "ai_landing.feature_ats_title": { en: "ATS-aware scoring", uk: "Оцінка для ATS", ru: "Оценка с учётом ATS" },
+  "ai_landing.feature_ats_desc": { en: "Detects missing keywords and provides exact phrases to match target roles.", uk: "Виявляє відсутні ключові слова та пропонує точні фрази для відповідних вакансій.", ru: "Определяет отсутствующие ключевые слова и предлагает точные фразы для соответствующих ролей." },
+  "ai_landing.feature_actionable_title": { en: "Actionable edits", uk: "Практичні правки", ru: "Практичные правки" },
+  "ai_landing.feature_actionable_desc": { en: "AI-written bullet rewrites and section-level suggestions you can apply instantly.", uk: "AI‑згенеровані варіанти пунктів і пропозиції по кожному розділу, які можна застосувати одразу.", ru: "AI‑переписанные пункты и рекомендации по разделам, которые можно применить сразу." },
+  "ai_landing.feature_private_title": { en: "Private & exportable", uk: "Приватно та експортовано", ru: "Конфиденциально и экспортируемо" },
+  "ai_landing.feature_private_desc": { en: "Secure processing and polished PDF export ready for applications.", uk: "Безпечна обробка і стильний експорт у PDF, готовий до відправки.", ru: "Безопасная обработка и аккуратный экспорт в PDF, готовый к отправке." },
+
+  "ai_landing.seo_title": { en: "AI Resume Analysis — what to expect", uk: "AI‑аналіз резюме — чого очікувати", ru: "AI‑анализ резюме — чего ожидать" },
+  "ai_landing.seo_paragraph": { en: "Our analysis combines ATS keyword matching, structure checks, and language-quality scoring so you can send resumes that pass automated filters and impress hiring teams. Suggestions are prioritized so small edits have measurable impact.", uk: "Наш аналіз поєднує відповідність ключових слів ATS, перевірки структури та оцінку якості мови, щоб ви могли надсилати резюме, які проходять автоматичні фільтри та справляють враження на рекрутерів. Пропозиції пріоритизовані, тому невеликі правки дають вимірний ефект.", ru: "Наш анализ сочетает соответствие ключевых слов ATS, проверки структуры и оценку качества языка, чтобы вы могли отправлять резюме, которые проходят автоматические фильтры и впечатляют рекрутеров. Предложения приоритизированы, поэтому небольшие правки дают измеримый эффект." },
+  "ai_landing.what_we_evaluate_title": { en: "What we evaluate", uk: "Що ми перевіряємо", ru: "Что мы оцениваем" },
+  "ai_landing.eval_ats_label": { en: "ATS fit:", uk: "ATS відповідність:", ru: "ATS соответствие:" },
+  "ai_landing.eval_ats": { en: "keyword density, role-focused phrasing and suggested terms.", uk: "щільність ключових слів, формулювання, орієнтовані на роль, та рекомендовані терміни.", ru: "плотность ключевых слов, фразы, ориентированные на роль, и предлагаемые термины." },
+  "ai_landing.eval_impact_label": { en: "Impact:", uk: "Вплив:", ru: "Влияние:" },
+  "ai_landing.eval_impact": { en: "stronger action verbs, measurable results and concise bullets.", uk: "сильні дієслова, вимірювані результати та лаконічні пункти.", ru: "сильные глаголы действий, измеримые результаты и лаконичные пункты." },
+  "ai_landing.eval_structure_label": { en: "Structure:", uk: "Структура:", ru: "Структура:" },
+  "ai_landing.eval_structure": { en: "section completeness and readable ordering for recruiters.", uk: "повнота розділів і зрозумілий порядок для рекрутерів.", ru: "полнота разделов и удобный порядок для рекрутеров." },
+  "ai_landing.how_increases_title": { en: "How it increases interview probability", uk: "Як це підвищує ймовірність співбесіди", ru: "Как это повышает вероятность интервью" },
+  "ai_landing.how_increases_desc": { en: "By surfacing recruiter- and ATS-relevant changes, users see higher visibility in applicant pools — focused edits beat random changes.", uk: "Виявляючи зміни, важливі для рекрутерів та ATS, користувачі отримують вищу видимість у пулі кандидатів — цілеспрямовані правки працюють краще за випадкові.", ru: "Выявляя изменения, релевантные для рекрутеров и ATS, пользователи получают большую видимость в пуле соискателей — целевые правки работают лучше случайных." },
+  "ai_landing.metrics_title": { en: "Real results — real metrics", uk: "Реальні результати — реальні метрики", ru: "Реальные результаты — реальные метрики" },
+  "ai_landing.faq_title": { en: "Frequently asked questions", uk: "Поширені запитання", ru: "Часто задаваемые вопросы" },
+  "ai_landing.faq_q1": { en: "How does AI help with ATS?", uk: "Як AI допомагає з ATS?", ru: "Как AI помогает с ATS?" },
+  "ai_landing.faq_a1": { en: "It highlights missing keywords and suggests phrasing aligned with job descriptions so your resume passes automated filters.", uk: "Виділяє відсутні ключові слова та пропонує формулювання відповідно до опису вакансії, щоб ваше резюме проходило автоматичні фільтри.", ru: "Выделяет отсутствующие ключевые слова и предлагает формулировки в соответствии с описанием вакансии, чтобы ваше резюме проходило автоматические фильтры." },
+  "ai_landing.faq_q2": { en: "Is my resume stored?", uk: "Чи зберігається моє резюме?", ru: "Сохраняется ли моё резюме?" },
+  "ai_landing.faq_a2": { en: "No — files are processed securely and not stored indefinitely. Connect your own AI key for maximum control.", uk: "Ні — файли обробляються безпечно і не зберігаються довічно. Підключіть власний AI ключ для повного контролю.", ru: "Нет — файлы обрабатываются безопасно и не хранятся бесконечно. Подключите собственный AI‑ключ для полного контроля." },
+  "ai_landing.cta_try_free": { en: "Try AI Resume Analysis — free", uk: "Спробувати AI‑аналіз резюме — безкоштовно", ru: "Попробовать AI‑анализ резюме — бесплатно" },
+  "ai_landing.cta_subtext": { en: "No credit card required • Export to PDF • Privacy-first", uk: "Без кредитної картки • Експорт у PDF • Приватність насамперед", ru: "Без карты • Экспорт в PDF • Конфиденциальность в приоритете" },
+
   // Cover Letter Landing Page
   "cl_landing.hero_title": {
     en: "AI Cover Letter Generator",

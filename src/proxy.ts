@@ -19,8 +19,7 @@ export default async function proxy(request: NextRequest) {
         !session &&
         (
             request.nextUrl.pathname.startsWith('/dashboard') ||
-            request.nextUrl.pathname.startsWith('/resume') ||
-            request.nextUrl.pathname.startsWith('/ai')
+            request.nextUrl.pathname.startsWith('/resume')
         )
     ) {
         return NextResponse.redirect(new URL("/auth/signin", request.url));
