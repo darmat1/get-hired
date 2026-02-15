@@ -370,11 +370,7 @@ export const translations: Translations = {
     uk: "Завантажити PDF",
     ru: "Скачать PDF",
   },
-  "landing.hero.cta_secondary": {
-    en: "Upload LinkedIn PDF",
-    uk: "Завантажити LinkedIn PDF",
-    ru: "Загрузить LinkedIn PDF",
-  },
+
   "form.loading": {
     en: "Loading...",
     uk: "Завантаження...",
