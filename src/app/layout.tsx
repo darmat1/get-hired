@@ -36,11 +36,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // 1. Получаем данные на сервере (в Next 15/16 это асинхронно)
   const headerList = await headers();
   const cookieStore = await cookies();
 
-  // 2. Определяем локаль (приоритет: заголовок от прокси -> кука -> дефолт)
   const locale = (headerList.get("x-locale") ||
     cookieStore.get("NEXT_LOCALE")?.value ||
     "en") as Language;
@@ -54,7 +52,6 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          {/* 3. Передаем initialLanguage для совпадения стейта клиента и сервера */}
           <LanguageProvider initialLanguage={locale}>
             {children}
             <AIKeyWarning />

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "@/lib/translations";
 
 import { usePathname } from "next/navigation";
@@ -11,7 +11,6 @@ export function Footer() {
   const pathname = usePathname();
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
-  // Hide footer on dashboard and resume builder pages
   if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/resume")) {
     return null;
   }
@@ -20,7 +19,6 @@ export function Footer() {
     <footer className="border-t border-border bg-background/50">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Column 1: About */}
           <div>
             <h3 className="font-semibold mb-4">{t("footer.about")}</h3>
             <p className="text-sm text-muted-foreground">
