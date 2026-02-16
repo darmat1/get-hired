@@ -7,35 +7,52 @@ const pages = [
   "/",
   "/ai",
   "/pricing",
-  "/templates",
+  "/linkedin-import",
+  "/cover-letter",
   "/privacy-policy",
   "/terms-of-service",
 ];
 
 function urlFor(loc: string, path: string) {
-  if (loc === "en") return `${SITE_URL}${path}`;
+  if (loc === "en") return `${SITE_URL}${path === "/" ? "" : path}`;
   return `${SITE_URL}/${loc}${path === "/" ? "" : path}`;
 }
 
 export async function GET() {
   const lastmod = new Date().toISOString();
 
-  const urls = pages
-    .map((path) => {
-      const alternates = locales
-        .map(
-          (loc) =>
-            `    <xhtml:link rel="alternate" hreflang="${loc}" href="${urlFor(loc, path)}"/>`,
-        )
-        .join("\n");
+  const urlEntries = pages
+    .flatMap((path) =>
+      locales.map((currentLoc) => {
+        const alternates = locales
+          .map(
+            (altLoc) =>
+              `    <xhtml:link rel="alternate" hreflang="${altLoc}" href="${urlFor(altLoc, path)}"/>`,
+          )
+          .join("\n");
 
-      return `  <url>\n    <loc>${urlFor("en", path)}</loc>\n    <lastmod>${lastmod}</lastmod>\n${alternates}\n  </url>`;
-    })
-    .join("\n");
+        const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${urlFor("en", path)}"/>`;
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>`;
+        return `
+  <url>
+    <loc>${urlFor(currentLoc, path)}</loc>
+    <lastmod>${lastmod}</lastmod>
+${alternates}
+${xDefault}
+  </url>`;
+      }),
+    )
+    .join("");
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${urlEntries}
+</urlset>`;
 
   return new NextResponse(xml, {
-    headers: { "Content-Type": "application/xml" },
+    headers: {
+      "Content-Type": "application/xml",
+      "Cache-Control": "public, s-maxage=86400, stale-while-revalidate",
+    },
   });
 }
