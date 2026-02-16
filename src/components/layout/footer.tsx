@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useTranslation } from "@/lib/translations";
-
 import { usePathname } from "next/navigation";
+import { isAppRoute } from "@/lib/i18n-config";
 
 export function Footer() {
   const { t } = useTranslation();
   const pathname = usePathname();
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
-  if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/resume")) {
+  if (isAppRoute(pathname || "")) {
     return null;
   }
 

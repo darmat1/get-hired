@@ -1,28 +1,32 @@
 "use client";
 
-import Link from "next/link";
+import { LocalizedLink } from "@/components/ui/localized-link";
 import { useTranslation } from "@/lib/translations";
 import { User, Cpu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Logo from "../ui/icons/logo";
+import { stripLocale } from "@/lib/i18n-config";
 
 export function ProfileSidebar() {
   const { t } = useTranslation();
   const pathname = usePathname();
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => stripLocale(pathname || "") === path;
 
   return (
     <aside className="w-64 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-full flex flex-col">
       <div className="px-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
-        <Link href="/" className="h-16 flex items-center justify-center">
+        <LocalizedLink
+          href="/"
+          className="h-16 flex items-center justify-center"
+        >
           <Logo />
-        </Link>
+        </LocalizedLink>
       </div>
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-2">
           <li>
-            <Link
+            <LocalizedLink
               href="/dashboard/profile"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
                 isActive("/dashboard/profile")
@@ -32,10 +36,10 @@ export function ProfileSidebar() {
             >
               <User className="mr-3 h-5 w-5 flex-shrink-0" />
               {t("profile.title")}
-            </Link>
+            </LocalizedLink>
           </li>
           <li>
-            <Link
+            <LocalizedLink
               href="/dashboard/profile/ai"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
                 isActive("/dashboard/profile/ai")
@@ -45,7 +49,7 @@ export function ProfileSidebar() {
             >
               <Cpu className="mr-3 h-5 w-5 flex-shrink-0" />
               {t("ai_settings.title")}
-            </Link>
+            </LocalizedLink>
           </li>
         </ul>
       </nav>

@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LanguageSelector } from "@/components/ui/language-selector";
 import { UserMenu } from "@/components/ui/user-menu";
 import { useTranslation } from "@/lib/translations";
+import { isAppRoute } from "@/lib/i18n-config";
 import Logo from "../ui/icons/logo";
 import { usePathname } from "next/navigation";
 import { MD5 } from "crypto-js";
@@ -15,8 +16,7 @@ export function Header() {
   const { data: session, isPending } = useSession();
   const { t } = useTranslation();
   const pathname = usePathname();
-  const isAppRoute =
-    pathname?.startsWith("/dashboard") || pathname?.startsWith("/resume");
+  const isApplicationPage = isAppRoute(pathname || "");
 
   const emailHash = session?.user?.email
     ? MD5(session.user.email.toLowerCase().trim()).toString()
@@ -28,7 +28,7 @@ export function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            {!isAppRoute && (
+            {!isApplicationPage && (
               <LocalizedLink
                 href="/"
                 className="text-xl font-bold text-gray-900 dark:text-white"

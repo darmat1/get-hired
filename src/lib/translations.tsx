@@ -21,6 +21,8 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined,
 );
 
+import { useRouter } from "next/navigation";
+
 export function LanguageProvider({
   children,
   initialLanguage = "en",
@@ -28,7 +30,13 @@ export function LanguageProvider({
   children: ReactNode;
   initialLanguage: Language;
 }) {
-  const [language] = useState<Language>(initialLanguage);
+  const [language, setLanguageState] = useState<Language>(initialLanguage);
+  const router = useRouter();
+
+  // Keep state in sync with server-provided prop
+  useEffect(() => {
+    setLanguageState(initialLanguage);
+  }, [initialLanguage]);
 
   const setLanguage = (newLang: Language) => {
     const currentPath = window.location.pathname;
@@ -54,10 +62,16 @@ export function LanguageProvider({
       newPath = cleanPath ? `/${newLang}/${cleanPath}` : `/${newLang}`;
     }
 
+    const fullPath = newPath + searchParams;
+
     document.cookie = `NEXT_LOCALE=${newLang}; Path=/; max-age=31536000; sameSite=lax`;
     localStorage.setItem("cv-maker-language", newLang);
 
-    window.location.href = newPath + searchParams;
+    // Update state immediately for fast feedback
+    setLanguageState(newLang);
+
+    // Use Next.js router for smooth transition
+    router.push(fullPath);
   };
 
   const t = (key: string): string => {
