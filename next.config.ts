@@ -17,6 +17,10 @@ export default withSentryConfig(nextConfig, {
   // Это уберет ошибку "Cannot find module for page: /_document"
   autoInstrumentServerFunctions: false,
 
+  reactComponentAnnotation: {
+    enabled: false,
+  },
+
   // 3. Остальные полезные настройки
   silent: !process.env.CI,
   widenClientFileUpload: true,
