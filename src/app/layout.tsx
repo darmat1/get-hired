@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers, cookies } from "next/headers";
 import "./globals.scss";
@@ -6,7 +6,6 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 import { LanguageProvider, type Language } from "@/lib/translations";
 import { Footer } from "@/components/layout/footer";
 import { AIKeyWarning } from "@/components/layout/ai-key-warning";
-
 import { getBaseUrl } from "@/lib/i18n-config";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -15,18 +14,47 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = getBaseUrl();
+
+// 1. Улучшенные метаданные
 export const metadata: Metadata = {
-  title: "GetHired - Create Professional Resumes",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "GetHired - AI Career Agent & Resume Tailor",
+    template: "%s | GetHired",
+  },
   description:
-    "Create professional resumes with LinkedIn data integration and AI recommendations",
+    "Personal AI Career Agent that adapts your experience to any job description in 30 seconds. LinkedIn import and fact-based cover letters.",
+  keywords: [
+    "AI Resume Builder",
+    "LinkedIn to Resume",
+    "ATS Resume Optimization",
+    "AI Cover Letter Generator",
+  ],
+  authors: [{ name: "GetHired Team" }],
   alternates: {
-    canonical: getBaseUrl(),
+    canonical: "./",
     languages: {
-      en: `${getBaseUrl()}/`,
-      uk: `${getBaseUrl()}/uk`,
-      ru: `${getBaseUrl()}/ru`,
+      "en-US": "/",
+      "uk-UA": "/uk",
+      "ru-RU": "/ru",
+      "x-default": "/",
     },
   },
+  openGraph: {
+    type: "website",
+    siteName: "GetHired",
+    title: "GetHired - Stop guessing what recruiters want",
+    description:
+      "Tailor your resume to any job description using AI in seconds.",
+    images: [{ url: "/og-image.png" }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0b0e14",
+  width: "device-width",
+  initialScale: 1,
 };
 
 const themeScript = `(function(){try{const t=localStorage.getItem('cv-maker-theme'),s=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(t!=='light'&&s))document.documentElement.classList.add('dark');else document.documentElement.classList.remove('dark')}catch(e){}})();`;
@@ -43,10 +71,35 @@ export default async function RootLayout({
     cookieStore.get("NEXT_LOCALE")?.value ||
     "en") as Language;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "GetHired",
+    description:
+      "AI-powered career agent for resume tailoring and cover letter generation.",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    featureList: [
+      "LinkedIn PDF Import",
+      "AI Resume Tailoring",
+      "Fact-based Cover Letter Generation",
+      "ATS Optimization",
+    ],
+  };
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
