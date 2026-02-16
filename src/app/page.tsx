@@ -1,10 +1,11 @@
 import { LandingPage } from "@/components/landing/landing-page";
 import type { Metadata } from "next";
 import { getT } from "@/lib/server-i18n";
+import { getBaseUrl } from "@/lib/i18n-config";
 
 export function generateMetadata({ locale }: { locale?: string }): Metadata {
   const t = getT((locale as any) || "en");
-  const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const SITE_URL = getBaseUrl();
 
   return {
     title: t("page.home.title"),
