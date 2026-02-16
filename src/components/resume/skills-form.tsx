@@ -94,6 +94,7 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
             <button
               onClick={() => handleRemoveSkill(skill)}
               className="text-muted-foreground hover:text-destructive ml-1 focus:outline-none"
+              type="button"
             >
               <X size={14} />
             </button>
@@ -121,14 +122,14 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
             )
           }
           placeholder={`Add ${title.toLowerCase()}...`}
-          className="flex-1 w-full px-3 py-2 border border-input bg-background rounded-md text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-1 w-full px-3 py-2 border border-input bg-background rounded-md text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-foreground"
         />
 
         {category === "language" && (
           <select
             value={languageLevel}
             onChange={(e) => setLanguageLevel(e.target.value as Skill["level"])}
-            className="w-[130px] px-3 py-2 border border-input bg-background rounded-md text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="w-[130px] px-3 py-2 border border-input bg-background rounded-md text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-foreground"
           >
             <option value="beginner">{t("skill.level.beginner")}</option>
             <option value="elementary">{t("skill.level.elementary")}</option>
@@ -152,6 +153,7 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
           variant="secondary"
           size="icon"
           disabled={!inputValue.trim()}
+          type="button"
         >
           <Plus size={18} />
         </Button>
@@ -160,44 +162,48 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">{t("form.skills")}</h2>
-      </div>
+    <form onSubmit={(e) => e.preventDefault()}>
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-foreground">
+            {t("form.skills")}
+          </h2>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Technical Skills */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-foreground">
+          {/* Technical Skills */}
+          <div className="md:col-span-2 space-y-6">
+            <div className="bg-card p-6 rounded-lg border shadow-sm">
+              {renderCategorySection(
+                "technical",
+                t("skills.technical"),
+                technicalInput,
+                setTechnicalInput,
+              )}
+            </div>
+          </div>
+
+          {/* Soft Skills */}
           <div className="bg-card p-6 rounded-lg border shadow-sm">
             {renderCategorySection(
-              "technical",
-              t("skills.technical"),
-              technicalInput,
-              setTechnicalInput,
+              "soft",
+              t("skills.soft"),
+              softInput,
+              setSoftInput,
+            )}
+          </div>
+
+          {/* Language Skills */}
+          <div className="bg-card p-6 rounded-lg border shadow-sm">
+            {renderCategorySection(
+              "language",
+              t("skills.languages"),
+              languageInput,
+              setLanguageInput,
             )}
           </div>
         </div>
-
-        {/* Soft Skills */}
-        <div className="bg-card p-6 rounded-lg border shadow-sm">
-          {renderCategorySection(
-            "soft",
-            t("skills.soft"),
-            softInput,
-            setSoftInput,
-          )}
-        </div>
-
-        {/* Language Skills */}
-        <div className="bg-card p-6 rounded-lg border shadow-sm">
-          {renderCategorySection(
-            "language",
-            t("skills.languages"),
-            languageInput,
-            setLanguageInput,
-          )}
-        </div>
       </div>
-    </div>
+    </form>
   );
 }

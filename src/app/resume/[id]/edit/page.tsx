@@ -184,6 +184,7 @@ export default function EditResumePage() {
                       variant="outline"
                       onClick={saveResume}
                       disabled={isSaving}
+                      type="button"
                     >
                       {isSaving ? (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -192,7 +193,7 @@ export default function EditResumePage() {
                       )}
                       {t("form.save")}
                     </Button>
-                    <Button onClick={downloadPDF}>
+                    <Button onClick={downloadPDF} type="button">
                       <Download className="h-4 w-4 mr-2" />
                       {t("form.download_pdf")}
                     </Button>
