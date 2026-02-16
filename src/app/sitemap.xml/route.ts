@@ -42,7 +42,7 @@ export async function GET() {
   <url>
     <loc>${currentUrl}</loc>
     <lastmod>${lastmod}</lastmod>
-    <changefrequency>monthly</changefrequency>
+    <changefreq>monthly</changefreq>
     <priority>${path === "" ? "1.0" : "0.8"}</priority>
     ${alternates}${xDefault}
   </url>`;
@@ -57,8 +57,7 @@ ${entries}
 
   return new Response(xml, {
     headers: {
-      "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, s-maxage=86400, stale-while-revalidate",
+      "Content-Type": "application/xml",
     },
   });
 }
