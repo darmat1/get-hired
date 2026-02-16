@@ -8,20 +8,28 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ["/", "/llms.txt"],
         disallow: [
           "/api/",
           "/dashboard/",
           "/uk/dashboard/",
           "/ru/dashboard/",
           "/auth/",
-          "/*_next/",
+          "/_next/",
           "/*?*",
         ],
       },
       {
-        userAgent: ["GPTBot", "ChatGPT-User"],
-        allow: ["/"],
+        userAgent: [
+          "GPTBot",
+          "ChatGPT-User",
+          "Claude-Webcheck",
+          "ClaudeBot",
+          "PerplexityBot",
+          "Google-Extended",
+        ],
+        allow: ["/", "/llms.txt"],
+        disallow: ["/api/"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
