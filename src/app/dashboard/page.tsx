@@ -45,6 +45,7 @@ export default function MyExperiencePage() {
   } | null>(null);
   const [isAiProcessing, setIsAiProcessing] = useState(false);
   const [aiTimer, setAiTimer] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -104,10 +105,7 @@ export default function MyExperiencePage() {
     setProfile({ ...profile, [field]: value });
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const processFile = async (file: File) => {
     if (file.type !== "application/pdf") {
       setMessage({ type: "error", text: t("profile.error.upload_pdf") });
       return;
@@ -129,6 +127,40 @@ export default function MyExperiencePage() {
           error instanceof Error ? error.message : t("profile.import_error"),
       });
       setIsLoading(false);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await processFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      await processFile(file);
     }
   };
 
@@ -242,11 +274,32 @@ export default function MyExperiencePage() {
                 <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center cursor-pointer hover:border-blue-500 dark:hover:border-blue-400 transition-colors"
+                    onDragOver={handleDragOver}
+                    onDragEnter={handleDragEnter}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+                      isDragging
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                        : "border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400"
+                    }`}
                   >
-                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {fileName || t("profile.upload_pdf_desc")}
+                    <Upload
+                      className={`h-8 w-8 mx-auto mb-2 transition-colors ${
+                        isDragging ? "text-blue-600" : "text-gray-400"
+                      }`}
+                    />
+                    <p
+                      className={`text-sm transition-colors ${
+                        isDragging
+                          ? "text-blue-700 dark:text-blue-300 font-medium"
+                          : "text-gray-600 dark:text-gray-400"
+                      }`}
+                    >
+                      {fileName ||
+                        (isDragging
+                          ? t("profile.drop_here") || "Drop PDF here"
+                          : t("profile.upload_pdf_desc"))}
                     </p>
                     <input
                       type="file"
