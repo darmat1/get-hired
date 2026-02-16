@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { signOut } from "@/lib/auth-client";
-import Link from "next/link";
+import { LocalizedLink } from "@/components/ui/localized-link";
 import { LogOut, User, Settings } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 
@@ -25,10 +25,7 @@ export function UserMenu({
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
@@ -73,14 +70,14 @@ export function UserMenu({
             </p>
           </div>
 
-          <Link
+          <LocalizedLink
             href="/dashboard/profile"
             onClick={() => setIsOpen(false)}
             className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
             <Settings className="h-4 w-4" />
             {t("nav.profile")}
-          </Link>
+          </LocalizedLink>
 
           <button
             onClick={handleSignOut}

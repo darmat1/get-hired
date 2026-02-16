@@ -1,8 +1,8 @@
-import { getBaseUrl } from "@/lib/i18n-config";
+export const dynamic = "force-static";
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
 
 export async function GET() {
-  const SITE_URL = getBaseUrl().replace(/\/$/, "");
-
   const content = `
 # GetHired - AI Career Agent
 

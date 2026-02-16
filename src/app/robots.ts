@@ -1,8 +1,8 @@
 import { MetadataRoute } from "next";
-import { getBaseUrl } from "@/lib/i18n-config";
+export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
-  const SITE_URL = getBaseUrl().replace(/\/$/, "");
+  const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
 
   return {
     rules: [
