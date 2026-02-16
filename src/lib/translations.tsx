@@ -1,11 +1,15 @@
 "use client";
 
-import { createContext, useContext, ReactNode, useEffect, useState } from "react"; // Added useState
-import { usePathname, useRouter } from "next/navigation";
-import { translations, Language, getT } from "@/lib/translations-data";
-// ^ Убедитесь, что путь к данным правильный
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
+import { translations } from "./translations-data";
 
-export type { Language };
+export type Language = "en" | "uk" | "ru";
 
 interface LanguageContextType {
   language: Language;
@@ -17,80 +21,50 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined,
 );
 
-// Helper function to determine language from path
-const getLanguageFromPath = (path: string): Language => {
-  if (!path) return "en";
-  const segments = path.split("/").filter(Boolean);
-  if (segments.length > 0) {
-    if (segments[0] === "uk") return "uk";
-    if (segments[0] === "ru") return "ru";
-  }
-  return "en";
-};
-
 export function LanguageProvider({
   children,
-  initialLanguage,
+  initialLanguage = "en",
 }: {
   children: ReactNode;
-  initialLanguage: Language; // Accept initialLanguage prop
+  initialLanguage: Language;
 }) {
-  const pathname = usePathname();
-  const router = useRouter();
+  // Инициализируем стейт один раз. Благодаря заголовкам в лейауте,
+  // значение на сервере и клиенте будет одинаковым.
+  const [language] = useState<Language>(initialLanguage);
 
-  // Use initialLanguage from props as the initial currentLanguage
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(initialLanguage);
-
-  // 2. Функция переключения языка (чистая логика URL)
   const setLanguage = (newLang: Language) => {
-    if (newLang === currentLanguage) return;
+    // В i18n с прокси лучше всего работает прямая смена URL через href
+    const currentPath = window.location.pathname;
+    const segments = currentPath.split("/").filter(Boolean);
+    const locales = ["uk", "ru", "ua"];
 
-    const path = pathname || "/";
-    const segments = path.split("/").filter(Boolean);
-
-    // Если текущий URL начинается с языка, убираем его, чтобы получить чистый путь
-    if (segments.length > 0 && (segments[0] === "uk" || segments[0] === "ru")) {
+    if (locales.includes(segments[0])) {
       segments.shift();
     }
 
-    const cleanPath = "/" + segments.join("/"); // Например "/dashboard" или "/"
+    const cleanPath = "/" + segments.join("/");
+    const newPath =
+      newLang === "en"
+        ? cleanPath
+        : `/${newLang}${cleanPath === "/" ? "" : cleanPath}`;
 
-    // Формируем новый путь
-    let newPath;
-    if (newLang === "en") {
-      newPath = cleanPath; // Английский = путь без префикса
-    } else {
-      newPath = `/${newLang}${cleanPath === "/" ? "" : cleanPath}`; // /uk/dashboard
-    }
-
-    // Сохраняем куку для Middleware и обновляем localStorage
+    document.cookie = `NEXT_LOCALE=${newLang}; Path=/; max-age=31536000; sameSite=lax`;
     localStorage.setItem("cv-maker-language", newLang);
-    document.cookie = `NEXT_LOCALE=${newLang}; Path=/; max-age=${31536000}; samesite=Lax`;
 
-    // Update the state variable
-    setCurrentLanguage(newLang);
-
-    // Переходим
-    router.push(newPath);
+    window.location.href = newPath;
   };
 
-  // 3. Получаем функцию перевода
   const t = (key: string): string => {
-    const getter = getT(currentLanguage);
-    return getter(key);
+    const translation = translations[key];
+    return translation ? translation[language] || translation["en"] : key;
   };
 
-  // 4. Синхронизация кук при навигации (чтобы сервер знал текущий язык)
   useEffect(() => {
-    localStorage.setItem("cv-maker-language", currentLanguage);
-    document.documentElement.lang = currentLanguage; // Simplified
-    document.cookie = `NEXT_LOCALE=${currentLanguage}; Path=/; max-age=${31536000}; samesite=Lax`;
-  }, [currentLanguage]);
+    document.documentElement.lang = language;
+  }, [language]);
 
   return (
-    <LanguageContext.Provider
-      value={{ language: currentLanguage, setLanguage, t }}
-    >
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

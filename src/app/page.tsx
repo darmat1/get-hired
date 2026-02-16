@@ -13,7 +13,7 @@ export function generateMetadata({ locale }: { locale?: string }): Metadata {
       canonical: SITE_URL,
       languages: {
         en: `${SITE_URL}/`,
-        uk: `${SITE_URL}/ua`,
+        uk: `${SITE_URL}/uk`,
         ru: `${SITE_URL}/ru`,
       },
     },

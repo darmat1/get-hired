@@ -24,7 +24,7 @@ export async function GET() {
       const alternates = locales
         .map(
           (loc) =>
-            `    <xhtml:link rel="alternate" hreflang="${loc === "ua" ? "uk" : loc}" href="${urlFor(loc, path)}"/>`,
+            `    <xhtml:link rel="alternate" hreflang="${loc}" href="${urlFor(loc, path)}"/>`,
         )
         .join("\n");
 

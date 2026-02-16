@@ -28,6 +28,17 @@ export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
   const router = useRouter();
   const currentLanguage = languages.find((l) => l.code === language);
 
+  function buildLocalizedPath(target: Language) {
+    const stripped = pathname?.replace(/^\/(ua|ru)(?=\/|$)/, "") || "";
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    if (target === "en") {
+      return (stripped === "" ? "/" : stripped) + search;
+    }
+    const localePrefix = target;
+    const base = stripped === "" ? "" : stripped;
+    return `/${localePrefix}${base}${search}`;
+  }
+
   return (
     <div className={`relative ${className}`}>
       <button
@@ -55,6 +66,9 @@ export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
                 key={lang.code}
                 onClick={() => {
                   setLanguage(lang.code);
+                  // navigate to localized path (SEO-friendly)
+                  const targetPath = buildLocalizedPath(lang.code);
+                  router.push(targetPath);
                   setIsOpen(false);
                 }}
                 className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${

@@ -27,10 +27,11 @@ const serverTranslations: Record<string, Record<string, string>> = {
 };
 
 export function getT(locale: Locale = "en") {
-  const lookup = locale;
+  const lookup = locale; // allow ua -> uk mapping where required
   return (key: string) => {
     const entry = serverTranslations[key];
     if (!entry) return key;
+    // serverTranslations uses ua/uk keys consistently where applicable
     return (entry as any)[locale] || (entry as any)[lookup] || entry.en || key;
   };
 }

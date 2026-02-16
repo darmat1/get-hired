@@ -9,11 +9,7 @@ import { usePathname } from "next/navigation";
 export function Footer() {
   const { t } = useTranslation();
   const pathname = usePathname();
-  const [currentYear, setCurrentYear] = useState(0);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
   // Hide footer on dashboard and resume builder pages
   if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/resume")) {
