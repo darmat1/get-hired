@@ -1,42 +1,38 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  // Твои обычные настройки Next.js (если есть)
+};
 
 export default withSentryConfig(nextConfig, {
-  // For all available options, see:
-  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
-
   org: "owntest-nr",
-
   project: "gethired",
 
-  // Only print logs for uploading source maps in CI
+  // 1. Отключаем автоматическую обертку Middleware/Proxy.
+  // Твой custom proxy.ts лучше мониторить вручную, чтобы не ломать билд.
+  autoInstrumentMiddleware: false,
+
+  // 2. Отключаем автоматическую обертку серверных функций старого роутера.
+  // Это уберет ошибку "Cannot find module for page: /_document"
+  autoInstrumentServerFunctions: false,
+
+  // 3. Остальные полезные настройки
   silent: !process.env.CI,
-
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
 
-  // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
+  disableLogger: true,
+
   tunnelRoute: "/monitoring",
 
+  // Настройки webpack (оставляем твои)
   webpack: {
-    // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
     automaticVercelMonitors: true,
-
-    // Tree-shaking options for reducing bundle size
     treeshake: {
-      // Automatically tree-shake Sentry logger statements to reduce bundle size
       removeDebugLogging: true,
     },
-  }
+  },
 });
