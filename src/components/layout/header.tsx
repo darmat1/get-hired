@@ -2,6 +2,7 @@
 
 import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
+import { LocalizedLink } from "@/components/ui/localized-link";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LanguageSelector } from "@/components/ui/language-selector";
 import { UserMenu } from "@/components/ui/user-menu";
@@ -28,12 +29,12 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             {!isAppRoute && (
-              <Link
+              <LocalizedLink
                 href="/"
                 className="text-xl font-bold text-gray-900 dark:text-white"
               >
                 <Logo />
-              </Link>
+              </LocalizedLink>
             )}
           </div>
 

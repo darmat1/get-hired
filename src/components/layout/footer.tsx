@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useTranslation } from "@/lib/translations";
 
 import { usePathname } from "next/navigation";
@@ -8,7 +9,11 @@ import { usePathname } from "next/navigation";
 export function Footer() {
   const { t } = useTranslation();
   const pathname = usePathname();
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(0);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   // Hide footer on dashboard and resume builder pages
   if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/resume")) {

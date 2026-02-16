@@ -1,11 +1,24 @@
 import { LandingPage } from "@/components/landing/landing-page";
 import type { Metadata } from "next";
+import { getT } from "@/lib/server-i18n";
 
-export const metadata: Metadata = {
-  title: "AI Resume Tailor & Cover Letter Generator | LinkedIn PDF to Resume",
-  description:
-    "Create tailored resumes and fact-based cover letters in seconds. Convert your LinkedIn PDF and match it to any job description using AI.",
-};
+export function generateMetadata({ locale }: { locale?: string }): Metadata {
+  const t = getT((locale as any) || "en");
+  const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+  return {
+    title: t("page.home.title"),
+    description: t("page.home.description"),
+    alternates: {
+      canonical: SITE_URL,
+      languages: {
+        en: `${SITE_URL}/`,
+        uk: `${SITE_URL}/ua`,
+        ru: `${SITE_URL}/ru`,
+      },
+    },
+  };
+}
 
 export default function Home() {
   const jsonLd = {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, Globe } from "lucide-react";
 import { useTranslation, Language } from "@/lib/translations";
 
@@ -23,6 +24,8 @@ export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
     { code: "ru", name: mounted ? t("language.russian") : "Russian" },
   ];
 
+  const pathname = usePathname();
+  const router = useRouter();
   const currentLanguage = languages.find((l) => l.code === language);
 
   return (

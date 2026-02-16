@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.scss";
 import { AuthProvider } from "@/components/providers/auth-provider";
@@ -16,10 +17,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
 export const metadata: Metadata = {
   title: "CV Maker - Create Professional Resumes",
   description:
     "Create professional resumes with LinkedIn data integration and AI recommendations",
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      en: `${SITE_URL}/`,
+      uk: `${SITE_URL}/uk`,
+      ru: `${SITE_URL}/ru`,
+    },
+  },
 };
 
 const themeScript = `
@@ -42,6 +53,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  const initialLocale = cookieStore.get("NEXT_LOCALE")?.value || "en";
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -51,7 +65,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <LanguageProvider>
+          <LanguageProvider initialLanguage={initialLocale}>
             {children}
             <AIKeyWarning />
             <Footer />
