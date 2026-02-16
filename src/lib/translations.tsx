@@ -28,30 +28,36 @@ export function LanguageProvider({
   children: ReactNode;
   initialLanguage: Language;
 }) {
-  // Инициализируем стейт один раз. Благодаря заголовкам в лейауте,
-  // значение на сервере и клиенте будет одинаковым.
   const [language] = useState<Language>(initialLanguage);
 
   const setLanguage = (newLang: Language) => {
-    // В i18n с прокси лучше всего работает прямая смена URL через href
     const currentPath = window.location.pathname;
-    const segments = currentPath.split("/").filter(Boolean);
-    const locales = ["uk", "ru", "ua"];
+    const searchParams = window.location.search;
 
-    if (locales.includes(segments[0])) {
+    const segments = currentPath.split("/").filter(Boolean);
+
+    const localesToClean = ["uk", "ru", "en"];
+
+    while (
+      segments.length > 0 &&
+      localesToClean.includes(segments[0].toLowerCase())
+    ) {
       segments.shift();
     }
 
-    const cleanPath = "/" + segments.join("/");
-    const newPath =
-      newLang === "en"
-        ? cleanPath
-        : `/${newLang}${cleanPath === "/" ? "" : cleanPath}`;
+    const cleanPath = segments.join("/");
+
+    let newPath = "";
+    if (newLang === "en") {
+      newPath = cleanPath ? `/${cleanPath}` : "/";
+    } else {
+      newPath = cleanPath ? `/${newLang}/${cleanPath}` : `/${newLang}`;
+    }
 
     document.cookie = `NEXT_LOCALE=${newLang}; Path=/; max-age=31536000; sameSite=lax`;
     localStorage.setItem("cv-maker-language", newLang);
 
-    window.location.href = newPath;
+    window.location.href = newPath + searchParams;
   };
 
   const t = (key: string): string => {
