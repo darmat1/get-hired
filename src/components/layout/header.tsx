@@ -10,6 +10,7 @@ import { isAppRoute } from "@/lib/i18n-config";
 import Logo from "../ui/icons/logo";
 import { usePathname } from "next/navigation";
 import { MD5 } from "crypto-js";
+import { LogIn } from "lucide-react";
 
 export function Header() {
   const { data: session, isPending } = useSession();
@@ -37,7 +38,7 @@ export function Header() {
             )}
           </div>
 
-          <nav className="flex items-center space-x-4">
+          <nav className="flex items-center space-x-2">
             <div className="flex items-center space-x-2">
               <ThemeToggle />
               <LanguageSelector />
@@ -55,8 +56,9 @@ export function Header() {
             ) : (
               <LocalizedLink
                 href="/auth/signin"
-                className="rounded-md bg-blue-700 px-4 py-2 text-white hover:bg-blue-800"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors text-sm font-medium text-gray-700 dark:text-gray-200 no-underline hover:no-underline"
               >
+                <LogIn className="h-4 w-4" />
                 {t("nav.sign_in")}
               </LocalizedLink>
             )}
