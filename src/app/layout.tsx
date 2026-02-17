@@ -68,9 +68,11 @@ export default async function RootLayout({
   const headerList = await headers();
   const cookieStore = await cookies();
 
-  const locale = (headerList.get("x-locale") ||
-    cookieStore.get("NEXT_LOCALE")?.value ||
-    "en") as Language;
+  // Detect locale from header (set by proxy) or cookie
+  const headerLocale = headerList.get("x-locale");
+  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+
+  const locale = (headerLocale || cookieLocale || "en") as Language;
 
   const jsonLd = {
     "@context": "https://schema.org",

@@ -1,7 +1,6 @@
 import { LandingPage } from "@/components/landing/landing-page";
 import type { Metadata } from "next";
 import { getT } from "@/lib/server-i18n";
-export const dynamic = "force-static";
 
 export function generateMetadata({ locale }: { locale?: string }): Metadata {
   const t = getT((locale as any) || "en");

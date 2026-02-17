@@ -46,7 +46,13 @@ export function proxy(request: NextRequest) {
   }
 
   // 4. Логика для главной и дефолтного языка
-  requestHeaders.set("x-locale", "en"); // По умолчанию en
+  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  const initialLocale =
+    cookieLocale && SUPPORTED_LOCALES.includes(cookieLocale)
+      ? cookieLocale
+      : "en";
+
+  requestHeaders.set("x-locale", initialLocale); // Устанавливаем из куки или en
 
   if (pathname === "/") {
     const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
