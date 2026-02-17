@@ -24,6 +24,7 @@ import Link from "next/link";
 
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function EditResumePage() {
   const { t } = useTranslation();
@@ -122,39 +123,11 @@ export default function EditResumePage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          </main>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message={t("profile.loading_profile")} />;
   }
 
   if (!session) {
-    return (
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold mb-4">
-                Please sign in to edit your resume
-              </h2>
-              <Button onClick={() => (window.location.href = "/auth/signin")}>
-                Sign In
-              </Button>
-            </div>
-          </main>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message={t("auth.sign_in_required")} />;
   }
 
   return (

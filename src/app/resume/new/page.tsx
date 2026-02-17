@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { LocalizedLink } from "@/components/ui/localized-link";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function NewResumePage() {
   const { t } = useTranslation();
@@ -53,24 +54,7 @@ export default function NewResumePage() {
   };
 
   if (!session) {
-    return (
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="max-w-md mx-auto text-center py-12">
-              <h2 className="text-2xl font-bold mb-4 text-foreground">
-                {t("auth.sign_in_required") ||
-                  "Please sign in to create a resume"}
-              </h2>
-              <Button onClick={() => (window.location.href = "/auth/signin")}>
-                {t("nav.sign_in")}
-              </Button>
-            </div>
-          </main>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message={t("auth.sign_in_required")} />;
   }
 
   return (

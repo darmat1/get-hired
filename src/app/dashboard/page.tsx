@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { ResumeSuggestions } from "@/components/profile/resume-suggestions";
 import { extractTextFromPDF } from "@/components/resume/linkedin-import-button";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function MyExperiencePage() {
   const { t } = useTranslation();
@@ -203,7 +204,7 @@ export default function MyExperiencePage() {
     }
   };
 
-  if (!session) return <div>{t("common.auth_required")}</div>;
+  if (!session) return <LoadingScreen message={t("common.auth_required")} />;
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
