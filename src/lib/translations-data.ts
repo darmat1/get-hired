@@ -19,6 +19,11 @@ export const translations: Translations = {
     uk: "Потрібна авторизація",
     ru: "Требуется авторизация",
   },
+  "auth.sign_in_required": {
+    en: "Please sign in to create a resume",
+    uk: "Будь ласка, увійдіть, щоб створити резюме",
+    ru: "Пожалуйста, войдите, чтобы создать резюме",
+  },
   "profile.error.upload_pdf": {
     en: "Please upload a PDF file",
     uk: "Будь ласка, завантажте PDF-файл",
@@ -28,6 +33,51 @@ export const translations: Translations = {
     en: "Create Resume",
     uk: "Створити резюме",
     ru: "Создать резюме",
+  },
+  "resume_builder.new_subtitle": {
+    en: "Give your resume a name to get started.",
+    uk: "Дайте назву вашому резюме, щоб почати.",
+    ru: "Дайте название вашему резюме, чтобы начать.",
+  },
+  "resume_builder.resume_title": {
+    en: "Resume Title",
+    uk: "Назва резюме",
+    ru: "Название резюме",
+  },
+  "resume_builder.title_placeholder": {
+    en: "e.g. Software Engineer 2024",
+    uk: "напр., Software Engineer 2024",
+    ru: "напр., Software Engineer 2024",
+  },
+  "resume_builder.quick_start_title": {
+    en: "Quick Start",
+    uk: "Швидкий старт",
+    ru: "Быстрый старт",
+  },
+  "resume_builder.quick_start_desc": {
+    en: "After creating your resume, you can import data from your profile or fill in the details manually in our powerful editor.",
+    uk: "Після створення резюме ви зможете імпортувати дані з профілю або заповнити деталі вручну в нашому редакторі.",
+    ru: "После создания резюме вы сможете импортировать данные из профиля или заполнить детали вручную в нашем редакторе.",
+  },
+  "resume.new.title": {
+    en: "Create New Resume",
+    uk: "Сворити нове резюме",
+    ru: "Создать новое резюме",
+  },
+  "resume.new.subtitle": {
+    en: "Start by giving your resume a title. You can always change it later.",
+    uk: "Почніть з назви резюме. Ви завжди зможете змінити її пізніше.",
+    ru: "Начните с названия резюме. Вы всегда сможете изменить его позже.",
+  },
+  "resume.new.input_label": {
+    en: "Resume Title",
+    uk: "Назва резюме",
+    ru: "Название резюме",
+  },
+  "resume.new.placeholder": {
+    en: "e.g. Senior Software Engineer - Google",
+    uk: "напр., Senior Software Engineer - Google",
+    ru: "напр., Senior Software Engineer - Google",
   },
   "nav.sign_in": { en: "Sign In", uk: "Увійти", ru: "Войти" },
   "nav.sign_out": { en: "Sign out", uk: "Вийти", ru: "Выйти" },
@@ -123,6 +173,16 @@ export const translations: Translations = {
     en: "Import error",
     uk: "Помилка імпорту",
     ru: "Ошибка импорта",
+  },
+  "resume.new.error_failed": {
+    en: "Failed to create resume",
+    uk: "Не вдалося створити резюме",
+    ru: "Не удалось создать резюме",
+  },
+  "resume.new.error_unexpected": {
+    en: "An unexpected error occurred",
+    uk: "Сталася неочікувана помилка",
+    ru: "Произошла непредвиденная ошибка",
   },
   "profile.pdf_processing": {
     en: "Processing PDF...",
@@ -443,6 +503,16 @@ export const translations: Translations = {
   "common.cancel": { en: "Cancel", uk: "Скасувати", ru: "Отмена" },
   "common.delete": { en: "Delete", uk: "Видалити", ru: "Удалить" },
   "common.save": { en: "Save", uk: "Зберегти", ru: "Сохранить" },
+  "common.create": {
+    en: "Create Resume",
+    uk: "Створити резюме",
+    ru: "Создать резюме",
+  },
+  "common.back_to_dashboard": {
+    en: "Back to Dashboard",
+    uk: "Назад до панелі",
+    ru: "Назад к панели",
+  },
 
   "ai.title": {
     en: "AI Resume Analysis",

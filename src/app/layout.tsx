@@ -58,7 +58,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const themeScript = `(function(){try{const t=localStorage.getItem('cv-maker-theme'),s=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(t!=='light'&&s))document.documentElement.classList.add('dark');else document.documentElement.classList.remove('dark')}catch(e){}})();`;
+const themeScript = `(function(){try{const t=localStorage.getItem('get-hired-theme'),s=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(t!=='light'&&s))document.documentElement.classList.add('dark');else document.documentElement.classList.remove('dark')}catch(e){}})();`;
 
 export default async function RootLayout({
   children,
