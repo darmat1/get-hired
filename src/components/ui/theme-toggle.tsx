@@ -38,7 +38,7 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
   );
 
   useEffect(() => {
-    const saved = localStorage.getItem("cv-maker-theme") as
+    const saved = localStorage.getItem("get-hired-theme") as
       | "light"
       | "dark"
       | "system";
@@ -73,7 +73,7 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
     const nextTheme = currentTheme === "light" ? "dark" : "light";
 
     setTheme(nextTheme);
-    localStorage.setItem("cv-maker-theme", nextTheme);
+    localStorage.setItem("get-hired-theme", nextTheme);
     applyTheme(nextTheme);
   };
 
