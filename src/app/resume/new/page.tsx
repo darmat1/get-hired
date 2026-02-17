@@ -2,87 +2,54 @@
 
 import { useState } from "react";
 import { useSession } from "@/lib/auth-client";
-import { PersonalInfoForm } from "@/components/resume/personal-info-form";
-import { WorkExperienceForm } from "@/components/resume/work-experience-form";
-import { EducationForm } from "@/components/resume/education-form";
-import { SkillsForm } from "@/components/resume/skills-form";
-import { TemplateSelector } from "@/components/resume/template-selector";
-import { ResumePreview } from "@/components/resume/resume-preview";
-import { AIAnalysisPanel } from "@/components/resume/ai-analysis-panel";
-import {
-  PersonalInfo,
-  WorkExperience,
-  Education,
-  Skill,
-  Resume,
-} from "@/types/resume";
 import { Button } from "@/components/ui/button";
-import { Download, Save } from "lucide-react";
+import { Loader2, Plus, ArrowLeft } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
-
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
+import { LocalizedLink } from "@/components/ui/localized-link";
 
 export default function NewResumePage() {
   const { t } = useTranslation();
   const { data: session } = useSession();
-  const [step, setStep] = useState(1);
-  const [resumeData, setResumeData] = useState<Partial<Resume>>({
-    personalInfo: {
-      firstName: "",
-      lastName: "",
-      email: session?.user?.email || "",
-      phone: "",
-      location: "",
-      summary: "",
-    },
-    workExperience: [],
-    education: [],
-    skills: [],
-    template: "modern",
-  });
+  const router = useRouter();
+  const [title, setTitle] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const updatePersonalInfo = (info: PersonalInfo) => {
-    setResumeData((prev) => ({ ...prev, personalInfo: info }));
-  };
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim() || isCreating) return;
 
-  const updateWorkExperience = (experience: WorkExperience[]) => {
-    setResumeData((prev) => ({ ...prev, workExperience: experience }));
-  };
+    setIsCreating(true);
+    setError(null);
 
-  const updateEducation = (education: Education[]) => {
-    setResumeData((prev) => ({ ...prev, education }));
-  };
-
-  const updateSkills = (skills: Skill[]) => {
-    setResumeData((prev) => ({ ...prev, skills }));
-  };
-
-  const updateTemplate = (template: string) => {
-    setResumeData((prev) => ({ ...prev, template }));
-  };
-
-  const saveResume = async () => {
     try {
       const response = await fetch("/api/resumes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(resumeData),
+        body: JSON.stringify({
+          title: title.trim(),
+        }),
       });
 
       if (response.ok) {
         const savedResume = await response.json();
-        window.location.href = `/resume/${savedResume.id}`;
+        // Redirect to edit page
+        router.push(`/resume/${savedResume.id}/edit`);
+      } else {
+        const data = await response.json();
+        setError(data.error || t("resume.new.error_failed"));
       }
-    } catch (error) {
-      console.error("Failed to save resume:", error);
+    } catch (err) {
+      console.error("Failed to create resume:", err);
+      setError(t("resume.new.error_unexpected"));
+    } finally {
+      setIsCreating(false);
     }
-  };
-
-  const downloadPDF = () => {
-    console.log("Downloading PDF...");
   };
 
   if (!session) {
@@ -91,12 +58,13 @@ export default function NewResumePage() {
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header />
           <main className="flex-1 overflow-y-auto p-8">
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold mb-4">
-                Please sign in to create a resume
+            <div className="max-w-md mx-auto text-center py-12">
+              <h2 className="text-2xl font-bold mb-4 text-foreground">
+                {t("auth.sign_in_required") ||
+                  "Please sign in to create a resume"}
               </h2>
               <Button onClick={() => (window.location.href = "/auth/signin")}>
-                Sign In
+                {t("nav.sign_in")}
               </Button>
             </div>
           </main>
@@ -111,89 +79,89 @@ export default function NewResumePage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto p-8">
-          <div className="space-y-6 text-foreground">
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-3xl font-bold">
-                {t("resume_builder.title")}
+          <div className="max-w-2xl mx-auto">
+            <div className="mb-8">
+              <LocalizedLink
+                href="/dashboard"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                {t("common.back_to_dashboard") || "Back to Dashboard"}
+              </LocalizedLink>
+              <h1 className="text-3xl font-bold text-foreground">
+                {t("nav.create_resume")}
               </h1>
-
-              <div className="flex gap-4">{/* LinkedIn import disabled */}</div>
+              <p className="mt-2 text-muted-foreground">
+                {t("resume_builder.new_subtitle") ||
+                  "Give your resume a name to get started."}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="space-y-8">
-                {step === 1 && (
-                  <PersonalInfoForm
-                    data={resumeData.personalInfo!}
-                    onChange={updatePersonalInfo}
-                    onNext={() => setStep(2)}
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 shadow-sm">
+              <form onSubmit={handleCreate} className="space-y-6">
+                <div>
+                  <label
+                    htmlFor="resume-title"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    {t("resume_builder.resume_title") || "Resume Title"}
+                  </label>
+                  <input
+                    id="resume-title"
+                    type="text"
+                    required
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder={
+                      t("resume_builder.title_placeholder") ||
+                      "e.g. Software Engineer 2024"
+                    }
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    autoFocus
                   />
-                )}
+                  {error && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+                      {error}
+                    </p>
+                  )}
+                </div>
 
-                {step === 2 && (
-                  <WorkExperienceForm
-                    data={resumeData.workExperience || []}
-                    onChange={updateWorkExperience}
-                    onNext={() => setStep(3)}
-                    onBack={() => setStep(1)}
-                  />
-                )}
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                  <LocalizedLink href="/dashboard">
+                    <Button variant="ghost" type="button">
+                      {t("common.cancel")}
+                    </Button>
+                  </LocalizedLink>
+                  <Button
+                    type="submit"
+                    disabled={!title.trim() || isCreating}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+                  >
+                    {isCreating ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Plus className="h-4 w-4 mr-2" />
+                    )}
+                    {t("common.create") || "Create Resume"}
+                  </Button>
+                </div>
+              </form>
+            </div>
 
-                {step === 3 && (
-                  <EducationForm
-                    data={resumeData.education || []}
-                    onChange={updateEducation}
-                    onNext={() => setStep(4)}
-                    onBack={() => setStep(2)}
-                  />
-                )}
-
-                {step === 4 && (
-                  <SkillsForm
-                    data={resumeData.skills || []}
-                    onChange={updateSkills}
-                    onNext={() => setStep(5)}
-                    onBack={() => setStep(3)}
-                  />
-                )}
-
-                {step === 5 && (
-                  <div className="space-y-6">
-                    <TemplateSelector
-                      selectedTemplate={resumeData.template || "modern"}
-                      onChange={updateTemplate}
-                    />
-
-                    <div className="flex justify-between">
-                      <Button variant="outline" onClick={() => setStep(4)}>
-                        {t("form.back")}
-                      </Button>
-
-                      <div className="flex gap-4">
-                        <Button
-                          onClick={saveResume}
-                          className="flex items-center gap-2"
-                        >
-                          <Save className="h-4 w-4" />
-                          {t("form.save")}
-                        </Button>
-                        <Button
-                          onClick={downloadPDF}
-                          variant="outline"
-                          className="flex items-center gap-2"
-                        >
-                          <Download className="h-4 w-4" />
-                          {t("form.download_pdf")}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="lg:sticky lg:top-8 h-fit space-y-6">
-                <ResumePreview data={resumeData} />
-                <AIAnalysisPanel resume={resumeData} />
+            <div className="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/30">
+              <div className="flex gap-4">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg h-fit">
+                  <Plus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-blue-900 dark:text-blue-300">
+                    {t("resume_builder.quick_start_title") || "Quick Start"}
+                  </h3>
+                  <p className="text-sm text-blue-700 dark:text-blue-400/80 mt-1">
+                    {t("resume_builder.quick_start_desc") ||
+                      "After creating your resume, you can import data from your profile or fill in the details manually in our powerful editor."}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
