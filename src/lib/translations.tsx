@@ -65,7 +65,6 @@ export function LanguageProvider({
     const fullPath = newPath + searchParams;
 
     document.cookie = `NEXT_LOCALE=${newLang}; Path=/; max-age=31536000; sameSite=lax`;
-    localStorage.setItem("cv-maker-language", newLang);
 
     // Update state immediately for fast feedback
     setLanguageState(newLang);
@@ -82,6 +81,16 @@ export function LanguageProvider({
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);
+
+  // Cleanup stale language keys from localStorage
+  useEffect(() => {
+    const staleKeys = ["cv-maker-language", "selectedLanguage", "i18nextLng"];
+    staleKeys.forEach((key) => {
+      if (localStorage.getItem(key)) {
+        localStorage.removeItem(key);
+      }
+    });
+  }, []);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

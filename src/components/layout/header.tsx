@@ -1,7 +1,6 @@
 "use client";
 
 import { useSession } from "@/lib/auth-client";
-import Link from "next/link";
 import { LocalizedLink } from "@/components/ui/localized-link";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LanguageSelector } from "@/components/ui/language-selector";
@@ -54,12 +53,12 @@ export function Header() {
                 gravatarUrl={gravatarUrl}
               />
             ) : (
-              <Link
+              <LocalizedLink
                 href="/auth/signin"
                 className="rounded-md bg-blue-700 px-4 py-2 text-white hover:bg-blue-800"
               >
                 {t("nav.sign_in")}
-              </Link>
+              </LocalizedLink>
             )}
           </nav>
         </div>

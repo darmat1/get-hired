@@ -1,5 +1,4 @@
 import { Header } from "@/components/layout/header";
-export const dynamic = "force-static";
 
 export default function PrivacyPolicy() {
   return (

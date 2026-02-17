@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
+import React from "react";
+
+import { LocalizedLink } from "@/components/ui/localized-link";
 import { useTranslation } from "@/lib/translations";
 import { usePathname } from "next/navigation";
 import { isAppRoute } from "@/lib/i18n-config";
@@ -9,7 +10,7 @@ import { isAppRoute } from "@/lib/i18n-config";
 export function Footer() {
   const { t } = useTranslation();
   const pathname = usePathname();
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const currentYear = new Date().getFullYear();
 
   if (isAppRoute(pathname || "")) {
     return null;
@@ -31,20 +32,20 @@ export function Footer() {
             <h3 className="font-semibold mb-4">{t("footer.product")}</h3>
             <ul className="space-y-2">
               <li>
-                <Link
+                <LocalizedLink
                   href="/ai"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("footer.ai_analysis")}
-                </Link>
+                </LocalizedLink>
               </li>
               <li>
-                <Link
+                <LocalizedLink
                   href="/pricing"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("footer.pricing")}
-                </Link>
+                </LocalizedLink>
               </li>
             </ul>
           </div>
@@ -54,20 +55,20 @@ export function Footer() {
             <h3 className="font-semibold mb-4">{t("footer.solutions")}</h3>
             <ul className="space-y-2">
               <li>
-                <Link
+                <LocalizedLink
                   href="/cover-letter"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("footer.cover_letter")}
-                </Link>
+                </LocalizedLink>
               </li>
               <li>
-                <Link
+                <LocalizedLink
                   href="/linkedin-import"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("footer.linkedin_import")}
-                </Link>
+                </LocalizedLink>
               </li>
             </ul>
           </div>
@@ -77,28 +78,28 @@ export function Footer() {
             <h3 className="font-semibold mb-4">{t("footer.legal")}</h3>
             <ul className="space-y-2">
               <li>
-                <Link
+                <LocalizedLink
                   href="/privacy-policy"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("footer.privacy_policy")}
-                </Link>
+                </LocalizedLink>
               </li>
               <li>
-                <Link
+                <LocalizedLink
                   href="/terms-of-service"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {t("footer.terms_of_service")}
-                </Link>
+                  {t("footer." + "terms_of_service")}
+                </LocalizedLink>
               </li>
               <li>
-                <Link
+                <LocalizedLink
                   href="/cookie-policy"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("footer.cookie_policy")}
-                </Link>
+                </LocalizedLink>
               </li>
             </ul>
           </div>
