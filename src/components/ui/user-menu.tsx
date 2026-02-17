@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { signOut } from "@/lib/auth-client";
 import { LocalizedLink } from "@/components/ui/localized-link";
-import { LogOut, User, Settings } from "lucide-react";
+import { LogOut, Settings, LayoutDashboard } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 
 interface UserMenuProps {
@@ -71,9 +71,18 @@ export function UserMenu({
           </div>
 
           <LocalizedLink
+            href="/dashboard"
+            onClick={() => setIsOpen(false)}
+            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline"
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            {t("nav.dashboard")}
+          </LocalizedLink>
+
+          <LocalizedLink
             href="/dashboard/profile"
             onClick={() => setIsOpen(false)}
-            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline"
           >
             <Settings className="h-4 w-4" />
             {t("nav.profile")}
