@@ -233,14 +233,17 @@ export function AIKeysForm() {
             );
             const isPreferred = userData.preferredAIProvider === service.id;
             const testStatus = testResults[service.id] || "idle";
+            const isGroq = service.id === "groq";
 
             return (
               <div
                 key={service.id}
                 className={`p-4 rounded-lg border transition-all ${
-                  isPreferred
-                    ? "bg-blue-50/50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800"
-                    : "bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600"
+                  isGroq
+                    ? "bg-amber-50/50 dark:bg-amber-900/10 border-amber-300 dark:border-amber-700 shadow-md scale-[1.01]"
+                    : isPreferred
+                      ? "bg-blue-50/50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800"
+                      : "bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600"
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
@@ -248,6 +251,12 @@ export function AIKeysForm() {
                     <span className="font-medium text-gray-900 dark:text-white">
                       {service.name}
                     </span>
+                    {isGroq && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border border-amber-200 dark:border-amber-700">
+                        <Zap className="h-3 w-3" />
+                        {t("ai_settings.recommended") || "Recommended (Free)"}
+                      </span>
+                    )}
                     {isConnected && (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
                         <CheckCircle className="h-3 w-3" />

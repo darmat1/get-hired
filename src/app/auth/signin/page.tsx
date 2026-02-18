@@ -21,14 +21,28 @@ export default function SignInPage() {
     setError("");
 
     try {
-      await signIn.email({
+      const { data, error } = await signIn.email({
         email,
         password,
         callbackURL: "/dashboard",
       });
-      router.push("/dashboard");
+
+      if (error) {
+        if (
+          error.status === 403 &&
+          error.message?.includes("Email not verified")
+        ) {
+          setError(
+            "Your email is not verified. Please check your inbox or sign up again to resend the link.",
+          );
+        } else {
+          setError(error.message || "Invalid credentials");
+        }
+      } else {
+        router.push("/dashboard");
+      }
     } catch (err) {
-      setError("Invalid credentials");
+      setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -76,6 +90,17 @@ export default function SignInPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end">
+              <div className="text-sm">
+                <Link
+                  href="/auth/forgot-password"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
+                  Forgot your password?
+                </Link>
               </div>
             </div>
 

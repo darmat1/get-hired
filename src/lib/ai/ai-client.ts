@@ -105,7 +105,7 @@ export async function aiComplete(
 
   if (systemProviders.length === 0 && errors.length === 0) {
     throw new Error(
-      "[AI] No AI providers available. Please configure an API key in your profile or system .env",
+      "[AI] No AI providers available. Please configure an API key in your profile",
     );
   }
 

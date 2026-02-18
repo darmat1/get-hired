@@ -131,8 +131,8 @@ export default async function RootLayout({
         />
         <AuthProvider>
           <LanguageProvider initialLanguage={locale}>
-            {children}
             <AIKeyWarning />
+            {children}
             <Footer />
           </LanguageProvider>
         </AuthProvider>

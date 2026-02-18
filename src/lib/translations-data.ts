@@ -14,6 +14,56 @@ export const translations: Translations = {
     uk: "Налаштування AI",
     ru: "AI настройки",
   },
+  "auth.forgot_password": {
+    en: "Forgot password?",
+    uk: "Забули пароль?",
+    ru: "Забыли пароль?",
+  },
+  "auth.reset_password": {
+    en: "Reset Password",
+    uk: "Скинути пароль",
+    ru: "Сбросить пароль",
+  },
+  "auth.verify_email": {
+    en: "Verify Email",
+    uk: "Підтвердити Email",
+    ru: "Подтвердить Email",
+  },
+  "auth.confirmation_code": {
+    en: "Confirmation Code",
+    uk: "Код підтвердження",
+    ru: "Код подтверждения",
+  },
+  "auth.send_code": {
+    en: "Send Code",
+    uk: "Надіслати код",
+    ru: "Отправить код",
+  },
+  "auth.resend_code": {
+    en: "Resend Code",
+    uk: "Надіслати код повторно",
+    ru: "Отправить код повторно",
+  },
+  "auth.code_sent": {
+    en: "We've sent a code to your email",
+    uk: "Ми надіслали код на ваш email",
+    ru: "Мы отправили код на ваш email",
+  },
+  "auth.verification_success": {
+    en: "Email verified successfully!",
+    uk: "Email успішно підтверджено!",
+    ru: "Email успешно подтвержден!",
+  },
+  "auth.reset_success": {
+    en: "Password reset successfully!",
+    uk: "Пароль успішно скинуто!",
+    ru: "Пароль успешно сброшен!",
+  },
+  "auth.check_email": {
+    en: "Please check your inbox",
+    uk: "Будь ласка, перевірте поштову скриньку",
+    ru: "Пожалуйста, проверьте почтовый ящик",
+  },
   "common.auth_required": {
     en: "Authorization required",
     uk: "Потрібна авторизація",
@@ -337,7 +387,42 @@ export const translations: Translations = {
   "profile.error.password_change_failed": {
     en: "Failed to change password",
     uk: "Не вдалося змінити пароль",
-    ru: "Ошибка при изменении пароля",
+    ru: "Ошибка при изменении пароле",
+  },
+  "profile.danger_zone": {
+    en: "Danger Zone",
+    uk: "Зона ризику",
+    ru: "Опасная зона",
+  },
+  "profile.delete_account": {
+    en: "Delete Account",
+    uk: "Видалити акаунт",
+    ru: "Удалить аккаунт",
+  },
+  "profile.delete_account_desc": {
+    en: "Once you delete your account, there is no going back. Please be certain.",
+    uk: "Після видалення акаунта його неможливо буде відновити. Будь ласка, будьте впевнені.",
+    ru: "После удаления аккаунта его невозможно будет восстановить. Пожалуйста, будьте уверены.",
+  },
+  "profile.delete_confirm_title": {
+    en: "Are you absolutely sure?",
+    uk: "Ви абсолютно впевнені?",
+    ru: "Вы абсолютно уверены?",
+  },
+  "profile.delete_confirm_desc": {
+    en: "This action cannot be undone. This will permanently delete your account and remove all your data from our servers.",
+    uk: "Цю дію неможливо скасувати. Це назавжди видалить ваш акаунт та всі ваші дані з наших серверів.",
+    ru: "Это действие нельзя отменить. Это навсегда удалит ваш аккаунт и все ваши данные с наших серверов.",
+  },
+  "profile.delete_success": {
+    en: "Account deleted successfully",
+    uk: "Акаунт успішно видалено",
+    ru: "Аккаунт успешно удален",
+  },
+  "profile.delete_error": {
+    en: "Error deleting account",
+    uk: "Помилка при видаленні акаунта",
+    ru: "Ошибка при удалении аккаунта",
   },
 
   "home.title": {

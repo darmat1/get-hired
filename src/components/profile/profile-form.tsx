@@ -1,8 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession, linkSocial, unlinkAccount } from "@/lib/auth-client";
-import { User, AlertCircle, CheckCircle, Loader, Linkedin } from "lucide-react";
+import {
+  useSession,
+  linkSocial,
+  unlinkAccount,
+  signOut,
+} from "@/lib/auth-client";
+import {
+  User,
+  AlertCircle,
+  CheckCircle,
+  Loader,
+  Linkedin,
+  Trash2,
+  AlertTriangle,
+} from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 
 export function ProfileForm() {
@@ -21,6 +34,7 @@ export function ProfileForm() {
     type: "success" | "error";
     text: string;
   } | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -203,6 +217,40 @@ export function ProfileForm() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/account/delete", {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || t("profile.delete_error"));
+      }
+
+      setMessage({ type: "success", text: t("profile.delete_success") });
+      // Clear session on the client side to remove cookies and reset state
+      await signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            window.location.href = "/";
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Account delete error:", error);
+      setMessage({
+        type: "error",
+        text:
+          error instanceof Error ? error.message : t("profile.delete_error"),
+      });
+      setShowDeleteConfirm(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
@@ -373,6 +421,56 @@ export function ProfileForm() {
           </button>
         </form>
       </div>
+
+      {/* Danger Zone */}
+      <div className="bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-900/50 p-6">
+        <h3 className="text-lg font-semibold text-red-900 dark:text-red-400 mb-2 flex items-center gap-2">
+          <AlertTriangle className="h-5 w-5" />
+          {t("profile.danger_zone")}
+        </h3>
+        <p className="text-sm text-red-700 dark:text-red-300 mb-6">
+          {t("profile.delete_account_desc")}
+        </p>
+        <button
+          onClick={() => setShowDeleteConfirm(true)}
+          disabled={loading}
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+        >
+          <Trash2 className="h-4 w-4" />
+          {t("profile.delete_account")}
+        </button>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              {t("profile.delete_confirm_title")}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 font-medium">
+              {t("profile.delete_confirm_desc")}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={loading}
+                className="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-medium transition-colors"
+              >
+                {t("common.cancel")}
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={loading}
+                className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                {loading && <Loader className="h-4 w-4 animate-spin" />}
+                {t("common.delete")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
