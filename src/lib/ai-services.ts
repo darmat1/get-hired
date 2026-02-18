@@ -46,6 +46,10 @@ export function getAvailableAIServices(): AIService[] {
   });
 
   return services.sort((a, b) => {
+    // Groq always comes first as it's the free/recommended option
+    if (a.id === "groq") return -1;
+    if (b.id === "groq") return 1;
+
     if (a.isFree !== b.isFree) {
       return a.isFree ? -1 : 1;
     }

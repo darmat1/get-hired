@@ -13,6 +13,7 @@
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@openrouter/sdk": "^0.3.16",
     "@prisma/client": "^6.19.1",
+    "@radix-ui/react-label": "^2.1.8",
     "@react-pdf/renderer": "^4.3.2",
     "@sentry/nextjs": "^10.39.0",
     "@toon-format/toon": "^2.1.0",
@@ -34,6 +35,7 @@
     "react": "^19.2.3",
     "react-dom": "19.2.3",
     "react-pdf": "^10.3.0",
+    "resend": "^6.9.2",
     "sass": "^1.97.2",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18"

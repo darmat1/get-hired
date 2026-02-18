@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
-import { AlertTriangle, X } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@/lib/translations";
@@ -12,7 +12,6 @@ export function AIKeyWarning() {
   const pathname = usePathname();
   const { t } = useTranslation();
   const [hasKeys, setHasKeys] = useState<boolean | null>(null);
-  const [isVisible, setIsVisible] = useState(true);
 
   // Don't show on profile pages where user adds keys
   const isProfilePage = pathname?.startsWith("/dashboard/profile");
@@ -37,55 +36,43 @@ export function AIKeyWarning() {
     checkKeys();
   }, [session, pathname]); // Re-check on path change in case user added key
 
-  if (
-    !session?.user ||
-    hasKeys === true ||
-    hasKeys === null ||
-    !isVisible ||
-    isProfilePage
-  ) {
+  if (!session?.user || hasKeys === true || hasKeys === null || isProfilePage) {
     return null;
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 max-w-md w-full animate-in slide-in-from-bottom-5 fade-in duration-300">
-      <div className="bg-amber-50 dark:bg-amber-900/40 border border-amber-200 dark:border-amber-700/50 rounded-lg shadow-lg p-4 relative">
-        <button
-          onClick={() => setIsVisible(false)}
-          className="absolute top-2 right-2 text-amber-500 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-200"
-        >
-          <X className="h-4 w-4" />
-        </button>
-
-        <div className="flex gap-3">
-          <div className="bg-amber-100 dark:bg-amber-900/60 p-2 rounded-full h-fit flex-shrink-0">
-            <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-          </div>
-          <div>
-            <h4 className="font-semibold text-amber-900 dark:text-amber-100 mb-1">
-              {t("ai_warning.title") || "AI Configuration Required"}
-            </h4>
-            <p className="text-sm text-amber-800 dark:text-amber-200/90 mb-3">
-              {t("ai_warning.description") ||
-                "To use AI features, please connect at least one AI provider. Groq offers free models for testing."}
-            </p>
-            <div className="flex gap-2">
-              <Link
-                href="/dashboard/profile/ai"
-                className="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors"
-                onClick={() => setIsVisible(false)}
-              >
-                {t("ai_warning.setup_link") || "Setup Keys"}
-              </Link>
-              <a
-                href="https://console.groq.com/keys"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs bg-white dark:bg-amber-900/40 border border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-100 px-3 py-1.5 rounded-md font-medium hover:bg-amber-50 dark:hover:bg-amber-800/50 transition-colors"
-              >
-                {t("ai_warning.get_groq") || "Get Free Groq Key"}
-              </a>
+    <div className="relative z-[60] animate-in slide-in-from-top-full duration-300">
+      <div className="bg-amber-900 text-amber-50 shadow-lg px-4 py-2.5 border-b border-amber-800">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <div className="flex items-center gap-3">
+            <div className="bg-amber-800 p-1.5 rounded-full flex-shrink-0 hidden sm:block">
+              <AlertTriangle className="h-4 w-4 text-amber-200" />
             </div>
+            <div>
+              <p className="text-sm font-bold leading-tight text-white">
+                {t("ai_warning.title") || "AI Configuration Required"}
+              </p>
+              <p className="text-xs text-amber-100/90 leading-tight">
+                {t("ai_warning.description") ||
+                  "To use AI features, please connect at least one AI provider. Groq offers free models for testing."}
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <Link
+              href="/dashboard/profile/ai"
+              className="text-[10px] sm:text-xs bg-amber-100 text-amber-900 px-3 py-1.5 rounded-md font-bold transition-colors hover:bg-white"
+            >
+              {t("ai_warning.setup_link") || "Setup AI Keys"}
+            </Link>
+            <a
+              href="https://console.groq.com/keys"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] sm:text-xs bg-amber-800 text-white border border-amber-700 px-3 py-1.5 rounded-md font-bold hover:bg-amber-700/50 transition-colors"
+            >
+              {t("ai_warning.get_groq") || "Get Free Groq Key"}
+            </a>
           </div>
         </div>
       </div>
