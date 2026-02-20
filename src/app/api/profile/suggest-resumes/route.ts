@@ -91,7 +91,7 @@ RULES:
       userPrompt: profileToon,
       temperature: 0.7,
       responseFormat: { type: "json_object" },
-    });
+    }, session.user.id);
 
     const aiContent = response.content;
     logWithTime("AI response received", {

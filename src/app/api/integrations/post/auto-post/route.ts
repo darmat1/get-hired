@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { submolts } from "@/lib/moltbook-data";
 import { aiComplete } from "@/lib/ai";
 
@@ -47,16 +49,24 @@ export async function GET(req: NextRequest) {
       subj = submolts.find((s) => s.name === "general") || submolts[0];
       postTitle = `${mintCurrRaw} minting`;
       finalContent = `${inscriptions} mbc20.xyz`;
-    } else {
-      // Режим AI (как сейчас): рандомная ветка + генерация
+  } else {
+    // Режим AI (как сейчас): рандомная ветка + генерация
       subj = submolts[Math.floor(Math.random() * submolts.length)];
+      // Получаем userId активного пользователя (если есть)
+      let userId: string | undefined;
+      try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        userId = session?.user?.id;
+      } catch {
+        userId = undefined;
+      }
       const genResponse = await aiComplete({
         systemPrompt:
           'Return JSON: { "title": "string", "hook": "string", "body": "string", conclusion: "string" }. Hook must be under 50 characters. Body must be under 300 characters but minimum 200 characters. Conclusion must be under 50 characters.',
         userPrompt: `Generate a technical status about ${subj.display_name}`,
         temperature: 0.7,
         responseFormat: { type: "json_object" },
-      });
+      }, userId);
 
       const genPost = JSON.parse(genResponse.content);
 
