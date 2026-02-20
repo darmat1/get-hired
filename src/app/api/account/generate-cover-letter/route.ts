@@ -87,7 +87,7 @@ Write the plain-text response letter now. Temperature is 0.`;
       userPrompt,
       temperature: 0.5,
       maxTokens: 1000,
-    });
+    }, session.user.id);
 
     return NextResponse.json({
       success: true,

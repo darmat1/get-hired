@@ -138,7 +138,7 @@ ${normalizedText}`;
       systemPrompt,
       userPrompt,
       temperature: 0,
-    });
+    }, session.user.id);
 
     const parsedData = parseAIResponse(response.content);
     const safeStr = (val: any) => (typeof val === "string" ? val : "");

@@ -183,13 +183,20 @@ analysis:
 
 Return ONLY valid TOON format (no JSON, no markdown).`;
 
-  const response = await aiComplete({
-    systemPrompt: "You are a professional resume analyst.",
-    userPrompt: prompt,
-    temperature: 0.3,
+  // Use centralized API route to ensure per-user provider flow when possible
+  const apiResp = await fetch("/api/ai/complete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      systemPrompt: "You are a professional resume analyst.",
+      userPrompt: prompt,
+      temperature: 0.3,
+      responseFormat: { type: "json_object" },
+    }),
   });
 
-  const content = response.content;
+  const apiResult = await apiResp.json();
+  const content = apiResult?.content ?? "";
 
   // Try TOON first, fallback to JSON
   try {
