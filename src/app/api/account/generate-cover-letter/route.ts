@@ -5,6 +5,81 @@ import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
 import { aiComplete } from "@/lib/ai";
 
+const SHARED_RULES = `### LANGUAGE ENFORCEMENT (ABSOLUTE PRIORITY)
+- Detect the JD language using stop words:
+  - "та", "або", "що", "вимоги" -> UKRAINIAN
+  - "и", "или", "что", "требования" -> RUSSIAN
+  - "and", "or", "that", "requirements" -> ENGLISH
+- The ENTIRE output MUST be in the JD's detected language.
+- If the profile is in a different language, TRANSLATE the facts.
+
+### FIX TYPOS IN JOB DESCRIPTION
+- If the JD contains obvious typos in technology names, use the CORRECT spelling in your letter.
+- Examples: "formki" → "Formik", "redax" → "Redux", "Reakt" → "React", "typeskript" → "TypeScript", "noad" → "Node", "ekspres" → "Express".
+- NEVER copy typos from the JD into the cover letter.
+
+### DATA INTEGRITY (CRITICAL — ANTI-HALLUCINATION)
+- Use ONLY facts, numbers, and details that are EXPLICITLY present in the CANDIDATE PROFILE.
+- Extract and USE specific metrics: years of experience, team sizes, project counts, performance numbers, company names, technologies used.
+- If the profile says "Led a team of 5 developers" — write exactly that, not "Led a large team".
+- If a specific metric is NOT in the profile, describe the experience qualitatively. NEVER invent numbers.
+- Do NOT just say "I have experience with X". Instead say "I have N years of experience with X, having used it at [Company] to [specific achievement]".
+
+### FORMATTING
+- Plain text only. NO markdown, NO asterisks, NO bold.`;
+
+const PROSE_PROMPT = `You are writing a cover letter on behalf of a Candidate. Write a compelling, SPECIFIC letter using REAL facts from their profile.
+
+${SHARED_RULES}
+
+### WRITING PROCESS
+- Step 1: Read the JD. Identify the company name, the role, and 3-5 KEY requirements.
+- Step 2: Calculate the candidate's years of experience specifically in the REQUIRED STACK (not total career years).
+- Step 3: For EACH key requirement, find the MOST SPECIFIC matching fact from the profile (with numbers, company names, outcomes).
+- Step 4: Find relevant soft skills from the profile.
+
+### OUTPUT STRUCTURE (strictly follow this template)
+Line 1: Greeting to the company team (e.g. "Hello, [Company] team!" or equivalent in detected language).
+
+Paragraph 1 (2-3 sentences): Introduce the candidate by name. State interest in the specific role. Mention years of experience specifically in the REQUIRED STACK (calculate from work dates in profile — only count positions where the stack was used). Do NOT use total career years.
+
+Paragraph 2: For each key JD requirement, describe the candidate's relevant experience using SPECIFIC metrics from the profile — company names, team sizes, project outcomes, technologies. Write in natural prose, NOT bullet list.
+
+Paragraph 3: Describe the candidate's soft skills and strengths using information from the profile (teamwork, leadership, communication, mentoring, etc.).
+
+Last line: A brief well-wish and the candidate's full name as signature.
+
+### WHAT NOT TO DO
+- Do NOT write generic phrases like "I have extensive experience in..." without specifics.
+- Do NOT list JD requirements back with "I can do this".
+- Do NOT use bullet points or dashes.
+- Do NOT copy the JD text back.
+- Do NOT hallucinate or invent facts not present in the profile.
+- Do NOT use total career years — calculate years ONLY in the required stack.`;
+
+const BULLET_PROMPT = `You are writing a concise cover letter on behalf of a Candidate using a bullet-list format. Use REAL facts from their profile.
+
+${SHARED_RULES}
+- Use a simple hyphen list ("- Skill: Result with specific metrics").
+
+### WRITING PROCESS
+- Step 1: Read the JD. Identify 3-5 KEY requirements.
+- Step 2: For EACH requirement, find the MOST SPECIFIC matching fact from the profile.
+
+### OUTPUT STRUCTURE
+Line 1: One sentence stating interest in the role + strongest qualification with a SPECIFIC metric.
+
+- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
+- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
+- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
+
+Last line: Closing sentence.
+
+### WHAT NOT TO DO
+- Do NOT write generic "I can do this" — every bullet MUST have a specific fact.
+- Do NOT hallucinate or invent facts not present in the profile.
+- Do NOT copy the JD requirements verbatim as bullet text.`;
+
 export async function POST(request: Request) {
   try {
     const session = await auth.api.getSession({
@@ -15,7 +90,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { jobDescription } = await request.json();
+    const { jobDescription, format = "prose" } = await request.json();
 
     if (!jobDescription) {
       return NextResponse.json(
@@ -45,49 +120,25 @@ export async function POST(request: Request) {
     };
     const profileToon = encode(profileData);
 
-    // System prompt focused on factual achievements with metrics
-    const systemPrompt = `You are a professional Candidate applying for a job.
+    const systemPrompt = format === "bullet" ? BULLET_PROMPT : PROSE_PROMPT;
 
-### 1. LANGUAGE ENFORCEMENT (ABSOLUTE PRIORITY)
-- **Step 1: Detect JD Language** by looking for "Stop Words" (words that only exist in one language):
-  - "та", "або", "що", "для", "вимоги", "ми" -> **UKRAINIAN**.
-  - "и", "или", "что", "для", "требования", "мы" -> **RUSSIAN**.
-  - "and", "or", "that", "for", "requirements", "we" -> **ENGLISH**.
-- **Step 2: TRANSLATE**: If the Candidate Profile is in English, but the JD is in Ukrainian, you **MUST TRANSLATE** the candidate's achievements into Ukrainian for the response.
-- **Rule**: The output must match the **JD's language** 100%.
-
-### 2. FORMATTING (PLAIN TEXT ONLY)
-- **NO MARKDOWN**: No asterisks (** or *).
-- **NO BOLD**: Do not use bold text.
-- **Style**: Use a simple hyphen list ("- Skill: Result").
-
-### 3. DATA INTEGRITY (ANTI-HALLUCINATION)
-- **Source**: Use ONLY facts from the "CANDIDATE PROFILE".
-- **No Inventions**: Do not invent numbers. If a specific metric isn't in the profile, describe the outcome qualitatively.
-
-### 4. OUTPUT STRUCTURE
-[One direct sentence in DETECTED LANGUAGE stating interest in the role]
-
-- [Matching Fact from Profile (Translated if needed)]
-- [Matching Fact from Profile (Translated if needed)]
-- [Matching Fact from Profile (Translated if needed)]
-
-[Closing sentence in DETECTED LANGUAGE]`;
-
-    const userPrompt = `JOB DESCRIPTION (Analyze stop words for language):
+    const userPrompt = `=== JOB DESCRIPTION (detect language, fix typos) ===
 ${jobDescription}
 
-CANDIDATE PROFILE (Source of facts - TRANSLATE these if needed):
+=== CANDIDATE PROFILE (source of ALL facts — use specific numbers, company names, years) ===
 ${profileToon}
 
-Write the plain-text response letter now. Temperature is 0.`;
+Write the cover letter now. Use ONLY facts from the profile above.`;
 
-    const response = await aiComplete({
-      systemPrompt,
-      userPrompt,
-      temperature: 0.5,
-      maxTokens: 1000,
-    }, session.user.id);
+    const response = await aiComplete(
+      {
+        systemPrompt,
+        userPrompt,
+        temperature: 0.3,
+        maxTokens: 1500,
+      },
+      session.user.id,
+    );
 
     return NextResponse.json({
       success: true,

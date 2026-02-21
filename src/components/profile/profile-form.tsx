@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   useSession,
   linkSocial,
@@ -20,6 +21,7 @@ import { useTranslation } from "@/lib/translations";
 
 export function ProfileForm() {
   const { data: session } = useSession();
+  const router = useRouter();
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
@@ -234,7 +236,7 @@ export function ProfileForm() {
       await signOut({
         fetchOptions: {
           onSuccess: () => {
-            window.location.href = "/";
+            router.push("/");
           },
         },
       });

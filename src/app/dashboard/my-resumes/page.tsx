@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 
 export default function Dashboard() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { data: session } = useSession();
   const [resumes, setResumes] = useState<ResumeData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +96,7 @@ export default function Dashboard() {
               <h2 className="text-2xl font-bold mb-4">
                 Please sign in to view your dashboard
               </h2>
-              <Button onClick={() => (window.location.href = "/auth/signin")}>
+              <Button onClick={() => router.push("/auth/signin")}>
                 Sign In
               </Button>
             </div>
@@ -151,9 +153,7 @@ export default function Dashboard() {
                     <Sparkles className="h-4 w-4 mr-2" />
                     {t("profile.suggest_btn")}
                   </Button>
-                  <Button
-                    onClick={() => (window.location.href = "/resume/new")}
-                  >
+                  <Button onClick={() => router.push("/resume/new")}>
                     <FileText className="h-4 w-4 mr-2" />
                     {t("nav.create_resume")}
                   </Button>
@@ -169,9 +169,7 @@ export default function Dashboard() {
                   <p className="text-muted-foreground mb-4">
                     {t("dashboard.no_resumes_desc")}
                   </p>
-                  <Button
-                    onClick={() => (window.location.href = "/resume/new")}
-                  >
+                  <Button onClick={() => router.push("/resume/new")}>
                     {t("nav.create_resume")}
                   </Button>
                 </div>
@@ -210,7 +208,7 @@ export default function Dashboard() {
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            (window.location.href = `/resume/${resume.id}/edit`)
+                            router.push(`/resume/${resume.id}/edit`)
                           }
                         >
                           <Edit className="h-3 w-3 mr-1" />

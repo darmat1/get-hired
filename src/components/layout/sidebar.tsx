@@ -41,7 +41,7 @@ export function Sidebar() {
           <li>
             <LocalizedLink
               href="/dashboard"
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard")
                   ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-400"
                   : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -54,7 +54,7 @@ export function Sidebar() {
           <li>
             <LocalizedLink
               href="/dashboard/my-resumes"
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard/my-resumes")
                   ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-400"
                   : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -67,7 +67,7 @@ export function Sidebar() {
           <li>
             <LocalizedLink
               href="/dashboard/cover-letter"
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard/cover-letter")
                   ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-400"
                   : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"

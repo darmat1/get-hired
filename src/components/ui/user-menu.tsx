@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
 import { LocalizedLink } from "@/components/ui/localized-link";
 import { LogOut, Settings, LayoutDashboard } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
+import Image from "next/image";
 
 interface UserMenuProps {
   userName: string;
@@ -21,6 +23,7 @@ export function UserMenu({
 }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -40,7 +43,7 @@ export function UserMenu({
 
   const handleSignOut = async () => {
     await signOut();
-    window.location.href = "/";
+    router.push("/");
   };
 
   return (
@@ -49,7 +52,9 @@ export function UserMenu({
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
       >
-        <img
+        <Image
+          width={32}
+          height={32}
           src={userImage || gravatarUrl}
           alt={userName || userEmail}
           className="h-8 w-8 rounded-full border border-gray-200 dark:border-gray-700 object-cover"

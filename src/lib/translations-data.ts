@@ -1549,6 +1549,21 @@ export const translations: Translations = {
     uk: "Супровідний лист успішно згенерований",
     ru: "Сопроводительное письмо успешно сгенерировано",
   },
+  "cover_letter.format_label": {
+    en: "Format",
+    uk: "Формат",
+    ru: "Формат",
+  },
+  "cover_letter.format_prose": {
+    en: "Letter (prose)",
+    uk: "Лист (проза)",
+    ru: "Письмо (проза)",
+  },
+  "cover_letter.format_bullet": {
+    en: "Bullet list",
+    uk: "Список",
+    ru: "Список",
+  },
 
   // LinkedIn Import
   "resume.import_from_linkedin": {
