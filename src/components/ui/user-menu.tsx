@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
 import { LocalizedLink } from "@/components/ui/localized-link";
 import { LogOut, Settings, LayoutDashboard } from "lucide-react";
@@ -22,6 +23,7 @@ export function UserMenu({
 }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export function UserMenu({
 
   const handleSignOut = async () => {
     await signOut();
-    window.location.href = "/";
+    router.push("/");
   };
 
   return (

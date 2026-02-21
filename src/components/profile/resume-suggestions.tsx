@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -32,6 +33,7 @@ interface ResumeSuggestionsProps {
 
 export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
   const { t } = useTranslation();
+  const router = useRouter();
   const [variants, setVariants] = useState<ResumeVariant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRegenerating, setIsRegenerating] = useState(false);
@@ -126,7 +128,8 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
       });
 
       if (response.ok) {
-        window.location.href = "/dashboard";
+        const resume = await response.json();
+        router.push(`/resume/${resume.id}/edit`);
       }
     } catch (error) {
       console.error("Failed to create resume:", error);
