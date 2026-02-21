@@ -2,11 +2,21 @@
 
 import { useState } from "react";
 import { useTranslation } from "@/lib/translations";
-import { AlertCircle, CheckCircle, Loader, Copy } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle,
+  Loader,
+  Copy,
+  FileText,
+  List,
+} from "lucide-react";
+
+type CoverLetterFormat = "prose" | "bullet";
 
 export function CoverLetterForm() {
   const { t, language } = useTranslation();
   const [jobDescription, setJobDescription] = useState("");
+  const [format, setFormat] = useState<CoverLetterFormat>("prose");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
@@ -38,13 +48,16 @@ export function CoverLetterForm() {
         body: JSON.stringify({
           jobDescription: jobDescription,
           language: language,
+          format: format,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || t("cover_letter.error.generation_failed"));
+        throw new Error(
+          data.error || t("cover_letter.error.generation_failed"),
+        );
       }
 
       setCoverLetter(data.coverLetter);
@@ -55,7 +68,10 @@ export function CoverLetterForm() {
     } catch (error) {
       setMessage({
         type: "error",
-        text: error instanceof Error ? error.message : t("cover_letter.error.generation_failed"),
+        text:
+          error instanceof Error
+            ? error.message
+            : t("cover_letter.error.generation_failed"),
       });
     } finally {
       setLoading(false);
@@ -115,6 +131,40 @@ export function CoverLetterForm() {
               disabled={loading}
             />
           </div>
+
+          {/* Format Toggle */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {t("cover_letter.format_label")}
+            </label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setFormat("prose")}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-all ${
+                  format === "prose"
+                    ? "bg-blue-50 border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-300 ring-2 ring-blue-200 dark:ring-blue-800"
+                    : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+                }`}
+              >
+                <FileText className="h-4 w-4" />
+                {t("cover_letter.format_prose")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormat("bullet")}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-all ${
+                  format === "bullet"
+                    ? "bg-blue-50 border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-300 ring-2 ring-blue-200 dark:ring-blue-800"
+                    : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+                }`}
+              >
+                <List className="h-4 w-4" />
+                {t("cover_letter.format_bullet")}
+              </button>
+            </div>
+          </div>
+
           <button
             type="submit"
             disabled={loading}

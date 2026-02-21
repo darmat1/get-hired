@@ -11,6 +11,7 @@ import Logo from "../ui/icons/logo";
 import { usePathname } from "next/navigation";
 import { MD5 } from "crypto-js";
 import { LogIn } from "lucide-react";
+import { useEffect } from "react";
 
 export function Header() {
   const { data: session, isPending } = useSession();
@@ -22,6 +23,12 @@ export function Header() {
     ? MD5(session.user.email.toLowerCase().trim()).toString()
     : "";
   const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?d=mp`;
+
+  useEffect(() => {
+    if (session) {
+      console.log(session);
+    }
+  }, [session]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80">

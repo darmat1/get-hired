@@ -2,7 +2,28 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Твои обычные настройки Next.js (если есть)
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "media.licdn.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.gravatar.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default withSentryConfig(nextConfig, {
