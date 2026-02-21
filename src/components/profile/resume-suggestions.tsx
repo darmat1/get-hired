@@ -25,7 +25,41 @@ interface ResumeVariant {
   reasoning: string;
   selectedSkills: string[];
   selectedExp: string[];
+  keywords?: string[];
 }
+
+const HighlightText = ({
+  text,
+  keywords,
+}: {
+  text: string;
+  keywords?: string[];
+}) => {
+  if (!keywords || keywords.length === 0) return <>{text}</>;
+  // Sort by length descending so longer phrases match first
+  const sortedKeywords = [...keywords].sort((a, b) => b.length - a.length);
+  const regex = new RegExp(
+    `(${sortedKeywords.map((k) => k.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")).join("|")})`,
+    "gi",
+  );
+  const parts = text.split(regex);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (
+          sortedKeywords.some((k) => k.toLowerCase() === part.toLowerCase())
+        ) {
+          return (
+            <strong key={i} className="font-semibold text-primary">
+              {part}
+            </strong>
+          );
+        }
+        return <span key={i}>{part}</span>;
+      })}
+    </>
+  );
+};
 
 interface ResumeSuggestionsProps {
   onClose: () => void;
@@ -39,6 +73,7 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [isCreating, setIsCreating] = useState<string | null>(null);
   const [existingResumes, setExistingResumes] = useState<string[]>([]);
+  const [workExperience, setWorkExperience] = useState<any[]>([]);
   const hasLoadedRef = useRef(false);
 
   useEffect(() => {
@@ -48,7 +83,20 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
     hasLoadedRef.current = true;
     loadSuggestions();
     fetchExistingResumes();
+    fetchWorkExperience();
   }, []);
+
+  const fetchWorkExperience = async () => {
+    try {
+      const response = await fetch("/api/profile/experience");
+      if (response.ok) {
+        const data = await response.json();
+        setWorkExperience(data.workExperience || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch experience:", error);
+    }
+  };
 
   const fetchExistingResumes = async () => {
     try {
@@ -239,9 +287,35 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
                         </span>
                       </div>
 
-                      <p className="text-sm text-secondary-foreground/80 mb-4 italic">
-                        {variant.reasoning}
-                      </p>
+                      <div className="mb-4">
+                        <div className="text-sm text-secondary-foreground/80 italic mb-2">
+                          <HighlightText
+                            text={variant.reasoning}
+                            keywords={variant.keywords}
+                          />
+                        </div>
+                        {variant.selectedExp &&
+                          variant.selectedExp.length > 0 &&
+                          workExperience.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {variant.selectedExp
+                                .map(
+                                  (expId) =>
+                                    workExperience.find((e) => e.id === expId)
+                                      ?.company,
+                                )
+                                .filter(Boolean)
+                                .map((company, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="text-[10px] bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 px-1.5 py-0.5 rounded font-medium"
+                                  >
+                                    {company}
+                                  </span>
+                                ))}
+                            </div>
+                          )}
+                      </div>
 
                       <div className="space-y-3 mb-4">
                         <div className="flex flex-wrap gap-1">
