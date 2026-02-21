@@ -28,7 +28,7 @@ export function ProfileSidebar() {
           <li>
             <LocalizedLink
               href="/dashboard/profile"
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard/profile")
                   ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-400"
                   : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -41,7 +41,7 @@ export function ProfileSidebar() {
           <li>
             <LocalizedLink
               href="/dashboard/profile/ai"
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard/profile/ai")
                   ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-400"
                   : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
