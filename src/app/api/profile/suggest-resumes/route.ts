@@ -64,9 +64,10 @@ RETURN YOUR RESPONSE IN JSON FORMAT:
       "targetRole": "Role Title",
       "seniority": "junior | middle | senior | lead",
       "matchScore": 85,
-      "reasoning": "Brief explanation",
+      "reasoning": "Brief explanation why this role fits",
       "selectedSkills": ["skill1", "skill2"],
-      "selectedExpIds": ["exp_id1", "exp_id2"]
+      "selectedExpIds": ["exp_id1", "exp_id2"],
+      "keywords": ["keyword1", "keyword2", "keyword3"]
     }
   ]
 }
@@ -74,7 +75,10 @@ RETURN YOUR RESPONSE IN JSON FORMAT:
 RULES:
 - Return ONLY valid JSON (no TOON, no markdown blocks).
 - Maximum 8 variants.
-- All content MUST be in English.`;
+- All content MUST be in English.
+- "selectedExpIds" MUST include ALL work experience IDs where the candidate used skills relevant to this role. Do NOT skip any company — if the candidate used the relevant stack there, include that experience ID.
+- "keywords" — list of 3-7 key technology/skill terms from the variant that match the candidate's experience. These will be highlighted in the UI.
+- "reasoning" should mention specific companies and technologies from the candidate's profile.`;
 
     const profileData = {
       personalInfo: profile.personalInfo,
@@ -86,12 +90,15 @@ RULES:
     const profileToon = encode(profileData);
 
     const aiStart = Date.now();
-    const response = await aiComplete({
-      systemPrompt,
-      userPrompt: profileToon,
-      temperature: 0.7,
-      responseFormat: { type: "json_object" },
-    }, session.user.id);
+    const response = await aiComplete(
+      {
+        systemPrompt,
+        userPrompt: profileToon,
+        temperature: 0.7,
+        responseFormat: { type: "json_object" },
+      },
+      session.user.id,
+    );
 
     const aiContent = response.content;
     logWithTime("AI response received", {
@@ -143,6 +150,7 @@ RULES:
             reasoning: v.reasoning,
             selectedSkills: v.selectedSkills,
             selectedExp: v.selectedExpIds,
+            keywords: v.keywords || [],
           },
         }),
       ),

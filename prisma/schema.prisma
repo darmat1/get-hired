@@ -146,6 +146,7 @@ model ResumeVariant {
   reasoning      String // AI explanation of why this role fits
   selectedSkills Json // Subset of skills relevant to this role
   selectedExp    Json // Indices or IDs of work experience to include
+  keywords       Json?       @default("[]") // Keywords to highlight in reasoning
   createdAt      DateTime    @default(now())
 
   @@index([profileId])
