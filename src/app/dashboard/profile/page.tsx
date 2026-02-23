@@ -1,10 +1,27 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTranslation } from "@/lib/translations";
 import { ProfileForm } from "@/components/profile/profile-form";
+import { useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function ProfilePage() {
   const { t } = useTranslation();
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isPending && session === null) {
+      router.push("/");
+    }
+  }, [session, isPending, router]);
+
+  if (isPending)
+    return <LoadingScreen message={t("profile.loading_profile")} />;
+  if (!session) return null;
+
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

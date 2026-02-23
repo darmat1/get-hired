@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Loader2, Plus, ArrowLeft } from "lucide-react";
@@ -13,11 +13,17 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function NewResumePage() {
   const { t } = useTranslation();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isPending && session === null) {
+      router.push("/");
+    }
+  }, [session, isPending, router]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,9 +59,9 @@ export default function NewResumePage() {
     }
   };
 
-  if (!session) {
-    return <LoadingScreen message={t("auth.sign_in_required")} />;
-  }
+  if (isPending)
+    return <LoadingScreen message={t("profile.loading_profile")} />;
+  if (!session) return null;
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">

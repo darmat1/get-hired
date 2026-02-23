@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Download, Save, Loader2, ChevronLeft } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { Header } from "@/components/layout/header";
@@ -28,7 +28,8 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function EditResumePage() {
   const { t } = useTranslation();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
 
@@ -53,11 +54,10 @@ export default function EditResumePage() {
   useEffect(() => {
     if (session?.user && id) {
       fetchResume();
-    } else if (session === null) {
-      setIsLoading(false); // Stop loading if definitely not logged in
+    } else if (!isPending && session === null) {
+      router.push("/");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, id]);
+  }, [session, isPending, id, router]);
 
   const fetchResume = async () => {
     try {
@@ -122,13 +122,9 @@ export default function EditResumePage() {
     window.open(`/api/resumes/${id}/pdf`, "_blank");
   };
 
-  if (isLoading) {
+  if (isPending)
     return <LoadingScreen message={t("profile.loading_profile")} />;
-  }
-
-  if (!session) {
-    return <LoadingScreen message={t("auth.sign_in_required")} />;
-  }
+  if (!session) return null;
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">

@@ -11,6 +11,7 @@ import {
   Trash2,
   AlertTriangle,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { Modal } from "@/components/ui/modal";
@@ -30,7 +31,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 export default function Dashboard() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const [resumes, setResumes] = useState<ResumeData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState<{
@@ -43,8 +44,10 @@ export default function Dashboard() {
   useEffect(() => {
     if (session) {
       fetchResumes();
+    } else if (!isPending && session === null) {
+      router.push("/");
     }
-  }, [session]);
+  }, [session, isPending, router]);
 
   const fetchResumes = async () => {
     try {
@@ -86,25 +89,26 @@ export default function Dashboard() {
     window.open(`/api/resumes/${id}/pdf`, "_blank");
   };
 
-  if (!session) {
+  if (isPending) {
     return (
       <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header />
           <main className="flex-1 overflow-y-auto p-8">
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold mb-4">
-                Please sign in to view your dashboard
-              </h2>
-              <Button onClick={() => router.push("/auth/signin")}>
-                Sign In
-              </Button>
+            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+              <Loader2 className="h-10 w-10 text-primary animate-spin" />
+              <p className="text-muted-foreground animate-pulse">
+                {t("dashboard.loading")}
+              </p>
             </div>
           </main>
         </div>
       </div>
     );
   }
+
+  if (!session) return null;
 
   if (isLoading) {
     return (
