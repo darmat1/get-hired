@@ -1,6 +1,6 @@
 import { Resume } from "@/types/resume";
 import { encode, decode } from "@toon-format/toon";
-import { aiComplete, getAvailableProviders } from "@/lib/ai";
+import { getAvailableProviders } from "@/lib/ai";
 
 export interface AIAnalysis {
   score: number;

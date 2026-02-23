@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { aiComplete } from "@/lib/ai";
+import { aiComplete } from "@/lib/ai/server-ai";
 import type { AICompletionRequest } from "@/lib/ai/types";
 
 // Centralized API to complete AI prompts using per-user credentials
@@ -31,12 +31,19 @@ export async function POST(req: Request) {
         responseFormat,
         model,
       },
-      session.user.id
+      session.user.id,
     );
 
-    return NextResponse.json({ content: aiResponse.content, provider: aiResponse.provider, model: aiResponse.model });
+    return NextResponse.json({
+      content: aiResponse.content,
+      provider: aiResponse.provider,
+      model: aiResponse.model,
+    });
   } catch (err: any) {
     console.error("[AI API complete error]:", err);
-    return NextResponse.json({ error: err?.message ?? "Internal error" }, { status: 500 });
+    return NextResponse.json(
+      { error: err?.message ?? "Internal error" },
+      { status: 500 },
+    );
   }
 }

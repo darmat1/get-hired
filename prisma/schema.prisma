@@ -42,7 +42,7 @@ model AiCredential {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   provider  String // groq, openrouter, openai, anthropic, google, xai
-  key       String // encrypted key
+  key       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -102,12 +102,12 @@ model Resume {
   id             String   @id @default(cuid())
   title          String
   template       String   @default("modern")
-  personalInfo   Json
-  workExperience Json
-  education      Json
-  skills         Json
-  certificates   Json?
-  customization  Json? // Added customization field
+  personalInfo   String?
+  workExperience String?
+  education      String?
+  skills         String?
+  certificates   String?
+  customization  String?
   language       String   @default("en")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -122,11 +122,11 @@ model UserProfile {
   id             String   @id @default(cuid())
   userId         String   @unique
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  personalInfo   Json // firstName, lastName, email, phone, etc.
-  workExperience Json // Array of all work experience entries
-  education      Json // Array of all education entries  
-  skills         Json // Array of all skills
-  certificates   Json? // Array of all certificates
+  personalInfo   String? // firstName, lastName, email, phone, etc.
+  workExperience String? // Array of all work experience entries
+  education      String? // Array of all education entries  
+  skills         String? // Array of all skills
+  certificates   String? // Array of all certificates
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -143,10 +143,10 @@ model ResumeVariant {
   targetRole     String // e.g., "senior_frontend"
   seniority      String // junior, middle, senior
   matchScore     Int // 0-100 confidence score
-  reasoning      String // AI explanation of why this role fits
-  selectedSkills Json // Subset of skills relevant to this role
-  selectedExp    Json // Indices or IDs of work experience to include
-  keywords       Json?       @default("[]") // Keywords to highlight in reasoning
+  reasoning      String?
+  selectedSkills String?
+  selectedExp    String?
+  keywords       String?     @default("[]")
   createdAt      DateTime    @default(now())
 
   @@index([profileId])

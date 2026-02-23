@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { encrypt } from "@/lib/encryption";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -59,8 +58,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const encryptedKey = encrypt(apiKey);
-
     await prisma.$transaction(async (tx) => {
       // 1. Save or update the key
       await tx.aiCredential.upsert({
@@ -73,10 +70,10 @@ export async function POST(req: Request) {
         create: {
           userId: session.user.id,
           provider,
-          key: encryptedKey,
+          key: apiKey,
         },
         update: {
-          key: encryptedKey,
+          key: apiKey,
         },
       });
 
