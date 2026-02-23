@@ -469,6 +469,7 @@ export default function MyExperiencePage() {
                   <SkillsForm
                     data={profile.skills || []}
                     onChange={(val) => updateProfile("skills", val)}
+                    hideImport={true}
                   />
                 </TabsContent>
               </Tabs>
