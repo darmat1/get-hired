@@ -745,6 +745,16 @@ export const translations: Translations = {
     uk: "Керуйте AI-сервісами для аналізу резюме",
     ru: "Управляйте AI сервисами для анализа резюме",
   },
+  "ai_settings.recommended": {
+    en: "Recommended",
+    uk: "Рекомендовано",
+    ru: "Рекомендуется",
+  },
+  "ai_settings.get_groq_key": {
+    en: "Get API Key ↗",
+    uk: "Отримати API ключ ↗",
+    ru: "Получить API ключ ↗",
+  },
   "ai_settings.active_service": {
     en: "Active AI service:",
     uk: "Активний AI сервіс:",

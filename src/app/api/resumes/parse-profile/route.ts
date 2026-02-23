@@ -71,7 +71,7 @@ RETURN STRICT JSON:
       "startDate": "YYYY-MM",
       "endDate": "YYYY-MM",
       "current": false,
-      "description": "string"
+      "description": ["string (detailed bullet point)"]
     }
   ],
   "education": [
@@ -94,6 +94,7 @@ RETURN STRICT JSON:
 }
 
 RULES:
+- Extract experience descriptions as an array of detailed bullet points. Do NOT summarize into a single string. Preserve all specific accomplishments and metrics.
 - Return ONLY valid JSON (no markdown, no code fences, no extra text)
 - Do NOT invent data
 - Dates in YYYY-MM format`;
@@ -134,11 +135,14 @@ ${existingProfileJson}
 NEW DATA TO PARSE:
 ${normalizedText}`;
 
-    const response = await aiComplete({
-      systemPrompt,
-      userPrompt,
-      temperature: 0,
-    }, session.user.id);
+    const response = await aiComplete(
+      {
+        systemPrompt,
+        userPrompt,
+        temperature: 0,
+      },
+      session.user.id,
+    );
 
     const parsedData = parseAIResponse(response.content);
     const safeStr = (val: any) => (typeof val === "string" ? val : "");

@@ -297,9 +297,21 @@ export function AIKeysForm() {
 
                 {!isConnected ? (
                   <div className="space-y-3">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {t(`ai_service.${service.id}.description`)}
-                    </p>
+                    <div className="flex justify-between items-start gap-4">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {t(`ai_service.${service.id}.description`)}
+                      </p>
+                      {isGroq && (
+                        <a
+                          href="https://console.groq.com/keys"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[10px] text-blue-600 dark:text-blue-400 hover:underline flex-shrink-0"
+                        >
+                          {t("ai_settings.get_groq_key") || "Get API Key ↗"}
+                        </a>
+                      )}
+                    </div>
                     <div className="relative">
                       <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <input
