@@ -44,7 +44,7 @@ const TextFormatToolbar = ({
 }) => {
   return (
     <div
-      className="fixed z-50 flex items-center gap-1 p-1 bg-white rounded-lg shadow-2xl border border-slate-200 animate-in fade-in zoom-in duration-75"
+      className="absolute z-50 flex items-center gap-1 p-1 bg-white rounded-lg shadow-2xl border border-slate-200 animate-in fade-in zoom-in duration-75"
       style={{
         top: position.top,
         left: position.left,
@@ -129,12 +129,14 @@ const EditableText = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const editableRef = useRef<HTMLDivElement>(null);
   const isFocused = useRef(false);
+  const [localValue, setLocalValue] = useState(value || "");
 
   // Sync initial and external value updates
   useEffect(() => {
     if (editableRef.current && !isFocused.current) {
       if (editableRef.current.innerHTML !== (value || "")) {
         editableRef.current.innerHTML = value || "";
+        setLocalValue(value || "");
       }
     }
   }, [value]);
@@ -153,10 +155,9 @@ const EditableText = ({
   const handleFocus = (e: React.FocusEvent<HTMLDivElement>) => {
     isFocused.current = true;
     if (!allowFormatting) return;
-    const rect = e.currentTarget.getBoundingClientRect();
     setToolbarPos({
-      top: rect.top + window.scrollY,
-      left: rect.left + window.scrollX,
+      top: 0,
+      left: 0,
     });
     updateToolbarState();
   };
@@ -175,6 +176,7 @@ const EditableText = ({
     // After formatting, update the value
     const element = containerRef.current?.querySelector("[contenteditable]");
     const newVal = (element as HTMLDivElement)?.innerHTML || "";
+    setLocalValue(newVal);
     if (newVal !== value) {
       onChange(newVal);
     }
@@ -213,14 +215,16 @@ const EditableText = ({
           setToolbarPos(null);
         }}
         onKeyDown={handleKeyDown}
+        onInput={(e) => setLocalValue(e.currentTarget.innerHTML)}
         onFocus={handleFocus}
         onSelect={handleSelect}
         ref={editableRef}
         style={style}
         className={cn(
-          "outline-none transition-all duration-200 rounded px-1 -mx-1 hover:bg-slate-100/50 focus:bg-white focus:shadow-sm focus:ring-1 focus:ring-blue-400 min-w-[10px] inline-block",
+          "outline-none transition-all duration-200 rounded px-1 -mx-1 hover:bg-slate-100/50 focus:bg-white focus:text-black focus:shadow-sm focus:ring-1 focus:ring-blue-400 min-w-[10px] inline-block",
           className,
-          !value &&
+          !localValue &&
+            !toolbarPos &&
             "text-gray-300 italic min-w-[50px] after:content-[attr(data-placeholder)]",
         )}
         data-placeholder={placeholder}
@@ -278,6 +282,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
     data;
 
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Default values
   const sidebarColor = customization?.sidebarColor || "#2e3a4e";
@@ -399,10 +404,19 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
         onMouseLeave={() => setIsSidebarHovered(false)}
       >
         {/* CUSTOMIZATION OVERLAY */}
-        {isEditing && isSidebarHovered && (
-          <div className="absolute top-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-3 z-50 border border-white/10 shadow-xl animate-in fade-in duration-200">
-            <div className="text-xs font-bold text-white/80 mb-2 flex items-center gap-2">
-              <Settings2 size={12} /> Sidebar Options
+        {isEditing && isSettingsOpen && (
+          <div className="absolute top-2 left-2 right-2 bg-slate-900 shadow-2xl rounded-xl border border-white/10 p-4 z-50 animate-in fade-in zoom-in duration-300">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm font-bold text-white flex items-center gap-2">
+                <Settings2 size={14} className="text-blue-400" /> Sidebar
+                Options
+              </div>
+              <button
+                onClick={() => setIsSettingsOpen(false)}
+                className="p-1 hover:bg-white/10 rounded-full text-white/40 hover:text-white transition-colors"
+              >
+                <X size={14} />
+              </button>
             </div>
 
             <div className="mb-3">
@@ -475,6 +489,20 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
           </div>
         )}
 
+        {/* Settings Trigger */}
+        {isEditing && isSidebarHovered && !isSettingsOpen && (
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 text-white rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 animate-in zoom-in group/settings-btn"
+            title="Sidebar Options"
+          >
+            <Settings2
+              size={14}
+              className="group-hover/settings-btn:rotate-90 transition-transform duration-500"
+            />
+          </button>
+        )}
+
         {/* Avatar */}
         {showAvatar && (
           <div className="flex justify-center mt-4 mb-8">
@@ -499,39 +527,71 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
             Contact
           </h3>
           <div className="space-y-3">
-            <div>
-              <div className="text-[10px] font-bold text-white/60 uppercase">
-                Email
+            {showEmail && (
+              <div>
+                <div className="text-[10px] font-bold text-white/60 uppercase">
+                  Email
+                </div>
+                <EditableText
+                  value={personalInfo.email || ""}
+                  onChange={(v) => updatePersonalInfo("email", v)}
+                  className="text-[10px] text-white/90 break-words"
+                  placeholder="Email"
+                />
               </div>
-              <EditableText
-                value={personalInfo.email || ""}
-                onChange={(v) => updatePersonalInfo("email", v)}
-                className="text-[10px] text-white/90 break-words"
-                placeholder="Email"
-              />
-            </div>
-            <div>
-              <div className="text-[10px] font-bold text-white/60 uppercase">
-                Phone
+            )}
+            {showPhone && (
+              <div>
+                <div className="text-[10px] font-bold text-white/60 uppercase">
+                  Phone
+                </div>
+                <EditableText
+                  value={personalInfo.phone || ""}
+                  onChange={(v) => updatePersonalInfo("phone", v)}
+                  className="text-[10px] text-white/90"
+                  placeholder="Phone"
+                />
               </div>
-              <EditableText
-                value={personalInfo.phone || ""}
-                onChange={(v) => updatePersonalInfo("phone", v)}
-                className="text-[10px] text-white/90"
-                placeholder="Phone"
-              />
-            </div>
-            <div>
-              <div className="text-[10px] font-bold text-white/60 uppercase">
-                Location
+            )}
+            {showLinkedin && (
+              <div>
+                <div className="text-[10px] font-bold text-white/60 uppercase">
+                  LinkedIn
+                </div>
+                <EditableText
+                  value={personalInfo.linkedin || ""}
+                  onChange={(v) => updatePersonalInfo("linkedin", v)}
+                  className="text-[10px] text-white/90 break-words"
+                  placeholder="LinkedIn URL"
+                />
               </div>
-              <EditableText
-                value={personalInfo.location || ""}
-                onChange={(v) => updatePersonalInfo("location", v)}
-                className="text-[10px] text-white/90"
-                placeholder="Location"
-              />
-            </div>
+            )}
+            {showTelegram && (
+              <div>
+                <div className="text-[10px] font-bold text-white/60 uppercase">
+                  Telegram
+                </div>
+                <EditableText
+                  value={personalInfo.telegram || ""}
+                  onChange={(v) => updatePersonalInfo("telegram", v)}
+                  className="text-[10px] text-white/90"
+                  placeholder="Telegram"
+                />
+              </div>
+            )}
+            {showAddress && (
+              <div>
+                <div className="text-[10px] font-bold text-white/60 uppercase">
+                  Location
+                </div>
+                <EditableText
+                  value={personalInfo.location || ""}
+                  onChange={(v) => updatePersonalInfo("location", v)}
+                  className="text-[10px] text-white/90"
+                  placeholder="Location"
+                />
+              </div>
+            )}
           </div>
         </div>
 

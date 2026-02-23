@@ -129,7 +129,15 @@ interface TemplateProps {
 }
 
 export function CreativeTemplate({ resume }: TemplateProps) {
-  const { personalInfo, workExperience, education, skills } = resume;
+  const { personalInfo, workExperience, education, skills, customization } =
+    resume;
+
+  const showAvatar = customization?.showAvatar !== false;
+  const showPhone = customization?.showPhone !== false;
+  const showEmail = customization?.showEmail !== false;
+  const showAddress = customization?.showAddress !== false;
+  const showLinkedin = customization?.showLinkedin !== false;
+  const showTelegram = customization?.showTelegram !== false;
 
   return (
     <Document>
@@ -155,15 +163,29 @@ export function CreativeTemplate({ resume }: TemplateProps) {
               style={{ fontSize: 9, color: "#666", marginBottom: 15 }}
             />
           )}
-          {personalInfo.avatarUrl && (
+          {showAvatar && personalInfo.avatarUrl && (
             <Image src={personalInfo.avatarUrl} style={styles.avatar} />
           )}
 
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarTitle}>Contact</Text>
-            <Text style={styles.contactItem}>{personalInfo.email}</Text>
-            <Text style={styles.contactItem}>{personalInfo.phone}</Text>
-            <Text style={styles.contactItem}>{personalInfo.location}</Text>
+            {showEmail && personalInfo.email && (
+              <Text style={styles.contactItem}>{personalInfo.email}</Text>
+            )}
+            {showPhone && personalInfo.phone && (
+              <Text style={styles.contactItem}>{personalInfo.phone}</Text>
+            )}
+            {showAddress && personalInfo.location && (
+              <Text style={styles.contactItem}>{personalInfo.location}</Text>
+            )}
+            {showLinkedin && personalInfo.linkedin && (
+              <Text style={styles.contactItem}>
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+              </Text>
+            )}
+            {showTelegram && personalInfo.telegram && (
+              <Text style={styles.contactItem}>{personalInfo.telegram}</Text>
+            )}
             {personalInfo.website && (
               <Text style={styles.contactItem}>{personalInfo.website}</Text>
             )}
