@@ -2,9 +2,10 @@
 
 import { Skill } from "@/types/resume";
 import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Sparkles } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { useState, KeyboardEvent } from "react";
+import { ProfileImportModal } from "./profile-import-modal";
 
 interface SkillsFormProps {
   data: Skill[];
@@ -15,6 +16,7 @@ interface SkillsFormProps {
 
 export function SkillsForm({ data, onChange }: SkillsFormProps) {
   const { t } = useTranslation();
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   // State for input values
   const [technicalInput, setTechnicalInput] = useState("");
@@ -44,6 +46,21 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
 
   const handleRemoveSkill = (skillToRemove: Skill) => {
     onChange(data.filter((skill) => skill !== skillToRemove));
+  };
+
+  const handleImport = (selectedSkills: Skill[]) => {
+    // Merge skills by name to avoid duplicates
+    const existingNames = new Set(data.map((s) => s.name.toLowerCase()));
+    const newSkills = selectedSkills
+      .filter((s) => !existingNames.has(s.name.toLowerCase()))
+      .map((s) => ({
+        ...s,
+        id: crypto.randomUUID(),
+      }));
+
+    if (newSkills.length > 0) {
+      onChange([...data, ...newSkills]);
+    }
   };
 
   const handleKeyDown = (
@@ -168,6 +185,16 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
           <h2 className="text-xl font-semibold text-foreground">
             {t("form.skills")}
           </h2>
+          <Button
+            onClick={() => setIsImportModalOpen(true)}
+            variant="outline"
+            size="sm"
+            type="button"
+            className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+          >
+            <Sparkles className="h-4 w-4 mr-2" />
+            {t("profile.btn_import")}
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-foreground">
@@ -204,6 +231,13 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
           </div>
         </div>
       </div>
+
+      <ProfileImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImport={handleImport}
+        type="skills"
+      />
     </form>
   );
 }

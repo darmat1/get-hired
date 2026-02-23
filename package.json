@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@openrouter/sdk": "^0.3.16",
     "@prisma/client": "^6.19.1",

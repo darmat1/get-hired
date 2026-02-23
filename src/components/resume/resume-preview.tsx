@@ -41,7 +41,7 @@ export function ResumePreview({
   };
 
   return (
-    <div className="flex flex-col h-full bg-card border border-border shadow-lg overflow-hidden">
+    <div className="flex flex-col h-full bg-card border border-border shadow-lg">
       <div className="p-4 border-b bg-card flex justify-between items-center flex-shrink-0">
         <h3 className="font-semibold text-foreground/80 text-sm">
           {t("preview.title")}
@@ -53,24 +53,19 @@ export function ResumePreview({
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto bg-muted/40 p-6 custom-scrollbar">
-        <div
-          className="mx-auto relative"
-          style={{ width: "100%", aspectRatio: "1 / 1.414" }}
-        >
+      <div className="flex-1 overflow-auto bg-muted/40 p-4 md:p-12 custom-scrollbar">
+        <div className="flex justify-center min-w-max pb-8">
           <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 origin-top transition-transform duration-300 scale-[0.72]"
-            style={{ width: "210mm", height: "297mm" }}
+            className="bg-white shadow-2xl ring-1 ring-black/10 transition-shadow duration-300 relative"
+            style={{ width: "210mm", minHeight: "297mm" }}
           >
-            <div className="resume-paper shadow-2xl ring-1 ring-black/10 h-full w-full">
-              {data.personalInfo ? (
-                renderPreview()
-              ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground/40 italic bg-white">
-                  <p>{t("message.no_data")}</p>
-                </div>
-              )}
-            </div>
+            {data.personalInfo ? (
+              renderPreview()
+            ) : (
+              <div className="flex items-center justify-center h-full min-h-[297mm] text-muted-foreground/40 italic bg-white">
+                <p>{t("message.no_data")}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

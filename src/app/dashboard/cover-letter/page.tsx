@@ -1,13 +1,29 @@
 "use client";
 
+import { useEffect } from "react";
 import { CoverLetterForm } from "@/components/cover-letter/cover-letter-form";
 import { useTranslation } from "@/lib/translations";
+import { useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 
 export default function CoverLetterPage() {
   const { t } = useTranslation();
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isPending && session === null) {
+      router.push("/");
+    }
+  }, [session, isPending, router]);
+
+  if (isPending)
+    return <LoadingScreen message={t("profile.loading_profile")} />;
+  if (!session) return null;
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">

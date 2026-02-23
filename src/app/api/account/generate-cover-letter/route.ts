@@ -6,12 +6,10 @@ import { encode } from "@toon-format/toon";
 import { aiComplete } from "@/lib/ai";
 
 const SHARED_RULES = `### LANGUAGE ENFORCEMENT (ABSOLUTE PRIORITY)
-- Detect the JD language using stop words:
-  - "та", "або", "що", "вимоги" -> UKRAINIAN
-  - "и", "или", "что", "требования" -> RUSSIAN
-  - "and", "or", "that", "requirements" -> ENGLISH
-- The ENTIRE output MUST be in the JD's detected language.
-- If the profile is in a different language, TRANSLATE the facts.
+- Identify the PRIMARY language of the Job Description (JD) text.
+- Ignore accidentally pasted website UI buttons or navigation words (e.g., "Підписатись", "Зберегти", "Сховати", "Save", "Apply", "Share").
+- The ENTIRE output MUST be in the JD's primary language.
+- If the profile is in a different language, TRANSLATE the facts to the primary JD language.
 
 ### FIX TYPOS IN JOB DESCRIPTION
 - If the JD contains obvious typos in technology names, use the CORRECT spelling in your letter.

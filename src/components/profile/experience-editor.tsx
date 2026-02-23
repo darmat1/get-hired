@@ -225,7 +225,7 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
                         onChange={(e) =>
                           updateDescription(index, dIndex, e.target.value)
                         }
-                        placeholder="Наприклад: Increased conversion rate by 15%..."
+                        placeholder="Example: Increased conversion rate by 15%..."
                         className="
     flex-1 
     px-3 py-2 

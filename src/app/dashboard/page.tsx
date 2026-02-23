@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useTranslation } from "@/lib/translations";
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,8 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function MyExperiencePage() {
   const { t } = useTranslation();
-  const { data: session } = useSession();
+  const router = useRouter();
+  const { data: session, isPending } = useSession();
   const [profile, setProfile] = useState<any>({
     personalInfo: {},
     workExperience: [],
@@ -53,8 +55,10 @@ export default function MyExperiencePage() {
   useEffect(() => {
     if (session) {
       fetchProfile();
+    } else if (!isPending && session === null) {
+      router.push("/");
     }
-  }, [session]);
+  }, [session, isPending, router]);
 
   // AI processing timer
   useEffect(() => {
@@ -204,6 +208,8 @@ export default function MyExperiencePage() {
     }
   };
 
+  if (isPending)
+    return <LoadingScreen message={t("profile.loading_profile")} />;
   if (!session) return <LoadingScreen message={t("common.auth_required")} />;
 
   return (
