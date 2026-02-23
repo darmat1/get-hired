@@ -132,7 +132,7 @@ export default function EditResumePage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="max-w-6xl mx-auto space-y-6 text-foreground">
+          <div className="max-w-[1400px] mx-auto space-y-6 text-foreground">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <Link
@@ -164,18 +164,18 @@ export default function EditResumePage() {
               </div>
             </div>
 
-            <div className="flex justify-center">
-              <div className="w-full">
+            <div className="flex flex-col xl:flex-row gap-8 items-start justify-center">
+              <div className="flex-1 w-full max-w-[950px]">
                 <ResumePreview
                   data={resumeData as Resume}
                   onChange={setResumeData}
                   isEditing={true}
                 />
               </div>
-            </div>
 
-            <div className="mt-8">
-              <AIAnalysisPanel resume={resumeData as Resume} />
+              <div className="w-full xl:w-[400px] sticky top-8 self-start">
+                <AIAnalysisPanel resume={resumeData as Resume} />
+              </div>
             </div>
           </div>
         </main>
