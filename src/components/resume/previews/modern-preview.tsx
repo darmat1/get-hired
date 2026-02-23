@@ -796,7 +796,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
           <EditableText
             value={personalInfo.summary || ""}
             onChange={(v) => updatePersonalInfo("summary", v)}
-            className="text-[10px] leading-relaxed text-gray-600 text-justify mt-4 block"
+            className="text-[12px] leading-relaxed text-gray-600 text-justify mt-4 block"
             multiline
             placeholder="Professional Summary..."
             allowFormatting={true}
@@ -960,7 +960,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                                 className="text-xs font-bold text-gray-800 uppercase block mb-2"
                                 placeholder="Title"
                               />
-                              <div className="text-[10px] text-gray-600 space-y-1">
+                              <div className="text-[12px] text-gray-600 space-y-1">
                                 {(
                                   (Array.isArray(exp.description)
                                     ? exp.description
