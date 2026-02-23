@@ -13,6 +13,9 @@ import {
   Trash2,
   Pencil,
   X,
+  Bold,
+  Italic,
+  Type,
 } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { cn } from "@/lib/utils";
@@ -25,7 +28,85 @@ interface EditableTextProps {
   placeholder?: string;
   multiline?: boolean;
   style?: React.CSSProperties;
+  allowFormatting?: boolean;
 }
+
+const TextFormatToolbar = ({
+  position,
+  onFormat,
+  activeStates,
+  hasSelection,
+}: {
+  position: { top: number; left: number };
+  onFormat: (type: "bold" | "italic" | "clear") => void;
+  activeStates: { bold: boolean; italic: boolean };
+  hasSelection: boolean;
+}) => {
+  return (
+    <div
+      className="fixed z-50 flex items-center gap-1 p-1 bg-white rounded-lg shadow-2xl border border-slate-200 animate-in fade-in zoom-in duration-75"
+      style={{
+        top: position.top,
+        left: position.left,
+        transform: "translateY(-100%) translateY(-8px)",
+      }}
+    >
+      <button
+        onMouseDown={(e) => {
+          e.preventDefault();
+          if (hasSelection) onFormat("bold");
+        }}
+        disabled={!hasSelection}
+        className={cn(
+          "p-2 rounded transition-colors",
+          !hasSelection
+            ? "text-slate-400 cursor-not-allowed"
+            : activeStates.bold
+              ? "bg-blue-50 text-blue-600"
+              : "hover:bg-slate-100 text-slate-600",
+        )}
+        title="Bold (Cmd+B)"
+      >
+        <Bold size={16} />
+      </button>
+      <button
+        onMouseDown={(e) => {
+          e.preventDefault();
+          if (hasSelection) onFormat("italic");
+        }}
+        disabled={!hasSelection}
+        className={cn(
+          "p-2 rounded transition-colors",
+          !hasSelection
+            ? "text-slate-400 cursor-not-allowed"
+            : activeStates.italic
+              ? "bg-blue-50 text-blue-600"
+              : "hover:bg-slate-100 text-slate-600",
+        )}
+        title="Italic (Cmd+I)"
+      >
+        <Italic size={16} />
+      </button>
+      <div className="w-px h-5 bg-slate-100 mx-1" />
+      <button
+        onMouseDown={(e) => {
+          e.preventDefault();
+          if (hasSelection) onFormat("clear");
+        }}
+        disabled={!hasSelection}
+        className={cn(
+          "p-2 rounded transition-colors",
+          !hasSelection
+            ? "text-slate-400 cursor-not-allowed"
+            : "hover:bg-slate-100 text-slate-600",
+        )}
+        title="Clear Formatting"
+      >
+        <Type size={16} />
+      </button>
+    </div>
+  );
+};
 
 const EditableText = ({
   value,
@@ -34,10 +115,82 @@ const EditableText = ({
   placeholder,
   style,
   multiline = false,
+  allowFormatting = false,
 }: EditableTextProps) => {
+  const [toolbarPos, setToolbarPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+  const [activeStates, setActiveStates] = useState({
+    bold: false,
+    italic: false,
+  });
+  const [hasSelection, setHasSelection] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const editableRef = useRef<HTMLDivElement>(null);
+  const isFocused = useRef(false);
+
+  // Sync initial and external value updates
+  useEffect(() => {
+    if (editableRef.current && !isFocused.current) {
+      if (editableRef.current.innerHTML !== (value || "")) {
+        editableRef.current.innerHTML = value || "";
+      }
+    }
+  }, [value]);
+
+  const updateToolbarState = () => {
+    if (!allowFormatting) return;
+    setActiveStates({
+      bold: document.queryCommandState("bold"),
+      italic: document.queryCommandState("italic"),
+    });
+
+    const selection = window.getSelection();
+    setHasSelection(!!selection && selection.toString().trim().length > 0);
+  };
+
+  const handleFocus = (e: React.FocusEvent<HTMLDivElement>) => {
+    isFocused.current = true;
+    if (!allowFormatting) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setToolbarPos({
+      top: rect.top + window.scrollY,
+      left: rect.left + window.scrollX,
+    });
+    updateToolbarState();
+  };
+
+  const handleSelect = () => {
+    updateToolbarState();
+  };
+
+  const handleFormat = (type: "bold" | "italic" | "clear") => {
+    if (type === "clear") {
+      document.execCommand("removeFormat", false);
+    } else {
+      document.execCommand(type, false);
+    }
+    updateToolbarState();
+    // After formatting, update the value
+    const element = containerRef.current?.querySelector("[contenteditable]");
+    const newVal = (element as HTMLDivElement)?.innerHTML || "";
+    if (newVal !== value) {
+      onChange(newVal);
+    }
+  };
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      if (toolbarPos) updateToolbarState();
+    };
+    document.addEventListener("mouseup", handleGlobalMouseUp);
+    return () => document.removeEventListener("mouseup", handleGlobalMouseUp);
+  }, [toolbarPos]);
+
   const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-    const newVal =
-      e.currentTarget.innerText || e.currentTarget.textContent || "";
+    isFocused.current = false;
+    const newVal = e.currentTarget.innerHTML || "";
     if (newVal !== value) {
       onChange(newVal);
     }
@@ -51,21 +204,35 @@ const EditableText = ({
   };
 
   return (
-    <div
-      contentEditable
-      suppressContentEditableWarning
-      onBlur={handleBlur}
-      onKeyDown={handleKeyDown}
-      style={style}
-      className={cn(
-        "outline-none transition-all duration-200 rounded px-1 -mx-1 hover:bg-slate-100/50 focus:bg-white focus:shadow-sm focus:ring-1 focus:ring-blue-400 min-w-[10px] inline-block",
-        className,
-        !value &&
-          "text-gray-300 italic min-w-[50px] after:content-[attr(data-placeholder)]",
+    <div ref={containerRef} className="relative inline-block w-full">
+      <div
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={(e) => {
+          handleBlur(e);
+          setToolbarPos(null);
+        }}
+        onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
+        onSelect={handleSelect}
+        ref={editableRef}
+        style={style}
+        className={cn(
+          "outline-none transition-all duration-200 rounded px-1 -mx-1 hover:bg-slate-100/50 focus:bg-white focus:shadow-sm focus:ring-1 focus:ring-blue-400 min-w-[10px] inline-block",
+          className,
+          !value &&
+            "text-gray-300 italic min-w-[50px] after:content-[attr(data-placeholder)]",
+        )}
+        data-placeholder={placeholder}
+      />
+      {toolbarPos && (
+        <TextFormatToolbar
+          position={toolbarPos}
+          onFormat={handleFormat}
+          activeStates={activeStates}
+          hasSelection={hasSelection}
+        />
       )}
-      data-placeholder={placeholder}
-    >
-      {value}
     </div>
   );
 };
@@ -527,6 +694,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
             className="text-[10px] leading-relaxed text-gray-600 text-justify mt-4 block"
             multiline
             placeholder="Professional Summary..."
+            allowFormatting={true}
           />
         </div>
 
@@ -707,6 +875,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                                       }}
                                       className="flex-1"
                                       multiline
+                                      allowFormatting={true}
                                     />
                                     {isEditing && (
                                       <button

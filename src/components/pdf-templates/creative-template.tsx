@@ -8,6 +8,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { Resume } from "@/types/resume";
+import { FormattedText } from "@/lib/pdf-utils";
 
 Font.register({
   family: "Roboto",
@@ -26,19 +27,23 @@ const styles = StyleSheet.create({
   page: {
     fontFamily: "Roboto",
     fontSize: 9,
-    flexDirection: "row",
     backgroundColor: "#fff",
+    paddingTop: "30pt",
+    paddingBottom: "30pt",
   },
   sidebar: {
+    position: "absolute",
+    left: 0,
+    top: "30pt",
+    bottom: "30pt",
     width: "30%",
     backgroundColor: "#f3f4f6",
-    padding: 20,
-    height: "100%",
+    padding: "0 20pt",
   },
   main: {
+    marginLeft: "30%",
     width: "70%",
-    padding: 20,
-    paddingTop: 30,
+    padding: "0 20pt",
   },
   avatar: {
     width: 100,
@@ -129,8 +134,27 @@ export function CreativeTemplate({ resume }: TemplateProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        {/* Persistent Sidebar Background */}
+        <View
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: "30%",
+            backgroundColor: "#f3f4f6",
+          }}
+          fixed
+        />
+
         {/* Sidebar */}
-        <View style={styles.sidebar}>
+        <View style={[styles.sidebar, { backgroundColor: "transparent" }]}>
+          {personalInfo.summary && (
+            <FormattedText
+              html={personalInfo.summary}
+              style={{ fontSize: 9, color: "#666", marginBottom: 15 }}
+            />
+          )}
           {personalInfo.avatarUrl && (
             <Image src={personalInfo.avatarUrl} style={styles.avatar} />
           )}
@@ -173,11 +197,10 @@ export function CreativeTemplate({ resume }: TemplateProps) {
 
           {personalInfo.summary && (
             <View style={{ marginBottom: 15 }}>
-              <Text
+              <FormattedText
+                html={personalInfo.summary}
                 style={{ fontSize: 9, lineHeight: 1.4, textAlign: "justify" }}
-              >
-                {personalInfo.summary}
-              </Text>
+              />
             </View>
           )}
 
@@ -194,9 +217,10 @@ export function CreativeTemplate({ resume }: TemplateProps) {
                     </Text>
                   </View>
                   {exp.description.map((d, i) => (
-                    <Text key={i} style={styles.bullet}>
-                      • {d}
-                    </Text>
+                    <View key={i} style={{ flexDirection: "row" }}>
+                      <Text style={styles.bullet}>• </Text>
+                      <FormattedText html={d} style={styles.bullet} />
+                    </View>
                   ))}
                 </View>
               ))}

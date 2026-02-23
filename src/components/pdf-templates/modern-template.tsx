@@ -8,6 +8,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { Resume } from "@/types/resume";
+import { FormattedText } from "@/lib/pdf-utils";
 
 // Register fonts
 Font.register({
@@ -52,16 +53,20 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
     page: {
       fontFamily: "Roboto",
       fontSize: 9,
-      flexDirection: "row",
       backgroundColor: "#ffffff",
+      paddingTop: "30pt",
+      paddingBottom: "30pt",
     },
     // Sidebar (Left - 35%)
     sidebar: {
+      position: "absolute",
+      left: 0,
+      top: "30pt",
+      bottom: "30pt",
       width: "35%",
       backgroundColor: sidebarColor, // Dynamic Color
-      padding: 20,
+      padding: "0 20pt",
       color: "#ffffff",
-      height: "100%",
     },
     avatarContainer: {
       alignItems: "center",
@@ -109,9 +114,9 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
     },
     // Main Content (Right - 65%)
     main: {
+      marginLeft: "35%",
       width: "65%",
-      padding: 30,
-      paddingTop: 50,
+      padding: "0 30pt",
       color: "#1f2937",
     },
     headerName: {
@@ -200,8 +205,21 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        {/* Persistent Sidebar Background */}
+        <View
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: "35%",
+            backgroundColor: sidebarColor,
+          }}
+          fixed
+        />
+
         {/* LEFT SIDEBAR */}
-        <View style={styles.sidebar}>
+        <View style={[styles.sidebar, { backgroundColor: "transparent" }]}>
           {showAvatar && personalInfo.avatarUrl && (
             <View style={styles.avatarContainer}>
               <Image src={personalInfo.avatarUrl} style={styles.avatar} />
@@ -465,7 +483,10 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
           {/* <Text style={styles.headerTitle}>Full Stack Developer</Text> */}
 
           {personalInfo.summary && (
-            <Text style={styles.summaryText}>{personalInfo.summary}</Text>
+            <FormattedText
+              html={personalInfo.summary}
+              style={styles.summaryText}
+            />
           )}
 
           {workExperience.length > 0 && (
@@ -494,9 +515,7 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                     <Text style={styles.expTitle}>{exp.title}</Text>
 
                     {exp.description.map((d, i) => (
-                      <Text key={i} style={styles.expDesc}>
-                        {d}
-                      </Text>
+                      <FormattedText key={i} html={d} style={styles.expDesc} />
                     ))}
                   </View>
                 </View>
