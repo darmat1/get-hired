@@ -222,7 +222,37 @@ export const translations: Translations = {
   "profile.import_error": {
     en: "Import error",
     uk: "Помилка імпорту",
-    ru: "Ошибка импорта",
+    ru: "Ошибка імпорта",
+  },
+  "profile.import_experience": {
+    en: "Import Experience",
+    uk: "Імпорт досвіду",
+    ru: "Импорт опыта",
+  },
+  "profile.import_education": {
+    en: "Import Education",
+    uk: "Імпорт освіти",
+    ru: "Импорт образования",
+  },
+  "profile.import_skills": {
+    en: "Import Skills",
+    uk: "Імпорт навичок",
+    ru: "Импорт навыков",
+  },
+  "profile.import_selected": {
+    en: "Import Selected",
+    uk: "Імпортувати обране",
+    ru: "Импортировать выбранное",
+  },
+  "profile.no_items_found": {
+    en: "No items found in your profile",
+    uk: "Нічого не знайдено у вашому профілі",
+    ru: "Ничего не найдено в вашем профиле",
+  },
+  "profile.btn_import": {
+    en: "Import from Profile",
+    uk: "Імпортувати з профілю",
+    ru: "Импортировать из профиля",
   },
   "resume.new.error_failed": {
     en: "Failed to create resume",

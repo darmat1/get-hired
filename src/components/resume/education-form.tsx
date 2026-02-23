@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { Education } from "@/types/resume";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Sparkles } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
+import { ProfileImportModal } from "./profile-import-modal";
 
 interface EducationFormProps {
   data: Education[];
@@ -14,6 +16,8 @@ interface EducationFormProps {
 
 export function EducationForm({ data, onChange }: EducationFormProps) {
   const { t } = useTranslation();
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
   const addEducation = () => {
     const newEducation: Education = {
       id: Math.random().toString(36),
@@ -42,22 +46,42 @@ export function EducationForm({ data, onChange }: EducationFormProps) {
     onChange(data.filter((_, i) => i !== index));
   };
 
+  const handleImport = (selectedItems: Education[]) => {
+    const itemsWithNewIds = selectedItems.map((item) => ({
+      ...item,
+      id: Math.random().toString(36),
+    }));
+    onChange([...data, ...itemsWithNewIds]);
+  };
+
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <div className="">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-wrap gap-3 justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-foreground">
             {t("form.education")}
           </h2>
-          <Button
-            onClick={addEducation}
-            variant="outline"
-            size="sm"
-            type="button"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            {t("form.add")}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setIsImportModalOpen(true)}
+              variant="outline"
+              size="sm"
+              type="button"
+              className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              {t("profile.btn_import")}
+            </Button>
+            <Button
+              onClick={addEducation}
+              variant="outline"
+              size="sm"
+              type="button"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              {t("form.add")}
+            </Button>
+          </div>
         </div>
 
         <div className="space-y-6 text-foreground">
@@ -193,6 +217,13 @@ export function EducationForm({ data, onChange }: EducationFormProps) {
           ))}
         </div>
       </div>
+
+      <ProfileImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImport={handleImport}
+        type="education"
+      />
     </form>
   );
 }

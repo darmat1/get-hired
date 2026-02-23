@@ -1,7 +1,74 @@
-import { Resume } from "@/types/resume";
+import { Resume, WorkExperience, Education, Skill } from "@/types/resume";
 import { useTranslation } from "@/lib/translations";
-import { useState } from "react";
-import { Settings2, Palette, Eye, EyeOff, Linkedin, Send } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import {
+  Settings2,
+  Palette,
+  Eye,
+  EyeOff,
+  Linkedin,
+  Send,
+  GripVertical,
+  Plus,
+  Trash2,
+  Pencil,
+  X,
+} from "lucide-react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+
+interface EditableTextProps {
+  value: string;
+  onChange: (val: string) => void;
+  className?: string;
+  placeholder?: string;
+  multiline?: boolean;
+  style?: React.CSSProperties;
+}
+
+const EditableText = ({
+  value,
+  onChange,
+  className,
+  placeholder,
+  style,
+  multiline = false,
+}: EditableTextProps) => {
+  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    const newVal =
+      e.currentTarget.innerText || e.currentTarget.textContent || "";
+    if (newVal !== value) {
+      onChange(newVal);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!multiline && e.key === "Enter") {
+      e.preventDefault();
+      e.currentTarget.blur();
+    }
+  };
+
+  return (
+    <div
+      contentEditable
+      suppressContentEditableWarning
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      style={style}
+      className={cn(
+        "outline-none transition-all duration-200 rounded px-1 -mx-1 hover:bg-slate-100/50 focus:bg-white focus:shadow-sm focus:ring-1 focus:ring-blue-400 min-w-[10px] inline-block",
+        className,
+        !value &&
+          "text-gray-300 italic min-w-[50px] after:content-[attr(data-placeholder)]",
+      )}
+      data-placeholder={placeholder}
+    >
+      {value}
+    </div>
+  );
+};
 
 interface Props {
   data: Partial<Resume>;
@@ -40,7 +107,6 @@ const SidebarToggle = ({
 );
 
 export function ModernPreview({ data, onChange, isEditing }: Props) {
-  // const { t } = useTranslation(); // Unused
   const { personalInfo, workExperience, education, skills, customization } =
     data;
 
@@ -48,7 +114,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
 
   // Default values
   const sidebarColor = customization?.sidebarColor || "#2e3a4e";
-  const showAvatar = customization?.showAvatar !== false; // Default true
+  const showAvatar = customization?.showAvatar !== false;
   const showPhone = customization?.showPhone !== false;
   const showEmail = customization?.showEmail !== false;
   const showAddress = customization?.showAddress !== false;
@@ -56,6 +122,28 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
   const showTelegram = customization?.showTelegram !== false;
 
   if (!personalInfo) return null;
+
+  const updateSection = (section: keyof Resume, value: any) => {
+    if (!onChange) return;
+    onChange({
+      ...data,
+      [section]: value,
+    });
+  };
+
+  const updatePersonalInfo = (
+    field: keyof typeof personalInfo,
+    value: string,
+  ) => {
+    if (!onChange) return;
+    onChange({
+      ...data,
+      personalInfo: {
+        ...personalInfo,
+        [field]: value,
+      },
+    });
+  };
 
   const updateCustomization = (key: string, value: any) => {
     if (!onChange) return;
@@ -66,6 +154,72 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
         [key]: value,
       },
     });
+  };
+
+  const onDragEnd = (result: any) => {
+    if (!result.destination || !onChange) return;
+    const items = Array.from(workExperience || []);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    updateSection("workExperience", items);
+  };
+
+  const addExperience = () => {
+    const newExp: WorkExperience = {
+      id: Math.random().toString(36).substring(2, 9),
+      title: "Job Title",
+      company: "Company Name",
+      location: "Location",
+      startDate: "2024",
+      endDate: "Present",
+      current: true,
+      description: ["Job responsibility point"],
+    };
+    updateSection("workExperience", [...(workExperience || []), newExp]);
+  };
+
+  const removeExperience = (id: string) => {
+    updateSection(
+      "workExperience",
+      (workExperience || []).filter((e) => e.id !== id),
+    );
+  };
+
+  const addEducation = () => {
+    const newEdu: Education = {
+      id: Math.random().toString(36).substring(2, 9),
+      institution: "Institution",
+      degree: "Degree",
+      field: "Field of Study",
+      startDate: "2020",
+      endDate: "2024",
+      current: false,
+    };
+    updateSection("education", [...(education || []), newEdu]);
+  };
+
+  const removeEducation = (id: string) => {
+    updateSection(
+      "education",
+      (education || []).filter((e) => e.id !== id),
+    );
+  };
+
+  const addSkill = (category: "technical" | "soft" | "language") => {
+    const newSkill: Skill = {
+      id: Math.random().toString(36).substring(2, 9),
+      name: "New Skill",
+      category,
+      level: category === "language" ? "intermediate" : "expert",
+    };
+    updateSection("skills", [...(skills || []), newSkill]);
+  };
+
+  const removeSkill = (id: string) => {
+    updateSection(
+      "skills",
+      (skills || []).filter((s) => s.id !== id),
+    );
   };
 
   return (
@@ -84,7 +238,6 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
               <Settings2 size={12} /> Sidebar Options
             </div>
 
-            {/* Color Picker */}
             <div className="mb-3">
               <div className="text-[10px] text-white/60 mb-1 flex items-center gap-1">
                 <Palette size={10} /> Color
@@ -95,21 +248,22 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                   "#1e293b",
                   "#0f172a",
                   "#374151",
-                  "#4b5563", // Grays/Blues
+                  "#4b5563",
                   "#1a365d",
-                  "#2c5282", // Blues
+                  "#2c5282",
                   "#276749",
-                  "#22543d", // Greens
+                  "#22543d",
                   "#742a2a",
-                  "#9b2c2c", // Reds
+                  "#9b2c2c",
                   "#553c9a",
-                  "#44337a", // Purples
+                  "#44337a",
                 ].map((color) => (
                   <button
                     key={color}
-                    className={`w-4 h-4 rounded-full border border-white/30 transition-transform hover:scale-110 ${
-                      sidebarColor === color ? "ring-2 ring-white" : ""
-                    }`}
+                    className={cn(
+                      "w-4 h-4 rounded-full border border-white/30 transition-transform hover:scale-110",
+                      sidebarColor === color && "ring-2 ring-white",
+                    )}
                     style={{ backgroundColor: color }}
                     onClick={() => updateCustomization("sidebarColor", color)}
                   />
@@ -117,7 +271,6 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
               </div>
             </div>
 
-            {/* Toggles */}
             <div className="space-y-0.5">
               <SidebarToggle
                 label="Avatar"
@@ -161,7 +314,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
             {personalInfo.avatarUrl ? (
               <img
                 src={personalInfo.avatarUrl}
-                alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
+                alt=""
                 className="w-24 h-24 rounded-full object-cover border-4 border-white/20"
               />
             ) : (
@@ -178,286 +331,441 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
           <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
             Contact
           </h3>
-
-          {showEmail && (
-            <div className="mb-3">
+          <div className="space-y-3">
+            <div>
               <div className="text-[10px] font-bold text-white/60 uppercase">
                 Email
               </div>
-              <div className="text-[10px] text-white/90 break-words">
-                {personalInfo.email}
-              </div>
+              <EditableText
+                value={personalInfo.email || ""}
+                onChange={(v) => updatePersonalInfo("email", v)}
+                className="text-[10px] text-white/90 break-words"
+                placeholder="Email"
+              />
             </div>
-          )}
-
-          {showPhone && (
-            <div className="mb-3">
+            <div>
               <div className="text-[10px] font-bold text-white/60 uppercase">
                 Phone
               </div>
-              <div className="text-[10px] text-white/90">
-                {personalInfo.phone}
-              </div>
+              <EditableText
+                value={personalInfo.phone || ""}
+                onChange={(v) => updatePersonalInfo("phone", v)}
+                className="text-[10px] text-white/90"
+                placeholder="Phone"
+              />
             </div>
-          )}
-
-          {showTelegram && personalInfo.telegram && (
-            <div className="mb-3">
-              <div className="text-[10px] font-bold text-white/60 uppercase flex items-center gap-1">
-                <Send size={10} /> Telegram
-              </div>
-              <div className="text-[10px] text-white/90 break-words">
-                {personalInfo.telegram}
-              </div>
-            </div>
-          )}
-
-          {showLinkedin && personalInfo.linkedin && (
-            <div className="mb-3">
-              <div className="text-[10px] font-bold text-white/60 uppercase flex items-center gap-1">
-                <Linkedin size={10} /> LinkedIn
-              </div>
-              <div className="text-[10px] text-white/90 break-words">
-                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-              </div>
-            </div>
-          )}
-
-          {personalInfo.website && (
-            <div className="mb-3">
+            <div>
               <div className="text-[10px] font-bold text-white/60 uppercase">
-                Website
+                Location
               </div>
-              <div className="text-[10px] text-white/90 break-words">
-                {personalInfo.website}
-              </div>
+              <EditableText
+                value={personalInfo.location || ""}
+                onChange={(v) => updatePersonalInfo("location", v)}
+                className="text-[10px] text-white/90"
+                placeholder="Location"
+              />
             </div>
-          )}
-
-          {showAddress && (
-            <div className="mb-3">
-              <div className="text-[10px] font-bold text-white/60 uppercase">
-                Address
-              </div>
-              <div className="text-[10px] text-white/90">
-                {personalInfo.location}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* Education */}
-        {education && education.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
+        <div className="mb-8">
+          <div className="flex justify-between items-center border-b border-white/20 pb-2 mb-4">
+            <h3 className="text-sm font-bold uppercase text-white/90">
               Education
             </h3>
-            <div className="space-y-4">
-              {education.map((edu) => (
-                <div key={edu.id}>
-                  <div className="text-[10px] font-bold text-white/95 mb-0.5">
-                    {edu.startDate?.split("-")[0]}
-                    {edu.endDate || edu.current
-                      ? ` - ${
-                          edu.current ? "Present" : edu.endDate?.split("-")[0]
-                        }`
-                      : ""}
-                  </div>
-                  <div className="text-[11px] font-bold text-white/90 leading-tight mb-0.5">
-                    {edu.degree}
-                  </div>
-                  {edu.field && (
-                    <div className="text-[10px] text-white/80 font-medium mb-0.5">
-                      {edu.field}
-                    </div>
-                  )}
-                  <div className="text-[10px] text-white/70 italic">
-                    {edu.institution}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Skills & Languages */}
-        {skills && skills.length > 0 && (
-          <div className="space-y-6">
-            {/* Technical Skills */}
-            {skills.some((s) => s.category === "technical") && (
-              <div>
-                <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
-                  Technical Skills
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {skills
-                    .filter((s) => s.category === "technical")
-                    .map((skill) => (
-                      <span
-                        key={skill.id}
-                        className="text-[10px] bg-white/10 px-2 py-1 rounded text-white/90"
-                      >
-                        {skill.name}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            )}
-
-            {/* Soft Skills */}
-            {skills.some((s) => s.category === "soft") && (
-              <div>
-                <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
-                  Soft Skills
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {skills
-                    .filter((s) => s.category === "soft")
-                    .map((skill) => (
-                      <span
-                        key={skill.id}
-                        className="text-[10px] bg-white/10 px-2 py-1 rounded text-white/90"
-                      >
-                        {skill.name}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            )}
-
-            {/* Languages */}
-            {skills.some((s) => s.category === "language") && (
-              <div>
-                <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
-                  Languages
-                </h3>
-                <div className="space-y-3">
-                  {skills
-                    .filter((s) => s.category === "language")
-                    .map((skill) => {
-                      // Calculate dots (1-5) based on level
-                      const levelMap: Record<string, number> = {
-                        beginner: 1,
-                        elementary: 2,
-                        intermediate: 3,
-                        advanced: 4,
-                        expert: 5,
-                      };
-                      const dots = levelMap[skill.level || "intermediate"] || 3;
-
-                      return (
-                        <div key={skill.id}>
-                          <div className="flex justify-between items-end mb-1">
-                            <span className="text-[10px] font-bold text-white/90">
-                              {skill.name}
-                            </span>
-                            <span className="text-[9px] text-white/60 capitalize">
-                              {skill.level}
-                            </span>
-                          </div>
-                          <div className="flex gap-1">
-                            {[1, 2, 3, 4, 5].map((i) => (
-                              <div
-                                key={i}
-                                className={`h-1.5 flex-1 rounded-full ${
-                                  i <= dots ? "bg-white/80" : "bg-white/20"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
+            {isEditing && (
+              <button
+                onClick={addEducation}
+                className="text-[9px] text-white/50 hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-white/10"
+              >
+                <Plus size={10} /> Add
+              </button>
             )}
           </div>
-        )}
-      </div>
-
-      {/* MAIN CONTENT (Right - 65%) */}
-      <div className="w-[65%] p-8 pt-12 flex flex-col">
-        {/* Header */}
-        <div className="mb-8">
-          <h1
-            className="text-3xl font-bold uppercase tracking-wide leading-tight mb-2 transition-colors duration-300"
-            style={{ color: sidebarColor }}
-          >
-            {personalInfo.firstName} <br /> {personalInfo.lastName}
-          </h1>
+          <div className="space-y-4">
+            {(education || []).map((edu, idx) => (
+              <div key={edu.id} className="relative group/edu">
+                {isEditing && (
+                  <button
+                    onClick={() => removeEducation(edu.id)}
+                    className="absolute -right-2 top-0 opacity-0 group-hover/edu:opacity-100 text-white/40 hover:text-red-300 transition-opacity p-1"
+                    title="Delete education"
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                )}
+                <div className="text-[10px] font-bold text-white/95 mb-0.5 flex gap-1">
+                  <EditableText
+                    value={edu.startDate || ""}
+                    onChange={(v) => {
+                      const newEdu = [...(education || [])];
+                      newEdu[idx] = { ...newEdu[idx], startDate: v };
+                      updateSection("education", newEdu);
+                    }}
+                    placeholder="Start"
+                  />
+                  <span>-</span>
+                  <EditableText
+                    value={edu.current ? "Present" : edu.endDate || ""}
+                    onChange={(v) => {
+                      const newEdu = [...(education || [])];
+                      if (v.toLowerCase() === "present")
+                        newEdu[idx] = {
+                          ...newEdu[idx],
+                          current: true,
+                          endDate: "",
+                        };
+                      else
+                        newEdu[idx] = {
+                          ...newEdu[idx],
+                          current: false,
+                          endDate: v,
+                        };
+                      updateSection("education", newEdu);
+                    }}
+                    placeholder="End"
+                  />
+                </div>
+                <EditableText
+                  value={edu.degree || ""}
+                  onChange={(v) => {
+                    const newEdu = [...(education || [])];
+                    newEdu[idx] = { ...newEdu[idx], degree: v };
+                    updateSection("education", newEdu);
+                  }}
+                  className="text-[11px] font-bold text-white/90 block"
+                  placeholder="Degree"
+                />
+                <EditableText
+                  value={edu.institution || ""}
+                  onChange={(v) => {
+                    const newEdu = [...(education || [])];
+                    newEdu[idx] = { ...newEdu[idx], institution: v };
+                    updateSection("education", newEdu);
+                  }}
+                  className="text-[10px] text-white/70 italic block"
+                  placeholder="Institution"
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
-        {personalInfo.summary && (
-          <div className="mb-8">
-            <p className="text-[10px] leading-relaxed text-gray-600 text-justify">
-              {personalInfo.summary}
-            </p>
-          </div>
-        )}
-
-        {workExperience && workExperience.length > 0 && (
-          <div>
-            <h2
-              className="text-xl font-bold capitalize mb-6 transition-colors duration-300"
-              style={{ color: sidebarColor }}
-            >
-              Experience
-            </h2>
-
-            <div className="space-y-0 relative">
-              {workExperience.map((exp, idx) => (
-                <div key={exp.id} className="flex gap-4 mb-6 relative">
-                  {/* Timeline Line */}
-                  {idx !== workExperience.length - 1 && (
-                    <div className="absolute left-[3.5px] top-2 bottom-[-24px] w-[1px] bg-slate-200"></div>
-                  )}
-
-                  {/* Dot */}
-                  <div className="shrink-0 mt-1.5 z-10">
-                    <div
-                      className="w-2 h-2 rounded-full border-2 bg-white transition-colors duration-300"
-                      style={{ borderColor: sidebarColor }}
-                    ></div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 pb-1">
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span
-                        className="text-[10px] font-bold transition-colors duration-300"
-                        style={{ color: sidebarColor }}
-                      >
-                        {exp.startDate?.split("-")[0]} -{" "}
-                        {exp.current ? "Present" : exp.endDate?.split("-")[0]}
-                      </span>
+        {/* Skills & Languages */}
+        <div className="space-y-6">
+          {(["technical", "soft", "language"] as const).map((cat) => (
+            <div key={cat}>
+              <div className="flex justify-between items-center border-b border-white/20 pb-2 mb-4">
+                <h3 className="text-sm font-bold uppercase text-white/90">
+                  {cat === "technical"
+                    ? "Technical Skills"
+                    : cat === "soft"
+                      ? "Soft Skills"
+                      : "Languages"}
+                </h3>
+                {isEditing && (
+                  <button
+                    onClick={() => addSkill(cat)}
+                    className="text-[9px] text-white/50 hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-white/10"
+                  >
+                    <Plus size={10} /> Add
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {(skills || [])
+                  .filter((s) => s.category === cat)
+                  .map((skill) => (
+                    <div key={skill.id} className="relative group/skill">
+                      <EditableText
+                        value={skill.name || ""}
+                        onChange={(v) => {
+                          const newSkills = [...(skills || [])];
+                          const sIdx = newSkills.findIndex(
+                            (s) => s.id === skill.id,
+                          );
+                          newSkills[sIdx] = { ...newSkills[sIdx], name: v };
+                          updateSection("skills", newSkills);
+                        }}
+                        className="text-[10px] bg-white/10 px-2 py-1 rounded text-white/90"
+                      />
+                      {isEditing && (
+                        <button
+                          onClick={() => removeSkill(skill.id)}
+                          className="absolute -top-1.5 -right-1.5 opacity-0 group-hover/skill:opacity-100 bg-red-500 shadow-sm rounded-full p-0.5 text-white hover:bg-red-600 transition-all scale-75 hover:scale-100"
+                        >
+                          <X size={8} />
+                        </button>
+                      )}
                     </div>
-                    <div className="text-[10px] text-gray-500 italic mb-1">
-                      {exp.company} | {exp.location}
-                    </div>
-                    <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase">
-                      {exp.title}
-                    </h3>
-
-                    {exp.description && (
-                      <div className="text-[10px] text-gray-600 leading-relaxed">
-                        {(Array.isArray(exp.description)
-                          ? exp.description
-                          : typeof exp.description === "string"
-                            ? (exp.description as string).split("\n")
-                            : []
-                        )
-                          .filter(Boolean)
-                          .map((d, i) => (
-                            <div key={i} className="mb-1">
-                              {d}
-                            </div>
-                          ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
+                  ))}
+              </div>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* MAIN CONTENT */}
+      <div className="w-[65%] p-8 pt-12 flex flex-col">
+        <div className="mb-8">
+          <div className="text-3xl font-bold uppercase tracking-wide leading-tight mb-2 flex flex-col gap-1">
+            <EditableText
+              value={personalInfo.firstName || ""}
+              onChange={(v) => updatePersonalInfo("firstName", v)}
+              style={{ color: sidebarColor }}
+            />
+            <EditableText
+              value={personalInfo.lastName || ""}
+              onChange={(v) => updatePersonalInfo("lastName", v)}
+              style={{ color: sidebarColor }}
+            />
+          </div>
+          <EditableText
+            value={personalInfo.summary || ""}
+            onChange={(v) => updatePersonalInfo("summary", v)}
+            className="text-[10px] leading-relaxed text-gray-600 text-justify mt-4 block"
+            multiline
+            placeholder="Professional Summary..."
+          />
+        </div>
+
+        {workExperience && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2
+                className="text-xl font-bold capitalize"
+                style={{ color: sidebarColor }}
+              >
+                Experience
+              </h2>
+              {isEditing && (
+                <button
+                  onClick={addExperience}
+                  className="text-[10px] text-blue-600/70 hover:text-blue-600 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-blue-50 border border-transparent hover:border-blue-100"
+                >
+                  <Plus size={14} /> Add Experience
+                </button>
+              )}
+            </div>
+
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="experience">
+                {(provided) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="space-y-0 relative"
+                  >
+                    {workExperience.map((exp, idx) => (
+                      <Draggable
+                        key={exp.id}
+                        draggableId={exp.id}
+                        index={idx}
+                        isDragDisabled={!isEditing}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            className={cn(
+                              "flex gap-4 mb-6 relative group/item",
+                              snapshot.isDragging &&
+                                "bg-white shadow-xl z-50 rounded-lg scale-105",
+                            )}
+                          >
+                            {isEditing && (
+                              <div className="absolute -right-2 -top-2 flex gap-1 opacity-0 group-hover/item:opacity-100 transition-all duration-200 z-50">
+                                <div
+                                  {...provided.dragHandleProps}
+                                  className="p-1.5 bg-white shadow-md border border-gray-100 rounded-md cursor-grab text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+                                  title="Drag to reorder"
+                                >
+                                  <GripVertical size={14} />
+                                </div>
+                                <button
+                                  onClick={() => removeExperience(exp.id)}
+                                  className="p-1.5 bg-white shadow-md border border-gray-100 rounded-md text-red-400 hover:text-red-600 hover:bg-red-50"
+                                  title="Delete experience"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                            )}
+                            <div className="shrink-0 mt-1.5 z-10">
+                              <div
+                                className="w-2 h-2 rounded-full border-2 bg-white"
+                                style={{ borderColor: sidebarColor }}
+                              ></div>
+                            </div>
+                            <div className="flex-1 pb-1">
+                              <div
+                                className="flex items-baseline gap-1 text-[10px] font-bold"
+                                style={{ color: sidebarColor }}
+                              >
+                                <EditableText
+                                  value={exp.startDate || ""}
+                                  onChange={(v) => {
+                                    const newExp = [...(workExperience || [])];
+                                    newExp[idx] = {
+                                      ...newExp[idx],
+                                      startDate: v,
+                                    };
+                                    updateSection("workExperience", newExp);
+                                  }}
+                                  placeholder="Start"
+                                />
+                                <span>-</span>
+                                <EditableText
+                                  value={
+                                    exp.current ? "Present" : exp.endDate || ""
+                                  }
+                                  onChange={(v) => {
+                                    const newExp = [...(workExperience || [])];
+                                    if (v.toLowerCase() === "present")
+                                      newExp[idx] = {
+                                        ...newExp[idx],
+                                        current: true,
+                                        endDate: "",
+                                      };
+                                    else
+                                      newExp[idx] = {
+                                        ...newExp[idx],
+                                        current: false,
+                                        endDate: v,
+                                      };
+                                    updateSection("workExperience", newExp);
+                                  }}
+                                  placeholder="End"
+                                />
+                              </div>
+                              <div className="text-[10px] text-gray-500 italic mb-1 flex gap-1">
+                                <EditableText
+                                  value={exp.company || ""}
+                                  onChange={(v) => {
+                                    const newExp = [...(workExperience || [])];
+                                    newExp[idx] = {
+                                      ...newExp[idx],
+                                      company: v,
+                                    };
+                                    updateSection("workExperience", newExp);
+                                  }}
+                                  placeholder="Company"
+                                />
+                                <span>|</span>
+                                <EditableText
+                                  value={exp.location || ""}
+                                  onChange={(v) => {
+                                    const newExp = [...(workExperience || [])];
+                                    newExp[idx] = {
+                                      ...newExp[idx],
+                                      location: v,
+                                    };
+                                    updateSection("workExperience", newExp);
+                                  }}
+                                  placeholder="Location"
+                                />
+                              </div>
+                              <EditableText
+                                value={exp.title || ""}
+                                onChange={(v) => {
+                                  const newExp = [...(workExperience || [])];
+                                  newExp[idx] = { ...newExp[idx], title: v };
+                                  updateSection("workExperience", newExp);
+                                }}
+                                className="text-xs font-bold text-gray-800 uppercase block mb-2"
+                                placeholder="Title"
+                              />
+                              <div className="text-[10px] text-gray-600 space-y-1">
+                                {(
+                                  (Array.isArray(exp.description)
+                                    ? exp.description
+                                    : [exp.description]
+                                  ).filter(Boolean) as string[]
+                                ).map((d, dIdx) => (
+                                  <div
+                                    key={dIdx}
+                                    className="flex gap-1 group/desc"
+                                  >
+                                    <span className="shrink-0">•</span>
+                                    <EditableText
+                                      value={d}
+                                      onChange={(v) => {
+                                        const newExp = [
+                                          ...(workExperience || []),
+                                        ];
+                                        const newDesc = [
+                                          ...(newExp[idx]
+                                            .description as string[]),
+                                        ];
+                                        newDesc[dIdx] = v;
+                                        newExp[idx] = {
+                                          ...newExp[idx],
+                                          description: newDesc,
+                                        };
+                                        updateSection("workExperience", newExp);
+                                      }}
+                                      className="flex-1"
+                                      multiline
+                                    />
+                                    {isEditing && (
+                                      <button
+                                        onClick={() => {
+                                          const newExp = [
+                                            ...(workExperience || []),
+                                          ];
+                                          const newDesc = (
+                                            newExp[idx].description as string[]
+                                          ).filter((_, i) => i !== dIdx);
+                                          newExp[idx] = {
+                                            ...newExp[idx],
+                                            description: newDesc,
+                                          };
+                                          updateSection(
+                                            "workExperience",
+                                            newExp,
+                                          );
+                                        }}
+                                        className="opacity-0 group-hover/desc:opacity-100 text-red-300 hover:text-red-500"
+                                      >
+                                        <Trash2 size={10} />
+                                      </button>
+                                    )}
+                                  </div>
+                                ))}
+                                {isEditing && (
+                                  <button
+                                    onClick={() => {
+                                      const newExp = [
+                                        ...(workExperience || []),
+                                      ];
+                                      const newDesc = [
+                                        ...((newExp[idx]
+                                          .description as string[]) || []),
+                                        "",
+                                      ];
+                                      newExp[idx] = {
+                                        ...newExp[idx],
+                                        description: newDesc,
+                                      };
+                                      updateSection("workExperience", newExp);
+                                    }}
+                                    className="text-[9px] text-blue-500/70 hover:text-blue-600 flex items-center gap-1 mt-1 transition-colors"
+                                  >
+                                    <Plus size={8} /> Add Point
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           </div>
         )}
       </div>
