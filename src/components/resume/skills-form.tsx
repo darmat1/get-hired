@@ -12,9 +12,14 @@ interface SkillsFormProps {
   onChange: (skills: Skill[]) => void;
   onNext?: () => void;
   onBack?: () => void;
+  hideImport?: boolean;
 }
 
-export function SkillsForm({ data, onChange }: SkillsFormProps) {
+export function SkillsForm({
+  data,
+  onChange,
+  hideImport = false,
+}: SkillsFormProps) {
   const { t } = useTranslation();
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
@@ -185,16 +190,18 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
           <h2 className="text-xl font-semibold text-foreground">
             {t("form.skills")}
           </h2>
-          <Button
-            onClick={() => setIsImportModalOpen(true)}
-            variant="outline"
-            size="sm"
-            type="button"
-            className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-          >
-            <Sparkles className="h-4 w-4 mr-2" />
-            {t("profile.btn_import")}
-          </Button>
+          {!hideImport && (
+            <Button
+              onClick={() => setIsImportModalOpen(true)}
+              variant="outline"
+              size="sm"
+              type="button"
+              className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              {t("profile.btn_import")}
+            </Button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-foreground">

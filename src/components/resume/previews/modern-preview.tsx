@@ -16,10 +16,12 @@ import {
   Bold,
   Italic,
   Type,
+  Sparkles,
 } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ProfileImportModal } from "../profile-import-modal";
 
 interface EditableTextProps {
   value: string;
@@ -278,11 +280,16 @@ const SidebarToggle = ({
 );
 
 export function ModernPreview({ data, onChange, isEditing }: Props) {
+  const { t } = useTranslation();
   const { personalInfo, workExperience, education, skills, customization } =
     data;
 
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [importType, setImportType] = useState<"experience" | "skills">(
+    "experience",
+  );
 
   // Default values
   const sidebarColor = customization?.sidebarColor || "#2e3a4e";
@@ -392,6 +399,33 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
       "skills",
       (skills || []).filter((s) => s.id !== id),
     );
+  };
+
+  const handleImport = (selectedItems: any[]) => {
+    if (importType === "experience") {
+      const itemsWithNewIds = selectedItems.map((item) => ({
+        ...item,
+        id: Math.random().toString(36).substring(2, 9),
+      }));
+      updateSection("workExperience", [
+        ...(workExperience || []),
+        ...itemsWithNewIds,
+      ]);
+    } else {
+      // Merge skills by name to avoid duplicates
+      const existingNames = new Set(
+        (skills || []).map((s) => s.name.toLowerCase()),
+      );
+      const newSkills = selectedItems
+        .filter((s) => !existingNames.has(s.name.toLowerCase()))
+        .map((s) => ({
+          ...s,
+          id: Math.random().toString(36).substring(2, 9),
+        }));
+      if (newSkills.length > 0) {
+        updateSection("skills", [...(skills || []), ...newSkills]);
+      }
+    }
   };
 
   return (
@@ -692,12 +726,23 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                       : "Languages"}
                 </h3>
                 {isEditing && (
-                  <button
-                    onClick={() => addSkill(cat)}
-                    className="text-[9px] text-white/50 hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-white/10"
-                  >
-                    <Plus size={10} /> Add
-                  </button>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => {
+                        setImportType("skills");
+                        setIsImportModalOpen(true);
+                      }}
+                      className="text-[9px] text-blue-500 hover:text-blue-600 flex items-center gap-1.5 px-1.5 py-0.5 rounded transition-all hover:bg-white/10"
+                    >
+                      <Sparkles size={10} /> {t("profile.btn_import")}
+                    </button>
+                    <button
+                      onClick={() => addSkill(cat)}
+                      className="text-[9px] text-white/50 hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-white/10"
+                    >
+                      <Plus size={10} /> Add
+                    </button>
+                  </div>
                 )}
               </div>
               <div className="flex flex-wrap gap-2">
@@ -768,12 +813,23 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                 Experience
               </h2>
               {isEditing && (
-                <button
-                  onClick={addExperience}
-                  className="text-[10px] text-blue-600/70 hover:text-blue-600 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-blue-50 border border-transparent hover:border-blue-100"
-                >
-                  <Plus size={14} /> Add Experience
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setImportType("experience");
+                      setIsImportModalOpen(true);
+                    }}
+                    className="text-[10px] text-blue-600/70 hover:text-blue-600 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-blue-50 border border-transparent hover:border-blue-100"
+                  >
+                    <Sparkles size={14} /> {t("profile.btn_import")}
+                  </button>
+                  <button
+                    onClick={addExperience}
+                    className="text-[10px] text-blue-600/70 hover:text-blue-600 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-blue-50 border border-transparent hover:border-blue-100"
+                  >
+                    <Plus size={14} /> Add Experience
+                  </button>
+                </div>
               )}
             </div>
 
@@ -998,6 +1054,13 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
           </div>
         )}
       </div>
+
+      <ProfileImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImport={handleImport}
+        type={importType}
+      />
     </div>
   );
 }
