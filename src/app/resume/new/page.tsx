@@ -15,9 +15,14 @@ export default function NewResumePage() {
   const { t } = useTranslation();
   const { data: session, isPending } = useSession();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [title, setTitle] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isPending && session === null) {
@@ -59,7 +64,7 @@ export default function NewResumePage() {
     }
   };
 
-  if (isPending)
+  if (!mounted || isPending)
     return <LoadingScreen message={t("profile.loading_profile")} />;
   if (!session) return null;
 

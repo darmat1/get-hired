@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "@/lib/translations";
 import { ProfileForm } from "@/components/profile/profile-form";
 import { useSession } from "@/lib/auth-client";
@@ -10,7 +10,12 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 export default function ProfilePage() {
   const { t } = useTranslation();
   const { data: session, isPending } = useSession();
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isPending && session === null) {
@@ -18,7 +23,7 @@ export default function ProfilePage() {
     }
   }, [session, isPending, router]);
 
-  if (isPending)
+  if (!mounted || isPending)
     return <LoadingScreen message={t("profile.loading_profile")} />;
   if (!session) return null;
 

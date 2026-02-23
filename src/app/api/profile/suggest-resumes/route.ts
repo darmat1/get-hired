@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
-import { aiComplete } from "@/lib/ai";
+import { aiComplete } from "@/lib/ai/server-ai";
 
 export async function POST() {
   const requestStart = Date.now();
@@ -140,7 +140,7 @@ RULES:
     const createStart = Date.now();
     const savedVariants = await Promise.all(
       (parsed.variants || []).map((v: any) =>
-        prisma.resumeVariant.create({
+        (prisma.resumeVariant.create as any)({
           data: {
             profileId: profile.id,
             title: v.title,

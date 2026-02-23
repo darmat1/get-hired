@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CoverLetterForm } from "@/components/cover-letter/cover-letter-form";
 import { useTranslation } from "@/lib/translations";
 import { useSession } from "@/lib/auth-client";
@@ -13,7 +13,12 @@ import { Sidebar } from "@/components/layout/sidebar";
 export default function CoverLetterPage() {
   const { t } = useTranslation();
   const { data: session, isPending } = useSession();
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isPending && session === null) {
@@ -21,7 +26,7 @@ export default function CoverLetterPage() {
     }
   }, [session, isPending, router]);
 
-  if (isPending)
+  if (!mounted || isPending)
     return <LoadingScreen message={t("profile.loading_profile")} />;
   if (!session) return null;
 

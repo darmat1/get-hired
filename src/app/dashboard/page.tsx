@@ -29,6 +29,7 @@ export default function MyExperiencePage() {
   const { t } = useTranslation();
   const router = useRouter();
   const { data: session, isPending } = useSession();
+  const [mounted, setMounted] = useState(false);
   const [profile, setProfile] = useState<any>({
     personalInfo: {},
     workExperience: [],
@@ -51,6 +52,10 @@ export default function MyExperiencePage() {
   const [isDragging, setIsDragging] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (session) {
@@ -208,7 +213,7 @@ export default function MyExperiencePage() {
     }
   };
 
-  if (isPending)
+  if (!mounted || isPending)
     return <LoadingScreen message={t("profile.loading_profile")} />;
   if (!session) return <LoadingScreen message={t("common.auth_required")} />;
 

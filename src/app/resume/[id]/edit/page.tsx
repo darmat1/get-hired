@@ -34,6 +34,7 @@ export default function EditResumePage() {
   const id = params?.id as string;
 
   const [step, setStep] = useState(1);
+  const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [resumeData, setResumeData] = useState<Partial<Resume>>({
@@ -50,6 +51,10 @@ export default function EditResumePage() {
     skills: [],
     template: "modern",
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (session?.user && id) {
@@ -122,7 +127,7 @@ export default function EditResumePage() {
     window.open(`/api/resumes/${id}/pdf`, "_blank");
   };
 
-  if (isPending)
+  if (!mounted || isPending)
     return <LoadingScreen message={t("profile.loading_profile")} />;
   if (!session) return null;
 

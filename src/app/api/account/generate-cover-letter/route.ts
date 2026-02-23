@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
-import { aiComplete } from "@/lib/ai";
+import { aiComplete } from "@/lib/ai/server-ai";
 
 const SHARED_RULES = `### LANGUAGE ENFORCEMENT (ABSOLUTE PRIORITY)
 - Identify the PRIMARY language of the Job Description (JD) text.

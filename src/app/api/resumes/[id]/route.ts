@@ -60,7 +60,7 @@ export async function GET(
 
                 // Persist to Profile
                 if (userProfile) {
-                  await prisma.userProfile.update({
+                  await (prisma.userProfile.update as any)({
                     where: { id: userProfile.id },
                     data: {
                       personalInfo: {
@@ -128,7 +128,7 @@ export async function PUT(
       return NextResponse.json({ error: "Resume not found" }, { status: 404 });
     }
 
-    const updatedResume = await prisma.resume.update({
+    const updatedResume = await (prisma.resume.update as any)({
       where: {
         id: id,
       },

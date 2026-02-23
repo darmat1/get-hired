@@ -46,7 +46,7 @@ export async function PUT(request: Request) {
 
     const body = await request.json();
 
-    const profile = await prisma.userProfile.upsert({
+    const profile = await (prisma.userProfile.upsert as any)({
       where: { userId: session.user.id },
       update: {
         personalInfo: body.personalInfo || {},

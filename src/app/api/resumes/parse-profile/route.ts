@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { aiComplete } from "@/lib/ai";
+import { aiComplete } from "@/lib/ai/server-ai";
 
 export async function POST(request: Request) {
   try {
@@ -192,7 +192,7 @@ ${normalizedText}`;
     }));
 
     if (existingProfile) {
-      await prisma.userProfile.update({
+      await (prisma.userProfile.update as any)({
         where: { userId: session.user.id },
         data: {
           personalInfo: finalPersonalInfo,
@@ -202,7 +202,7 @@ ${normalizedText}`;
         },
       });
     } else {
-      await prisma.userProfile.create({
+      await (prisma.userProfile.create as any)({
         data: {
           userId: session.user.id,
           personalInfo: finalPersonalInfo,

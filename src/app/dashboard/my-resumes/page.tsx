@@ -32,6 +32,7 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const router = useRouter();
   const { data: session, isPending } = useSession();
+  const [mounted, setMounted] = useState(false);
   const [resumes, setResumes] = useState<ResumeData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState<{
@@ -40,6 +41,10 @@ export default function Dashboard() {
   }>({ isOpen: false, resumeId: null });
   const [isDeleting, setIsDeleting] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (session) {
@@ -89,7 +94,7 @@ export default function Dashboard() {
     window.open(`/api/resumes/${id}/pdf`, "_blank");
   };
 
-  if (isPending) {
+  if (!mounted || isPending) {
     return (
       <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
         <Sidebar />
