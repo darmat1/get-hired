@@ -38,7 +38,7 @@ export async function aiComplete(
               console.log(
                 `[AI] Trying user provider: ${provider.name} (${provider.id})`,
               );
-              const decryptedKey = userKey.key;
+              const decryptedKey = userKey.key ?? undefined;
 
               // If this is the preferred provider, use preferred model if set
               const modelOverride =
