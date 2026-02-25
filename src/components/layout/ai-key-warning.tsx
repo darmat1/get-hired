@@ -29,12 +29,12 @@ export function AIKeyWarning() {
           setHasKeys(false);
         }
       } catch (err) {
-        console.error("[AIKeyWarning] Failed to check keys:", err);
+        console.error("Failed to check keys:", err);
       }
     };
 
     checkKeys();
-  }, [session, pathname]); // Re-check on path change in case user added key
+  }, [session, pathname]);
 
   if (!session?.user || hasKeys === true || hasKeys === null || isProfilePage) {
     return null;

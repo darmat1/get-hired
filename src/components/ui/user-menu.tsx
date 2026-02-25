@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
 import { LocalizedLink } from "@/components/ui/localized-link";
-import { LogOut, Settings, LayoutDashboard } from "lucide-react";
+import { LogOut, Settings, LayoutDashboard, ShieldCheck } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import Image from "next/image";
 
@@ -13,6 +13,7 @@ interface UserMenuProps {
   userEmail: string;
   userImage?: string;
   gravatarUrl: string;
+  userRole?: string;
 }
 
 export function UserMenu({
@@ -20,6 +21,7 @@ export function UserMenu({
   userEmail,
   userImage,
   gravatarUrl,
+  userRole,
 }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -83,6 +85,17 @@ export function UserMenu({
             <LayoutDashboard className="h-4 w-4" />
             {t("nav.dashboard")}
           </LocalizedLink>
+
+          {userRole === "admin" && (
+            <LocalizedLink
+              href="/admin/blog"
+              onClick={() => setIsOpen(false)}
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline"
+            >
+              <ShieldCheck className="h-4 w-4" />
+              Admin
+            </LocalizedLink>
+          )}
 
           <LocalizedLink
             href="/dashboard/profile"

@@ -33,6 +33,8 @@ model User {
   // AI Preferences
   preferredAIProvider String?
   preferredAIModel    String?
+  role                String  @default("user")
+  posts               Post[]
 
   @@map("user")
 }
@@ -151,4 +153,19 @@ model ResumeVariant {
 
   @@index([profileId])
   @@map("resume_variant")
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  content   Json // { "en": { "title": "...", "body": "..." }, "ru": { ... } }
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId])
+  @@map("post")
 }
