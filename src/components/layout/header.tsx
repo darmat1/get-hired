@@ -11,13 +11,18 @@ import Logo from "../ui/icons/logo";
 import { usePathname } from "next/navigation";
 import { MD5 } from "crypto-js";
 import { LogIn } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function Header() {
   const { data: session, isPending } = useSession();
   const { t } = useTranslation();
   const pathname = usePathname();
   const isApplicationPage = isAppRoute(pathname || "");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const emailHash = session?.user?.email
     ? MD5(session.user.email.toLowerCase().trim()).toString()
@@ -29,6 +34,34 @@ export function Header() {
       console.log(session);
     }
   }, [session]);
+
+  // Don't render session-dependent content until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return (
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center">
+              {!isApplicationPage && (
+                <LocalizedLink
+                  href="/"
+                  className="text-xl font-bold text-gray-900 dark:text-white"
+                >
+                  <Logo />
+                </LocalizedLink>
+              )}
+            </div>
+            <nav className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2">
+                <ThemeToggle />
+                <LanguageSelector />
+              </div>
+            </nav>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80">
