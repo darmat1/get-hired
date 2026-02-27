@@ -6,7 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locales = ["en", "uk", "ru"];
   const defaultLocale = "en";
-
+  const staticLastMod = new Date("2026-02-27");
   const staticRoutes = [
     "",
     "/ai",
@@ -43,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       return {
         url: getUrl(route, locale),
-        lastModified: new Date(),
+        lastModified: staticLastMod,
         changeFrequency: "monthly" as const,
         priority: route === "" ? 1 : 0.8,
         alternates: {
