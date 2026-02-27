@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 import { LanguageProvider, type Language } from "@/lib/translations";
 import { Footer } from "@/components/layout/footer";
 import { AIKeyWarning } from "@/components/layout/ai-key-warning";
+import { Header } from "@/components/layout/header";
 import { getBaseUrl } from "@/lib/i18n-config";
 import Script from "next/script";
 

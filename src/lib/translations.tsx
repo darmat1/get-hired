@@ -71,6 +71,18 @@ export function LanguageProvider({
 
     // Use Next.js router for smooth transition
     router.push(fullPath);
+    // On blog pages, force a full page refresh to ensure language-specific content is re-fetched
+    // This helps when certain components rely on server-rendered localized data.
+    if (typeof window !== "undefined" && window.location.pathname.startsWith("/blog")) {
+      window.location.reload();
+    }
+    // Notify parts of the UI to refresh any language-dependent data without full reload
+    if (typeof window !== "undefined") {
+      const event = new CustomEvent("localeChanged", {
+        detail: { language: newLang },
+      });
+      window.dispatchEvent(event);
+    }
   };
 
   const t = (key: string): string => {

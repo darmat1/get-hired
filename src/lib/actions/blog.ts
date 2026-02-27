@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 export async function createPost(data: {
   slug: string;
   content: any;
+  imageUrl?: string;
   published?: boolean;
 }) {
   const session = await auth.api.getSession({
@@ -22,6 +23,7 @@ export async function createPost(data: {
     data: {
       slug: data.slug,
       content: data.content,
+      imageUrl: data.imageUrl,
       published: data.published ?? false,
       authorId: session.user.id,
     },
@@ -42,6 +44,38 @@ export async function getPostBySlug(slug: string) {
   return await prisma.post.findUnique({
     where: { slug },
   });
+}
+
+export async function updatePost(
+  id: string,
+  data: {
+    slug: string;
+    content: any;
+    imageUrl?: string;
+    published?: boolean;
+  },
+) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session || session.user.role !== "admin") {
+    throw new Error("Unauthorized");
+  }
+
+  const post = await prisma.post.update({
+    where: { id },
+    data: {
+      slug: data.slug,
+      content: data.content,
+      imageUrl: data.imageUrl,
+      published: data.published,
+    },
+  });
+
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${data.slug}`);
+  return post;
 }
 
 export async function deletePost(id: string) {

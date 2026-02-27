@@ -159,6 +159,7 @@ model Post {
   id        String   @id @default(cuid())
   slug      String   @unique
   content   Json // { "en": { "title": "...", "body": "..." }, "ru": { ... } }
+  imageUrl  String?
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

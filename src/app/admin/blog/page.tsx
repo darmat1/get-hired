@@ -18,8 +18,8 @@ export default async function BlogAdminPage() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-10">Blog Administration</h1>
+    <div className="w-full h-full py-8 px-8">
+      <h1 className="text-3xl font-bold mb-8">Blog Administration</h1>
       <BlogAdminClient initialPosts={posts} />
     </div>
   );

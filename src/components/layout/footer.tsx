@@ -47,6 +47,14 @@ export function Footer() {
                   {t("footer.pricing")}
                 </LocalizedLink>
               </li>
+              <li>
+                <LocalizedLink
+                  href="/blog"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.blog")}
+                </LocalizedLink>
+              </li>
             </ul>
           </div>
 
@@ -54,6 +62,14 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">{t("footer.solutions")}</h3>
             <ul className="space-y-2">
+              <li>
+                <LocalizedLink
+                  href="/resume-builder"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.resume_builder")}
+                </LocalizedLink>
+              </li>
               <li>
                 <LocalizedLink
                   href="/cover-letter"
