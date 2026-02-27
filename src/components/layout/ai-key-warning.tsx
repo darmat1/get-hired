@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocaleRefresh } from "@/hooks/useLocaleRefresh";
 import { useSession } from "@/lib/auth-client";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
@@ -16,25 +17,34 @@ export function AIKeyWarning() {
   // Don't show on profile pages where user adds keys
   const isProfilePage = pathname?.startsWith("/dashboard/profile");
 
-  useEffect(() => {
+  // Fetch keys and refresh on locale changes as well
+  const fetchKeys = async () => {
     if (!session?.user) return;
-
-    const checkKeys = async () => {
-      try {
-        const res = await fetch("/api/account/ai-keys");
-        const data = await res.json();
-        if (data.connectedProviders && data.connectedProviders.length > 0) {
-          setHasKeys(true);
-        } else {
-          setHasKeys(false);
-        }
-      } catch (err) {
-        console.error("[AIKeyWarning] Failed to check keys:", err);
+    try {
+      const res = await fetch("/api/account/ai-keys");
+      const data = await res.json();
+      if (data.connectedProviders && data.connectedProviders.length > 0) {
+        setHasKeys(true);
+      } else {
+        setHasKeys(false);
       }
-    };
+    } catch (err) {
+      console.error("Failed to check keys:", err);
+    }
+  };
 
-    checkKeys();
-  }, [session, pathname]); // Re-check on path change in case user added key
+  useEffect(() => {
+    fetchKeys();
+  }, [session, pathname]);
+
+  // Re-fetch keys when locale changes to refresh language-specific text if needed
+  useLocaleRefresh(fetchKeys);
+  // Extra safety: also listen for localeChanged DOM event directly
+  useEffect(() => {
+    const onLocaleChanged = () => fetchKeys();
+    window.addEventListener("localeChanged", onLocaleChanged as any);
+    return () => window.removeEventListener("localeChanged", onLocaleChanged as any);
+  }, []);
 
   if (!session?.user || hasKeys === true || hasKeys === null || isProfilePage) {
     return null;

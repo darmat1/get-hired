@@ -1704,6 +1704,11 @@ export const translations: Translations = {
     uk: "GetHired допомагає вам створювати професійні резюме за допомогою рекомендацій AI та інтеграції з LinkedIn PDF.",
     ru: "GetHired помогает вам создавать профессиональные резюме с помощью рекомендаций AI и интеграции с LinkedIn PDF.",
   },
+  "footer.blog": {
+    en: "Blog",
+    uk: "Блог",
+    ru: "Блог",
+  },
   "footer.legal": { en: "Legal", uk: "Юридичне", ru: "Юридическое" },
   "footer.privacy_policy": {
     en: "Privacy Policy",
@@ -1753,6 +1758,11 @@ export const translations: Translations = {
     en: "LinkedIn PDF Import",
     uk: "Імпорт LinkedIn PDF",
     ru: "Импорт LinkedIn PDF",
+  },
+  "footer.resume_builder": {
+    en: "Resume Builder",
+    uk: "Конструктор резюме",
+    ru: "Конструктор резюме",
   },
 
   // LinkedIn Import Landing Page
@@ -2403,6 +2413,176 @@ export const translations: Translations = {
     en: "Generate Cover Letter",
     uk: "Згенерувати супровідний лист",
     ru: "Сгенерировать сопроводительное письмо",
+  },
+  "resume_builder.hero_badge": {
+    en: "Top Rated Resume Builder {year}",
+    uk: "Найкращий конструктор резюме {year}",
+    ru: "Лучший конструктор резюме {year}",
+  },
+  "resume_builder.hero_title": {
+    en: "Build a Job-Winning Resume",
+    uk: "Створіть переможне резюме",
+    ru: "Создайте победное резюме",
+  },
+  "resume_builder.hero_title_highlight": {
+    en: "in Under 5 Minutes",
+    uk: "менш ніж за 5 хвилин",
+    ru: "менее чем за 5 минут",
+  },
+  "resume_builder.hero_desc": {
+    en: "Use our free online resume maker to generate ATS-friendly, professional CVs precisely tailored to your dream job. No forced paywalls.",
+    uk: "Використовуйте наш безкоштовний онлайн конструктор резюме для створення професійних CV, адаптованих для ATS та вашої омріяної роботи. Без прихованих платежів.",
+    ru: "Используйте наш бесплатный онлайн конструктор резюме для создания профессиональных CV, адаптированных для ATS и вашей работы мечты. Без скрытых платежей.",
+  },
+  "resume_builder.hero_cta": {
+    en: "Create My Resume For Free",
+    uk: "Створити резюме безкоштовно",
+    ru: "Создать резюме бесплатно",
+  },
+  "resume_builder.hero_no_cc": {
+    en: "No Credit Card Needed",
+    uk: "Кредитна картка не потрібна",
+    ru: "Кредитная карта не нужна",
+  },
+  "resume_builder.features_title": {
+    en: "Why Our Online Resume Builder is the Best",
+    uk: "Чому наш онлайн конструктор резюме найкращий",
+    ru: "Почему наш онлайн конструктор резюме лучший",
+  },
+  "resume_builder.features_desc": {
+    en: "Everything you need to successfully pass the HR screening and get invited to the interview.",
+    uk: "Все необхідне, щоб успішно пройти перевірку HR та отримати запрошення на співбесіду.",
+    ru: "Все необходимое, чтобы успешно пройти проверку HR и получить приглашение на собеседование.",
+  },
+  "resume_builder.feature1_title": {
+    en: "ATS-Ready Templates",
+    uk: "Шаблони для ATS",
+    ru: "Шаблоны для ATS",
+  },
+  "resume_builder.feature1_desc": {
+    en: "Expert-tested CV layouts guaranteed to be parsed correctly by tracking systems.",
+    uk: "Перевірені експертами формати CV, які гарантовано правильно розпізнаються системами відстеження.",
+    ru: "Проверенные экспертами форматы CV, которые гарантированно правильно распознаются системами отслеживания.",
+  },
+  "resume_builder.feature2_title": {
+    en: "LinkedIn Import",
+    uk: "Імпорт з LinkedIn",
+    ru: "Импорт из LinkedIn",
+  },
+  "resume_builder.feature2_desc": {
+    en: "Instantly turn your LinkedIn profile into a fully structured resume PDF.",
+    uk: "Миттєво перетворіть ваш профіль LinkedIn на повністю структуроване PDF-резюме.",
+    ru: "Мгновенно превратите ваш профиль LinkedIn в полностью структурированное PDF-резюме.",
+  },
+  "resume_builder.feature3_title": {
+    en: "AI Text Generation",
+    uk: "Генерація тексту ШІ",
+    ru: "Генерация текста ИИ",
+  },
+  "resume_builder.feature3_desc": {
+    en: "Stuck on what to write? Our AI perfectly describes your duties and achievements.",
+    uk: "Не знаєте, що написати? Наш ШІ ідеально опише ваші обов'язки та досягнення.",
+    ru: "Не знаете, что написать? Наш ИИ идеально опишет ваши обязанности и достижения.",
+  },
+  "resume_builder.feature4_title": {
+    en: "Free Instant Export",
+    uk: "Безкоштовний миттєвий експорт",
+    ru: "Бесплатный мгновенный экспорт",
+  },
+  "resume_builder.feature4_desc": {
+    en: "Download high-quality professional looking PDFs without annoying watermarks.",
+    uk: "Завантажуйте високоякісні професійні PDF-файли без дратівливих водяних знаків.",
+    ru: "Скачивайте высококачественные профессиональные PDF-файлы без раздражающих водяных знаков.",
+  },
+  "resume_builder.steps_title": {
+    en: "Create a Resume Online in 3 Simple Steps",
+    uk: "Створіть резюме онлайн за 3 прості кроки",
+    ru: "Создайте резюме онлайн за 3 простых шага",
+  },
+  "resume_builder.step1_title": {
+    en: "Pick a Template",
+    uk: "Оберіть шаблон",
+    ru: "Выберите шаблон",
+  },
+  "resume_builder.step1_desc": {
+    en: "Choose from simple, creative, or modern resume formats that fit your industry.",
+    uk: "Обирайте з простих, креативних або сучасних форматів резюме, які підходять вашій галузі.",
+    ru: "Выбирайте из простых, креативных или современных форматов резюме, которые подходят вашей отрасли.",
+  },
+  "resume_builder.step2_title": {
+    en: "Fill in Details via AI",
+    uk: "Заповніть деталі за допомогою ШІ",
+    ru: "Заполните детали с помощью ИИ",
+  },
+  "resume_builder.step2_desc": {
+    en: "Import from LinkedIn, or type manually with real-time AI writing assistance.",
+    uk: "Імпортуйте з LinkedIn або вводьте вручну за допомогою ШІ-асистента в реальному часі.",
+    ru: "Импортируйте из LinkedIn или вводите вручную с помощью ИИ-ассистента в реальном времени.",
+  },
+  "resume_builder.step3_title": {
+    en: "Download and Apply",
+    uk: "Завантажте та подайте заявку",
+    ru: "Скачайте и подайте заявку",
+  },
+  "resume_builder.step3_desc": {
+    en: "Hit download to get a pristine PDF, ready to impress hiring managers.",
+    uk: "Натисніть «Завантажити», щоб отримати ідеальний PDF, готовий вразити менеджерів з найму.",
+    ru: "Нажмите «Скачать», чтобы получить идеальный PDF, готовый впечатлить менеджеров по найму.",
+  },
+  "resume_builder.steps_cta": {
+    en: "Start Your Professional Resume Now",
+    uk: "Почніть створювати професійне резюме зараз",
+    ru: "Начните создавать профессиональное резюме сейчас",
+  },
+  "resume_builder.seo_title": {
+    en: "Learn More About Making the Perfect CV",
+    uk: "Дізнайтеся більше про створення ідеального CV",
+    ru: "Узнайте больше о создании идеального CV",
+  },
+  "resume_builder.seo1_title": {
+    en: "Why You Need an ATS-Friendly Resume Builder",
+    uk: "Чому вам потрібен конструктор резюме, адаптований для ATS",
+    ru: "Почему вам нужен конструктор резюме, адаптированный для ATS",
+  },
+  "resume_builder.seo1_desc": {
+    en: "Did you know over 70% of large companies use Applicant Tracking Systems (ATS) to filter job applications? Our <strong>free online resume maker</strong> automatically structures your data so robots and human recruiters can effortlessly read it. Avoid fancy graphics that break parsing; stick to our tested, professional resume templates.",
+    uk: "Чи знаєте ви, що понад 70% великих компаній використовують системи ATS для фільтрації резюме? Наш <strong>безкоштовний онлайн конструктор резюме</strong> автоматично структурує ваші дані так, щоб роботи та рекрутери могли легко їх прочитати.",
+    ru: "Знаете ли вы, что более 70% крупных компаний используют системы ATS для фильтрации резюме? Наш <strong>бесплатный онлайн конструктор резюме</strong> автоматически структурирует ваши данные так, чтобы роботы и рекрутеры могли легко их прочитать.",
+  },
+  "resume_builder.seo2_title": {
+    en: "How to Create a Resume for Your First Job",
+    uk: "Як створити резюме для першої роботи",
+    ru: "Как создать резюме для первой работы",
+  },
+  "resume_builder.seo2_desc": {
+    en: "If you're wondering how to write a CV with no experience, our <strong>resume tool</strong> provides targeted sections for education, personal projects, and soft skills. The AI assistant can even recommend ways to phrase your academic achievements to sound like viable work experience.",
+    uk: "Якщо ви не знаєте, як написати резюме без досвіду, наш інструмент пропонує розділи для освіти, проєктів та навичок. ШІ підкаже, як описати ваші академічні досягнення.",
+    ru: "Если вы не знаете, как написать резюме без опыта, наш инструмент предлагает разделы для образования, проектов и навыков. ИИ подскажет, как описать ваши академические достижения.",
+  },
+  "resume_builder.seo3_title": {
+    en: "Is This Resume Generator Truly Free?",
+    uk: "Чи дійсно цей генератор резюме безкоштовний?",
+    ru: "Действительно ли этот генератор резюме бесплатный?",
+  },
+  "resume_builder.seo3_desc": {
+    en: 'Many "free resume builders" ask you to pay precisely when you hit the download button. We believe in transparency. You can create, organize, and download a basic <strong>professional CV in PDF format</strong> indefinitely. We only charge for premium advanced AI features, not the core resume creator functionality.',
+    uk: 'Багато "безкоштовних" сервісів вимагають оплату при завантаженні. Ми за прозорість. Ви можете створювати та завантажувати базове резюме у PDF завжди безкоштовно. Ми беремо плату лише за розширені ШІ-функції.',
+    ru: 'Многие "бесплатные" сервисы требуют оплату при скачивании. Мы за прозрачность. Вы можете создавать и скачивать базовое резюме в PDF всегда бесплатно. Мы берем плату только за расширенные ИИ-функции.',
+  },
+  "resume_builder.cta_title": {
+    en: "Stop Struggling with Word Formatting",
+    uk: "Припиніть боротьбу з форматуванням у Word",
+    ru: "Прекратите борьбу с форматированием в Word",
+  },
+  "resume_builder.cta_desc": {
+    en: "Build an impeccable resume today. Take control of your career and double your interview chances.",
+    uk: "Створіть бездоганне резюме сьогодні. Візьміть кар'єру під контроль та подвойте шанси на співбесіду.",
+    ru: "Создайте безупречное резюме сегодня. Возьмите карьеру под контроль и удвойте шансы на собеседование.",
+  },
+  "resume_builder.cta_button": {
+    en: "Start Building Now — It's Free",
+    uk: "Почати зараз — це безкоштовно",
+    ru: "Начать сейчас — это бесплатно",
   },
 };
 

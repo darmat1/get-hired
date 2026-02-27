@@ -59,6 +59,7 @@ export function Header() {
                 userEmail={session.user?.email || ""}
                 userImage={session.user?.image || undefined}
                 gravatarUrl={gravatarUrl}
+                userRole={(session.user as any)?.role}
               />
             ) : (
               <LocalizedLink
