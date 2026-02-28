@@ -6,21 +6,32 @@ import { Header } from "@/components/layout/header";
 
 const POSTS_PER_PAGE = 10;
 
-export default async function BlogListPage() {
+export default async function BlogListPage({
+  params,
+}: {
+  params: Promise<{ number: string }>;
+}) {
+  const { number } = await params;
+  const page = parseInt(number) || 1;
+  const skip = (page - 1) * POSTS_PER_PAGE;
+
+  const [posts, totalCount] = await Promise.all([
+    prisma.post.findMany({
+      where: { published: true },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: POSTS_PER_PAGE,
+    }),
+    prisma.post.count({ where: { published: true } }),
+  ]);
+
+  const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
+
   const headerList = await headers();
   const cookieStore = await cookies();
   const locale = (headerList.get("x-locale") ||
     cookieStore.get("NEXT_LOCALE")?.value ||
     "en") as Language;
-
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-    take: POSTS_PER_PAGE,
-  });
-
-  const totalCount = await prisma.post.count({ where: { published: true } });
-  const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 
   return (
     <>
@@ -79,15 +90,25 @@ export default async function BlogListPage() {
 
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 mt-12">
+            {page > 1 && (
+              <Link
+                href={page === 2 ? "/blog" : `/blog/page/${page - 1}`}
+                className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              >
+                Previous
+              </Link>
+            )}
             <span className="text-slate-500 dark:text-slate-400">
-              Page 1 of {totalPages}
+              Page {page} of {totalPages}
             </span>
-            <Link
-              href="/blog/page/2"
-              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition"
-            >
-              Next
-            </Link>
+            {page < totalPages && (
+              <Link
+                href={`/blog/page/${page + 1}`}
+                className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              >
+                Next
+              </Link>
+            )}
           </div>
         )}
       </div>
