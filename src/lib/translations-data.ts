@@ -1604,6 +1604,46 @@ export const translations: Translations = {
     uk: "Список",
     ru: "Список",
   },
+  "cover_letter.generate_resume": {
+    en: "Also generate a tailored resume",
+    uk: "Також згенерувати адаптоване резюме",
+    ru: "Также сгенерировать адаптированное резюме",
+  },
+  "cover_letter.generate_resume_desc": {
+    en: "AI will create a personalized resume matching job keywords and filtering irrelevant experience",
+    uk: "ШІ створить персоналізоване резюме з відповідними ключовими словами та відфільтрує нерелевантний досвід",
+    ru: "ИИ создаст персонализированное резюме с соответствующими ключевыми словами и отфильтрует нерелевантный опыт",
+  },
+  "cover_letter.generated_resume": {
+    en: "Tailored Resume",
+    uk: "Адаптоване резюме",
+    ru: "Адаптированное резюме",
+  },
+  "cover_letter.generate_both": {
+    en: "Generate Cover Letter & Resume",
+    uk: "Згенерувати лист і резюме",
+    ru: "Сгенерировать письмо и резюме",
+  },
+  "cover_letter.success.both_generated": {
+    en: "Cover letter and tailored resume generated successfully",
+    uk: "Лист і адаптоване резюме успішно згенеровано",
+    ru: "Письмо и адаптированное резюме успешно сгенерированы",
+  },
+  "cover_letter.copy_resume": {
+    en: "Copy Resume",
+    uk: "Копіювати резюме",
+    ru: "Копировать резюме",
+  },
+  "cover_letter.generating_resume": {
+    en: "Generating tailored resume...",
+    uk: "Генерація адаптованого резюме...",
+    ru: "Генерация адаптированного резюме...",
+  },
+  "cover_letter.open_resume_editor": {
+    en: "Open Resume Editor",
+    uk: "Відкрити редактор резюме",
+    ru: "Открыть редактор резюме",
+  },
 
   // LinkedIn Import
   "resume.import_from_linkedin": {
