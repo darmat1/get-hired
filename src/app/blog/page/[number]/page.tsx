@@ -6,6 +6,16 @@ import { Header } from "@/components/layout/header";
 
 const POSTS_PER_PAGE = 10;
 
+const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
+
+function replaceImageUrl(url: string | null): string | null {
+  if (!url) return null;
+  return url.replace(
+    `https://${SUPABASE_STORAGE_HOST}/storage/`,
+    "/storage/"
+  );
+}
+
 export default async function BlogListPage({
   params,
 }: {
@@ -44,7 +54,7 @@ export default async function BlogListPage({
               (post.content as any)[locale] || (post.content as any)["en"];
             if (!content) return null;
 
-            const imageUrl = (post as any).imageUrl || null;
+            const imageUrl = replaceImageUrl((post as any).imageUrl);
             const bodyHtml = (content as any).body || "";
             const plain = bodyHtml
               .replace(/<[^>]+>/g, " ")

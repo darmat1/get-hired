@@ -6,6 +6,16 @@ import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { Metadata } from "next";
 
+const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
+
+function replaceImageUrl(url: string | null): string | null {
+  if (!url) return null;
+  return url.replace(
+    `https://${SUPABASE_STORAGE_HOST}/storage/`,
+    "/storage/"
+  );
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -29,6 +39,7 @@ export async function generateMetadata({
   const excerpt = content?.excerpt || "";
 
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
+  const imageUrl = replaceImageUrl(post.imageUrl);
 
   return {
     title,
@@ -38,10 +49,10 @@ export async function generateMetadata({
       description: excerpt,
       type: "article",
       url: `${siteUrl}/blog/${slug}`,
-      images: post.imageUrl
+      images: imageUrl
         ? [
             {
-              url: post.imageUrl,
+              url: imageUrl,
               width: 1200,
               height: 630,
               alt: title,
@@ -53,7 +64,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description: excerpt,
-      images: post.imageUrl ? [post.imageUrl] : [],
+      images: imageUrl ? [imageUrl] : [],
     },
   };
 }
@@ -85,6 +96,7 @@ export default async function BlogPostPage({
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(" ");
   const headerTitle = content?.title ?? slugToTitle(slug);
+  const imageUrl = replaceImageUrl(post.imageUrl);
 
   if (!content) {
     return (
@@ -107,7 +119,7 @@ export default async function BlogPostPage({
             "@type": "BlogPosting",
             headline: headerTitle,
             description: content.excerpt || "",
-            image: post.imageUrl || undefined,
+            image: imageUrl || undefined,
             datePublished: post.createdAt.toISOString(),
             dateModified: post.updatedAt?.toISOString() || post.createdAt.toISOString(),
             author: {
@@ -135,11 +147,11 @@ export default async function BlogPostPage({
           {headerTitle}
         </h1>
 
-        {post.imageUrl && (
+        {imageUrl && (
           <div className="relative w-full mb-12 overflow-hidden rounded-xl border border-slate-800 shadow-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={post.imageUrl}
+              src={imageUrl}
               alt={headerTitle}
               className="w-full h-auto max-h-[600px] object-cover"
             />
