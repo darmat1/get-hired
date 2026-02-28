@@ -6,6 +6,12 @@ import { OpenRouter } from "@openrouter/sdk";
 import { prisma } from "@/lib/prisma";
 
 const TRINITY_MODEL = "arcee-ai/trinity-large-preview:free";
+const STEPFUN_MODEL = "stepfun/step-3.5-flash:free";
+
+const OPENROUTER_MODELS: Record<string, string> = {
+  "openrouter-trinity": TRINITY_MODEL,
+  "openrouter-stepfun": STEPFUN_MODEL,
+};
 
 async function getUserOpenRouterKey(userId: string) {
   const user = await prisma.user.findUnique({
@@ -19,27 +25,45 @@ async function generateWithOpenRouter(
   apiKey: string,
   systemPrompt: string,
   userPrompt: string,
+  model: string,
 ) {
+  console.log("[OpenRouter] API key present:", !!apiKey, "Key length:", apiKey?.length);
+  
   const openrouter = new OpenRouter({ apiKey });
 
-  const response = await openrouter.chat.send({
-    model: TRINITY_MODEL,
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userPrompt },
-    ],
-  });
+  console.log("[OpenRouter] Starting request with model:", model);
+  console.log("[OpenRouter] System prompt length:", systemPrompt.length);
+  console.log("[OpenRouter] User prompt length:", userPrompt.length);
 
-  const content = response.choices[0]?.message?.content;
-  if (!content) return "";
-  if (typeof content === "string") return content;
-  
-  for (const item of content) {
-    if ("text" in item && typeof item.text === "string") {
-      return item.text;
+  try {
+    const startTime = Date.now();
+    const response = await openrouter.chat.send({
+      model: TRINITY_MODEL,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+    });
+    const duration = Date.now() - startTime;
+    console.log("[OpenRouter] Response received in", duration, "ms");
+
+    const content = response.choices[0]?.message?.content;
+    if (!content) {
+      console.warn("[OpenRouter] Empty content returned");
+      return "";
     }
+    if (typeof content === "string") return content;
+    
+    for (const item of content) {
+      if ("text" in item && typeof item.text === "string") {
+        return item.text;
+      }
+    }
+    return "";
+  } catch (error) {
+    console.error("[OpenRouter] Error:", error);
+    throw error;
   }
-  return "";
 }
 
 export async function POST(request: Request) {
@@ -153,7 +177,7 @@ Content Requirements:
 
     let results: Record<string, string>;
 
-    if (provider === "openrouter") {
+    if (provider?.startsWith("openrouter")) {
       const userId = session.user?.id;
       if (!userId) {
         return NextResponse.json(
@@ -170,9 +194,17 @@ Content Requirements:
         );
       }
 
+      const model = OPENROUTER_MODELS[provider];
+      if (!model) {
+        return NextResponse.json(
+          { error: "Invalid provider" },
+          { status: 400 },
+        );
+      }
+
       const responses = await Promise.all(
         prompts.map((p) =>
-          generateWithOpenRouter(openRouterKey, p.systemPrompt, p.userPrompt),
+          generateWithOpenRouter(openRouterKey, p.systemPrompt, p.userPrompt, model),
         ),
       );
       results = {

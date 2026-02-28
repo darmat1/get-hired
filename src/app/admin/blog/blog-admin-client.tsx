@@ -46,7 +46,7 @@ export default function BlogAdminClient({
     body_uk: "",
     topic: "",
     requirements: "",
-    provider: "groq",
+    provider: "openrouter-trinity",
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +78,7 @@ export default function BlogAdminClient({
       body_uk: "",
       topic: "",
       requirements: "",
-      provider: "groq",
+      provider: "openrouter-trinity",
     });
     clearImage();
     setEditingPostId(null);
@@ -100,7 +100,7 @@ export default function BlogAdminClient({
       body_uk: content.uk?.body || "",
       topic: "",
       requirements: "",
-      provider: "groq",
+      provider: "openrouter-trinity",
     });
     setCurrentImageUrl(post.imageUrl || null);
     setImagePreview(post.imageUrl || null);
@@ -187,6 +187,7 @@ export default function BlogAdminClient({
     }
     setIsGenerating(true);
     try {
+      console.log("[Blog] Starting generation with provider:", formData.provider);
       const res = await fetch("/api/account/generate-blog-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -198,6 +199,13 @@ export default function BlogAdminClient({
         }),
       });
       const data = await res.json();
+      console.log("[Blog] Response:", data);
+      
+      if (!res.ok) {
+        alert(`Error: ${data.error || "Unknown error"}`);
+        return;
+      }
+      
       if (data?.content) {
         const en = data.content.en || {
           title: formData.title_en,
@@ -231,7 +239,9 @@ export default function BlogAdminClient({
         alert("AI content generation failed: no content returned");
       }
     } catch (err) {
-      alert("Error generating content from AI");
+      console.error("[Blog] Generation error:", err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      alert(`Error generating content from AI: ${errorMessage}`);
     } finally {
       setIsGenerating(false);
     }
@@ -355,7 +365,8 @@ export default function BlogAdminClient({
                 className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
               >
                 <option value="groq">Groq</option>
-                <option value="openrouter">OpenRouter (Trinity)</option>
+                <option value="openrouter-trinity">OpenRouter (Trinity)</option>
+                <option value="openrouter-stepfun">OpenRouter (StepFun)</option>
               </select>
               <button
                 type="button"
