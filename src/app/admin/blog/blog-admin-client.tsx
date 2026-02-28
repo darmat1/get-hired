@@ -46,6 +46,7 @@ export default function BlogAdminClient({
     body_uk: "",
     topic: "",
     requirements: "",
+    provider: "openrouter-trinity",
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +78,7 @@ export default function BlogAdminClient({
       body_uk: "",
       topic: "",
       requirements: "",
+      provider: "openrouter-trinity",
     });
     clearImage();
     setEditingPostId(null);
@@ -98,6 +100,7 @@ export default function BlogAdminClient({
       body_uk: content.uk?.body || "",
       topic: "",
       requirements: "",
+      provider: "openrouter-trinity",
     });
     setCurrentImageUrl(post.imageUrl || null);
     setImagePreview(post.imageUrl || null);
@@ -184,6 +187,7 @@ export default function BlogAdminClient({
     }
     setIsGenerating(true);
     try {
+      console.log("[Blog] Starting generation with provider:", formData.provider);
       const res = await fetch("/api/account/generate-blog-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -191,9 +195,17 @@ export default function BlogAdminClient({
           slug: formData.slug,
           topic: formData.topic,
           requirements: formData.requirements,
+          provider: formData.provider,
         }),
       });
       const data = await res.json();
+      console.log("[Blog] Response:", data);
+      
+      if (!res.ok) {
+        alert(`Error: ${data.error || "Unknown error"}`);
+        return;
+      }
+      
       if (data?.content) {
         const en = data.content.en || {
           title: formData.title_en,
@@ -227,7 +239,9 @@ export default function BlogAdminClient({
         alert("AI content generation failed: no content returned");
       }
     } catch (err) {
-      alert("Error generating content from AI");
+      console.error("[Blog] Generation error:", err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      alert(`Error generating content from AI: ${errorMessage}`);
     } finally {
       setIsGenerating(false);
     }
@@ -342,16 +356,30 @@ export default function BlogAdminClient({
                 }
               />
             </div>
-            <button
-              type="button"
-              onClick={handleGenerateFromAI}
-              className="w-full max-w-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm"
-            >
-              {isGenerating ? (
-                <Loader className="h-4 w-4 animate-spin" />
-              ) : null}
-              Generate from AI
-            </button>
+            <div className="flex items-center gap-4">
+              <select
+                value={formData.provider}
+                onChange={(e) =>
+                  setFormData({ ...formData, provider: e.target.value })
+                }
+                className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+              >
+                <option value="groq">Groq</option>
+                <option value="openrouter-trinity">OpenRouter (Trinity)</option>
+                <option value="openrouter-stepfun">OpenRouter (StepFun)</option>
+              </select>
+              <button
+                type="button"
+                onClick={handleGenerateFromAI}
+                disabled={isGenerating}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
+              >
+                {isGenerating ? (
+                  <Loader className="h-4 w-4 animate-spin" />
+                ) : null}
+                Generate from AI
+              </button>
+            </div>
           </div>
 
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800">

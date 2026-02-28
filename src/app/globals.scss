@@ -160,6 +160,10 @@
 
   a {
     @apply text-primary underline-offset-4 hover:underline;
+
+    &:hover {
+      @apply no-underline;
+    }
   }
 
   :focus-visible {

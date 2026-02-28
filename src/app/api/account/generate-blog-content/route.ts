@@ -2,8 +2,70 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { aiComplete } from "@/lib/ai/server-ai";
+import { OpenRouter } from "@openrouter/sdk";
+import { prisma } from "@/lib/prisma";
 
-// Generate blog post content in EN/RU/UK based on topic and requirements
+const TRINITY_MODEL = "arcee-ai/trinity-large-preview:free";
+const STEPFUN_MODEL = "stepfun/step-3.5-flash:free";
+
+const OPENROUTER_MODELS: Record<string, string> = {
+  "openrouter-trinity": TRINITY_MODEL,
+  "openrouter-stepfun": STEPFUN_MODEL,
+};
+
+async function getUserOpenRouterKey(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { aiKeys: true },
+  });
+  return user?.aiKeys.find((k) => k.provider === "openrouter")?.key;
+}
+
+async function generateWithOpenRouter(
+  apiKey: string,
+  systemPrompt: string,
+  userPrompt: string,
+  model: string,
+) {
+  console.log("[OpenRouter] API key present:", !!apiKey, "Key length:", apiKey?.length);
+  
+  const openrouter = new OpenRouter({ apiKey });
+
+  console.log("[OpenRouter] Starting request with model:", model);
+  console.log("[OpenRouter] System prompt length:", systemPrompt.length);
+  console.log("[OpenRouter] User prompt length:", userPrompt.length);
+
+  try {
+    const startTime = Date.now();
+    const response = await openrouter.chat.send({
+      model: TRINITY_MODEL,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+    });
+    const duration = Date.now() - startTime;
+    console.log("[OpenRouter] Response received in", duration, "ms");
+
+    const content = response.choices[0]?.message?.content;
+    if (!content) {
+      console.warn("[OpenRouter] Empty content returned");
+      return "";
+    }
+    if (typeof content === "string") return content;
+    
+    for (const item of content) {
+      if ("text" in item && typeof item.text === "string") {
+        return item.text;
+      }
+    }
+    return "";
+  } catch (error) {
+    console.error("[OpenRouter] Error:", error);
+    throw error;
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await auth.api.getSession({
@@ -14,7 +76,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { topic, requirements, slug } = await request.json();
+    const { topic, requirements, provider } = await request.json();
     if (!topic || !requirements) {
       return NextResponse.json(
         { error: "Topic and requirements are required" },
@@ -22,9 +84,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // --- 1. ENGLISH CONTENT ---
-    const enPrompt = {
-      systemPrompt: `You are an expert career coach and SEO copywriter for "gethired.work" (an advanced AI resume builder and career assistant). 
+    const prompts = [
+      {
+        lang: "en",
+        systemPrompt: `You are an expert career coach and SEO copywriter for "gethired.work" (an advanced AI resume builder and career assistant). 
 Write a highly engaging, professional, 500-1000 words and SEO-optimized blog post in English.
 
 Formatting Requirements:
@@ -50,15 +113,11 @@ Content Requirements:
 1. Organically include keywords: 'resume builder', 'CV maker', 'AI career assistant', 'job application tips'.
 2. Structure: Catchy intro, actionable main points, conclusion.
 3. End with a CTA inviting the reader to build their ATS-friendly resume at <a href='https://gethired.work'>gethired.work</a>.`,
-      userPrompt: `Topic: ${topic}\nSpecific Requirements: ${requirements}\n\nGenerate the English blog post JSON.`,
-      temperature: 0.4,
-      maxTokens: 3000,
-      responseFormat: { type: "json_object" } as any,
-    };
-
-    // --- 2. RUSSIAN CONTENT ---
-    const ruPrompt = {
-      systemPrompt: `Вы — эксперт по карьерному консультированию и профессиональный SEO-копирайтер для сервиса "gethired.work" (AI-конструктор резюме). 
+        userPrompt: `Topic: ${topic}\nSpecific Requirements: ${requirements}\n\nGenerate the English blog post JSON.`,
+      },
+      {
+        lang: "ru",
+        systemPrompt: `Вы — эксперт по карьерному консультированию и профессиональный SEO-копирайтер для сервиса "gethired.work" (AI-конструктор резюме). 
 Напишите вовлекающую, полезную и SEO-оптимизированную статью на 500-1000 слов для блога на русском языке.
 
 Требования к формату:
@@ -83,15 +142,11 @@ Content Requirements:
 Требования к контенту:
 1. Ключевые слова: 'создать резюме', 'конструктор резюме', 'AI карьерный помощник'.
 2. В конце добавьте CTA: создайте идеальное резюме на <a href='https://gethired.work'>gethired.work</a>.`,
-      userPrompt: `Тема: ${topic}\nСпецифические требования: ${requirements}\n\nСгенерируйте JSON статьи на русском языке.`,
-      temperature: 0.4,
-      maxTokens: 3000,
-      responseFormat: { type: "json_object" } as any,
-    };
-
-    // --- 3. UKRAINIAN CONTENT ---
-    const ukPrompt = {
-      systemPrompt: `Ви — експерт з кар'єрного консультування та професійний SEO-копірайтер для сервісу "gethired.work" (AI-конструктор резюме). 
+        userPrompt: `Тема: ${topic}\nСпецифические требования: ${requirements}\n\nСгенерируйте JSON статьи на русском языке.`,
+      },
+      {
+        lang: "uk",
+        systemPrompt: `Ви — експерт з кар'єрного консультування та професійний SEO-копірайтер для сервісу "gethired.work" (AI-конструктор резюме). 
 Напишіть цікаву, корисну та SEO-оптимізовану статтю на 500-1000 слів для блогу українською мовою.
 
 Вимоги до формату:
@@ -116,17 +171,68 @@ Content Requirements:
 Вимоги до контенту:
 1. Ключові слова: 'створити резюме', 'конструктор резюме', 'AI кар'єрний помічник'.
 2. Наприкінці додайте CTA: створіть ідеальне резюме на <a href='https://gethired.work'>gethired.work</a>.`,
-      userPrompt: `Тема: ${topic}\nСпецифічні вимоги: ${requirements}\n\nЗгенеруйте JSON статті українською мовою.`,
-      temperature: 0.4,
-      maxTokens: 3000,
-      responseFormat: { type: "json_object" } as any,
-    };
+        userPrompt: `Тема: ${topic}\nСпецифічні вимоги: ${requirements}\n\nЗгенеруйте JSON статті українською мовою.`,
+      },
+    ];
 
-    const [enRes, ruRes, ukRes] = await Promise.all([
-      aiComplete(enPrompt, session.user?.id),
-      aiComplete(ruPrompt, session.user?.id),
-      aiComplete(ukPrompt, session.user?.id),
-    ]);
+    let results: Record<string, string>;
+
+    if (provider?.startsWith("openrouter")) {
+      const userId = session.user?.id;
+      if (!userId) {
+        return NextResponse.json(
+          { error: "User authentication required" },
+          { status: 400 },
+        );
+      }
+
+      const openRouterKey = await getUserOpenRouterKey(userId);
+      if (!openRouterKey) {
+        return NextResponse.json(
+          { error: "OpenRouter API key not found. Please add it in your profile settings." },
+          { status: 400 },
+        );
+      }
+
+      const model = OPENROUTER_MODELS[provider];
+      if (!model) {
+        return NextResponse.json(
+          { error: "Invalid provider" },
+          { status: 400 },
+        );
+      }
+
+      const responses = await Promise.all(
+        prompts.map((p) =>
+          generateWithOpenRouter(openRouterKey, p.systemPrompt, p.userPrompt, model),
+        ),
+      );
+      results = {
+        en: responses[0],
+        ru: responses[1],
+        uk: responses[2],
+      };
+    } else {
+      const aiCompletePrompts = prompts.map((p) => ({
+        systemPrompt: p.systemPrompt,
+        userPrompt: p.userPrompt,
+        temperature: 0.4,
+        maxTokens: 3000,
+        responseFormat: { type: "json_object" } as any,
+      }));
+
+      const [enRes, ruRes, ukRes] = await Promise.all([
+        aiComplete(aiCompletePrompts[0], session.user?.id),
+        aiComplete(aiCompletePrompts[1], session.user?.id),
+        aiComplete(aiCompletePrompts[2], session.user?.id),
+      ]);
+
+      results = {
+        en: enRes.content,
+        ru: ruRes.content,
+        uk: ukRes.content,
+      };
+    }
 
     const parseAiResponse = (resContent: string, fallbackTopic: string) => {
       try {
@@ -147,9 +253,9 @@ Content Requirements:
     };
 
     const content = {
-      en: parseAiResponse(enRes.content, topic),
-      ru: parseAiResponse(ruRes.content, topic),
-      uk: parseAiResponse(ukRes.content, topic),
+      en: parseAiResponse(results.en, topic),
+      ru: parseAiResponse(results.ru, topic),
+      uk: parseAiResponse(results.uk, topic),
     };
 
     return NextResponse.json({ content });
