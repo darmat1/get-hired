@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "@/lib/auth-client";
 import { PersonalInfoForm } from "@/components/resume/personal-info-form";
 import { WorkExperienceForm } from "@/components/resume/work-experience-form";
@@ -70,6 +70,7 @@ export default function EditResumePage() {
       if (response.ok) {
         const data = await response.json();
         setResumeData(data);
+        lastSavedDataRef.current = JSON.stringify(data);
       } else {
         console.error("Failed to fetch resume");
       }
@@ -100,18 +101,63 @@ export default function EditResumePage() {
     setResumeData((prev) => ({ ...prev, template }));
   };
 
+  // Keep refs for data tracking
+  const resumeDataRef = useRef(resumeData);
+  const lastSavedDataRef = useRef<string>("");
+
+  useEffect(() => {
+    resumeDataRef.current = resumeData;
+  }, [resumeData]);
+
+  // Auto-save every 15 seconds, but only if there are unsaved changes
+  useEffect(() => {
+    if (!id || !session?.user) return;
+
+    const interval = setInterval(async () => {
+      const currentDataStr = JSON.stringify(resumeDataRef.current);
+
+      // Skip if data hasn't changed since last save
+      if (currentDataStr === lastSavedDataRef.current) return;
+
+      setIsSaving(true);
+      try {
+        const response = await fetch(`/api/resumes/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: currentDataStr,
+        });
+
+        if (response.ok) {
+          lastSavedDataRef.current = currentDataStr;
+        } else {
+          console.error("Failed to auto-save resume");
+        }
+      } catch (error) {
+        console.error("Failed to auto-save resume:", error);
+      } finally {
+        setIsSaving(false);
+      }
+    }, 15000); // 15 seconds
+
+    return () => clearInterval(interval);
+  }, [id, session]);
+
   const saveResume = async () => {
     setIsSaving(true);
     try {
+      const currentDataStr = JSON.stringify(resumeDataRef.current);
       const response = await fetch(`/api/resumes/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(resumeData),
+        body: currentDataStr,
       });
 
       if (response.ok) {
+        lastSavedDataRef.current = currentDataStr;
         // Handle success
       } else {
         console.error("Failed to update resume");

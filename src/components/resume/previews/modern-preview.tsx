@@ -287,6 +287,24 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const settingsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        settingsRef.current &&
+        !settingsRef.current.contains(event.target as Node)
+      ) {
+        setIsSettingsOpen(false);
+      }
+    }
+    if (isSettingsOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSettingsOpen]);
   const [importType, setImportType] = useState<"experience" | "skills">(
     "experience",
   );
@@ -437,9 +455,11 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
         onMouseEnter={() => setIsSidebarHovered(true)}
         onMouseLeave={() => setIsSidebarHovered(false)}
       >
-        {/* CUSTOMIZATION OVERLAY */}
         {isEditing && isSettingsOpen && (
-          <div className="absolute top-2 left-2 right-2 bg-slate-900 shadow-2xl rounded-xl border border-white/10 p-4 z-50 animate-in fade-in zoom-in duration-300">
+          <div
+            ref={settingsRef}
+            className="absolute top-2 left-2 right-2 bg-slate-900 shadow-2xl rounded-xl border border-white/10 p-4 z-50 animate-in fade-in zoom-in duration-300"
+          >
             <div className="flex items-center justify-between mb-4">
               <div className="text-sm font-bold text-white flex items-center gap-2">
                 <Settings2 size={14} className="text-blue-400" /> Sidebar

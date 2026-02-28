@@ -407,15 +407,26 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                     {skills
                       .filter((s) => s.category === "language")
                       .map((skill, idx) => {
+                        const levelVal = (
+                          skill.level || "intermediate"
+                        ).toLowerCase();
                         const levelMap: Record<string, number> = {
                           beginner: 1,
+                          basic: 1,
                           elementary: 2,
+                          "limited working": 2,
                           intermediate: 3,
+                          "professional working": 3,
                           advanced: 4,
+                          "full professional": 4,
+                          fluent: 4,
+                          proficient: 4,
                           expert: 5,
+                          native: 5,
+                          bilingual: 5,
+                          "native or bilingual": 5,
                         };
-                        const dots =
-                          levelMap[skill.level || "intermediate"] || 3;
+                        const dots = levelMap[levelVal] || 3;
 
                         return (
                           <View key={idx} style={{ marginBottom: 8 }}>
