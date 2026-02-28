@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Loader, Image as ImageIcon, X, Trash2, Plus } from "lucide-react";
+import {
+  Loader,
+  Image as ImageIcon,
+  X,
+  Trash2,
+  Plus,
+  Link2,
+} from "lucide-react";
 import { createPost, deletePost, updatePost } from "@/lib/actions/blog";
 import { createClient } from "@supabase/supabase-js";
 
@@ -32,7 +39,8 @@ export default function BlogAdminClient({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
 
-  // Pick the best available default provider
+  const [relatedPostIds, setRelatedPostIds] = useState<string[]>([]);
+
   const defaultProvider = hasGeminiKey
     ? "gemini"
     : hasGroqKey
@@ -89,6 +97,7 @@ export default function BlogAdminClient({
       provider: defaultProvider,
     });
     clearImage();
+    setRelatedPostIds([]);
     setEditingPostId(null);
   };
 
@@ -113,7 +122,18 @@ export default function BlogAdminClient({
     setCurrentImageUrl(post.imageUrl || null);
     setImagePreview(post.imageUrl || null);
     setImageFile(null);
+    setRelatedPostIds(post.relatedPostIds || []);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const toggleRelatedPost = (postId: string) => {
+    setRelatedPostIds((prev) =>
+      prev.includes(postId)
+        ? prev.filter((id) => id !== postId)
+        : prev.length < 6
+          ? [...prev, postId]
+          : prev,
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -164,6 +184,7 @@ export default function BlogAdminClient({
           content,
           imageUrl: uploadedImageUrl || undefined,
           published: true,
+          relatedPostIds,
         });
         setPosts(posts.map((p) => (p.id === editingPostId ? updatedPost : p)));
       } else {
@@ -172,6 +193,7 @@ export default function BlogAdminClient({
           content,
           imageUrl: uploadedImageUrl || undefined,
           published: true,
+          relatedPostIds,
         });
         setPosts([newPost, ...posts]);
       }
@@ -253,6 +275,7 @@ export default function BlogAdminClient({
   };
 
   const noKeysAvailable = !hasGeminiKey && !hasOpenRouterKey && !hasGroqKey;
+  const availableForRelated = posts.filter((p) => p.id !== editingPostId);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -408,6 +431,109 @@ export default function BlogAdminClient({
             </div>
           </div>
 
+          {/* Related Posts */}
+          <div className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Link2 className="w-5 h-5 text-slate-500" />
+                <h3 className="font-bold text-lg text-slate-800 dark:text-slate-200">
+                  Related Posts
+                </h3>
+              </div>
+              <span className="text-sm text-slate-500 dark:text-slate-400">
+                {relatedPostIds.length}/6 selected
+              </span>
+            </div>
+
+            {availableForRelated.length === 0 ? (
+              <p className="text-sm text-slate-500 dark:text-slate-400 py-4 text-center border border-dashed border-slate-200 dark:border-slate-700 rounded-lg">
+                No other posts available yet
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
+                {availableForRelated.map((post) => {
+                  const isSelected = relatedPostIds.includes(post.id);
+                  const title =
+                    post.content?.en?.title ||
+                    post.content?.ru?.title ||
+                    post.content?.uk?.title ||
+                    post.slug;
+                  const isDisabled = !isSelected && relatedPostIds.length >= 6;
+
+                  return (
+                    <button
+                      key={post.id}
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={() => toggleRelatedPost(post.id)}
+                      className={`flex items-center gap-3 p-3 rounded-lg border text-left transition ${
+                        isSelected
+                          ? "bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700 ring-1 ring-blue-400"
+                          : isDisabled
+                            ? "opacity-40 cursor-not-allowed bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                            : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-50/50 dark:hover:bg-blue-900/10"
+                      }`}
+                    >
+                      {post.imageUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={post.imageUrl}
+                          alt=""
+                          className="w-10 h-10 rounded object-cover flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded bg-slate-200 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">
+                          <ImageIcon className="w-4 h-4 text-slate-400" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-medium truncate text-slate-800 dark:text-slate-200">
+                          {title}
+                        </div>
+                        <div className="text-xs text-slate-400 truncate mt-0.5">
+                          /{post.slug}
+                        </div>
+                      </div>
+                      <div
+                        className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition ${
+                          isSelected
+                            ? "bg-blue-500 border-blue-500"
+                            : "border-slate-300 dark:border-slate-600"
+                        }`}
+                      >
+                        {isSelected && (
+                          <svg
+                            className="w-2.5 h-2.5 text-white"
+                            fill="none"
+                            viewBox="0 0 10 8"
+                          >
+                            <path
+                              d="M1 4l3 3 5-6"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {relatedPostIds.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setRelatedPostIds([])}
+                className="text-xs text-slate-400 hover:text-red-500 transition"
+              >
+                Clear selection
+              </button>
+            )}
+          </div>
+
           {/* Language Tabs */}
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
             <div className="flex space-x-2 border-b border-slate-200 dark:border-slate-700 mb-6">
@@ -527,11 +653,19 @@ export default function BlogAdminClient({
                 <div className="font-semibold text-sm truncate text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
                   {post.slug}
                 </div>
-                <div
-                  className="text-xs text-slate-500 dark:text-slate-400 mt-1"
-                  suppressHydrationWarning
-                >
-                  {new Date(post.createdAt).toLocaleDateString()}
+                <div className="flex items-center gap-2 mt-1">
+                  <div
+                    className="text-xs text-slate-500 dark:text-slate-400"
+                    suppressHydrationWarning
+                  >
+                    {new Date(post.createdAt).toLocaleDateString()}
+                  </div>
+                  {post.relatedPostIds?.length > 0 && (
+                    <div className="flex items-center gap-1 text-xs text-blue-500">
+                      <Link2 className="w-3 h-3" />
+                      {post.relatedPostIds.length}
+                    </div>
+                  )}
                 </div>
               </div>
 

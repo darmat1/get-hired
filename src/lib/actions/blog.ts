@@ -10,6 +10,7 @@ export async function createPost(data: {
   content: any;
   imageUrl?: string;
   published?: boolean;
+  relatedPostIds?: string[];
 }) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -26,6 +27,7 @@ export async function createPost(data: {
       imageUrl: data.imageUrl,
       published: data.published ?? false,
       authorId: session.user.id,
+      relatedPostIds: data.relatedPostIds ?? [],
     },
   });
 
@@ -53,6 +55,7 @@ export async function updatePost(
     content: any;
     imageUrl?: string;
     published?: boolean;
+    relatedPostIds?: string[];
   },
 ) {
   const session = await auth.api.getSession({
@@ -70,6 +73,7 @@ export async function updatePost(
       content: data.content,
       imageUrl: data.imageUrl,
       published: data.published,
+      relatedPostIds: data.relatedPostIds ?? [],
     },
   });
 
