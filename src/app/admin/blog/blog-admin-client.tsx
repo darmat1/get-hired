@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Loader,
-  Image as ImageIcon,
-  X,
-  Edit,
-  Trash2,
-  Plus,
-} from "lucide-react";
+import { Loader, Image as ImageIcon, X, Trash2, Plus } from "lucide-react";
 import { createPost, deletePost, updatePost } from "@/lib/actions/blog";
 import { createClient } from "@supabase/supabase-js";
 
@@ -19,8 +12,14 @@ const supabase = createClient(
 
 export default function BlogAdminClient({
   initialPosts,
+  hasGeminiKey = false,
+  hasOpenRouterKey = false,
+  hasGroqKey = false,
 }: {
   initialPosts: any[];
+  hasGeminiKey?: boolean;
+  hasOpenRouterKey?: boolean;
+  hasGroqKey?: boolean;
 }) {
   const [posts, setPosts] = useState(initialPosts);
   const [isCreating, setIsCreating] = useState(false);
@@ -32,6 +31,15 @@ export default function BlogAdminClient({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+
+  // Pick the best available default provider
+  const defaultProvider = hasGeminiKey
+    ? "gemini"
+    : hasGroqKey
+      ? "groq"
+      : hasOpenRouterKey
+        ? "openrouter-trinity"
+        : "default";
 
   const [formData, setFormData] = useState({
     slug: "",
@@ -46,7 +54,7 @@ export default function BlogAdminClient({
     body_uk: "",
     topic: "",
     requirements: "",
-    provider: "openrouter-trinity",
+    provider: defaultProvider,
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +86,7 @@ export default function BlogAdminClient({
       body_uk: "",
       topic: "",
       requirements: "",
-      provider: "openrouter-trinity",
+      provider: defaultProvider,
     });
     clearImage();
     setEditingPostId(null);
@@ -100,12 +108,11 @@ export default function BlogAdminClient({
       body_uk: content.uk?.body || "",
       topic: "",
       requirements: "",
-      provider: "openrouter-trinity",
+      provider: defaultProvider,
     });
     setCurrentImageUrl(post.imageUrl || null);
     setImagePreview(post.imageUrl || null);
     setImageFile(null);
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -187,10 +194,6 @@ export default function BlogAdminClient({
     }
     setIsGenerating(true);
     try {
-      console.log(
-        "[Blog] Starting generation with provider:",
-        formData.provider,
-      );
       const res = await fetch("/api/account/generate-blog-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -202,7 +205,6 @@ export default function BlogAdminClient({
         }),
       });
       const data = await res.json();
-      console.log("[Blog] Response:", data);
 
       if (!res.ok) {
         alert(`Error: ${data.error || "Unknown error"}`);
@@ -210,21 +212,9 @@ export default function BlogAdminClient({
       }
 
       if (data?.content) {
-        const en = data.content.en || {
-          title: formData.title_en,
-          body: formData.body_en,
-          excerpt: formData.excerpt_en,
-        };
-        const ru = data.content.ru || {
-          title: formData.title_ru,
-          body: formData.body_ru,
-          excerpt: formData.excerpt_ru,
-        };
-        const uk = data.content.uk || {
-          title: formData.title_uk,
-          body: formData.body_uk,
-          excerpt: formData.excerpt_uk,
-        };
+        const en = data.content.en || {};
+        const ru = data.content.ru || {};
+        const uk = data.content.uk || {};
 
         setFormData({
           ...formData,
@@ -256,13 +246,13 @@ export default function BlogAdminClient({
     try {
       await deletePost(id);
       setPosts(posts.filter((p) => p.id !== id));
-      if (editingPostId === id) {
-        clearForm();
-      }
+      if (editingPostId === id) clearForm();
     } catch (err) {
       alert("Error deleting post");
     }
   };
+
+  const noKeysAvailable = !hasGeminiKey && !hasOpenRouterKey && !hasGroqKey;
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -283,6 +273,7 @@ export default function BlogAdminClient({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Cover Image */}
           <div>
             <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
               Cover Image
@@ -319,6 +310,7 @@ export default function BlogAdminClient({
             )}
           </div>
 
+          {/* Slug */}
           <div>
             <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
               Slug (URL path)
@@ -326,7 +318,7 @@ export default function BlogAdminClient({
             <input
               type="text"
               required
-              className="w-full max-w-2xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full max-w-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               value={formData.slug}
               onChange={(e) =>
                 setFormData({ ...formData, slug: e.target.value })
@@ -335,15 +327,24 @@ export default function BlogAdminClient({
             />
           </div>
 
+          {/* AI Generation */}
           <div className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-800">
             <h3 className="font-bold text-lg text-slate-800 dark:text-slate-200">
               AI Content Generation
             </h3>
+
+            {noKeysAvailable && (
+              <div className="text-sm text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg px-4 py-3">
+                No AI API keys found. Add a Gemini or OpenRouter key in your
+                profile settings to enable generation.
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 type="text"
                 placeholder="Topic"
-                className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
                 value={formData.topic}
                 onChange={(e) =>
                   setFormData({ ...formData, topic: e.target.value })
@@ -352,39 +353,62 @@ export default function BlogAdminClient({
               <textarea
                 placeholder="Requirements (AI prompts)"
                 rows={2}
-                className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
                 value={formData.requirements}
                 onChange={(e) =>
                   setFormData({ ...formData, requirements: e.target.value })
                 }
               />
             </div>
+
             <div className="flex items-center gap-4">
               <select
                 value={formData.provider}
                 onChange={(e) =>
                   setFormData({ ...formData, provider: e.target.value })
                 }
-                className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
               >
-                <option value="groq">Groq</option>
-                <option value="openrouter-trinity">OpenRouter (Trinity)</option>
-                <option value="openrouter-stepfun">OpenRouter (StepFun)</option>
+                {hasGeminiKey && (
+                  <option value="gemini">
+                    ✨ Gemini 2.5 Flash (recommended)
+                  </option>
+                )}
+                {hasGroqKey && (
+                  <option value="groq">Groq (Llama 3.3 70B)</option>
+                )}
+                {hasOpenRouterKey && (
+                  <>
+                    <option value="openrouter-trinity">
+                      OpenRouter (Trinity)
+                    </option>
+                    <option value="openrouter-stepfun">
+                      OpenRouter (StepFun)
+                    </option>
+                  </>
+                )}
+                {noKeysAvailable && (
+                  <option value="default" disabled>
+                    No API keys available
+                  </option>
+                )}
               </select>
+
               <button
                 type="button"
                 onClick={handleGenerateFromAI}
-                disabled={isGenerating}
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
+                disabled={isGenerating || noKeysAvailable}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isGenerating ? (
                   <Loader className="h-4 w-4 animate-spin" />
                 ) : null}
-                Generate from AI
+                {isGenerating ? "Generating..." : "Generate from AI"}
               </button>
             </div>
           </div>
 
+          {/* Language Tabs */}
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
             <div className="flex space-x-2 border-b border-slate-200 dark:border-slate-700 mb-6">
               {[
@@ -407,13 +431,12 @@ export default function BlogAdminClient({
               ))}
             </div>
 
-            {/* Language Content Area */}
             <div className="space-y-6">
               <input
                 type="text"
                 placeholder={`Title (${activeTab.toUpperCase()})`}
                 required={activeTab === "en"}
-                className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
                 value={(formData as any)[`title_${activeTab}`]}
                 onChange={(e) =>
                   setFormData({
@@ -425,7 +448,7 @@ export default function BlogAdminClient({
               <textarea
                 placeholder={`Excerpt (${activeTab.toUpperCase()})`}
                 rows={3}
-                className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
                 value={(formData as any)[`excerpt_${activeTab}`]}
                 onChange={(e) =>
                   setFormData({
@@ -438,7 +461,7 @@ export default function BlogAdminClient({
                 placeholder={`Body (${activeTab.toUpperCase()}) - HTML supported`}
                 required={activeTab === "en"}
                 rows={15}
-                className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white font-mono text-sm"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white font-mono text-sm"
                 value={(formData as any)[`body_${activeTab}`]}
                 onChange={(e) =>
                   setFormData({
@@ -454,7 +477,7 @@ export default function BlogAdminClient({
             <button
               type="submit"
               disabled={isCreating}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition flex items-center gap-2 shadow-md"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition flex items-center gap-2 shadow-md disabled:opacity-50"
             >
               {isCreating ? <Loader className="h-5 w-5 animate-spin" /> : null}
               {editingPostId ? "Save Changes" : "Publish Post"}
@@ -466,9 +489,7 @@ export default function BlogAdminClient({
       {/* Right Sidebar: Posts List */}
       <div className="w-full lg:w-96 flex-shrink-0 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm sticky top-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            Posts ({posts.length})
-          </h2>
+          <h2 className="text-xl font-bold">Posts ({posts.length})</h2>
           <button
             onClick={clearForm}
             className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-slate-700 rounded-lg transition"
@@ -483,13 +504,11 @@ export default function BlogAdminClient({
             <div
               key={post.id}
               onClick={() => handleEdit(post)}
-              className={`group flex items-center gap-4 p-3 rounded-lg border transition cursor-pointer
-                ${
-                  editingPostId === post.id
-                    ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 ring-1 ring-blue-500"
-                    : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
-                }
-              `}
+              className={`group flex items-center gap-4 p-3 rounded-lg border transition cursor-pointer ${
+                editingPostId === post.id
+                  ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 ring-1 ring-blue-500"
+                  : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
+              }`}
             >
               {post.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element

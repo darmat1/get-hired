@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locales = ["en", "uk", "ru"];
   const defaultLocale = "en";

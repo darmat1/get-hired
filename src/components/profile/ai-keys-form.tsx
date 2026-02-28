@@ -35,7 +35,7 @@ export function AIKeysForm() {
     text: string;
   } | null>(null);
 
-  console.log("[AIKeysForm] Rendered. Services scope:", services.length);
+  // console.log("[AIKeysForm] Rendered. Services scope:", services.length);
 
   // Generate stable random suffix for input names to prevent autocomplete after client mount
   const [randomSuffix, setRandomSuffix] = useState("");

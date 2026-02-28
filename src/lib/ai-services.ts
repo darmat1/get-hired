@@ -107,14 +107,17 @@ export async function testAIService(
       });
       return res.ok;
     } else if (service.id === "gemini") {
+      console.log("[GEMINI TEST] Testing with key:", service.apiKey?.slice(0, 10) + "...");
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${service.apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${service.apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ contents: [{ parts: [{ text: "Hi" }] }] }),
         },
       );
+      console.log("[GEMINI TEST] Response status:", res.status);
+      console.log("[GEMINI TEST] Response body:", await res.text());
       return res.ok;
     } else if (service.id === "grok") {
       const res = await fetch("https://api.x.ai/v1/models", {
