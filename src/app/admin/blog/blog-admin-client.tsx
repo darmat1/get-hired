@@ -46,6 +46,7 @@ export default function BlogAdminClient({
     body_uk: "",
     topic: "",
     requirements: "",
+    provider: "groq",
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +78,7 @@ export default function BlogAdminClient({
       body_uk: "",
       topic: "",
       requirements: "",
+      provider: "groq",
     });
     clearImage();
     setEditingPostId(null);
@@ -98,6 +100,7 @@ export default function BlogAdminClient({
       body_uk: content.uk?.body || "",
       topic: "",
       requirements: "",
+      provider: "groq",
     });
     setCurrentImageUrl(post.imageUrl || null);
     setImagePreview(post.imageUrl || null);
@@ -191,6 +194,7 @@ export default function BlogAdminClient({
           slug: formData.slug,
           topic: formData.topic,
           requirements: formData.requirements,
+          provider: formData.provider,
         }),
       });
       const data = await res.json();
@@ -342,16 +346,29 @@ export default function BlogAdminClient({
                 }
               />
             </div>
-            <button
-              type="button"
-              onClick={handleGenerateFromAI}
-              className="w-full max-w-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm"
-            >
-              {isGenerating ? (
-                <Loader className="h-4 w-4 animate-spin" />
-              ) : null}
-              Generate from AI
-            </button>
+            <div className="flex items-center gap-4">
+              <select
+                value={formData.provider}
+                onChange={(e) =>
+                  setFormData({ ...formData, provider: e.target.value })
+                }
+                className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+              >
+                <option value="groq">Groq</option>
+                <option value="openrouter">OpenRouter (Trinity)</option>
+              </select>
+              <button
+                type="button"
+                onClick={handleGenerateFromAI}
+                disabled={isGenerating}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
+              >
+                {isGenerating ? (
+                  <Loader className="h-4 w-4 animate-spin" />
+                ) : null}
+                Generate from AI
+              </button>
+            </div>
           </div>
 
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
