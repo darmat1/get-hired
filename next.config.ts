@@ -34,6 +34,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.supabase.co",
       },
+      {
+        protocol: "https",
+        hostname: "**.gethired.work",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
     ],
   },
 };

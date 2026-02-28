@@ -187,7 +187,10 @@ export default function BlogAdminClient({
     }
     setIsGenerating(true);
     try {
-      console.log("[Blog] Starting generation with provider:", formData.provider);
+      console.log(
+        "[Blog] Starting generation with provider:",
+        formData.provider,
+      );
       const res = await fetch("/api/account/generate-blog-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -200,12 +203,12 @@ export default function BlogAdminClient({
       });
       const data = await res.json();
       console.log("[Blog] Response:", data);
-      
+
       if (!res.ok) {
         alert(`Error: ${data.error || "Unknown error"}`);
         return;
       }
-      
+
       if (data?.content) {
         const en = data.content.en || {
           title: formData.title_en,

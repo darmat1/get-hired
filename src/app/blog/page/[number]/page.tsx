@@ -3,6 +3,7 @@ import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import type { Language } from "@/lib/translations";
 import { Header } from "@/components/layout/header";
+import Image from "next/image";
 
 const POSTS_PER_PAGE = 10;
 
@@ -10,10 +11,9 @@ const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
 
 function replaceImageUrl(url: string | null): string | null {
   if (!url) return null;
-  return url.replace(
-    `https://${SUPABASE_STORAGE_HOST}/storage/`,
-    "/storage/"
-  );
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
+  const path = url.replace(`https://${SUPABASE_STORAGE_HOST}/storage/`, "/storage/");
+  return `${siteUrl}${path}`;
 }
 
 export default async function BlogListPage({
@@ -54,7 +54,6 @@ export default async function BlogListPage({
               (post.content as any)[locale] || (post.content as any)["en"];
             if (!content) return null;
 
-            const imageUrl = replaceImageUrl((post as any).imageUrl);
             const bodyHtml = (content as any).body || "";
             const plain = bodyHtml
               .replace(/<[^>]+>/g, " ")
@@ -72,11 +71,14 @@ export default async function BlogListPage({
                 href={`/blog/${post.slug}`}
                 className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:border-slate-300 dark:hover:border-slate-700 transition no-underline hover:no-underline"
               >
-                {imageUrl && (
-                  <img
-                    src={imageUrl}
+                {(post as any).imageUrl && (
+                  <Image
+                    src={(post as any).imageUrl}
                     alt={content.title}
                     className="w-full h-40 object-cover rounded mb-3"
+                    width={542}
+                    height={160}
+                    loading="lazy"
                   />
                 )}
                 <h2 className="text-xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
