@@ -44,6 +44,15 @@ export async function generateMetadata({
   return {
     title,
     description: excerpt,
+    alternates: {
+      canonical: `${siteUrl}/blog/${slug}`,
+      languages: {
+        en: `${siteUrl}/blog/${slug}`,
+        uk: `${siteUrl}/uk/blog/${slug}`,
+        ru: `${siteUrl}/ru/blog/${slug}`,
+        "x-default": `${siteUrl}/blog/${slug}`,
+      },
+    },
     openGraph: {
       title,
       description: excerpt,

@@ -34,15 +34,6 @@ export const metadata: Metadata = {
     "AI Cover Letter Generator",
   ],
   authors: [{ name: "GetHired Team" }],
-  alternates: {
-    canonical: "./",
-    languages: {
-      "en-US": "/",
-      "uk-UA": "/uk",
-      "ru-RU": "/ru",
-      "x-default": "/",
-    },
-  },
   openGraph: {
     type: "website",
     siteName: "GetHired",

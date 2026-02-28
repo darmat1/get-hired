@@ -14,6 +14,15 @@ export const metadata: Metadata = {
     'resume ai',
     'gethired',
   ],
+  alternates: {
+    canonical: '/ai',
+    languages: {
+      'en-US': '/ai',
+      'uk-UA': '/uk/ai',
+      'ru-RU': '/ru/ai',
+      'x-default': '/ai',
+    },
+  },
   openGraph: {
     title: 'AI Resume Analysis — GetHired',
     description: 'Automated resume scoring, ATS optimization, and AI-generated, actionable suggestions.',
