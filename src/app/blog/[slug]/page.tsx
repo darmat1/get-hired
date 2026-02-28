@@ -5,15 +5,15 @@ import type { Language } from "@/lib/translations";
 import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { Metadata } from "next";
+import Script from "next/script";
 
 const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
 
 function replaceImageUrl(url: string | null): string | null {
   if (!url) return null;
-  return url.replace(
-    `https://${SUPABASE_STORAGE_HOST}/storage/`,
-    "/storage/"
-  );
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
+  const path = url.replace(`https://${SUPABASE_STORAGE_HOST}/storage/`, "/storage/");
+  return `${siteUrl}${path}`;
 }
 
 export async function generateMetadata({
@@ -90,13 +90,16 @@ export default async function BlogPostPage({
   const content = (post.content as any)[locale] || (post.content as any)["en"];
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
 
+  const title = content?.title || slug;
+  const excerpt = content?.excerpt || "";
+  const imageUrl = replaceImageUrl(post.imageUrl);
+
   const slugToTitle = (s: string) =>
     s
       .split("-")
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(" ");
   const headerTitle = content?.title ?? slugToTitle(slug);
-  const imageUrl = replaceImageUrl(post.imageUrl);
 
   if (!content) {
     return (
@@ -111,17 +114,20 @@ export default async function BlogPostPage({
   return (
     <>
       <Header />
-      <script
+      <Script
+        id="blog-posting-schema"
         type="application/ld+json"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
-            headline: headerTitle,
-            description: content.excerpt || "",
+            headline: title,
+            description: excerpt,
             image: imageUrl || undefined,
             datePublished: post.createdAt.toISOString(),
-            dateModified: post.updatedAt?.toISOString() || post.createdAt.toISOString(),
+            dateModified:
+              post.updatedAt?.toISOString() || post.createdAt.toISOString(),
             author: {
               "@type": "Organization",
               name: "GetHired",
@@ -147,13 +153,16 @@ export default async function BlogPostPage({
           {headerTitle}
         </h1>
 
-        {imageUrl && (
+        {post.imageUrl && (
           <div className="relative w-full mb-12 overflow-hidden rounded-xl border border-slate-800 shadow-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imageUrl}
+            <Image
+              src={post.imageUrl}
               alt={headerTitle}
               className="w-full h-auto max-h-[600px] object-cover"
+              width={734}
+              height={412}
+              loading="lazy"
             />
           </div>
         )}
