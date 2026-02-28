@@ -13,14 +13,29 @@ export default async function BlogAdminPage() {
     redirect("/");
   }
 
-  const posts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const [posts, aiKeys] = await Promise.all([
+    prisma.post.findMany({
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.aiCredential.findMany({
+      where: { userId: session.user.id },
+      select: { provider: true },
+    }),
+  ]);
+
+  const hasGeminiKey = aiKeys.some((k) => k.provider === "gemini");
+  const hasOpenRouterKey = aiKeys.some((k) => k.provider === "openrouter");
+  const hasGroqKey = aiKeys.some((k) => k.provider === "groq");
 
   return (
     <div className="w-full h-full py-8 px-8">
       <h1 className="text-3xl font-bold mb-8">Blog Administration</h1>
-      <BlogAdminClient initialPosts={posts} />
+      <BlogAdminClient
+        initialPosts={posts}
+        hasGeminiKey={hasGeminiKey}
+        hasOpenRouterKey={hasOpenRouterKey}
+        hasGroqKey={hasGroqKey}
+      />
     </div>
   );
 }

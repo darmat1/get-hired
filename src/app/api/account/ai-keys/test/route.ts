@@ -27,6 +27,7 @@ export async function POST(req: Request) {
     }
 
     // Attempt a lightweight test call
+    console.log("[AI Test] provider:", provider, "apiKey:", apiKey?.slice(0, 10) + "...");
     const isValid = await testAIService({
       id: provider,
       name: provider,

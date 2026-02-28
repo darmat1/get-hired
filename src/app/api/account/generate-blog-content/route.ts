@@ -3,22 +3,25 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { aiComplete } from "@/lib/ai/server-ai";
 import { OpenRouter } from "@openrouter/sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 import { prisma } from "@/lib/prisma";
 
 const TRINITY_MODEL = "arcee-ai/trinity-large-preview:free";
 const STEPFUN_MODEL = "stepfun/step-3.5-flash:free";
+const GEMINI_MODEL = "gemini-2.5-flash";
 
 const OPENROUTER_MODELS: Record<string, string> = {
   "openrouter-trinity": TRINITY_MODEL,
   "openrouter-stepfun": STEPFUN_MODEL,
 };
 
-async function getUserOpenRouterKey(userId: string) {
+async function getUserApiKey(userId: string, provider: string) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: { aiKeys: true },
   });
-  return user?.aiKeys.find((k) => k.provider === "openrouter")?.key;
+  return user?.aiKeys.find((k) => k.provider === provider)?.key;
 }
 
 async function generateWithOpenRouter(
@@ -27,46 +30,95 @@ async function generateWithOpenRouter(
   userPrompt: string,
   model: string,
 ) {
-  console.log(
-    "[OpenRouter] API key present:",
-    !!apiKey,
-    "Key length:",
-    apiKey?.length,
-  );
+  console.log("[OpenRouter] Starting request with model:", model);
 
   const openrouter = new OpenRouter({ apiKey });
-
-  console.log("[OpenRouter] Starting request with model:", model);
-  console.log("[OpenRouter] System prompt length:", systemPrompt.length);
-  console.log("[OpenRouter] User prompt length:", userPrompt.length);
 
   try {
     const startTime = Date.now();
     const response = await openrouter.chat.send({
-      model, // Fix: was hardcoded to TRINITY_MODEL
+      model,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
     });
-    const duration = Date.now() - startTime;
-    console.log("[OpenRouter] Response received in", duration, "ms");
+    console.log(
+      "[OpenRouter] Response received in",
+      Date.now() - startTime,
+      "ms",
+    );
 
     const content = response.choices[0]?.message?.content;
-    if (!content) {
-      console.warn("[OpenRouter] Empty content returned");
-      return "";
-    }
+    if (!content) return "";
     if (typeof content === "string") return content;
 
     for (const item of content) {
-      if ("text" in item && typeof item.text === "string") {
-        return item.text;
-      }
+      if ("text" in item && typeof item.text === "string") return item.text;
     }
     return "";
   } catch (error) {
     console.error("[OpenRouter] Error:", error);
+    throw error;
+  }
+}
+
+async function generateWithGroq(
+  apiKey: string,
+  systemPrompt: string,
+  userPrompt: string,
+) {
+  console.log("[Groq] Starting request");
+
+  const groq = new Groq({ apiKey });
+
+  try {
+    const startTime = Date.now();
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.4,
+      max_tokens: 3000,
+    });
+    console.log("[Groq] Response received in", Date.now() - startTime, "ms");
+
+    return response.choices[0]?.message?.content ?? "";
+  } catch (error) {
+    console.error("[Groq] Error:", error);
+    throw error;
+  }
+}
+
+async function generateWithGemini(
+  apiKey: string,
+  systemPrompt: string,
+  userPrompt: string,
+) {
+  console.log("[Gemini] Starting request with model:", GEMINI_MODEL);
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({
+    model: GEMINI_MODEL,
+    systemInstruction: systemPrompt,
+    generationConfig: {
+      responseMimeType: "application/json",
+      temperature: 0.4,
+      maxOutputTokens: 8192,
+    },
+  });
+
+  try {
+    const startTime = Date.now();
+    const result = await model.generateContent(userPrompt);
+    console.log("[Gemini] Response received in", Date.now() - startTime, "ms");
+
+    return result.response.text();
+  } catch (error) {
+    console.error("[Gemini] Error:", error);
     throw error;
   }
 }
@@ -109,7 +161,7 @@ JSON Escaping Rules (CRITICAL):
 - Format the entire HTML string as a single continuous line without raw line breaks, or properly escape newlines as \\n.
 
 Internal Linking Strategy:
-You must organically include up to 3 internal links from the list below where they fit naturally. Do NOT use more than 3 links.
+Organically include up to 3 internal links from the list below. Do NOT use more than 3 links.
 - https://gethired.work/resume-builder
 - https://gethired.work/cover-letter
 - https://gethired.work/linkedin-import
@@ -154,7 +206,7 @@ REMINDER: The entire response must be a valid JSON object. ALL text content must
 1. Ключевые слова: 'создать резюме', 'конструктор резюме', 'AI карьерный помощник'.
 2. В конце добавьте CTA: создайте идеальное резюме на <a href='https://gethired.work'>gethired.work</a>.
 
-НАПОМИНАНИЕ: Весь ответ должен быть валидным JSON объектом. ВЕСЬ текстовый контент должен быть написан только на русском языке — не на английском.`,
+НАПОМИНАНИЕ: Весь ответ — валидный JSON. ВЕСЬ текст только на русском языке, не на английском.`,
         userPrompt: `Тема: ${topic}\nСпецифические требования: ${requirements}\n\nСгенерируйте JSON статьи на русском языке. ВАЖНО: весь текст в title, excerpt и body должен быть написан ТОЛЬКО на русском языке, без английского.`,
       },
       {
@@ -187,23 +239,59 @@ REMINDER: The entire response must be a valid JSON object. ALL text content must
 1. Ключові слова: 'створити резюме', 'конструктор резюме', 'AI кар\'єрний помічник'.
 2. Наприкінці додайте CTA: створіть ідеальне резюме на <a href='https://gethired.work'>gethired.work</a>.
 
-НАГАДУВАННЯ: Вся відповідь має бути валідним JSON об'єктом. ВЕСЬ текстовий контент має бути написаний тільки українською мовою — не англійською.`,
+НАГАДУВАННЯ: Вся відповідь — валідний JSON. ВЕСЬ текст тільки українською мовою, не англійською.`,
         userPrompt: `Тема: ${topic}\nСпецифічні вимоги: ${requirements}\n\nЗгенеруйте JSON статті українською мовою. ВАЖЛИВО: весь текст у title, excerpt та body має бути написаний ТІЛЬКИ українською мовою, без англійської.`,
       },
     ];
 
+    const userId = session.user?.id;
+    if (!userId) {
+      return NextResponse.json(
+        { error: "User authentication required" },
+        { status: 400 },
+      );
+    }
+
     let results: Record<string, string>;
 
-    if (provider?.startsWith("openrouter")) {
-      const userId = session.user?.id;
-      if (!userId) {
+    if (provider === "groq") {
+      const groqKey = await getUserApiKey(userId, "groq");
+      if (!groqKey) {
         return NextResponse.json(
-          { error: "User authentication required" },
+          {
+            error:
+              "Groq API key not found. Please add it in your profile settings.",
+          },
           { status: 400 },
         );
       }
 
-      const openRouterKey = await getUserOpenRouterKey(userId);
+      const responses = await Promise.all(
+        prompts.map((p) =>
+          generateWithGroq(groqKey, p.systemPrompt, p.userPrompt),
+        ),
+      );
+      results = { en: responses[0], ru: responses[1], uk: responses[2] };
+    } else if (provider === "gemini") {
+      const geminiKey = await getUserApiKey(userId, "gemini");
+      if (!geminiKey) {
+        return NextResponse.json(
+          {
+            error:
+              "Gemini API key not found. Please add it in your profile settings.",
+          },
+          { status: 400 },
+        );
+      }
+
+      const responses = await Promise.all(
+        prompts.map((p) =>
+          generateWithGemini(geminiKey, p.systemPrompt, p.userPrompt),
+        ),
+      );
+      results = { en: responses[0], ru: responses[1], uk: responses[2] };
+    } else if (provider?.startsWith("openrouter")) {
+      const openRouterKey = await getUserApiKey(userId, "openrouter");
       if (!openRouterKey) {
         return NextResponse.json(
           {
@@ -232,12 +320,9 @@ REMINDER: The entire response must be a valid JSON object. ALL text content must
           ),
         ),
       );
-      results = {
-        en: responses[0],
-        ru: responses[1],
-        uk: responses[2],
-      };
+      results = { en: responses[0], ru: responses[1], uk: responses[2] };
     } else {
+      // Default: aiComplete (built-in provider)
       const aiCompletePrompts = prompts.map((p) => ({
         systemPrompt: p.systemPrompt,
         userPrompt: p.userPrompt,
@@ -247,9 +332,9 @@ REMINDER: The entire response must be a valid JSON object. ALL text content must
       }));
 
       const [enRes, ruRes, ukRes] = await Promise.all([
-        aiComplete(aiCompletePrompts[0], session.user?.id),
-        aiComplete(aiCompletePrompts[1], session.user?.id),
-        aiComplete(aiCompletePrompts[2], session.user?.id),
+        aiComplete(aiCompletePrompts[0], userId),
+        aiComplete(aiCompletePrompts[1], userId),
+        aiComplete(aiCompletePrompts[2], userId),
       ]);
 
       results = {
