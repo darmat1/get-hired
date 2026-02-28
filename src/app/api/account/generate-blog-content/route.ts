@@ -27,8 +27,13 @@ async function generateWithOpenRouter(
   userPrompt: string,
   model: string,
 ) {
-  console.log("[OpenRouter] API key present:", !!apiKey, "Key length:", apiKey?.length);
-  
+  console.log(
+    "[OpenRouter] API key present:",
+    !!apiKey,
+    "Key length:",
+    apiKey?.length,
+  );
+
   const openrouter = new OpenRouter({ apiKey });
 
   console.log("[OpenRouter] Starting request with model:", model);
@@ -38,7 +43,7 @@ async function generateWithOpenRouter(
   try {
     const startTime = Date.now();
     const response = await openrouter.chat.send({
-      model: TRINITY_MODEL,
+      model, // Fix: was hardcoded to TRINITY_MODEL
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
@@ -53,7 +58,7 @@ async function generateWithOpenRouter(
       return "";
     }
     if (typeof content === "string") return content;
-    
+
     for (const item of content) {
       if ("text" in item && typeof item.text === "string") {
         return item.text;
@@ -87,8 +92,10 @@ export async function POST(request: Request) {
     const prompts = [
       {
         lang: "en",
-        systemPrompt: `You are an expert career coach and SEO copywriter for "gethired.work" (an advanced AI resume builder and career assistant). 
+        systemPrompt: `You are an expert career coach and SEO copywriter for "gethired.work" (an advanced AI resume builder and career assistant).
 Write a highly engaging, professional, 500-1000 words and SEO-optimized blog post in English.
+
+MANDATORY LANGUAGE REQUIREMENT: ALL content in the "title", "excerpt", and "body" fields MUST be written EXCLUSIVELY in English. Using any other language is STRICTLY FORBIDDEN.
 
 Formatting Requirements:
 1. Output MUST be a valid JSON object strictly matching this format: {"title": "...", "excerpt": "...", "body": "..."}
@@ -112,12 +119,16 @@ You must organically include up to 3 internal links from the list below where th
 Content Requirements:
 1. Organically include keywords: 'resume builder', 'CV maker', 'AI career assistant', 'job application tips'.
 2. Structure: Catchy intro, actionable main points, conclusion.
-3. End with a CTA inviting the reader to build their ATS-friendly resume at <a href='https://gethired.work'>gethired.work</a>.`,
-        userPrompt: `Topic: ${topic}\nSpecific Requirements: ${requirements}\n\nGenerate the English blog post JSON.`,
+3. End with a CTA inviting the reader to build their ATS-friendly resume at <a href='https://gethired.work'>gethired.work</a>.
+
+REMINDER: The entire response must be a valid JSON object. ALL text content must be in English only.`,
+        userPrompt: `Topic: ${topic}\nSpecific Requirements: ${requirements}\n\nGenerate the English blog post JSON. Remember: ALL text in title, excerpt, and body must be in English only.`,
       },
       {
         lang: "ru",
-        systemPrompt: `Вы — эксперт по карьерному консультированию и профессиональный SEO-копирайтер для сервиса "gethired.work" (AI-конструктор резюме). 
+        systemPrompt: `КРИТИЧЕСКИ ВАЖНО: Весь текст в полях "title", "excerpt" и "body" должен быть написан ИСКЛЮЧИТЕЛЬНО на русском языке. Использование английского или любого другого языка СТРОГО ЗАПРЕЩЕНО.
+
+Вы — эксперт по карьерному консультированию и профессиональный SEO-копирайтер для сервиса "gethired.work" (AI-конструктор резюме).
 Напишите вовлекающую, полезную и SEO-оптимизированную статью на 500-1000 слов для блога на русском языке.
 
 Требования к формату:
@@ -141,12 +152,16 @@ Content Requirements:
 
 Требования к контенту:
 1. Ключевые слова: 'создать резюме', 'конструктор резюме', 'AI карьерный помощник'.
-2. В конце добавьте CTA: создайте идеальное резюме на <a href='https://gethired.work'>gethired.work</a>.`,
-        userPrompt: `Тема: ${topic}\nСпецифические требования: ${requirements}\n\nСгенерируйте JSON статьи на русском языке.`,
+2. В конце добавьте CTA: создайте идеальное резюме на <a href='https://gethired.work'>gethired.work</a>.
+
+НАПОМИНАНИЕ: Весь ответ должен быть валидным JSON объектом. ВЕСЬ текстовый контент должен быть написан только на русском языке — не на английском.`,
+        userPrompt: `Тема: ${topic}\nСпецифические требования: ${requirements}\n\nСгенерируйте JSON статьи на русском языке. ВАЖНО: весь текст в title, excerpt и body должен быть написан ТОЛЬКО на русском языке, без английского.`,
       },
       {
         lang: "uk",
-        systemPrompt: `Ви — експерт з кар'єрного консультування та професійний SEO-копірайтер для сервісу "gethired.work" (AI-конструктор резюме). 
+        systemPrompt: `КРИТИЧНО ВАЖЛИВО: Весь текст у полях "title", "excerpt" та "body" має бути написаний ВИКЛЮЧНО українською мовою. Використання англійської або будь-якої іншої мови СУВОРО ЗАБОРОНЕНО.
+
+Ви — експерт з кар'єрного консультування та професійний SEO-копірайтер для сервісу "gethired.work" (AI-конструктор резюме).
 Напишіть цікаву, корисну та SEO-оптимізовану статтю на 500-1000 слів для блогу українською мовою.
 
 Вимоги до формату:
@@ -169,9 +184,11 @@ Content Requirements:
 - https://gethired.work/uk/pricing
 
 Вимоги до контенту:
-1. Ключові слова: 'створити резюме', 'конструктор резюме', 'AI кар'єрний помічник'.
-2. Наприкінці додайте CTA: створіть ідеальне резюме на <a href='https://gethired.work'>gethired.work</a>.`,
-        userPrompt: `Тема: ${topic}\nСпецифічні вимоги: ${requirements}\n\nЗгенеруйте JSON статті українською мовою.`,
+1. Ключові слова: 'створити резюме', 'конструктор резюме', 'AI кар\'єрний помічник'.
+2. Наприкінці додайте CTA: створіть ідеальне резюме на <a href='https://gethired.work'>gethired.work</a>.
+
+НАГАДУВАННЯ: Вся відповідь має бути валідним JSON об'єктом. ВЕСЬ текстовий контент має бути написаний тільки українською мовою — не англійською.`,
+        userPrompt: `Тема: ${topic}\nСпецифічні вимоги: ${requirements}\n\nЗгенеруйте JSON статті українською мовою. ВАЖЛИВО: весь текст у title, excerpt та body має бути написаний ТІЛЬКИ українською мовою, без англійської.`,
       },
     ];
 
@@ -189,7 +206,10 @@ Content Requirements:
       const openRouterKey = await getUserOpenRouterKey(userId);
       if (!openRouterKey) {
         return NextResponse.json(
-          { error: "OpenRouter API key not found. Please add it in your profile settings." },
+          {
+            error:
+              "OpenRouter API key not found. Please add it in your profile settings.",
+          },
           { status: 400 },
         );
       }
@@ -204,7 +224,12 @@ Content Requirements:
 
       const responses = await Promise.all(
         prompts.map((p) =>
-          generateWithOpenRouter(openRouterKey, p.systemPrompt, p.userPrompt, model),
+          generateWithOpenRouter(
+            openRouterKey,
+            p.systemPrompt,
+            p.userPrompt,
+            model,
+          ),
         ),
       );
       results = {

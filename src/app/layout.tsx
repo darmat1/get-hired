@@ -75,35 +75,10 @@ export default async function RootLayout({
 
   const locale = (headerLocale || cookieLocale || "en") as Language;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "GetHired",
-    description:
-      "AI-powered career agent for resume tailoring and cover letter generation.",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-    featureList: [
-      "LinkedIn PDF Import",
-      "AI Resume Tailoring",
-      "Fact-based Cover Letter Generation",
-      "ATS Optimization",
-    ],
-  };
-
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

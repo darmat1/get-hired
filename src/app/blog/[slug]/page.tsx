@@ -4,6 +4,59 @@ import { headers, cookies } from "next/headers";
 import type { Language } from "@/lib/translations";
 import Image from "next/image";
 import { Header } from "@/components/layout/header";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+
+  if (!post) {
+    return { title: "Blog" };
+  }
+
+  const headerList = await headers();
+  const cookieStore = await cookies();
+  const locale = (headerList.get("x-locale") ||
+    cookieStore.get("NEXT_LOCALE")?.value ||
+    "en") as Language;
+
+  const content = (post.content as any)[locale] || (post.content as any)["en"];
+  const title = content?.title || slug;
+  const excerpt = content?.excerpt || "";
+
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
+
+  return {
+    title,
+    description: excerpt,
+    openGraph: {
+      title,
+      description: excerpt,
+      type: "article",
+      url: `${siteUrl}/blog/${slug}`,
+      images: post.imageUrl
+        ? [
+            {
+              url: post.imageUrl,
+              width: 1200,
+              height: 630,
+              alt: title,
+            },
+          ]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: excerpt,
+      images: post.imageUrl ? [post.imageUrl] : [],
+    },
+  };
+}
 
 export default async function BlogPostPage({
   params,
@@ -24,6 +77,7 @@ export default async function BlogPostPage({
     "en") as Language;
 
   const content = (post.content as any)[locale] || (post.content as any)["en"];
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
 
   const slugToTitle = (s: string) =>
     s
@@ -45,6 +99,37 @@ export default async function BlogPostPage({
   return (
     <>
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: headerTitle,
+            description: content.excerpt || "",
+            image: post.imageUrl || undefined,
+            datePublished: post.createdAt.toISOString(),
+            dateModified: post.updatedAt?.toISOString() || post.createdAt.toISOString(),
+            author: {
+              "@type": "Organization",
+              name: "GetHired",
+              url: siteUrl,
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "GetHired",
+              logo: {
+                "@type": "ImageObject",
+                url: `${siteUrl}/logo.png`,
+              },
+            },
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `${siteUrl}/blog/${slug}`,
+            },
+          }),
+        }}
+      />
       <article className="max-w-3xl mx-auto py-20 px-4">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-8 tracking-tight leading-tight text-slate-900 dark:text-white">
           {headerTitle}
