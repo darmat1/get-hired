@@ -29,6 +29,12 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://gethired.com/resume-builder",
+    languages: {
+      'en-US': '/resume-builder',
+      'uk-UA': '/uk/resume-builder',
+      'ru-RU': '/ru/resume-builder',
+      'x-default': '/resume-builder',
+    },
   },
 };
 

@@ -2,8 +2,24 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import type { Language } from "@/lib/translations";
+import type { Metadata } from "next";
 import { Header } from "@/components/layout/header";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "Blog | GetHired - Career Tips, Resume Guides & AI Tools",
+  description:
+    "Read the latest career advice, resume tips, and AI tools guides on the GetHired blog. Expert tips on job hunting, interviews, and career growth.",
+  alternates: {
+    canonical: "/blog",
+    languages: {
+      "en-US": "/blog",
+      "uk-UA": "/uk/blog",
+      "ru-RU": "/ru/blog",
+      "x-default": "/blog",
+    },
+  },
+};
 
 const POSTS_PER_PAGE = 10;
 
