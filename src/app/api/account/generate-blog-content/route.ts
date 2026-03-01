@@ -151,7 +151,7 @@ MANDATORY LANGUAGE REQUIREMENT: ALL content in the "title", "excerpt", and "body
 
 Formatting Requirements:
 1. Output MUST be a valid JSON object strictly matching this format: {"title": "...", "excerpt": "...", "body": "..."}
-2. The "excerpt" should be a catchy 2-sentence of no more than 270 characters summary for SEO.
+2. The "excerpt" should be a catchy 2-sentence of no more than 220 characters summary for SEO.
 3. The "body" must be formatted in clean, valid HTML. Use <h2>, <h3>, <p>, <ul>, <li>.
 4. DO NOT use Markdown formatting. Use ONLY HTML tags.
 5. DO NOT include an <h1> tag in the body.
@@ -185,7 +185,7 @@ REMINDER: The entire response must be a valid JSON object. ALL text content must
 
 Требования к формату:
 1. Результат ДОЛЖЕН быть валидным JSON объектом строго в таком формате: {"title": "...", "excerpt": "...", "body": "..."}
-2. "excerpt" — это краткое описание статьи (2 предложения, не более 270 символов).
+2. "excerpt" — это краткое описание статьи (2 предложения, не более 220 символов).
 3. "body" должно содержать чистый, валидный HTML (h2, h3, p, ul/li).
 4. НЕ используйте Markdown. Только HTML-теги.
 5. НЕ используйте тег <h1> внутри "body".
@@ -218,7 +218,7 @@ REMINDER: The entire response must be a valid JSON object. ALL text content must
 
 Вимоги до формату:
 1. Результат МАЄ БУТИ валідним JSON об'єктом у такому форматі: {"title": "...", "excerpt": "...", "body": "..."}
-2. "excerpt" — це короткий опис статті (2 речення, не більше 270 символів).
+2. "excerpt" — це короткий опис статті (2 речення, не більше 220 символів).
 3. "body" має містити чистий, валідний HTML (h2, h3, p, ul/li).
 4. НЕ використовуйте Markdown. Тільки HTML-теги.
 5. НЕ використовуйте тег <h1> всередині "body".
