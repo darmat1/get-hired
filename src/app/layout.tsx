@@ -18,7 +18,6 @@ const geistMono = Geist_Mono({
 
 const SITE_URL = getBaseUrl();
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
-// 1. Улучшенные метаданные
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -41,6 +40,11 @@ export const metadata: Metadata = {
     description:
       "Tailor your resume to any job description using AI in seconds.",
     images: [{ url: "/og-image.png" }],
+  },
+  alternates: {
+    types: {
+      "application/rss+xml": "https://gethired.work/feed.xml",
+    },
   },
 };
 
