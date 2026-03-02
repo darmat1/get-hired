@@ -13,6 +13,7 @@ import {
 import { headers, cookies } from "next/headers";
 import type { Language } from "@/lib/translations";
 import { getT } from "@/lib/translations-data";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Free Resume Builder 2026 | Create Professional ATS-Friendly Resumes",
@@ -30,10 +31,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://gethired.com/resume-builder",
     languages: {
-      'en-US': '/resume-builder',
-      'uk-UA': '/uk/resume-builder',
-      'ru-RU': '/ru/resume-builder',
-      'x-default': '/resume-builder',
+      "en-US": "/resume-builder",
+      "uk-UA": "/uk/resume-builder",
+      "ru-RU": "/ru/resume-builder",
+      "x-default": "/resume-builder",
     },
   },
 };
@@ -108,8 +109,14 @@ export default async function ResumeBuilderPage() {
                 <div className="w-3 h-3 rounded-full bg-emerald-300 dark:bg-emerald-400/80"></div>
               </div>
               <div className="p-4 sm:p-10 bg-slate-50 dark:bg-slate-900/50">
-                {/* Abstract Resume Graphic */}
-                <div className="max-w-3xl mx-auto bg-white dark:bg-slate-800 shadow rounded-lg p-8 space-y-6 opacity-90 animate-fade-in-up">
+                <Image
+                  src="/gen-c1.jpg"
+                  alt="Resume Builder"
+                  width={800}
+                  height={800}
+                  className="w-full h-full object-contain"
+                />
+                {/* <div className="max-w-3xl mx-auto bg-white dark:bg-slate-800 shadow rounded-lg p-8 space-y-6 opacity-90 animate-fade-in-up">
                   <div className="flex items-start gap-4 border-b border-slate-100 dark:border-slate-700 pb-6">
                     <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-700 flex-shrink-0 animate-pulse"></div>
                     <div className="space-y-3 flex-1">
@@ -123,7 +130,7 @@ export default async function ResumeBuilderPage() {
                     <div className="h-4 w-5/6 bg-slate-50 dark:bg-slate-700/50 rounded animate-pulse animation-delay-150"></div>
                     <div className="h-4 w-4/6 bg-slate-50 dark:bg-slate-700/50 rounded animate-pulse animation-delay-300"></div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
