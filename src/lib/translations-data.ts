@@ -863,96 +863,121 @@ export const translations: Translations = {
     ru: "• AI анализирует структуру и содержание вашего резюме\n• Выявляет сильные стороны и области для улучшения\n• Дает персонализированные рекомендации по каждому разделу\n• Помогает сделать резюме более привлекательным для рекрутеров",
   },
 
-  // LANDING PAGE TRANSLATIONS
+  // ====== LANDING PAGE REWRITE ======
+  // HERO
   "landing.hero.title": {
     en: "Stop guessing what recruiters want. Let AI do it for you.",
-    uk: "Припиніть вгадувати, чого хочуть рекрутери. Нехай AI зробить це за вас.",
-    ru: "Перестаньте угадывать, что хочет рекрутер. Пусть AI сделает это за вас.",
+    uk: "Складно вгадати, що шукає рекрутер? Нехай ШІ зробить це за вас.",
+    ru: "Хватит угадывать, что ищет рекрутер. Пусть нейросеть сделает это за вас.",
   },
   "landing.hero.subtitle": {
-    en: "Personal AI Career Agent that adapts your experience to any job description in 30 seconds.",
-    uk: "Ваш особистий кар'єрний AI-агент, який адаптує ваш досвід під будь-яку вакансію за 30 секунд.",
-    ru: "Личный AI-агент карьеры, который адаптирует твой опыт под любую вакансию за 30 секунд.",
+    en: "Personal AI Career Agent that adapts your experience to any job description in seconds.",
+    uk: "Особистий ШІ-агент, який адаптує ваш досвід під будь-яку вакансію за секунди.",
+    ru: "Личный ИИ-агент, который адаптирует ваш опыт под любую вакансию за считанные секунды.",
   },
   "landing.hero.cta": {
     en: "Create Free Profile",
-    uk: "Створити профіль безкоштовно",
-    ru: "Создать профиль бесплатно",
+    uk: "Створити безкоштовно",
+    ru: "Создать бесплатно",
   },
   "landing.hero.cta_secondary": {
-    en: "Upload LinkedIn PDF",
-    uk: "Завантажити LinkedIn PDF",
-    ru: "Загрузить LinkedIn PDF",
+    en: "Sign in with LinkedIn",
+    uk: "Увійти через LinkedIn",
+    ru: "Войти через LinkedIn",
   },
 
+  // PROBLEM
   "landing.problem.title": {
     en: "Why are you being ignored?",
     uk: "Чому вас ігнорують?",
     ru: "Почему вас игнорируют?",
   },
   "landing.problem.1": {
-    en: "You send the same resume to everyone.",
-    uk: "Ви надсилаєте те саме резюме всім підряд.",
-    ru: "Вы отправляете одно и то же резюме всем подряд.",
+    en: "You send the same resume to everyone",
+    uk: "Ви надсилаєте однакове резюме всім",
+    ru: "Вы отправляете одно резюме всем подряд",
   },
   "landing.problem.2": {
-    en: "You spend hours rewriting Cover Letters.",
-    uk: "Ви витрачаєте години на переписування супровідних листів.",
-    ru: "Вы тратите часы на переписывание Cover Letter.",
+    en: "You spend hours rewriting Cover Letters",
+    uk: "Витрачаєте години на супровідні листи",
+    ru: "Тратите часы на сопроводительные письма",
   },
   "landing.problem.3": {
-    en: "You forget the numbers ATS is looking for.",
-    uk: "Ви забуваєте вказати цифри, які шукає ATS.",
-    ru: "Вы забываете указать важные цифры, которые ищет ATS.",
+    en: "You fail the hidden ATS filters",
+    uk: "Не проходите приховані фільтри ATS",
+    ru: "Не проходите скрытые фильтры ATS",
   },
 
+  // SOLUTION
   "landing.solution.title": {
     en: "One Global Profile — Infinite Resumes",
-    uk: "Один глобальний профіль — нескінченна кількість резюме",
-    ru: "Один «Глобальный профиль» — бесконечное количество резюме",
+    uk: "Один глобальний профіль — нескінченні резюме",
+    ru: "Один глобальный профиль — бесконечные резюме",
   },
   "landing.solution.step1.title": {
-    en: "Data Collection",
-    uk: "Збір даних",
-    ru: "Сбор данных",
+    en: "Global Profile",
+    uk: "Глобальний профіль",
+    ru: "Глобальный профиль",
   },
   "landing.solution.step1.desc": {
-    en: "Upload your LinkedIn profile PDF once to create your Global Experience.",
-    uk: "Завантажте PDF свого профілю LinkedIn один раз, щоб створити свій глобальний досвід.",
-    ru: "Загрузите PDF своего профиля LinkedIn один раз, чтобы создать «Глобальный опыт».",
+    en: "Upload your LinkedIn profile once to build your master database of experience.",
+    uk: "Завантажте профіль з LinkedIn один раз, щоб створити базу вашого досвіду.",
+    ru: "Загрузите профиль из LinkedIn один раз, чтобы создать базу всего вашего опыта.",
   },
   "landing.solution.step2.title": {
     en: "AI Analysis",
-    uk: "Аналіз AI",
-    ru: "Анализ AI",
+    uk: "ШІ Аналіз",
+    ru: "ИИ Анализ",
   },
   "landing.solution.step2.desc": {
-    en: "AI analyzes your achievements and skills.",
-    uk: "AI аналізує ваші досягнення та навички.",
-    ru: "AI анализирует твои достижения.",
+    en: "Smart algorithms highlight your strongest achievements and skills.",
+    uk: "Розумні алгоритми виокремлюють ваші найсильніші досягнення.",
+    ru: "Умные алгоритмы выделяют ваши самые сильные достижения и навыки.",
   },
   "landing.solution.step3.title": {
     en: "Smart Matching",
-    uk: "Розумний підбір",
-    ru: "Мэтчинг",
+    uk: "Розумний метчинг",
+    ru: "Умный мэтчинг",
   },
   "landing.solution.step3.desc": {
-    en: "Paste a job link -> AI picks only relevant experience for this position.",
-    uk: "Вставте посилання на вакансію -> AI вибирає лише релевантний досвід.",
-    ru: "Вставляешь ссылку на вакансию → AI выбирает из твоего опыта только то, что релевантно этой позиции.",
+    en: "Paste a job link -> AI picks only relevant experience for this role.",
+    uk: "Вставте посилання на вакансію -> ШІ підбере лише релевантний досвід.",
+    ru: "Вставьте ссылку на вакансию -> ИИ подберет только релевантный опыт для этой роли.",
   },
 
+  // FEATURES
   "landing.features.cover_letter.title": {
     en: "Cover Letters you're not ashamed to send",
-    uk: "Супровідні листи, які не соромно надіслати",
-    ru: "Сопроводительные письма, которые не стыдно отправить",
+    uk: "Супровідні листи, за які не соромно",
+    ru: "Сопроводительные письма, за которые не стыдно",
   },
   "landing.features.cover_letter.desc": {
-    en: "No fluff or templates. AI uses dry facts from your experience to prove you fit.",
-    uk: "Без води та шаблонів. AI використовує сухі факти з вашого досвіду, щоб довести вашу відповідність.",
-    ru: "Никакой «воды» и шаблонных фраз. AI берет сухие факты из твоего опыта и доказывает, почему ты подходишь.",
+    en: "No fluff or templates. AI uses dry facts from your experience to prove you fit the role.",
+    uk: "Без води та шаблонів. ШІ використовує лише сухі факти з вашого досвіду, щоб довести вашу відповідність.",
+    ru: "Никакой воды и шаблонов. ИИ использует только сухие факты из вашего опыта, чтобы доказать, что вы подходите.",
+  },
+  "landing.features.cover_letter.item1": {
+    en: "Matches company tone",
+    uk: "Відповідає тону компанії",
+    ru: "Соответствует тону компании",
+  },
+  "landing.features.cover_letter.item2": {
+    en: "Finds missing keywords",
+    uk: "Знаходить відсутні ключові слова",
+    ru: "Находит недостающие ключевые слова",
+  },
+  "landing.features.cover_letter.item3": {
+    en: "Highlights matching experience",
+    uk: "Підкреслює релевантний досвід",
+    ru: "Подчеркивает релевантный опыт",
+  },
+  "landing.features.cover_letter.item4": {
+    en: "Focuses on measurable results",
+    uk: "Фокусується на вимірних результатах",
+    ru: "Фокусируется на измеримых результатах",
   },
 
+  // HOW IT WORKS
   "landing.how_it_works.title": {
     en: "How it works",
     uk: "Як це працює",
@@ -960,39 +985,70 @@ export const translations: Translations = {
   },
   "landing.how_it_works.step1": {
     en: "Upload PDF from LinkedIn",
-    uk: "Завантаження PDF з LinkedIn",
-    ru: "Загрузка PDF с LinkedIn",
+    uk: "Завантажте PDF з LinkedIn",
+    ru: "Загрузите PDF из LinkedIn",
   },
   "landing.how_it_works.step2": {
-    en: "AI Analysis of Experience",
-    uk: "AI аналіз досвіду",
-    ru: "AI-анализ опыта",
+    en: "AI Analyzes Experience",
+    uk: "ШІ аналізує досвід",
+    ru: "ИИ анализирует опыт",
   },
   "landing.how_it_works.step3": {
-    en: "Insert Job Description",
-    uk: "Вставте опис вакансії",
-    ru: "Вставка вакансии",
+    en: "Sync Job Description",
+    uk: "Додайте опис вакансії",
+    ru: "Добавьте описание вакансии",
   },
   "landing.how_it_works.step4": {
     en: "Download Tailored PDF",
-    uk: "Завантажте адаптирований PDF",
-    ru: "Скачивание PDF",
+    uk: "Завантажте адаптований PDF",
+    ru: "Скачайте адаптированный PDF",
   },
 
+  // FAQ
   "landing.seo.faq.title": {
     en: "Frequently Asked Questions",
     uk: "Часті запитання",
     ru: "Часто задаваемые вопросы",
   },
   "landing.seo.q1": {
-    en: "How to pass ATS systems?",
-    uk: "Як пройти системи ATS?",
-    ru: "Как пройти системы ATS?",
+    en: "Is GetHired free to use?",
+    uk: "Чи є GetHired безкоштовним?",
+    ru: "GetHired бесплатен в использовании?",
   },
   "landing.seo.a1": {
-    en: "Our templates are 100% ATS-friendly. AI optimizes keywords from the job description directly into your resume.",
-    uk: "Наші шаблони на 100% дружні до ATS. AI оптимізує ключові слова з опису вакансії прямо у ваше резюме.",
-    ru: "Наши шаблоны на 100% ATS-friendly. AI оптимизирует ключевые слова из вакансии прямо в ваше резюме.",
+    en: "Yes, you can create a profile, import your LinkedIn data, and generate your first tailored resume completely for free.",
+    uk: "Так, ви можете створити профіль, імпортувати дані з LinkedIn та згенерувати перше адаптоване резюме абсолютно безкоштовно.",
+    ru: "Да, вы можете создать профиль, импортировать данные из LinkedIn и сгенерировать первое адаптированное резюме абсолютно бесплатно.",
+  },
+  "landing.seo.q2": {
+    en: "Are your resume templates ATS-friendly?",
+    uk: "Чи дружні ваші шаблони до ATS?",
+    ru: "Проходят ли ваши шаблоны ATS?",
+  },
+  "landing.seo.a2": {
+    en: "Absolutely. All our templates are designed with best practices to ensure Applicant Tracking Systems parse your experience clearly without layout issues.",
+    uk: "Абсолютно. Усі наші шаблони створені за стандартами систем управління кандидатами (ATS), щоб дані зчитувались без помилок.",
+    ru: "Абсолютно. Все наши шаблоны разработаны с учетом требований систем ATS, чтобы текст считывался без проблем с версткой.",
+  },
+  "landing.seo.q3": {
+    en: "How does the AI Tailoring work?",
+    uk: "Як працює ШІ адаптація?",
+    ru: "Как работает адаптация через ИИ?",
+  },
+  "landing.seo.a3": {
+    en: "You provide a job description for the role you want. Our AI analyzes it for key skills and requirements, then rewrites your existing experience to highlight exactly what the recruiter is looking for.",
+    uk: "Ви надаєте опис бажаної вакансії. ШІ аналізує вимоги та переписує ваш наявний досвід так, щоб підкреслити саме те, що шукає рекрутер.",
+    ru: "Вы даете описание желаемой вакансии. ИИ анализирует требования и переписывает ваш имеющийся опыт так, чтобы подчеркнуть то, что ищет рекрутер.",
+  },
+  "landing.seo.q4": {
+    en: "Can I download my cover letter separately?",
+    uk: "Чи можна завантажити супровідний лист окремо?",
+    ru: "Можно ли скачать сопроводительное письмо отдельно?",
+  },
+  "landing.seo.a4": {
+    en: "Yes! You can generate cover letters instantly based on your profile and copy the text or download them directly from your dashboard.",
+    uk: "Так! Ви можете миттєво генерувати листи на основі профілю і копіювати текст або завантажувати їх з дашборду.",
+    ru: "Да! Вы можете мгновенно генерировать письма на основе вашего профиля и копировать текст или скачивать их прямо в дашборде.",
   },
 
   "template.title": {

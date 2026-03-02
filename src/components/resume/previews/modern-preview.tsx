@@ -17,6 +17,7 @@ import {
   Italic,
   Type,
   Sparkles,
+  Import,
 } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { cn } from "@/lib/utils";
@@ -752,9 +753,9 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                         setImportType("skills");
                         setIsImportModalOpen(true);
                       }}
-                      className="text-[9px] text-blue-500 hover:text-blue-600 flex items-center gap-1.5 px-1.5 py-0.5 rounded transition-all hover:bg-white/10"
+                      className="text-[9px] bg-white/10 text-white/50 hover:text-white flex items-center gap-1.5 px-1.5 py-0.5 rounded transition-all hover:bg-white/10"
                     >
-                      <Sparkles size={10} /> {t("profile.btn_import")}
+                      <Import size={10} />
                     </button>
                     <button
                       onClick={() => addSkill(cat)}
@@ -841,7 +842,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                     }}
                     className="text-[10px] text-blue-600/70 hover:text-blue-600 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-blue-50 border border-transparent hover:border-blue-100"
                   >
-                    <Sparkles size={14} /> {t("profile.btn_import")}
+                    <Import size={14} /> {t("profile.btn_import")}
                   </button>
                   <button
                     onClick={addExperience}
