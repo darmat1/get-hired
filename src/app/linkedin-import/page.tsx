@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function LinkedInImportPage() {
   const { t } = useTranslation();
@@ -60,8 +61,15 @@ export default function LinkedInImportPage() {
               </div>
 
               <div className="relative">
-                <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl flex flex-col items-center justify-center p-8 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-purple-500/5 pointer-events-none" />
+                <div className="aspect-[16/10] bg-gray-100 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl flex flex-col items-center justify-center overflow-hidden">
+                  <Image
+                    src="/parse-pdf1.jpg"
+                    alt="LinkedIn Import"
+                    width={800}
+                    height={800}
+                    className="w-full h-full object-contain"
+                  />
+                  {/* <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-purple-500/5 pointer-events-none" />
                   <FileText className="h-24 w-24 text-blue-500 mb-6 animate-pulse" />
                   <div className="text-center">
                     <p className="font-semibold text-gray-500 dark:text-gray-400 mb-2">
@@ -70,7 +78,7 @@ export default function LinkedInImportPage() {
                     <p className="text-sm text-gray-400">
                       Preview of PDF to Data transformation
                     </p>
-                  </div>
+                  </div> */}
                 </div>
                 {/* Floatings items */}
                 <div className="absolute -bottom-6 -left-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex items-center gap-3 animate-bounce duration-[3000ms]">
@@ -111,10 +119,14 @@ export default function LinkedInImportPage() {
                   {t("li_landing.step1_desc")}
                 </p>
                 {/* Step Placeholder */}
-                <div className="mt-8 w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600">
-                  <p className="text-xs text-gray-500 uppercase font-mono tracking-widest text-center px-4">
-                    Screenshot: LinkedIn &apos;Save to PDF&apos; Button
-                  </p>
+                <div className="mt-8 w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden">
+                  <Image
+                    src="/export-ln.jpg"
+                    alt="LinkedIn Import"
+                    width={598}
+                    height={336}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </div>
 
@@ -130,10 +142,14 @@ export default function LinkedInImportPage() {
                   {t("li_landing.step2_desc")}
                 </p>
                 {/* Step Placeholder */}
-                <div className="mt-8 w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600">
-                  <p className="text-xs text-gray-500 uppercase font-mono tracking-widest text-center px-4">
-                    Screenshot: Upload Area on CV Maker
-                  </p>
+                <div className="mt-8 w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden">
+                  <Image
+                    src="/upload-pdf.jpg"
+                    alt="Upload PDF"
+                    width={598}
+                    height={336}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </div>
 
@@ -149,10 +165,14 @@ export default function LinkedInImportPage() {
                   {t("li_landing.step3_desc")}
                 </p>
                 {/* Step Placeholder */}
-                <div className="mt-8 w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600">
-                  <p className="text-xs text-gray-500 uppercase font-mono tracking-widest text-center px-4">
-                    Screenshot: Final Professional Resume
-                  </p>
+                <div className="mt-8 w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden">
+                  <Image
+                    src="/suggest-resume.jpg"
+                    alt="Suggested Resume"
+                    width={598}
+                    height={336}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </div>
             </div>

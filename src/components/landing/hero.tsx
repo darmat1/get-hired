@@ -2,76 +2,66 @@
 
 import Link from "next/link";
 import { useTranslation } from "@/lib/translations";
-import { ArrowRight, Linkedin } from "lucide-react";
+import { ArrowRight, Linkedin, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 export function Hero() {
   const { t } = useTranslation();
 
   return (
-    <div className="relative isolate pt-14 dark:bg-gray-900">
-      <div
-        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-        aria-hidden="true"
-      >
-        <div
-          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-        />
+    <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center overflow-hidden">
+      {/* Animated Background blobs (Soft pastels/glows) */}
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-500/20 dark:bg-blue-600/20 rounded-[100%] blur-[120px] -z-10 animate-pulse"></div>
+
+      <div className="relative z-10">
+        <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800/50 text-blue-600 dark:text-blue-300 text-sm font-semibold mb-8 shadow-sm">
+          AI Resume & Cover Letter Generator
+        </div>
+
+        <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-8">
+          {t("landing.hero.title")}
+        </h1>
+
+        <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
+          {t("landing.hero.subtitle")}
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/auth/signin"
+            className="w-full sm:w-auto px-10 py-4 text-lg bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2"
+          >
+            {t("landing.hero.cta")} <ArrowRight className="w-5 h-5" />
+          </Link>
+          <Link
+            href="/auth/signin?method=linkedin"
+            className="w-full sm:w-auto px-10 py-4 text-lg bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 text-slate-700 dark:text-white font-bold rounded-full border border-slate-200 dark:border-white/10 transition-all duration-300 shadow-sm flex items-center justify-center gap-2"
+          >
+            <Linkedin className="w-5 h-5 text-[#0A66C2]" />
+            {t("landing.hero.cta_secondary")}
+          </Link>
+        </div>
       </div>
-      <div className="py-24 sm:py-32 lg:pb-40">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-              {t("landing.hero.title")}
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-              {t("landing.hero.subtitle")}
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link
-                href="/auth/signin"
-                className="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              >
-                {t("landing.hero.cta")}
-              </Link>
-              <Link
-                href="/auth/signin?method=linkedin" // Assuming this flow exists or will be implemented
-                className="text-sm font-semibold leading-6 text-gray-900 dark:text-white flex items-center gap-2"
-              >
-                <Linkedin size={16} />
-                {t("landing.hero.cta_secondary")}{" "}
-                <span aria-hidden="true">→</span>
-              </Link>
-            </div>
+
+      <div className="mt-20 relative mx-auto max-w-5xl">
+        {/* Pseudo-Browser Window for Hero */}
+        <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl bg-white dark:bg-slate-900 transform transition hover:scale-[1.02] duration-700">
+          <div className="bg-slate-100 dark:bg-slate-800/80 px-4 py-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700/50">
+            <div className="w-3 h-3 rounded-full bg-red-400"></div>
+            <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+            <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
           </div>
-          <div className="mt-16 flow-root sm:mt-24">
-            <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 dark:bg-white/5 dark:ring-white/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-              <img
-                src="/dashboard-preview-s.jpg" // Placeholder, need to check if this image exists or use a generic one/generate one
-                alt="App screenshot"
-                width={2432}
-                height={1442}
-                className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:ring-white/10"
-              />
-            </div>
+          <div className="p-2 sm:p-4 bg-slate-50 dark:bg-slate-900">
+            <Image
+              src="/dashboard-preview-s.jpg"
+              alt="App screenshot"
+              width={2432}
+              height={1442}
+              className="rounded-xl shadow-sm border border-slate-200/50 dark:border-slate-800 w-full h-auto"
+            />
           </div>
         </div>
       </div>
-      <div
-        className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-        aria-hidden="true"
-      >
-        <div
-          className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-        />
-      </div>
-    </div>
+    </section>
   );
 }
