@@ -1,5 +1,6 @@
 import { Resume, WorkExperience, Education, Skill } from "@/types/resume";
 import { useTranslation } from "@/lib/translations";
+import { getTranslation } from "@/lib/translations-data";
 import { useState, useEffect, useRef } from "react";
 import {
   Settings2,
@@ -579,7 +580,10 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
         {/* Contact */}
         <div className="mb-8">
           <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
-            Contact
+            {getTranslation("form.personal_info", data.language || "en") ===
+            "form.personal_info"
+              ? "Contact"
+              : getTranslation("form.personal_info", data.language || "en")}
           </h3>
           <div className="space-y-3">
             {showEmail && (
@@ -654,7 +658,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
         <div className="mb-8">
           <div className="flex justify-between items-center border-b border-white/20 pb-2 mb-4">
             <h3 className="text-sm font-bold uppercase text-white/90">
-              Education
+              {getTranslation("form.education", data.language || "en")}
             </h3>
             {isEditing && (
               <button
@@ -741,10 +745,16 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
               <div className="flex justify-between items-center border-b border-white/20 pb-2 mb-4">
                 <h3 className="text-sm font-bold uppercase text-white/90">
                   {cat === "technical"
-                    ? "Technical Skills"
+                    ? getTranslation(
+                        "profile.tab_skills",
+                        data.language || "en",
+                      )
                     : cat === "soft"
-                      ? "Soft Skills"
-                      : "Languages"}
+                      ? getTranslation("skills.soft", data.language || "en")
+                      : getTranslation(
+                          "skills.language",
+                          data.language || "en",
+                        )}
                 </h3>
                 {isEditing && (
                   <div className="flex gap-1">
@@ -831,7 +841,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                 className="text-xl font-bold capitalize"
                 style={{ color: sidebarColor }}
               >
-                Experience
+                {getTranslation("form.work_experience", data.language || "en")}
               </h2>
               {isEditing && (
                 <div className="flex gap-2">
@@ -957,15 +967,97 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                                   }}
                                   placeholder="Company"
                                 />
-                                {exp.employmentType && (
-                                  <>
+                                {isEditing ? (
+                                  <div className="flex items-center gap-1">
                                     <span>•</span>
-                                    <span>
-                                      {t(
-                                        `work.employment_types.${exp.employmentType}`,
-                                      )}
-                                    </span>
-                                  </>
+                                    <select
+                                      value={exp.employmentType || ""}
+                                      onChange={(e) => {
+                                        const newExp = [
+                                          ...(workExperience || []),
+                                        ];
+                                        newExp[idx] = {
+                                          ...newExp[idx],
+                                          employmentType: e.target.value,
+                                        };
+                                        updateSection("workExperience", newExp);
+                                      }}
+                                      className="bg-transparent border-none p-0 m-0 outline-none text-[10px] text-gray-500 italic hover:text-blue-600 transition-colors cursor-pointer appearance-none"
+                                    >
+                                      <option value="">
+                                        {getTranslation(
+                                          "work.employment_type",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="full_time">
+                                        {getTranslation(
+                                          "work.employment_types.full_time",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="part_time">
+                                        {getTranslation(
+                                          "work.employment_types.part_time",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="self_employed">
+                                        {getTranslation(
+                                          "work.employment_types.self_employed",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="freelance">
+                                        {getTranslation(
+                                          "work.employment_types.freelance",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="contract">
+                                        {getTranslation(
+                                          "work.employment_types.contract",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="internship">
+                                        {getTranslation(
+                                          "work.employment_types.internship",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="apprenticeship">
+                                        {getTranslation(
+                                          "work.employment_types.apprenticeship",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="seasonal">
+                                        {getTranslation(
+                                          "work.employment_types.seasonal",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                      <option value="pet_project">
+                                        {getTranslation(
+                                          "work.employment_types.pet_project",
+                                          data.language || "en",
+                                        )}
+                                      </option>
+                                    </select>
+                                  </div>
+                                ) : (
+                                  exp.employmentType && (
+                                    <>
+                                      <span>•</span>
+                                      <span>
+                                        {getTranslation(
+                                          `work.employment_types.${exp.employmentType}`,
+                                          data.language || "en",
+                                        )}
+                                      </span>
+                                    </>
+                                  )
                                 )}
                                 <span>|</span>
                                 <EditableText

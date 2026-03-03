@@ -2747,3 +2747,9 @@ export function getT(locale: Language) {
     return key;
   };
 }
+
+export function getTranslation(key: string, lang: string): string {
+  const translation = translations[key];
+  if (!translation) return key;
+  return translation[lang as Language] || translation["en"] || key;
+}

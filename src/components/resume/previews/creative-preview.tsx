@@ -1,5 +1,6 @@
 import { Resume } from "@/types/resume";
 import { useTranslation } from "@/lib/translations";
+import { getTranslation } from "@/lib/translations-data";
 
 interface Props {
   data: Partial<Resume>;
@@ -28,7 +29,10 @@ export function CreativePreview({ data }: Props) {
 
         <div className="mb-6">
           <h3 className="text-xs font-bold text-gray-500 uppercase border-b border-gray-300 pb-1 mb-2">
-            Contact
+            {getTranslation("form.personal_info", data.language || "en") ===
+            "form.personal_info"
+              ? "Contact"
+              : getTranslation("form.personal_info", data.language || "en")}
           </h3>
           <div className="text-[10px] text-gray-700 space-y-1 break-words">
             <p>{personalInfo.email}</p>
@@ -43,7 +47,7 @@ export function CreativePreview({ data }: Props) {
         {skills && skills.length > 0 && (
           <div className="mb-6">
             <h3 className="text-xs font-bold text-gray-500 uppercase border-b border-gray-300 pb-1 mb-2">
-              Skills
+              {getTranslation("profile.tab_skills", data.language || "en")}
             </h3>
             <div className="flex flex-wrap gap-1">
               {skills.map((s) => (
@@ -79,7 +83,7 @@ export function CreativePreview({ data }: Props) {
         {workExperience && workExperience.length > 0 && (
           <div className="mb-6">
             <h2 className="text-sm font-bold text-blue-600 uppercase mb-3 border-b border-gray-100 pb-1">
-              Experience
+              {getTranslation("form.work_experience", data.language || "en")}
             </h2>
             <div className="space-y-4">
               {workExperience.map((exp) => (
@@ -91,7 +95,7 @@ export function CreativePreview({ data }: Props) {
                     <span className="italic">
                       {exp.company}
                       {exp.employmentType &&
-                        ` • ${t(`work.employment_types.${exp.employmentType}`)}`}
+                        ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, data.language || "en")}`}
                     </span>
                     <span>
                       {exp.startDate} - {exp.current ? "Present" : exp.endDate}
@@ -120,7 +124,7 @@ export function CreativePreview({ data }: Props) {
         {education && education.length > 0 && (
           <div className="mb-6">
             <h2 className="text-sm font-bold text-blue-600 uppercase mb-3 border-b border-gray-100 pb-1">
-              Education
+              {getTranslation("form.education", data.language || "en")}
             </h2>
             <div className="space-y-3">
               {education.map((edu) => (

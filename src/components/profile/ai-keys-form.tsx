@@ -9,6 +9,7 @@ import {
   Loader,
   Trash2,
   Zap,
+  Settings,
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { AIService, getAvailableAIServices } from "@/lib/ai-services";
@@ -151,20 +152,20 @@ export function AIKeysForm() {
     }
   };
 
-  // const handleUpdatePreferences = async (prefs: {
-  //   preferredAIProvider?: string | null;
-  //   preferredAIModel?: string | null;
-  // }) => {
-  //   try {
-  //     await fetch("/api/account/ai-keys", {
-  //       method: "PATCH",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(prefs),
-  //     });
-  //   } catch (err) {
-  //     console.error("[AI] Error updating preference:", err);
-  //   }
-  // };
+  const handleUpdatePreferences = async (prefs: {
+    preferredAIProvider?: string | null;
+    preferredAIModel?: string | null;
+  }) => {
+    try {
+      await fetch("/api/account/ai-keys", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(prefs),
+      });
+    } catch (err) {
+      console.error("[AI] Error updating preference:", err);
+    }
+  };
 
   const handleSetPreferred = async (serviceId: string) => {
     setLoading(true);
@@ -380,33 +381,65 @@ export function AIKeysForm() {
                       </p>
                     </div>
 
-                    {/* {isPreferred && (
+                    {isPreferred && (
                       <div className="mt-2 pt-2 border-t border-blue-100 dark:border-blue-800">
                         <label className="block text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-1">
-                          Default Model
+                          {t("ai_settings.default_model") || "Default Model"}
                         </label>
                         <div className="flex items-center gap-2">
                           <Settings className="h-4 w-4 text-blue-400" />
-                          <input
-                            type="text"
-                            placeholder="e.g. gpt-4o, claude-3-5-sonnet-20241022"
-                            className="flex-1 bg-transparent border-0 border-b border-blue-200 dark:border-blue-700 focus:border-blue-500 text-xs py-1 outline-none text-gray-900 dark:text-white"
-                            value={userData.preferredAIModel || ""}
-                            onChange={(e) =>
-                              setUserData((prev) => ({
-                                ...prev,
-                                preferredAIModel: e.target.value,
-                              }))
-                            }
-                            onBlur={() =>
-                              handleUpdatePreferences({
-                                preferredAIModel: userData.preferredAIModel,
-                              })
-                            }
-                          />
+                          {service.id === "gemini" ? (
+                            <select
+                              className="flex-1 bg-transparent border-0 border-b border-blue-200 dark:border-blue-700 focus:border-blue-500 text-xs py-1 outline-none text-gray-900 dark:text-white"
+                              value={
+                                userData.preferredAIModel || "gemini-2.5-flash"
+                              }
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setUserData((prev) => ({
+                                  ...prev,
+                                  preferredAIModel: val,
+                                }));
+                                handleUpdatePreferences({
+                                  preferredAIModel: val,
+                                });
+                              }}
+                            >
+                              <option value="gemini-3-flash-preview">
+                                Gemini 3 Flash (Latest Preview)
+                              </option>
+                              <option value="gemini-2.5-flash">
+                                Gemini 2.5 Flash
+                              </option>
+                              <option value="gemini-2.5-flash-lite">
+                                Gemini 2.5 Flash Lite
+                              </option>
+                              <option value="gemma-3-27b-it">
+                                Gemma 3 27B IT
+                              </option>
+                            </select>
+                          ) : (
+                            <input
+                              type="text"
+                              placeholder="e.g. gpt-4o, claude-3-5-sonnet-latest"
+                              className="flex-1 bg-transparent border-0 border-b border-blue-200 dark:border-blue-700 focus:border-blue-500 text-xs py-1 outline-none text-gray-900 dark:text-white"
+                              value={userData.preferredAIModel || ""}
+                              onChange={(e) =>
+                                setUserData((prev) => ({
+                                  ...prev,
+                                  preferredAIModel: e.target.value,
+                                }))
+                              }
+                              onBlur={() =>
+                                handleUpdatePreferences({
+                                  preferredAIModel: userData.preferredAIModel,
+                                })
+                              }
+                            />
+                          )}
                         </div>
                       </div>
-                    )} */}
+                    )}
                   </div>
                 )}
               </div>

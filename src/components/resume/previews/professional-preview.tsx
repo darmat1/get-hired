@@ -1,5 +1,6 @@
 import { Resume } from "@/types/resume";
 import { useTranslation } from "@/lib/translations";
+import { getTranslation } from "@/lib/translations-data";
 
 interface Props {
   data: Partial<Resume>;
@@ -44,7 +45,7 @@ export function ProfessionalPreview({ data }: Props) {
       {personalInfo.summary && (
         <div>
           <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
-            Summary
+            {getTranslation("form.professional_summary", data.language || "en")}
           </h2>
           <p className="text-gray-800 text-xs leading-relaxed text-justify">
             {personalInfo.summary}
@@ -55,7 +56,7 @@ export function ProfessionalPreview({ data }: Props) {
       {workExperience && workExperience.length > 0 && (
         <div>
           <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
-            Experience
+            {getTranslation("form.work_experience", data.language || "en")}
           </h2>
           <div className="space-y-4">
             {workExperience.map((exp) => (
@@ -68,7 +69,7 @@ export function ProfessionalPreview({ data }: Props) {
                     <p className="text-gray-700 text-xs italic">
                       {exp.company}
                       {exp.employmentType &&
-                        ` • ${t(`work.employment_types.${exp.employmentType}`)}`}
+                        ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, data.language || "en")}`}
                     </p>
                   </div>
                   <div className="text-right text-[10px] text-gray-600">
@@ -103,7 +104,7 @@ export function ProfessionalPreview({ data }: Props) {
       {education && education.length > 0 && (
         <div>
           <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
-            Education
+            {getTranslation("form.education", data.language || "en")}
           </h2>
           <div className="space-y-3">
             {education.map((edu) => (
@@ -130,7 +131,7 @@ export function ProfessionalPreview({ data }: Props) {
       {skills && skills.length > 0 && (
         <div>
           <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
-            Skills
+            {getTranslation("profile.tab_skills", data.language || "en")}
           </h2>
           <div className="flex flex-wrap gap-x-4 gap-y-1">
             {skills.map((skill) => (

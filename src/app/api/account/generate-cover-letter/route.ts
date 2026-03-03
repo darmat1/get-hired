@@ -6,10 +6,17 @@ import { encode } from "@toon-format/toon";
 import { aiComplete } from "@/lib/ai/server-ai";
 
 const SHARED_RULES = `### LANGUAGE ENFORCEMENT (ABSOLUTE PRIORITY)
-- Identify the PRIMARY language of the Job Description (JD) text.
-- Ignore accidentally pasted website UI buttons or navigation words (e.g., "Підписатись", "Зберегти", "Сховати", "Save", "Apply", "Share").
-- The ENTIRE output MUST be in the JD's primary language.
-- If the profile is in a different language, TRANSLATE the facts to the primary JD language.
+- Detect the PRIMARY language of the Job Description (JD) text (e.g., Ukrainian, Russian, or English).
+- Write the ENTIRE output (every single word) in THAT detected language.
+- If the JD is in Ukrainian, the cover letter MUST be in Ukrainian.
+- If the JD is in Russian, the cover letter MUST be in Russian.
+- Ignore navigation words like "Save", "Apply", or "Підписатись" when detecting language.
+- Translate all candidate facts (from the profile) into the JD's language.
+
+### REQUIREMENT EXTRACTION (HIGHEST PRIORITY)
+- Analyze the Job Description (JD) to find sections like "Requirements", "What we expect", "Our perfect candidate" or equivalent in any language (e.g., "Що ми очікуємо", "Наші очікування", "Ожидания от кандидата", "Требования").
+- These sections are the company's HIGH-PRIORITY needs.
+- Every bullet point or paragraph you write MUST directly answer one or more of these specific expectations using a fact from the profile.
 
 ### FIX TYPOS IN JOB DESCRIPTION
 - If the JD contains obvious typos in technology names, use the CORRECT spelling in your letter.
@@ -31,21 +38,18 @@ const PROSE_PROMPT = `You are writing a cover letter on behalf of a Candidate. W
 ${SHARED_RULES}
 
 ### WRITING PROCESS
-- Step 1: Read the JD. Identify the company name, the role, and 3-5 KEY requirements.
-- Step 2: Calculate the candidate's years of experience specifically in the REQUIRED STACK (not total career years).
-- Step 3: For EACH key requirement, find the MOST SPECIFIC matching fact from the profile (with numbers, company names, outcomes).
-- Step 4: Find relevant soft skills from the profile.
+- Step 1: Read the JD. Detect the primary language.
+- Step 2: Extract the "Expectations" or "Requirements" section. Identify 3-7 TOP priorities.
+- Step 3: For EACH priority, find the MOST SPECIFIC matching fact from the profile (with metrics).
+- Step 4: Write a concise Greeting and opening paragraph.
+- Paragraph 2: Focus HEAVILY on matching extracted expectations with your facts. Natural prose only.
+- Paragraph 3: Soft skills and strengths.
+- Last line: Closing and candidate's full name.
 
-### OUTPUT STRUCTURE (strictly follow this template)
-Line 1: Greeting to the company team (e.g. "Hello, [Company] team!" or equivalent in detected language).
-
-Paragraph 1 (2-3 sentences): Introduce the candidate by name. State interest in the specific role. Mention years of experience specifically in the REQUIRED STACK (calculate from work dates in profile — only count positions where the stack was used). Do NOT use total career years.
-
-Paragraph 2: For each key JD requirement, describe the candidate's relevant experience using SPECIFIC metrics from the profile — company names, team sizes, project outcomes, technologies. Write in natural prose, NOT bullet list.
-
-Paragraph 3: Describe the candidate's soft skills and strengths using information from the profile (teamwork, leadership, communication, mentoring, etc.).
-
-Last line: A brief well-wish and the candidate's full name as signature.
+### CONSTRAINTS
+- STRICT LENGTH LIMIT: The entire letter MUST be between 800 and 1500 characters.
+- DO NOT exceed 1500 characters under any circumstances.
+- Be concise and punchy.
 
 ### WHAT NOT TO DO
 - Do NOT write generic phrases like "I have extensive experience in..." without specifics.
@@ -61,15 +65,16 @@ ${SHARED_RULES}
 - Use a simple hyphen list ("- Skill: Result with specific metrics").
 
 ### WRITING PROCESS
-- Step 1: Read the JD. Identify 3-5 KEY requirements.
-- Step 2: For EACH requirement, find the MOST SPECIFIC matching fact from the profile.
+- Step 1: Read the JD. Detect the primary language.
+- Step 2: Extract the "Expectations/Requirements" section (e.g., "Що ми очікуємо"). Identify 3-7 TOP priorities.
+- Step 3: For EACH priority, write a bullet point matching an expectation to a specific fact from the profile.
 
 ### OUTPUT STRUCTURE
 Line 1: One sentence stating interest in the role + strongest qualification with a SPECIFIC metric.
 
-- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
-- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
-- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
+- [Key JD requirement]: [Specific matching fact from profile with metrics]
+- [Key JD requirement]: [Specific matching fact from profile with metrics]
+- [Continue for all 3-7 priority matches...]
 
 Last line: Closing sentence.
 
@@ -258,7 +263,7 @@ Write the cover letter now. Use ONLY facts from the profile above.`;
         systemPrompt,
         userPrompt,
         temperature: 0.3,
-        maxTokens: 1500,
+        maxTokens: 3000,
       },
       session.user.id,
     );
@@ -288,7 +293,8 @@ Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY rele
           systemPrompt: TAILORED_RESUME_PROMPT,
           userPrompt: resumeUserPrompt,
           temperature: 0.3,
-          maxTokens: 3000,
+          maxTokens: 4000,
+          responseFormat: { type: "json_object" },
         },
         session.user.id,
       );
