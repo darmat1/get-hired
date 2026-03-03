@@ -824,6 +824,11 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
               style={{ color: sidebarColor }}
             />
           </div>
+          {(data as any).targetPosition && (data as any).targetCompany && (
+            <div className="text-sm font-medium mt-1" style={{ color: sidebarColor }}>
+              Applicant for the role {(data as any).targetPosition} for {(data as any).targetCompany}
+            </div>
+          )}
           <EditableText
             value={personalInfo.summary || ""}
             onChange={(v) => updatePersonalInfo("summary", v)}

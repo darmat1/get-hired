@@ -111,6 +111,8 @@ model Resume {
   certificates   String?
   customization  String?
   language       String   @default("en")
+  targetPosition String?
+  targetCompany  String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

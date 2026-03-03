@@ -67,6 +67,8 @@ export interface Resume {
     showTelegram?: boolean;
   };
   language: string;
+  targetPosition?: string;
+  targetCompany?: string;
   createdAt: string;
   updatedAt: string;
 }

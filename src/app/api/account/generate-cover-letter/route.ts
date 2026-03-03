@@ -249,7 +249,9 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
       "category": "technical",
       "level": "advanced"
     }
-  ]
+  ],
+  "targetPosition": "string or empty - extract the job title from JD (e.g., 'Front-end Developer', 'Senior React Developer')",
+  "targetCompany": "string or empty - extract the company name from JD (e.g., 'Panda Team', 'Google')"
 }
 
 ### CRITICAL RULES
@@ -258,7 +260,8 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 - Each work experience "description" array should have 3-5 bullet points.
 - Generate unique IDs for each item (use format like "we-1", "we-2", "edu-1", "skill-1", etc.).
 - Keep only RELEVANT positions. Filter out unrelated jobs.
-- Rewrite descriptions to maximize keyword matches and emphasize measurable results.`;
+- Rewrite descriptions to maximize keyword matches and emphasize measurable results.
+- IMPORTANT: Extract targetPosition and targetCompany from the Job Description. Look for the job title (usually at the beginning of JD or in "We are looking for..." section) and company name (usually mentioned in company description or at the top). If not found, leave empty strings. Do NOT use your own experience for these fields - ONLY extract from JD.`;
 
 export async function POST(request: Request) {
   try {
@@ -414,6 +417,8 @@ Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY rele
           education: resumeJson.education || [],
           skills: resumeJson.skills || [],
           certificates: resumeJson.certificates || [],
+          targetPosition: resumeJson.targetPosition || null,
+          targetCompany: resumeJson.targetCompany || null,
           userId: session.user.id,
         },
       });
