@@ -13,14 +13,21 @@ export class GeminiProvider implements AIProvider {
   }
 
   async complete(request: AICompletionRequest): Promise<AICompletionResponse> {
+    return this._complete(request, true);
+  }
+
+  private async _complete(
+    request: AICompletionRequest,
+    withThinking: boolean,
+  ): Promise<AICompletionResponse> {
     const apiKey = request.apiKey || process.env.GOOGLE_API_KEY;
     if (!apiKey) throw new Error("[AI] Google API key is missing");
 
     const model =
       request.model || process.env.GOOGLE_MODEL || "gemini-2.5-flash";
-    const isGemini3 = model.startsWith("gemini-3");
+
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
+    const timeoutId = setTimeout(() => controller.abort(), 120000);
 
     try {
       const response = await fetch(
@@ -45,7 +52,7 @@ export class GeminiProvider implements AIProvider {
                 request.responseFormat?.type === "json_object"
                   ? "application/json"
                   : "text/plain",
-              ...(isGemini3 ? { thinking_level: "MINIMAL" } : {}),
+              ...(withThinking ? { thinking_level: "MINIMAL" } : {}),
             },
           }),
         },
@@ -53,6 +60,19 @@ export class GeminiProvider implements AIProvider {
 
       if (!response.ok) {
         const errorText = await response.text();
+
+        // If Google doesn't recognize thinking_level for this model — retry without it
+        if (
+          withThinking &&
+          response.status === 400 &&
+          errorText.includes("thinking_level")
+        ) {
+          console.warn(
+            `[AI] Gemini: thinking_level not supported for model "${model}", retrying without it`,
+          );
+          return this._complete(request, false);
+        }
+
         throw new Error(`Google Gemini Error ${response.status}: ${errorText}`);
       }
 
