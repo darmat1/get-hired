@@ -16,6 +16,7 @@ export interface WorkExperience {
   title: string;
   company: string;
   location: string;
+  employmentType?: string;
   startDate: string;
   endDate?: string;
   current: boolean;
@@ -66,6 +67,8 @@ export interface Resume {
     showTelegram?: boolean;
   };
   language: string;
+  targetPosition?: string;
+  targetCompany?: string;
   createdAt: string;
   updatedAt: string;
 }

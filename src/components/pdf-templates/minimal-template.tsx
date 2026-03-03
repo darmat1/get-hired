@@ -8,6 +8,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { Resume } from "@/types/resume";
+import { getTranslation } from "@/lib/translations-data";
 
 const styles = StyleSheet.create({
   page: {
@@ -97,6 +98,11 @@ export function MinimalTemplate({ resume }: TemplateProps) {
             <Text style={styles.name}>
               {personalInfo.firstName} {personalInfo.lastName}
             </Text>
+            {resume.targetPosition && (
+              <Text style={[styles.contact, { color: "#6b7280", fontStyle: "italic" }]}>
+                {resume.targetPosition}
+              </Text>
+            )}
             <Text style={styles.contact}>
               {personalInfo.email} • {personalInfo.phone}
             </Text>
@@ -112,7 +118,9 @@ export function MinimalTemplate({ resume }: TemplateProps) {
 
         {workExperience.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
+            <Text style={styles.sectionTitle}>
+              {getTranslation("form.work_experience", resume.language || "en")}
+            </Text>
             {workExperience.map((exp, index) => (
               <View key={index} style={styles.jobBlock}>
                 <View
@@ -127,7 +135,10 @@ export function MinimalTemplate({ resume }: TemplateProps) {
                   </Text>
                 </View>
                 <Text style={styles.companyMeta}>
-                  {exp.company} • {exp.location}
+                  {exp.company}
+                  {exp.employmentType &&
+                    ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
+                  {exp.location ? ` • ${exp.location}` : ""}
                 </Text>
 
                 {exp.description.map((d, i) => (
@@ -142,7 +153,9 @@ export function MinimalTemplate({ resume }: TemplateProps) {
 
         {education.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={styles.sectionTitle}>
+              {getTranslation("form.education", resume.language || "en")}
+            </Text>
             {education.map((edu, index) => (
               <View key={index} style={styles.jobBlock}>
                 <View
@@ -164,7 +177,9 @@ export function MinimalTemplate({ resume }: TemplateProps) {
 
         {skills.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Skills</Text>
+            <Text style={styles.sectionTitle}>
+              {getTranslation("form.skills", resume.language || "en")}
+            </Text>
             <View style={styles.skillsGrid}>
               {skills.map((s, i) => (
                 <Text key={i} style={styles.skill}>

@@ -107,9 +107,12 @@ export async function testAIService(
       });
       return res.ok;
     } else if (service.id === "gemini") {
-      console.log("[GEMINI TEST] Testing with key:", service.apiKey?.slice(0, 10) + "...");
+      console.log(
+        "[GEMINI TEST] Testing with key:",
+        service.apiKey?.slice(0, 10) + "...",
+      );
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${service.apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${service.apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

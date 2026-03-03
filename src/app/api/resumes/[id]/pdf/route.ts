@@ -3,6 +3,32 @@ import { auth } from '@/lib/auth'
 import { generatePDF } from '@/lib/pdf-generator'
 import { prisma } from '@/lib/prisma'
 
+function getFilenameForResume(resume: any): string {
+  const isTailored = resume.title?.startsWith('Tailored:')
+  
+  if (isTailored && resume.personalInfo) {
+    try {
+      const personalInfo = typeof resume.personalInfo === 'string' 
+        ? JSON.parse(resume.personalInfo) 
+        : resume.personalInfo
+
+      const firstName = personalInfo?.firstName || ''
+      const lastName = personalInfo?.lastName || ''
+      
+      const position = resume.targetPosition || ''
+      const company = resume.targetCompany || ''
+
+      if (firstName && lastName && position && company) {
+        return `${firstName}-${lastName}_${position}_${company}.pdf`
+      }
+    } catch (e) {
+      console.error('Error parsing resume for filename:', e)
+    }
+  }
+
+  return `resume-${encodeURIComponent(resume.title || 'untitled')}.pdf`
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -26,15 +52,16 @@ export async function GET(
     })
 
     if (!resume) {
-      return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Resume not found', status: 404 })
     }
 
     const pdfBuffer = await generatePDF(resume as any)
+    const filename = getFilenameForResume(resume)
 
     return new NextResponse(pdfBuffer as any, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="resume-${encodeURIComponent(resume.title)}.pdf"`
+        'Content-Disposition': `inline; filename="${encodeURIComponent(filename)}"`
       }
     })
   } catch (error) {

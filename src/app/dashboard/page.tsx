@@ -213,6 +213,10 @@ export default function MyExperiencePage() {
     }
   };
 
+  // useEffect(() => {
+  //   console.log(profile);
+  // }, [profile]);
+
   if (!mounted || isPending)
     return <LoadingScreen message={t("profile.loading_profile")} />;
   if (!session) return <LoadingScreen message={t("common.auth_required")} />;

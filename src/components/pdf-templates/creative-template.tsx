@@ -9,6 +9,7 @@ import {
 } from "@react-pdf/renderer";
 import { Resume } from "@/types/resume";
 import { FormattedText } from "@/lib/pdf-utils";
+import { getTranslation } from "@/lib/translations-data";
 
 Font.register({
   family: "Roboto",
@@ -168,7 +169,9 @@ export function CreativeTemplate({ resume }: TemplateProps) {
           )}
 
           <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarTitle}>Contact</Text>
+            <Text style={styles.sidebarTitle}>
+              {getTranslation("form.personal_info", resume.language || "en")}
+            </Text>
             {showEmail && personalInfo.email && (
               <Text style={styles.contactItem}>{personalInfo.email}</Text>
             )}
@@ -193,7 +196,9 @@ export function CreativeTemplate({ resume }: TemplateProps) {
 
           {skills.length > 0 && (
             <View style={styles.sidebarSection}>
-              <Text style={styles.sidebarTitle}>Skills</Text>
+              <Text style={styles.sidebarTitle}>
+                {getTranslation("form.skills", resume.language || "en")}
+              </Text>
               <View style={styles.skillsWrap}>
                 {skills.map((skill, index) => (
                   <View key={index} style={styles.skillBadge}>
@@ -212,10 +217,16 @@ export function CreativeTemplate({ resume }: TemplateProps) {
           <Text style={styles.name}>
             {personalInfo.firstName} {personalInfo.lastName}
           </Text>
-          <Text style={{ fontSize: 10, color: "#4b5563", marginBottom: 20 }}>
-            {/* Could put title here if we had it, using summary for now */}
-            Frontend Developer
-          </Text>
+          {resume.targetPosition ? (
+            <Text style={{ fontSize: 10, color: "#4b5563", marginBottom: 20, fontStyle: "italic" }}>
+              {resume.targetPosition}
+            </Text>
+          ) : (
+            <Text style={{ fontSize: 10, color: "#4b5563", marginBottom: 20 }}>
+              {/* Could put title here if we had it, using summary for now */}
+              Frontend Developer
+            </Text>
+          )}
 
           {personalInfo.summary && (
             <View style={{ marginBottom: 15 }}>
@@ -228,12 +239,21 @@ export function CreativeTemplate({ resume }: TemplateProps) {
 
           {workExperience.length > 0 && (
             <View>
-              <Text style={styles.sectionTitle}>Experience</Text>
+              <Text style={styles.sectionTitle}>
+                {getTranslation(
+                  "form.work_experience",
+                  resume.language || "en",
+                )}
+              </Text>
               {workExperience.map((exp, index) => (
                 <View key={index} style={styles.jobBlock}>
                   <Text style={styles.jobTitle}>{exp.title}</Text>
                   <View style={styles.jobMeta}>
-                    <Text style={{ fontStyle: "italic" }}>{exp.company}</Text>
+                    <Text style={{ fontStyle: "italic" }}>
+                      {exp.company}
+                      {exp.employmentType &&
+                        ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
+                    </Text>
                     <Text>
                       {exp.startDate} - {exp.current ? "Present" : exp.endDate}
                     </Text>
@@ -251,7 +271,9 @@ export function CreativeTemplate({ resume }: TemplateProps) {
 
           {education.length > 0 && (
             <View>
-              <Text style={styles.sectionTitle}>Education</Text>
+              <Text style={styles.sectionTitle}>
+                {getTranslation("form.education", resume.language || "en")}
+              </Text>
               {education.map((edu, index) => (
                 <View key={index} style={styles.jobBlock}>
                   <Text style={styles.jobTitle}>{edu.institution}</Text>

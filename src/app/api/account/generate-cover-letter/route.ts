@@ -5,78 +5,158 @@ import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
 import { aiComplete } from "@/lib/ai/server-ai";
 
-const SHARED_RULES = `### LANGUAGE ENFORCEMENT (ABSOLUTE PRIORITY)
-- Identify the PRIMARY language of the Job Description (JD) text.
-- Ignore accidentally pasted website UI buttons or navigation words (e.g., "Підписатись", "Зберегти", "Сховати", "Save", "Apply", "Share").
-- The ENTIRE output MUST be in the JD's primary language.
-- If the profile is in a different language, TRANSLATE the facts to the primary JD language.
+const SHARED_RULES = `### STEP 0 — DETECT LANGUAGE (ABSOLUTE FIRST)
+- Read the entire Job Description (JD).
+- Detect its PRIMARY language (English, Ukrainian, Russian, Polish, etc.).
+- Ignore UI elements like "Save", "Apply", "Підписатись", "Войти" — these are navigation, not content.
+- Ignore technical names of technologies like "Python", "React", "Webpack" — these are not do not determine the language of the document.
+- The ENTIRE output — every word — must be in the JD's detected language.
+- All candidate facts from the profile must be TRANSLATED into the JD language.
 
-### FIX TYPOS IN JOB DESCRIPTION
-- If the JD contains obvious typos in technology names, use the CORRECT spelling in your letter.
-- Examples: "formki" → "Formik", "redax" → "Redux", "Reakt" → "React", "typeskript" → "TypeScript", "noad" → "Node", "ekspres" → "Express".
-- NEVER copy typos from the JD into the cover letter.
+### STEP 1 — EXTRACT JD REQUIREMENTS (CRITICAL)
+- Find sections labeled "Requirements", "What we expect", "Responsibilities", "Must have", or equivalents in any language
+  ("Що ми очікуємо", "Вимоги", "Ожидания", "Требования", "Wymagania", "We are looking for", etc.).
+- Rank the 5–8 MOST IMPORTANT requirements. These are what the employer most needs.
 
-### DATA INTEGRITY (CRITICAL — ANTI-HALLUCINATION)
-- Use ONLY facts, numbers, and details that are EXPLICITLY present in the CANDIDATE PROFILE.
-- Extract and USE specific metrics: years of experience, team sizes, project counts, performance numbers, company names, technologies used.
-- If the profile says "Led a team of 5 developers" — write exactly that, not "Led a large team".
-- If a specific metric is NOT in the profile, describe the experience qualitatively. NEVER invent numbers.
-- Do NOT just say "I have experience with X". Instead say "I have N years of experience with X, having used it at [Company] to [specific achievement]".
+### STEP 2 — MATCH PROFILE TO REQUIREMENTS
+- For EACH top requirement, find the BEST matching fact from the CANDIDATE PROFILE.
+- Prioritize facts with NUMBERS: years, team sizes, project counts, percentages, user counts.
+- If a metric exists in the profile — USE IT exactly. Do NOT invent or exaggerate.
+- If no metric — describe concretely but qualitatively.
+- Skip requirements with zero evidence in the profile.
+
+### DATA INTEGRITY — NON-NEGOTIABLE
+- Use ONLY facts explicitly present in the CANDIDATE PROFILE.
+- Never invent numbers, companies, projects, technologies, or dates.
+- Never use total career years — calculate relevant stack experience only.
+
+### FIX TYPOS IN JD
+- Silently correct obvious typos in tech names: "formki"→Formik, "redax"→Redux, "noad"→Node.
+- Never copy JD typos into the letter.
 
 ### FORMATTING
-- Plain text only. NO markdown, NO asterisks, NO bold.`;
+- Plain text only. No markdown. No asterisks. No bold. No headers.`;
 
-const PROSE_PROMPT = `You are writing a cover letter on behalf of a Candidate. Write a compelling, SPECIFIC letter using REAL facts from their profile.
+const PROSE_PROMPT = `You are a senior copywriter and career strategist. You write cover letters that make recruiters stop and think: "This is exactly who we need."
+
+${SHARED_RULES}
+
+### THE VOICE
+- Write like a confident professional speaking directly to a peer — not a job applicant begging for attention.
+- No robotic openers. No "I am applying for the position of...". No "I have extensive experience in...".
+- Every sentence must either prove something or advance the story. Cut anything decorative.
+- Vary sentence length. Mix short punches with longer evidence sentences. Keep it human.
+
+### STRUCTURE
+
+Greeting — SALUTATION (standalone line):
+  A warm, natural greeting to the team. Extract the company name from the JD if present.
+  Examples: "Hi [Company] team,", "Hello [Company] team,", "Привіт команді [Company],", "Здравствуйте, команда [Company],"
+  If no company name found — use "Hi there," or equivalent in the JD language.
+  This must appear as a standalone line before Paragraph 1.
+
+Paragraph 1 — HOOK (2–3 sentences):
+  Do NOT start with "I" or "Я". Start with an observation about what THEY need, then immediately pivot to the candidate's strongest proof.
+  Name the specific role. Include one concrete metric that proves fit.
+  The recruiter must feel: "This person already gets what we're building."
+
+Paragraph 2 — CORE MATCH (4–5 sentences):
+  Address the top 3–4 JD requirements directly — one sentence each.
+  Format per sentence: [JD keyword as natural phrase] + [specific proof with metric from profile].
+  Do NOT list. Write flowing prose where each sentence lands like evidence.
+  This paragraph is the heart. Make it dense with real facts.
+
+Paragraph 3 — AUTONOMY & FIT (2–3 sentences):
+  Show the candidate fits the TEAM CULTURE described in the JD (remote, no micromanagement, ownership, etc.).
+  Ground it in a real situation from the profile — not a generic claim.
+
+Last line — CLOSE:
+  One confident, forward-looking sentence. Candidate's full name.
+
+### LENGTH
+900–1400 characters total. Be sharp. Cut filler ruthlessly.
+
+### EXAMPLE OF PERFECT OUTPUT
+(This is a real example for an English-language Frontend/AI role. Use it as a style and structure reference — do NOT copy its content. Adapt fully to the actual JD and profile provided.)
+
+---
+Hi GetHired team,
+
+You're looking for a developer who treats AI not as a buzzword to list on a resume, but as infrastructure to architect around. That's exactly what I do at GetHired.work — built the entire AI career platform from scratch on Next.js, where prompt orchestration, response streaming, and error handling are core to the architecture, not bolted on top.
+
+On your stack: React and Next.js App Router have been my primary tools for 3+ years. At b0arding.com I led the full migration from Pages Router to App Router with React Server Components and a Redis caching layer, cutting page response times by 40% and pushing Core Web Vitals into the green. Performance isn't an afterthought — I hit Lighthouse 98/100 on mobile for a platform where 60% of traffic is mobile. On the AI side, I built a proprietary prompt abstraction layer that improved content quality by 45% and achieved 100% accuracy extracting structured data from LinkedIn PDFs.
+
+I'm used to working without hand-holding — at GetHired.work I wear the hats of product owner, engineer, and prompt architect simultaneously, making and owning architectural decisions end to end.
+
+Happy to walk through the codebase. Andrew Kupriyanov.
+---
+
+### FORBIDDEN
+- Starting with "I" or "Я"
+- "I have extensive experience in..." without immediate specific proof
+- Restating JD requirements without a matching profile fact
+- Three paragraphs that all start with the same word or pattern
+- Bullet points or dashes inside paragraphs
+- Copying JD sentences verbatim
+- Inventing any data not in the profile`;
+
+const BULLET_PROMPT = `You are a senior copywriter writing a bullet-format cover letter. Goal: give a recruiter a scannable, evidence-packed proof of fit in under 30 seconds of reading.
 
 ${SHARED_RULES}
 
-### WRITING PROCESS
-- Step 1: Read the JD. Identify the company name, the role, and 3-5 KEY requirements.
-- Step 2: Calculate the candidate's years of experience specifically in the REQUIRED STACK (not total career years).
-- Step 3: For EACH key requirement, find the MOST SPECIFIC matching fact from the profile (with numbers, company names, outcomes).
-- Step 4: Find relevant soft skills from the profile.
+### THE VOICE
+- Confident, direct, zero filler.
+- The opening line must hook — not announce.
+- Each bullet must feel like a checkmark on the recruiter's wishlist.
 
-### OUTPUT STRUCTURE (strictly follow this template)
-Line 1: Greeting to the company team (e.g. "Hello, [Company] team!" or equivalent in detected language).
+### STRUCTURE
 
-Paragraph 1 (2-3 sentences): Introduce the candidate by name. State interest in the specific role. Mention years of experience specifically in the REQUIRED STACK (calculate from work dates in profile — only count positions where the stack was used). Do NOT use total career years.
+GREETING (standalone line):
+  A warm, natural greeting to the team. Extract the company name from the JD if present.
+  Examples: "Hi [Company] team,", "Hello [Company] team,", "Привіт команді [Company],", "Здравствуйте, команда [Company],"
+  If no company name found — use "Hi there," or equivalent in the JD language.
+  This must appear as a standalone line before the opening line.
 
-Paragraph 2: For each key JD requirement, describe the candidate's relevant experience using SPECIFIC metrics from the profile — company names, team sizes, project outcomes, technologies. Write in natural prose, NOT bullet list.
+OPENING LINE (1 sentence):
+  Do NOT start with "I" or "Я".
+  Frame around what THEY are building + candidate's strongest credential with a metric.
 
-Paragraph 3: Describe the candidate's soft skills and strengths using information from the profile (teamwork, leadership, communication, mentoring, etc.).
+BULLET BLOCK (5–8 bullets):
+  Format: "- [JD requirement keyword]: [specific proof from profile with metric or concrete detail]"
+  Rules:
+  - Left side = JD keyword (gives recruiter instant visual match to their checklist).
+  - Right side = specific fact from profile. MUST include a number or named concrete achievement.
+  - Order by JD priority: most critical requirement first.
+  - No bullet without real evidence from the profile. Skip requirements with no match.
+  - Bad: "- React: маю досвід роботи з React"
+  - Good: "- React / Next.js: 3+ роки в App Router, міграція Pages→App Router у b0arding.com, Redis-кеш −40% response time"
 
-Last line: A brief well-wish and the candidate's full name as signature.
+CLOSING LINE (1 sentence):
+  Confident, forward-looking. Full candidate name.
 
-### WHAT NOT TO DO
-- Do NOT write generic phrases like "I have extensive experience in..." without specifics.
-- Do NOT list JD requirements back with "I can do this".
-- Do NOT use bullet points or dashes.
-- Do NOT copy the JD text back.
-- Do NOT hallucinate or invent facts not present in the profile.
-- Do NOT use total career years — calculate years ONLY in the required stack.`;
+### EXAMPLE OF PERFECT OUTPUT
+(Style and structure reference only — do NOT copy content. Adapt fully to the actual JD and profile provided.)
 
-const BULLET_PROMPT = `You are writing a concise cover letter on behalf of a Candidate using a bullet-list format. Use REAL facts from their profile.
+---
+Hi GetHired team,
 
-${SHARED_RULES}
-- Use a simple hyphen list ("- Skill: Result with specific metrics").
+Frontend for AI-driven products is my core focus: at GetHired.work I built the entire platform from scratch, with AI pipelines, streaming, and prompt architecture as first-class citizens of the Next.js app.
 
-### WRITING PROCESS
-- Step 1: Read the JD. Identify 3-5 KEY requirements.
-- Step 2: For EACH requirement, find the MOST SPECIFIC matching fact from the profile.
+- React / Next.js: 3+ years in App Router, led Pages→App Router migration at b0arding.com with Redis caching — response time down 40%
+- AI integrations: proprietary prompt abstraction layer at GetHired.work — +45% content quality, 100% accuracy parsing LinkedIn PDFs
+- SSR / Performance: Lighthouse 98/100 on mobile, Core Web Vitals optimization across production at b0arding.com
+- Tailwind / CSS: primary stack at GetHired.work and b0arding.com, responsive layouts serving 60%+ mobile users
+- API integrations: OpenAI, Claude, REST API, Stripe, WebSockets — across three separate products
+- Autonomy: product owner + engineer + prompt architect in one person, full ownership of architectural decisions
 
-### OUTPUT STRUCTURE
-Line 1: One sentence stating interest in the role + strongest qualification with a SPECIFIC metric.
+Happy to discuss further and share code. Andrew Kupriyanov.
+---
 
-- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
-- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
-- [Key JD requirement]: [Specific matching fact from profile with numbers, company name, outcome]
-
-Last line: Closing sentence.
-
-### WHAT NOT TO DO
-- Do NOT write generic "I can do this" — every bullet MUST have a specific fact.
-- Do NOT hallucinate or invent facts not present in the profile.
-- Do NOT copy the JD requirements verbatim as bullet text.`;
+### FORBIDDEN
+- Bullets without concrete proof from the profile
+- Opening with "I", "Я", "Мене звати"
+- Inventing any metric or technology not in the profile
+- Copying JD requirement text as-is without connecting to a profile fact`;
 
 const TAILORED_RESUME_PROMPT = `You are an expert resume writer creating a SELLING, results-driven resume. Your task is to create a TAILORED resume in structured JSON format for a specific job posting.
 
@@ -170,7 +250,9 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
       "category": "technical",
       "level": "advanced"
     }
-  ]
+  ],
+  "targetPosition": "string or empty - extract the job title from JD (e.g., 'Front-end Developer', 'Senior React Developer')",
+  "targetCompany": "string or empty - extract the company name from JD (e.g., 'Panda Team', 'Google')"
 }
 
 ### CRITICAL RULES
@@ -179,7 +261,8 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 - Each work experience "description" array should have 3-5 bullet points.
 - Generate unique IDs for each item (use format like "we-1", "we-2", "edu-1", "skill-1", etc.).
 - Keep only RELEVANT positions. Filter out unrelated jobs.
-- Rewrite descriptions to maximize keyword matches and emphasize measurable results.`;
+- Rewrite descriptions to maximize keyword matches and emphasize measurable results.
+- IMPORTANT: Extract targetPosition and targetCompany from the Job Description. Look for the job title (usually at the beginning of JD or in "We are looking for..." section) and company name (usually mentioned in company description or at the top). If not found, leave empty strings. Do NOT use your own experience for these fields - ONLY extract from JD.`;
 
 export async function POST(request: Request) {
   try {
@@ -258,7 +341,7 @@ Write the cover letter now. Use ONLY facts from the profile above.`;
         systemPrompt,
         userPrompt,
         temperature: 0.3,
-        maxTokens: 1500,
+        maxTokens: 3000,
       },
       session.user.id,
     );
@@ -288,7 +371,8 @@ Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY rele
           systemPrompt: TAILORED_RESUME_PROMPT,
           userPrompt: resumeUserPrompt,
           temperature: 0.3,
-          maxTokens: 3000,
+          maxTokens: 4000,
+          responseFormat: { type: "json_object" },
         },
         session.user.id,
       );
@@ -334,6 +418,8 @@ Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY rele
           education: resumeJson.education || [],
           skills: resumeJson.skills || [],
           certificates: resumeJson.certificates || [],
+          targetPosition: resumeJson.targetPosition || null,
+          targetCompany: resumeJson.targetCompany || null,
           userId: session.user.id,
         },
       });

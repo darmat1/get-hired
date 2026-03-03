@@ -7,6 +7,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { Resume } from "@/types/resume";
+import { getTranslation } from "@/lib/translations-data";
 
 const styles = StyleSheet.create({
   page: {
@@ -109,6 +110,11 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
               <Text style={styles.name}>
                 {personalInfo.firstName} {personalInfo.lastName}
               </Text>
+              {resume.targetPosition && (
+                <Text style={[styles.contactInfo, { color: "#4b5563", fontStyle: "italic" }]}>
+                  {resume.targetPosition}
+                </Text>
+              )}
               <Text style={styles.contactInfo}>
                 {personalInfo.email} | {personalInfo.phone}
               </Text>
@@ -124,7 +130,9 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
 
         {personalInfo.summary && (
           <View>
-            <Text style={styles.sectionTitle}>Summary</Text>
+            <Text style={styles.sectionTitle}>
+              {getTranslation("form.summary", resume.language || "en")}
+            </Text>
             <Text style={{ textAlign: "justify", marginBottom: 5 }}>
               {personalInfo.summary}
             </Text>
@@ -133,13 +141,19 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
 
         {workExperience.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Experience</Text>
+            <Text style={styles.sectionTitle}>
+              {getTranslation("form.work_experience", resume.language || "en")}
+            </Text>
             {workExperience.map((exp, index) => (
               <View key={index} style={{ marginBottom: 10 }}>
                 <View style={styles.jobHeader}>
                   <View>
                     <Text style={styles.jobTitle}>{exp.title}</Text>
-                    <Text style={styles.company}>{exp.company}</Text>
+                    <Text style={styles.company}>
+                      {exp.company}
+                      {exp.employmentType &&
+                        ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
+                    </Text>
                   </View>
                   <View>
                     <Text style={styles.dateLocation}>
@@ -160,7 +174,9 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
 
         {education.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={styles.sectionTitle}>
+              {getTranslation("form.education", resume.language || "en")}
+            </Text>
             {education.map((edu, index) => (
               <View key={index} style={{ marginBottom: 8 }}>
                 <View style={styles.jobHeader}>
@@ -183,7 +199,9 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
 
         {skills.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Skills</Text>
+            <Text style={styles.sectionTitle}>
+              {getTranslation("form.skills", resume.language || "en")}
+            </Text>
             <View style={styles.skillsContainer}>
               {skills.map((skill, index) => (
                 <Text key={index} style={styles.skillText}>

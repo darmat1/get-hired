@@ -1,5 +1,6 @@
 import { Resume } from "@/types/resume";
 import { useTranslation } from "@/lib/translations";
+import { getTranslation } from "@/lib/translations-data";
 
 interface Props {
   data: Partial<Resume>;
@@ -25,6 +26,11 @@ export function MinimalPreview({ data }: Props) {
           <h1 className="text-3xl font-bold uppercase tracking-widest mb-2">
             {personalInfo.firstName} {personalInfo.lastName}
           </h1>
+          {(data as any).targetPosition && (
+            <div className="text-sm font-medium text-gray-700 mt-1">
+              {(data as any).targetPosition}
+            </div>
+          )}
           <div className="text-[10px] text-gray-600 flex gap-3 uppercase tracking-wider">
             <span>{personalInfo.email}</span>
             <span>•</span>
@@ -46,7 +52,7 @@ export function MinimalPreview({ data }: Props) {
       {workExperience && workExperience.length > 0 && (
         <div>
           <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-gray-900">
-            Work Experience
+            {getTranslation("form.work_experience", data.language || "en")}
           </h2>
           <div className="space-y-6">
             {workExperience.map((exp) => (
@@ -60,7 +66,10 @@ export function MinimalPreview({ data }: Props) {
                   </span>
                 </div>
                 <div className="text-[10px] text-gray-600 mb-2 uppercase tracking-wide">
-                  {exp.company} • {exp.location}
+                  {exp.company}
+                  {exp.employmentType &&
+                    ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, data.language || "en")}`}{" "}
+                  • {exp.location}
                 </div>
 
                 {exp.description && (
@@ -71,7 +80,7 @@ export function MinimalPreview({ data }: Props) {
                         ? (exp.description as string).split("\n")
                         : []
                     )
-                      .filter(Boolean)
+                      .filter((d) => d !== undefined && d !== null)
                       .map((desc, idx) => (
                         <li key={idx} className="pl-0">
                           - {desc}
@@ -88,7 +97,7 @@ export function MinimalPreview({ data }: Props) {
       {education && education.length > 0 && (
         <div>
           <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-gray-900 mt-6">
-            Education
+            {getTranslation("form.education", data.language || "en")}
           </h2>
           <div className="space-y-4">
             {education.map((edu) => (
@@ -113,7 +122,7 @@ export function MinimalPreview({ data }: Props) {
       {skills && skills.length > 0 && (
         <div>
           <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-gray-900 mt-6">
-            Skills
+            {getTranslation("profile.tab_skills", data.language || "en")}
           </h2>
           <div className="flex flex-wrap gap-2">
             {skills.map((skill) => (

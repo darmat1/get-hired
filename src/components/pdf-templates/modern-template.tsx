@@ -9,6 +9,7 @@ import {
 } from "@react-pdf/renderer";
 import { Resume } from "@/types/resume";
 import { FormattedText } from "@/lib/pdf-utils";
+import { getTranslation } from "@/lib/translations-data";
 
 // Register fonts
 Font.register({
@@ -128,8 +129,6 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
     },
     headerTitle: {
       fontSize: 11,
-      letterSpacing: 2,
-      textTransform: "uppercase",
       color: "#4b5563",
       marginBottom: 20,
     },
@@ -227,7 +226,12 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
           )}
 
           <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarTitle}>Contact</Text>
+            <Text style={styles.sidebarTitle}>
+              {getTranslation("dashboard.template", resume.language || "en") ===
+              "Template"
+                ? "Contact"
+                : getTranslation("form.personal_info", resume.language || "en")}
+            </Text>
             <View style={styles.sidebarSeparator} />
 
             {/* Email first */}
@@ -282,7 +286,9 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
 
           {education.length > 0 && (
             <View style={styles.sidebarSection}>
-              <Text style={styles.sidebarTitle}>Education</Text>
+              <Text style={styles.sidebarTitle}>
+                {getTranslation("form.education", resume.language || "en")}
+              </Text>
               <View style={styles.sidebarSeparator} />
               {education.map((edu, idx) => (
                 <View key={idx} style={{ marginBottom: 10 }}>
@@ -333,7 +339,12 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
               {/* Technical Skills */}
               {skills.some((s) => s.category === "technical") && (
                 <View style={{ marginBottom: 20 }}>
-                  <Text style={styles.sidebarTitle}>Technical Skills</Text>
+                  <Text style={styles.sidebarTitle}>
+                    {getTranslation(
+                      "profile.tab_skills",
+                      resume.language || "en",
+                    )}
+                  </Text>
                   <View style={styles.sidebarSeparator} />
                   <View
                     style={{
@@ -401,7 +412,17 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
               {/* Languages */}
               {skills.some((s) => s.category === "language") && (
                 <View>
-                  <Text style={styles.sidebarTitle}>Languages</Text>
+                  <Text style={styles.sidebarTitle}>
+                    {getTranslation(
+                      "work.employment_types.language",
+                      resume.language || "en",
+                    ) === "work.employment_types.language"
+                      ? "Languages"
+                      : getTranslation(
+                          "skills.language",
+                          resume.language || "en",
+                        )}
+                  </Text>
                   <View style={styles.sidebarSeparator} />
                   <View>
                     {skills
@@ -490,6 +511,12 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
             {personalInfo.firstName} {personalInfo.lastName}
           </Text>
 
+          {resume.targetPosition && (
+            <Text style={styles.headerTitle}>
+              {resume.targetPosition}
+            </Text>
+          )}
+
           {/* Fallback title if needed */}
           {/* <Text style={styles.headerTitle}>Full Stack Developer</Text> */}
 
@@ -502,7 +529,12 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
 
           {workExperience.length > 0 && (
             <View>
-              <Text style={styles.mainSectionTitle}>Experience</Text>
+              <Text style={styles.mainSectionTitle}>
+                {getTranslation(
+                  "form.work_experience",
+                  resume.language || "en",
+                )}
+              </Text>
 
               {workExperience.map((exp, index) => (
                 <View key={index} style={styles.experienceIten}>
@@ -521,7 +553,10 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                       {exp.current ? "Present" : exp.endDate?.split("-")[0]}
                     </Text>
                     <Text style={styles.expCompany}>
-                      {exp.company} | {exp.location}
+                      {exp.company}
+                      {exp.employmentType &&
+                        ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
+                      {exp.location ? ` | ${exp.location}` : ""}
                     </Text>
                     <Text style={styles.expTitle}>{exp.title}</Text>
 
