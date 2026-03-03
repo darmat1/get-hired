@@ -26,8 +26,8 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
       current: false,
       description: [""],
     };
-    onChange([...data, newExperience]);
-    setExpandedIndex(data.length);
+    onChange([newExperience, ...data]);
+    setExpandedIndex(0);
   };
 
   const updateExperience = (
@@ -161,6 +161,51 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-muted-foreground mb-1">
+                      {t("work.employment_type")}
+                    </label>
+                    <select
+                      value={exp.employmentType || ""}
+                      onChange={(e) =>
+                        updateExperience(
+                          index,
+                          "employmentType",
+                          e.target.value,
+                        )
+                      }
+                      className="w-full px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
+                    >
+                      <option value="">{t("common.please_select")}</option>
+                      <option value="full_time">
+                        {t("work.employment_types.full_time")}
+                      </option>
+                      <option value="part_time">
+                        {t("work.employment_types.part_time")}
+                      </option>
+                      <option value="self_employed">
+                        {t("work.employment_types.self_employed")}
+                      </option>
+                      <option value="freelance">
+                        {t("work.employment_types.freelance")}
+                      </option>
+                      <option value="contract">
+                        {t("work.employment_types.contract")}
+                      </option>
+                      <option value="internship">
+                        {t("work.employment_types.internship")}
+                      </option>
+                      <option value="apprenticeship">
+                        {t("work.employment_types.apprenticeship")}
+                      </option>
+                      <option value="seasonal">
+                        {t("work.employment_types.seasonal")}
+                      </option>
+                      <option value="pet_project">
+                        {t("work.employment_types.pet_project")}
+                      </option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-muted-foreground mb-1">
                       {t("work.location")}
                     </label>
                     <input
@@ -199,11 +244,16 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
                     <label className="flex items-center gap-2 mt-2 cursor-pointer">
                       <input
                         type="checkbox"
-                        checked={exp.current}
+                        checked={!!exp.current}
                         onChange={(e) => {
-                          updateExperience(index, "current", e.target.checked);
-                          if (e.target.checked)
-                            updateExperience(index, "endDate", "");
+                          const isChecked = e.target.checked;
+                          const newData = [...data];
+                          newData[index] = {
+                            ...newData[index],
+                            current: isChecked,
+                            ...(isChecked ? { endDate: "" } : {}),
+                          };
+                          onChange(newData);
                         }}
                         className="accent-primary"
                       />

@@ -88,7 +88,11 @@ export function CreativePreview({ data }: Props) {
                     {exp.title}
                   </h3>
                   <div className="flex justify-between text-[10px] text-gray-500 mb-1">
-                    <span className="italic">{exp.company}</span>
+                    <span className="italic">
+                      {exp.company}
+                      {exp.employmentType &&
+                        ` • ${t(`work.employment_types.${exp.employmentType}`)}`}
+                    </span>
                     <span>
                       {exp.startDate} - {exp.current ? "Present" : exp.endDate}
                     </span>

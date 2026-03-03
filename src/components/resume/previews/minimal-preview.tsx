@@ -60,7 +60,10 @@ export function MinimalPreview({ data }: Props) {
                   </span>
                 </div>
                 <div className="text-[10px] text-gray-600 mb-2 uppercase tracking-wide">
-                  {exp.company} • {exp.location}
+                  {exp.company}
+                  {exp.employmentType &&
+                    ` • ${t(`work.employment_types.${exp.employmentType}`)}`}{" "}
+                  • {exp.location}
                 </div>
 
                 {exp.description && (

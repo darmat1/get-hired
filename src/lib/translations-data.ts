@@ -69,6 +69,11 @@ export const translations: Translations = {
     uk: "Потрібна авторизація",
     ru: "Требуется авторизация",
   },
+  "common.please_select": {
+    en: "Please select",
+    uk: "Будь ласка, оберіть",
+    ru: "Пожалуйста, выберите",
+  },
   "auth.sign_in_required": {
     en: "Please sign in to create a resume",
     uk: "Будь ласка, увійдіть, щоб створити резюме",
@@ -213,6 +218,56 @@ export const translations: Translations = {
     en: "Error saving profile",
     uk: "Помилка при збереженні профілю",
     ru: "Ошибка при сохранении профиля",
+  },
+  "work.employment_type": {
+    en: "Employment Type",
+    uk: "Тип зайнятості",
+    ru: "Тип занятости",
+  },
+  "work.employment_types.full_time": {
+    en: "Full-time",
+    uk: "Повна зайнятість",
+    ru: "Полная занятость",
+  },
+  "work.employment_types.part_time": {
+    en: "Part-time",
+    uk: "Часткова зайнятість",
+    ru: "Частичная занятость",
+  },
+  "work.employment_types.self_employed": {
+    en: "Self-employed",
+    uk: "Самозайнятість",
+    ru: "Самозанятость",
+  },
+  "work.employment_types.freelance": {
+    en: "Freelance",
+    uk: "Фріланс",
+    ru: "Фриланс",
+  },
+  "work.employment_types.contract": {
+    en: "Contract",
+    uk: "Контракт",
+    ru: "Контракт",
+  },
+  "work.employment_types.internship": {
+    en: "Internship",
+    uk: "Стажування",
+    ru: "Стажировка",
+  },
+  "work.employment_types.apprenticeship": {
+    en: "Apprenticeship",
+    uk: "Учнівство",
+    ru: "Ученичество",
+  },
+  "work.employment_types.seasonal": {
+    en: "Seasonal",
+    uk: "Сезонна робота",
+    ru: "Сезонная работа",
+  },
+  "work.employment_types.pet_project": {
+    en: "Pet project",
+    uk: "Власний проект",
+    ru: "Личный проект",
   },
   "profile.import_success": {
     en: "Profile successfully updated!",

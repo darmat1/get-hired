@@ -67,6 +67,8 @@ export function ProfessionalPreview({ data }: Props) {
                     </h3>
                     <p className="text-gray-700 text-xs italic">
                       {exp.company}
+                      {exp.employmentType &&
+                        ` • ${t(`work.employment_types.${exp.employmentType}`)}`}
                     </p>
                   </div>
                   <div className="text-right text-[10px] text-gray-600">

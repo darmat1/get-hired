@@ -957,6 +957,16 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                                   }}
                                   placeholder="Company"
                                 />
+                                {exp.employmentType && (
+                                  <>
+                                    <span>•</span>
+                                    <span>
+                                      {t(
+                                        `work.employment_types.${exp.employmentType}`,
+                                      )}
+                                    </span>
+                                  </>
+                                )}
                                 <span>|</span>
                                 <EditableText
                                   value={exp.location || ""}
