@@ -1,20 +1,26 @@
+import { Header } from "@/components/layout/header";
 import { LandingPage } from "@/components/landing/landing-page";
 import type { Metadata } from "next";
 import { getT } from "@/lib/server-i18n";
+import { headers } from "next/headers";
 
-export function generateMetadata({ locale }: { locale?: string }): Metadata {
-  const t = getT((locale as any) || "en");
-  const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
+export async function generateMetadata(): Promise<Metadata> {
+  const headerList = await headers();
+  const locale = headerList.get("x-locale") || "en";
+  const t = getT(locale as any);
+
+  const canonical = locale === "en" ? "/" : `/${locale}`;
 
   return {
     title: t("page.home.title"),
     description: t("page.home.description"),
     alternates: {
-      canonical: SITE_URL,
+      canonical,
       languages: {
-        en: `${SITE_URL}/`,
-        uk: `${SITE_URL}/uk`,
-        ru: `${SITE_URL}/ru`,
+        en: "/",
+        uk: "/uk",
+        ru: "/ru",
+        "x-default": "/",
       },
     },
   };

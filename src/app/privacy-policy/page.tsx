@@ -1,4 +1,27 @@
 import { Header } from "@/components/layout/header";
+import type { Metadata } from "next";
+import { headers } from "next/headers";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headerList = await headers();
+  const locale = headerList.get("x-locale") || "en";
+  const path = "/privacy-policy";
+  const canonical = locale === "en" ? path : `/${locale}${path}`;
+
+  return {
+    title: "Privacy Policy | GetHired",
+    description: "Privacy Policy for GetHired services and data processing.",
+    alternates: {
+      canonical,
+      languages: {
+        en: "/privacy-policy",
+        uk: "/uk/privacy-policy",
+        ru: "/ru/privacy-policy",
+        "x-default": "/privacy-policy",
+      },
+    },
+  };
+}
 
 export default function PrivacyPolicy() {
   return (

@@ -15,29 +15,37 @@ import type { Language } from "@/lib/translations";
 import { getT } from "@/lib/translations-data";
 import Image from "next/image";
 
-export const metadata: Metadata = {
-  title: "Free Resume Builder 2026 | Create Professional ATS-Friendly Resumes",
-  description:
-    "Create an ATS-friendly, professional resume with our free online resume maker. Choose from 20+ modern templates, get AI content suggestions, and download as PDF instantly.",
-  keywords:
-    "resume builder, free resume maker, online cv creator, ats-friendly resume templates, professional resume online, best resume builder tool, create cv fast, ai resume writer, resume formats 2026, online resume generator",
-  openGraph: {
-    title: "Free Resume Builder | Create a Professional Resume in Minutes",
+export async function generateMetadata(): Promise<Metadata> {
+  const headerList = await headers();
+  const locale = headerList.get("x-locale") || "en";
+  const path = "/resume-builder";
+  const canonical = locale === "en" ? path : `/${locale}${path}`;
+
+  return {
+    title:
+      "Free Resume Builder 2026 | Create Professional ATS-Friendly Resumes",
     description:
-      "Build a job-winning resume with our free online resume builder. ATS-friendly templates, AI suggestions, and instant PDF download.",
-    type: "website",
-    url: "https://gethired.com/resume-builder",
-  },
-  alternates: {
-    canonical: "https://gethired.com/resume-builder",
-    languages: {
-      "en-US": "/resume-builder",
-      "uk-UA": "/uk/resume-builder",
-      "ru-RU": "/ru/resume-builder",
-      "x-default": "/resume-builder",
+      "Create an ATS-friendly, professional resume with our free online resume maker. Choose from 20+ modern templates, get AI content suggestions, and download as PDF instantly.",
+    keywords:
+      "resume builder, free resume maker, online cv creator, ats-friendly resume templates, professional resume online, best resume builder tool, create cv fast, ai resume writer, resume formats 2026, online resume generator",
+    openGraph: {
+      title: "Free Resume Builder | Create a Professional Resume in Minutes",
+      description:
+        "Build a job-winning resume with our free online resume builder. ATS-friendly templates, AI suggestions, and instant PDF download.",
+      type: "website",
+      url: "/resume-builder",
     },
-  },
-};
+    alternates: {
+      canonical,
+      languages: {
+        "en-US": "/resume-builder",
+        "uk-UA": "/uk/resume-builder",
+        "ru-RU": "/ru/resume-builder",
+        "x-default": "/resume-builder",
+      },
+    },
+  };
+}
 
 export default async function ResumeBuilderPage() {
   const headerList = await headers();
