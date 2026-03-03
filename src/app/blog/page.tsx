@@ -6,20 +6,27 @@ import type { Metadata } from "next";
 import { Header } from "@/components/layout/header";
 import Image from "next/image";
 
-export const metadata: Metadata = {
-  title: "Blog | GetHired - Career Tips, Resume Guides & AI Tools",
-  description:
-    "Read the latest career advice, resume tips, and AI tools guides on the GetHired blog. Expert tips on job hunting, interviews, and career growth.",
-  alternates: {
-    canonical: "/blog",
-    languages: {
-      "en-US": "/blog",
-      "uk-UA": "/uk/blog",
-      "ru-RU": "/ru/blog",
-      "x-default": "/blog",
+export async function generateMetadata(): Promise<Metadata> {
+  const headerList = await headers();
+  const locale = headerList.get("x-locale") || "en";
+  const path = "/blog";
+  const canonical = locale === "en" ? path : `/${locale}${path}`;
+
+  return {
+    title: "Blog | GetHired - Career Tips, Resume Guides & AI Tools",
+    description:
+      "Read the latest career advice, resume tips, and AI tools guides on the GetHired blog. Expert tips on job hunting, interviews, and career growth.",
+    alternates: {
+      canonical,
+      languages: {
+        "en-US": "/blog",
+        "uk-UA": "/uk/blog",
+        "ru-RU": "/ru/blog",
+        "x-default": "/blog",
+      },
     },
-  },
-};
+  };
+}
 
 const POSTS_PER_PAGE = 10;
 
@@ -28,7 +35,10 @@ const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
 function replaceImageUrl(url: string | null): string | null {
   if (!url) return null;
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
-  const path = url.replace(`https://${SUPABASE_STORAGE_HOST}/storage/`, "/storage/");
+  const path = url.replace(
+    `https://${SUPABASE_STORAGE_HOST}/storage/`,
+    "/storage/",
+  );
   return `${siteUrl}${path}`;
 }
 

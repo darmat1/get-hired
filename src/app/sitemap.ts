@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locales = ["en", "uk", "ru"];
   const defaultLocale = "en";
-  const staticLastMod = new Date("2026-02-27");
+  const staticLastMod = new Date("2026-03-02");
   const staticRoutes = [
     "",
     "/ai",
@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           acc[loc] = getUrl(route, loc);
           return acc;
         },
-        {} as Record<string, string>,
+        { "x-default": getUrl(route, defaultLocale) } as Record<string, string>,
       );
 
       return {
@@ -64,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           acc[loc] = getUrl(route, loc);
           return acc;
         },
-        {} as Record<string, string>,
+        { "x-default": getUrl(route, defaultLocale) } as Record<string, string>,
       );
 
       return {

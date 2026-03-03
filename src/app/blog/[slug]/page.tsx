@@ -46,16 +46,19 @@ export async function generateMetadata({
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gethired.work";
   const imageUrl = replaceImageUrl(post.imageUrl);
 
+  const canonical =
+    locale === "en" ? `/blog/${slug}` : `/${locale}/blog/${slug}`;
+
   return {
     title,
     description: excerpt,
     alternates: {
-      canonical: `${siteUrl}/blog/${slug}`,
+      canonical,
       languages: {
-        en: `${siteUrl}/blog/${slug}`,
-        uk: `${siteUrl}/uk/blog/${slug}`,
-        ru: `${siteUrl}/ru/blog/${slug}`,
-        "x-default": `${siteUrl}/blog/${slug}`,
+        en: `/blog/${slug}`,
+        uk: `/uk/blog/${slug}`,
+        ru: `/ru/blog/${slug}`,
+        "x-default": `/blog/${slug}`,
       },
     },
     openGraph: {
