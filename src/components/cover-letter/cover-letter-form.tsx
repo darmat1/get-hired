@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "@/lib/translations";
 import { useRouter } from "next/navigation";
 import {
@@ -30,11 +30,30 @@ export function CoverLetterForm() {
   const [coverLetter, setCoverLetter] = useState("");
   const [resumeId, setResumeId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [resumeCount, setResumeCount] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/resumes")
+      .then((res) => res.json())
+      .then((data) => setResumeCount(Array.isArray(data) ? data.length : 0))
+      .catch(() => {});
+  }, []);
+
+  const isLimitReached = resumeCount >= 2;
 
   const handleGenerateCoverLetter = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
+
+    if (generateResume && isLimitReached) {
+      setMessage({
+        type: "error",
+        text: t("profile.suggest_limit_desc"),
+      });
+      setLoading(false);
+      return;
+    }
 
     if (!jobDescription.trim()) {
       setMessage({
@@ -183,24 +202,38 @@ export function CoverLetterForm() {
           </div>
 
           {/* Generate Tailored Resume Checkbox */}
-          <div className="flex items-start gap-3 p-4 rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20">
+          <div
+            className={`flex items-start gap-3 p-4 rounded-lg border ${
+              isLimitReached
+                ? "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/20"
+                : "border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20"
+            }`}
+          >
             <input
               type="checkbox"
               id="generateResume"
-              checked={generateResume}
+              checked={generateResume && !isLimitReached}
               onChange={(e) => setGenerateResume(e.target.checked)}
-              disabled={loading}
-              className="mt-0.5 h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-purple-600 focus:ring-purple-500 cursor-pointer"
+              disabled={loading || isLimitReached}
+              className={`mt-0.5 h-4 w-4 rounded border-gray-300 dark:border-gray-600 focus:ring-purple-500 cursor-pointer ${
+                isLimitReached
+                  ? "opacity-50 cursor-not-allowed"
+                  : "text-purple-600"
+              }`}
             />
             <label
               htmlFor="generateResume"
-              className="cursor-pointer select-none"
+              className={`select-none ${isLimitReached ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
-              <span className="block text-sm font-medium text-gray-900 dark:text-white">
+              <span
+                className={`block text-sm font-medium ${isLimitReached ? "text-amber-800 dark:text-amber-400" : "text-gray-900 dark:text-white"}`}
+              >
                 {t("cover_letter.generate_resume")}
               </span>
               <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                {t("cover_letter.generate_resume_desc")}
+                {isLimitReached
+                  ? t("profile.suggest_limit_desc")
+                  : t("cover_letter.generate_resume_desc")}
               </span>
             </label>
           </div>

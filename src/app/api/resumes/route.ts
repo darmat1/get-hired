@@ -41,6 +41,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const resumeCount = await prisma.resume.count({
+      where: { userId: session.user.id },
+    });
+
+    if (resumeCount >= 2) {
+      return NextResponse.json(
+        {
+          error:
+            "Resume limit reached. Please delete an existing resume to create a new one.",
+        },
+        { status: 403 },
+      );
+    }
+
     const body = await req.json();
 
     const resume = await (prisma.resume.create as any)({

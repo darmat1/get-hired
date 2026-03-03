@@ -186,7 +186,7 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
     }
   };
 
-  const isLimitReached = existingResumes.length >= 4;
+  const isLimitReached = existingResumes.length >= 2;
 
   return (
     <Modal

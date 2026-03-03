@@ -300,9 +300,9 @@ export const translations: Translations = {
     ru: "Лимит резюме достигнут",
   },
   "profile.suggest_limit_desc": {
-    en: "You can save up to 4 resumes. Delete unnecessary ones to create a new one.",
-    uk: "Ви можете зберегти не більше 4 резюме. Видаліть непотрібні, щоб створити нове.",
-    ru: "Вы можете сохранить не более 4 резюме. Удалите ненужные, чтобы создать новое.",
+    en: "You can save up to 2 resumes. Delete unnecessary ones to create a new one.",
+    uk: "Ви можете зберегти не більше 2 резюме. Видаліть непотрібні, щоб створити нове.",
+    ru: "Вы можете сохранить не более 2 резюме. Удалите ненужные, чтобы создать новое.",
   },
   "profile.no_suggestions": {
     en: "Failed to generate suggestions. Try updating your profile.",
@@ -2247,9 +2247,9 @@ export const translations: Translations = {
     ru: "Скоро будет",
   },
   "pricing_landing.feature_resumes": {
-    en: "4 Resumes per account",
-    uk: "4 резюме на акаунт",
-    ru: "4 резюме на аккаунт",
+    en: "2 Resumes per account",
+    uk: "2 резюме на акаунт",
+    ru: "2 резюме на аккаунт",
   },
   "pricing_landing.feature_template": {
     en: "1 Basic Template",
