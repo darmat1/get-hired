@@ -109,7 +109,7 @@ export function CreativePreview({ data }: Props) {
                           ? (exp.description as string).split("\n")
                           : []
                       )
-                        .filter(Boolean)
+                        .filter((d) => d !== undefined && d !== null)
                         .map((d, i) => (
                           <li key={i}>{d}</li>
                         ))}

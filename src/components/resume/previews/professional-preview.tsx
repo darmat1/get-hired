@@ -87,7 +87,7 @@ export function ProfessionalPreview({ data }: Props) {
                         ? (exp.description as string).split("\n")
                         : []
                     )
-                      .filter(Boolean)
+                      .filter((d) => d !== undefined && d !== null)
                       .map((desc, idx) => (
                         <li key={idx} className="text-gray-800 text-xs pl-1">
                           {desc}

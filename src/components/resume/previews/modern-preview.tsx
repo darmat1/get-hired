@@ -1088,7 +1088,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                                   (Array.isArray(exp.description)
                                     ? exp.description
                                     : [exp.description]
-                                  ).filter(Boolean) as string[]
+                                  ).filter((d) => d !== undefined && d !== null) as string[]
                                 ).map((d, dIdx) => (
                                   <div
                                     key={dIdx}

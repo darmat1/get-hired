@@ -75,7 +75,7 @@ export function MinimalPreview({ data }: Props) {
                         ? (exp.description as string).split("\n")
                         : []
                     )
-                      .filter(Boolean)
+                      .filter((d) => d !== undefined && d !== null)
                       .map((desc, idx) => (
                         <li key={idx} className="pl-0">
                           - {desc}
