@@ -70,9 +70,9 @@ export function CreativePreview({ data }: Props) {
             {personalInfo.firstName} <br />
             <span className="text-blue-600">{personalInfo.lastName}</span>
           </h1>
-          {(data as any).targetPosition && (data as any).targetCompany && (
+          {(data as any).targetPosition && (
             <div className="text-sm font-medium text-gray-700 mt-2">
-              Applicant for the role {(data as any).targetPosition} for {(data as any).targetCompany}
+              {(data as any).targetPosition}
             </div>
           )}
         </div>

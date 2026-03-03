@@ -26,9 +26,9 @@ export function MinimalPreview({ data }: Props) {
           <h1 className="text-3xl font-bold uppercase tracking-widest mb-2">
             {personalInfo.firstName} {personalInfo.lastName}
           </h1>
-          {(data as any).targetPosition && (data as any).targetCompany && (
+          {(data as any).targetPosition && (
             <div className="text-sm font-medium text-gray-700 mt-1">
-              Applicant for the role {(data as any).targetPosition} for {(data as any).targetCompany}
+              {(data as any).targetPosition}
             </div>
           )}
           <div className="text-[10px] text-gray-600 flex gap-3 uppercase tracking-wider">

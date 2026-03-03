@@ -9,6 +9,7 @@ const SHARED_RULES = `### STEP 0 — DETECT LANGUAGE (ABSOLUTE FIRST)
 - Read the entire Job Description (JD).
 - Detect its PRIMARY language (English, Ukrainian, Russian, Polish, etc.).
 - Ignore UI elements like "Save", "Apply", "Підписатись", "Войти" — these are navigation, not content.
+- Ignore technical names of technologies like "Python", "React", "Webpack" — these are not do not determine the language of the document.
 - The ENTIRE output — every word — must be in the JD's detected language.
 - All candidate facts from the profile must be TRANSLATED into the JD language.
 

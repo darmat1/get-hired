@@ -217,10 +217,16 @@ export function CreativeTemplate({ resume }: TemplateProps) {
           <Text style={styles.name}>
             {personalInfo.firstName} {personalInfo.lastName}
           </Text>
-          <Text style={{ fontSize: 10, color: "#4b5563", marginBottom: 20 }}>
-            {/* Could put title here if we had it, using summary for now */}
-            Frontend Developer
-          </Text>
+          {resume.targetPosition ? (
+            <Text style={{ fontSize: 10, color: "#4b5563", marginBottom: 20, fontStyle: "italic" }}>
+              {resume.targetPosition}
+            </Text>
+          ) : (
+            <Text style={{ fontSize: 10, color: "#4b5563", marginBottom: 20 }}>
+              {/* Could put title here if we had it, using summary for now */}
+              Frontend Developer
+            </Text>
+          )}
 
           {personalInfo.summary && (
             <View style={{ marginBottom: 15 }}>

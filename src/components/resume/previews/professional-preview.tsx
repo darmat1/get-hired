@@ -28,9 +28,9 @@ export function ProfessionalPreview({ data }: Props) {
         <h1 className="text-2xl font-bold text-gray-900 mb-2 uppercase tracking-wide">
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
-        {(data as any).targetPosition && (data as any).targetCompany && (
+        {(data as any).targetPosition && (
           <div className="text-sm font-medium text-gray-700 mt-1">
-            Applicant for the role {(data as any).targetPosition} for {(data as any).targetCompany}
+            {(data as any).targetPosition}
           </div>
         )}
         <div className="flex flex-wrap justify-center gap-x-4 text-gray-700 text-xs">

@@ -98,6 +98,11 @@ export function MinimalTemplate({ resume }: TemplateProps) {
             <Text style={styles.name}>
               {personalInfo.firstName} {personalInfo.lastName}
             </Text>
+            {resume.targetPosition && (
+              <Text style={[styles.contact, { color: "#6b7280", fontStyle: "italic" }]}>
+                {resume.targetPosition}
+              </Text>
+            )}
             <Text style={styles.contact}>
               {personalInfo.email} • {personalInfo.phone}
             </Text>

@@ -129,8 +129,6 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
     },
     headerTitle: {
       fontSize: 11,
-      letterSpacing: 2,
-      textTransform: "uppercase",
       color: "#4b5563",
       marginBottom: 20,
     },
@@ -512,6 +510,12 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
           <Text style={styles.headerName}>
             {personalInfo.firstName} {personalInfo.lastName}
           </Text>
+
+          {resume.targetPosition && (
+            <Text style={styles.headerTitle}>
+              {resume.targetPosition}
+            </Text>
+          )}
 
           {/* Fallback title if needed */}
           {/* <Text style={styles.headerTitle}>Full Stack Developer</Text> */}

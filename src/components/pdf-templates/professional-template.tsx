@@ -110,6 +110,11 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
               <Text style={styles.name}>
                 {personalInfo.firstName} {personalInfo.lastName}
               </Text>
+              {resume.targetPosition && (
+                <Text style={[styles.contactInfo, { color: "#4b5563", fontStyle: "italic" }]}>
+                  {resume.targetPosition}
+                </Text>
+              )}
               <Text style={styles.contactInfo}>
                 {personalInfo.email} | {personalInfo.phone}
               </Text>
