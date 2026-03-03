@@ -204,6 +204,23 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check resume limit if tailoring is requested
+    if (generateResume) {
+      const resumeCount = await prisma.resume.count({
+        where: { userId: session.user.id },
+      });
+
+      if (resumeCount >= 2) {
+        return NextResponse.json(
+          {
+            error:
+              "Resume limit reached. Please delete an existing resume to generate a new tailored version.",
+          },
+          { status: 403 },
+        );
+      }
+    }
+
     // Get user profile (not resumes)
     const profile = await prisma.userProfile.findUnique({
       where: { userId: session.user.id },
