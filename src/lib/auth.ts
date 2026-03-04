@@ -4,6 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
 import { emailOTP } from "better-auth/plugins";
+import { sendTelegramNotification } from "@/lib/telegram";
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
@@ -78,6 +79,21 @@ export const auth = betterAuth({
   account: {
     accountLinking: {
       enabled: true,
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await sendTelegramNotification(
+            `🚀 <b>New User Registered!</b>\n\n` +
+              `📧 <b>Email:</b> ${user.email}\n` +
+              `👤 <b>Name:</b> ${user.name || "N/A"}\n` +
+              `🆔 <b>ID:</b> ${user.id}\n` +
+              `📅 <b>Date:</b> ${new Date().toLocaleString()}`,
+          );
+        },
+      },
     },
   },
 });
