@@ -7,9 +7,9 @@ import { aiComplete } from "@/lib/ai/server-ai";
 
 const SHARED_RULES = `### STEP 0 — DETECT LANGUAGE (ABSOLUTE FIRST)
 - Read the entire Job Description (JD).
-- Detect its PRIMARY language (English, Ukrainian, Russian, Polish, etc.).
-- Ignore UI elements like "Save", "Apply", "Підписатись", "Войти" — these are navigation, not content.
-- Ignore technical names of technologies like "Python", "React", "Webpack" — these are not do not determine the language of the document.
+- Detect its PRIMARY language based ONLY on the main body text: job title, responsibilities, requirements, and company description.
+- IGNORE completely: UI navigation words ("Підписатись", "Зберегти", "Сховати", "Відгукнутись", "Save", "Apply", "Войти"), section labels ("Вимоги до володіння мовами"), and technology names.
+- If the company description and requirements are written in English — the JD language is English, regardless of any Ukrainian or Russian UI words present on the page.
 - The ENTIRE output — every word — must be in the JD's detected language.
 - All candidate facts from the profile must be TRANSLATED into the JD language.
 
@@ -201,58 +201,27 @@ const TAILORED_RESUME_PROMPT = `You are an expert resume writer creating a SELLI
    - Use "technical", "soft", or "language" for category.
    - Use "beginner", "elementary", "intermediate", "advanced", or "expert" for level.
 
+7. **ORDERING**:
+   - Sort work experience by this exact priority:
+     1. MOST RELEVANT to JD (matching stack, responsibilities) — always first, even if not current job.
+     2. Other commercial experience (employmentType: full_time, part_time, contract) — sorted newest to oldest.
+     3. Pet projects (employmentType: pet_project) — always last, regardless of date.
+   - RELEVANCE beats recency. A part-time Vue job must appear before a full-time React job if JD requires Vue.
+   - Current job does NOT automatically go first — relevance to JD determines position #1.
+   - NEVER place a pet_project above any commercial position.
+   - Preserve the employmentType value from the profile exactly as-is in the output JSON.
+   - Example: JD requires Vue → ReSpot (Vue, part-time) first, then b0arding.com (React, full-time, current) second, then older jobs, then pet_project last.
+
 ### OUTPUT FORMAT
 Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exact structure:
 
 {
-  "personalInfo": {
-    "firstName": "string",
-    "lastName": "string",
-    "email": "string",
-    "phone": "string",
-    "location": "string",
-    "website": "string or empty",
-    "linkedin": "string or empty",
-    "telegram": "string or empty",
-    "summary": "2-3 powerful sentences tailored to the role"
-  },
-  "workExperience": [
-    {
-      "id": "unique-id",
-      "title": "Job Title (can be adjusted to match JD terminology)",
-      "company": "Company Name",
-      "location": "City, Country",
-      "startDate": "YYYY-MM",
-      "endDate": "YYYY-MM or empty if current",
-      "current": false,
-      "description": [
-        "Achievement with metrics and JD keywords",
-        "Another achievement emphasizing relevant skills"
-      ]
-    }
-  ],
-  "education": [
-    {
-      "id": "unique-id",
-      "institution": "University Name",
-      "degree": "Degree",
-      "field": "Field of Study",
-      "startDate": "YYYY-MM",
-      "endDate": "YYYY-MM",
-      "current": false,
-      "gpa": "optional"
-    }
-  ],
-  "skills": [
-    {
-      "id": "unique-id",
-      "name": "Skill Name",
-      "category": "technical",
-      "level": "advanced"
-    }
-  ],
-  "targetPosition": "string or empty - extract the job title from JD (e.g., 'Front-end Developer', 'Senior React Developer')",
-  "targetCompany": "string or empty - extract the company name from JD (e.g., 'Panda Team', 'Google')"
+  "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "telegram": "", "summary": "2-3 powerful sentences tailored to the role" },
+  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
+  "education": [{ "id": "edu-1", "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false }],
+  "skills": [{ "id": "skill-1", "name": "", "category": "technical", "level": "advanced" }],
+  "targetPosition": "job title extracted from JD",
+  "targetCompany": "company name extracted from JD"
 }
 
 ### CRITICAL RULES
@@ -262,7 +231,7 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 - Generate unique IDs for each item (use format like "we-1", "we-2", "edu-1", "skill-1", etc.).
 - Keep only RELEVANT positions. Filter out unrelated jobs.
 - Rewrite descriptions to maximize keyword matches and emphasize measurable results.
-- IMPORTANT: Extract targetPosition and targetCompany from the Job Description. Look for the job title (usually at the beginning of JD or in "We are looking for..." section) and company name (usually mentioned in company description or at the top). If not found, leave empty strings. Do NOT use your own experience for these fields - ONLY extract from JD.`;
+- IMPORTANT: Extract targetPosition and targetCompany from the Job Description. Look for the job title (usually at the beginning of JD or in "We are looking for..." section) and company name (usually mentioned in company description or at the top). If not found, leave empty strings. Do NOT use candidate experience for these fields — ONLY extract from JD.`;
 
 export async function POST(request: Request) {
   try {
@@ -341,7 +310,7 @@ Write the cover letter now. Use ONLY facts from the profile above.`;
         systemPrompt,
         userPrompt,
         temperature: 0.3,
-        maxTokens: 3000,
+        maxTokens: 5000,
       },
       session.user.id,
     );
@@ -371,7 +340,7 @@ Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY rele
           systemPrompt: TAILORED_RESUME_PROMPT,
           userPrompt: resumeUserPrompt,
           temperature: 0.3,
-          maxTokens: 4000,
+          maxTokens: 12000,
           responseFormat: { type: "json_object" },
         },
         session.user.id,
@@ -391,8 +360,32 @@ Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY rele
           content = content.slice(0, -3);
         }
         content = content.trim();
-        resumeJson = JSON.parse(content);
-      } catch {
+
+        // Attempt to recover truncated JSON (e.g. MAX_TOKENS cut it mid-way)
+        try {
+          resumeJson = JSON.parse(content);
+        } catch {
+          // Find the last valid closing brace and try to close the JSON
+          const lastBrace = content.lastIndexOf("}");
+          if (lastBrace !== -1) {
+            const truncated = content.slice(0, lastBrace + 1);
+            // Count unclosed brackets/braces and close them
+            let fixed = truncated;
+            const openArrays =
+              (fixed.match(/\[/g) || []).length -
+              (fixed.match(/\]/g) || []).length;
+            const openObjects =
+              (fixed.match(/{/g) || []).length -
+              (fixed.match(/}/g) || []).length;
+            for (let i = 0; i < openArrays; i++) fixed += "]";
+            for (let i = 0; i < openObjects; i++) fixed += "}";
+            resumeJson = JSON.parse(fixed);
+            console.warn("[AI] Resume JSON was truncated and auto-recovered");
+          } else {
+            throw new Error("No valid JSON structure found");
+          }
+        }
+      } catch (err) {
         console.error(
           "Failed to parse AI resume JSON:",
           resumeResponse.content,
