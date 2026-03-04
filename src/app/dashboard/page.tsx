@@ -227,7 +227,7 @@ export default function MyExperiencePage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-5xl mx-auto space-y-6">
+          <div className="max-w-full mx-auto space-y-6">
             <div className="flex justify-between items-center">
               <div>
                 <h1 className="text-3xl font-bold">{t("nav.my_experience")}</h1>

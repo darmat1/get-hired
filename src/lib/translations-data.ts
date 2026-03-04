@@ -1674,6 +1674,11 @@ export const translations: Translations = {
     uk: "Згенерувати супровідний лист",
     ru: "Сгенерировать сопроводительное письмо",
   },
+  "cover_letter.generating": {
+    en: "Generating Cover Letter",
+    uk: "Генерування супровідного листа",
+    ru: "Генерация сопроводительного письма",
+  },
   "cover_letter.generated": {
     en: "Generated Cover Letter",
     uk: "Згенерований супровідний лист",
