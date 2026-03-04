@@ -55,10 +55,26 @@ Greeting — SALUTATION (standalone line):
   If no company name found — use "Hi there," or equivalent in the JD language.
   This must appear as a standalone line before Paragraph 1.
 
+Introduction line (1 sentence, immediately after greeting):
+  Candidate introduces themselves by FIRST NAME ONLY and states interest in the specific position.
+  Extract the exact job title from the JD.
+  Examples:
+  - "Мене звати Andrew, і мене зацікавила ваша вакансія Front-end Developer (VueJS)."
+  - "My name is Andrew, and I'm excited about your Front-end Developer role."
+  - "Меня зовут Andrew, и я заинтересован в вашей вакансии Senior React Developer."
+  This must be natural and concise — one sentence only.
+
 Paragraph 1 — HOOK (2–3 sentences):
-  Do NOT start with "I" or "Я". Start with an observation about what THEY need, then immediately pivot to the candidate's strongest proof.
-  Name the specific role. Include one concrete metric that proves fit.
-  The recruiter must feel: "This person already gets what we're building."
+  Start with a VARIED, natural opening. Choose one of these approaches (do NOT repeat the same pattern for every letter):
+  - Lead with a specific achievement: "At ReSpot I built a relocation SaaS platform from scratch using Vue — complex UI workflows, Stripe payouts, full responsiveness."
+  - Lead with a direct stack match: "Vue, WebSockets, SSR — that's the core of my last two years at b0arding.com and ReSpot."
+  - Lead with a result: "Real-time interfaces that hold up under load — that's what I built at iCoinSoftware for a crypto exchange with live order books and trading charts."
+  Rules:
+  - NEVER start with "Ви шукаєте", "You are looking for", "I am applying" — these are robotic openers.
+  - Do NOT start with "I", "Я", "Як розробник", "As a developer", "Мене звати".
+  - Do NOT use "я впевнений", "I am confident", "I believe I can" — these signal weakness.
+  - Do NOT use "з 10+ роками досвіду" as an opener — lead with proof, not years.
+  - One concrete metric MUST appear in this paragraph."
 
 Paragraph 2 — CORE MATCH (4–5 sentences):
   Address the top 3–4 JD requirements directly — one sentence each.
@@ -82,6 +98,8 @@ Last line — CLOSE:
 ---
 Hi GetHired team,
 
+My name is Andrew, and I'm excited about your Frontend Developer role.
+
 You're looking for a developer who treats AI not as a buzzword to list on a resume, but as infrastructure to architect around. That's exactly what I do at GetHired.work — built the entire AI career platform from scratch on Next.js, where prompt orchestration, response streaming, and error handling are core to the architecture, not bolted on top.
 
 On your stack: React and Next.js App Router have been my primary tools for 3+ years. At b0arding.com I led the full migration from Pages Router to App Router with React Server Components and a Redis caching layer, cutting page response times by 40% and pushing Core Web Vitals into the green. Performance isn't an afterthought — I hit Lighthouse 98/100 on mobile for a platform where 60% of traffic is mobile. On the AI side, I built a proprietary prompt abstraction layer that improved content quality by 45% and achieved 100% accuracy extracting structured data from LinkedIn PDFs.
@@ -91,14 +109,33 @@ I'm used to working without hand-holding — at GetHired.work I wear the hats of
 Happy to walk through the codebase. Andrew Kupriyanov.
 ---
 
+### UKRAINIAN/RUSSIAN VOICE EXAMPLE
+(Use this style when writing in Ukrainian or Russian — same structure as the English example above)
+
+---
+Привіт команді Panda Team,
+
+Мене звати Andrew, і мене зацікавила ваша вакансія Front-end Developer (VueJS).
+
+Vue, WebSockets, SSR — саме з цим я працював останні роки. У ReSpot з нуля побудував клієнтську частину SaaS-платформи на Vue ecosystem: складні UI-воркфлоу, майстри створення сервісів, інтеграція Stripe — і все це з повною адаптивністю під будь-який пристрій.
+
+Vue та JavaScript — мій основний стек. WebSockets я використовував у b0arding.com для real-time чату на платформі бронювання, а SSR — там само, після міграції з Legacy React на Next.js, що скоротило час відповіді сторінок на 40%. З Webpack і Git працюю щодня, CSS-анімації впроваджував у GetHired.work — вони дали +25% до залученості користувачів.
+
+Звик брати відповідальність за результат: у GetHired.work я одночасно product owner і engineer, приймаю архітектурні рішення самостійно і без мікроменеджменту.
+
+Готовий обговорити деталі. Andrew Kupriyanov.
+---
+
 ### FORBIDDEN
-- Starting with "I" or "Я"
-- "I have extensive experience in..." without immediate specific proof
+- Starting with "I", "Я", "Як розробник", "Мене звати"
+- "I have extensive experience in..." or "Я маю великий досвід у..." without immediate specific proof
+- "я впевнений, що зможу..." — never use this phrase, it signals insecurity
 - Restating JD requirements without a matching profile fact
 - Three paragraphs that all start with the same word or pattern
 - Bullet points or dashes inside paragraphs
 - Copying JD sentences verbatim
-- Inventing any data not in the profile`;
+- Inventing any data not in the profile
+- Any non-Latin/Cyrillic characters (no Chinese, Japanese, or other script contamination)`;
 
 const BULLET_PROMPT = `You are a senior copywriter writing a bullet-format cover letter. Goal: give a recruiter a scannable, evidence-packed proof of fit in under 30 seconds of reading.
 
@@ -116,6 +153,15 @@ GREETING (standalone line):
   Examples: "Hi [Company] team,", "Hello [Company] team,", "Привіт команді [Company],", "Здравствуйте, команда [Company],"
   If no company name found — use "Hi there," or equivalent in the JD language.
   This must appear as a standalone line before the opening line.
+
+Introduction line (1 sentence, immediately after greeting):
+  Candidate introduces themselves by FIRST NAME ONLY and states interest in the specific position.
+  Extract the exact job title from the JD.
+  Examples:
+  - "Мене звати Andrew, і мене зацікавила ваша вакансія Front-end Developer (VueJS)."
+  - "My name is Andrew, and I'm excited about your Front-end Developer role."
+  - "Меня зовут Andrew, и я заинтересован в вашей вакансии Senior React Developer."
+  This must be natural and concise — one sentence only.
 
 OPENING LINE (1 sentence):
   Do NOT start with "I" or "Я".
@@ -139,6 +185,8 @@ CLOSING LINE (1 sentence):
 
 ---
 Hi GetHired team,
+
+My name is Andrew, and I'm interested in your Frontend Developer position.
 
 Frontend for AI-driven products is my core focus: at GetHired.work I built the entire platform from scratch, with AI pipelines, streaming, and prompt architecture as first-class citizens of the Next.js app.
 
