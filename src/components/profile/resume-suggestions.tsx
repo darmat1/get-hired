@@ -123,8 +123,11 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
         });
         if (response.ok) {
           const data = await response.json();
-          if (data.variants && data.variants.length > 0) {
-            setVariants(data.variants);
+          const variantsArray = Array.isArray(data.variants)
+            ? data.variants
+            : [];
+          if (variantsArray.length > 0) {
+            setVariants(variantsArray);
             setIsLoading(false);
             return;
           }
@@ -136,7 +139,8 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
       });
       if (response.ok) {
         const data = await response.json();
-        setVariants(data.variants);
+        const variantsArray = Array.isArray(data.variants) ? data.variants : [];
+        setVariants(variantsArray);
       }
     } catch (error) {
       console.error("Failed to generate suggestions:", error);

@@ -23,6 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
         "x-default": "/",
       },
     },
+    openGraph: {
+      title: "Free Resume Builder | Create a Professional Resume in Minutes",
+      description:
+        "Build a job-winning resume with our free online resume builder. ATS-friendly templates, AI suggestions, and instant PDF download.",
+      type: "website",
+      url: canonical,
+    },
   };
 }
 

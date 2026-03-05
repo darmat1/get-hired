@@ -19,6 +19,7 @@ const ENCRYPTED_FIELDS_BY_MODEL: Record<string, string[]> = {
     "education",
     "skills",
     "certificates",
+    "resumeVariants",
   ],
   resume: [
     "personalInfo",
@@ -28,7 +29,6 @@ const ENCRYPTED_FIELDS_BY_MODEL: Record<string, string[]> = {
     "certificates",
     "customization",
   ],
-  resumeVariant: ["reasoning", "selectedSkills", "selectedExp", "keywords"],
 };
 
 // Fields that are stored as JSON and need stringify/parse
@@ -42,6 +42,7 @@ const JSON_FIELDS = new Set([
   "selectedSkills",
   "selectedExp",
   "keywords",
+  "resumeVariants",
 ]);
 
 /**
@@ -131,18 +132,25 @@ export const prisma = prismaBase.$extends({
               ENCRYPTED_FIELDS_BY_MODEL,
             )) {
               for (const field of fields) {
-                if (
-                  item[field] &&
-                  typeof item[field] === "string" &&
-                  item[field].includes(":")
-                ) {
+                if (item[field] && typeof item[field] === "string") {
                   try {
-                    const decrypted = decrypt(item[field]);
-                    item[field] = JSON_FIELDS.has(field)
-                      ? JSON.parse(decrypted)
-                      : decrypted;
+                    let val = item[field];
+                    let wasEncrypted = false;
+                    // If it's encrypted, decrypt first
+                    if (val.includes(":")) {
+                      val = decrypt(val);
+                      wasEncrypted = true;
+                    }
+
+                    // If it's a JSON field, parse it
+                    if (JSON_FIELDS.has(field)) {
+                      item[field] = JSON.parse(val);
+                    } else if (wasEncrypted) {
+                      // If it was encrypted but not a JSON field, update with decrypted value
+                      item[field] = val;
+                    }
                   } catch (e) {
-                    // Decryption failed - likely not encrypted or wrong key, ignore
+                    // Decryption or parsing failed - likely not encrypted/JSON or wrong key, ignore
                   }
                 }
               }

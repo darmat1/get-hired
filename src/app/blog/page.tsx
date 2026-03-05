@@ -25,6 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
         "x-default": "/blog",
       },
     },
+    openGraph: {
+      url: canonical,
+    },
   };
 }
 

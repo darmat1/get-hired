@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description:
         "Build a job-winning resume with our free online resume builder. ATS-friendly templates, AI suggestions, and instant PDF download.",
       type: "website",
-      url: "/resume-builder",
+      url: canonical,
     },
     alternates: {
       canonical,

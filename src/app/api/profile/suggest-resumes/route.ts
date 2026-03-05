@@ -127,41 +127,42 @@ RULES:
       variantsCount: parsed?.variants?.length || 0,
     });
 
-    // Save suggestions to database for the user (optional, but requested in schema)
-    // We can clear old variants and save new ones
-    const deleteStart = Date.now();
-    await prisma.resumeVariant.deleteMany({
-      where: { profileId: profile.id },
-    });
-    logWithTime("Old variants deleted", {
-      durationMs: Date.now() - deleteStart,
+    const saveStart = Date.now();
+    const updatedProfile = await prisma.userProfile.update({
+      where: { id: profile.id },
+      data: {
+        resumeVariants: (parsed.variants || []).map((v: any) => ({
+          title: v.title,
+          targetRole: v.targetRole,
+          seniority: v.seniority,
+          matchScore: v.matchScore,
+          reasoning: v.reasoning,
+          selectedSkills: v.selectedSkills,
+          selectedExp: v.selectedExpIds,
+          keywords: v.keywords || [],
+          createdAt: new Date().toISOString(),
+        })) as any,
+      },
     });
 
-    const createStart = Date.now();
-    const savedVariants = await Promise.all(
-      (parsed.variants || []).map((v: any) =>
-        (prisma.resumeVariant.create as any)({
-          data: {
-            profileId: profile.id,
-            title: v.title,
-            targetRole: v.targetRole,
-            seniority: v.seniority,
-            matchScore: v.matchScore,
-            reasoning: v.reasoning,
-            selectedSkills: v.selectedSkills,
-            selectedExp: v.selectedExpIds,
-            keywords: v.keywords || [],
-          },
-        }),
-      ),
-    );
-    logWithTime("Variants saved", {
-      count: savedVariants.length,
-      durationMs: Date.now() - createStart,
+    logWithTime("Variants saved to profile", {
+      type: typeof updatedProfile.resumeVariants,
+      count: Array.isArray(updatedProfile.resumeVariants)
+        ? updatedProfile.resumeVariants.length
+        : typeof updatedProfile.resumeVariants === "string"
+          ? "string-length"
+          : "not-countable",
+      durationMs: Date.now() - saveStart,
     });
 
     logWithTime("Request completed", { totalMs: Date.now() - requestStart });
-    return NextResponse.json({ variants: savedVariants });
+    const finalVariants = Array.isArray(updatedProfile.resumeVariants)
+      ? updatedProfile.resumeVariants
+      : typeof updatedProfile.resumeVariants === "string"
+        ? JSON.parse(updatedProfile.resumeVariants)
+        : [];
+
+    return NextResponse.json({ variants: finalVariants });
   } catch (error: any) {
     console.error("Suggest Resumes Error:", error);
     logWithTime("Request failed", {
@@ -184,9 +185,6 @@ export async function GET() {
 
     const profile = await prisma.userProfile.findUnique({
       where: { userId: session.user.id },
-      include: {
-        resumeVariants: true,
-      },
     });
 
     if (!profile) {
@@ -196,7 +194,14 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({ variants: profile.resumeVariants });
+    const variants = profile.resumeVariants;
+    const parsedVariants = Array.isArray(variants)
+      ? variants
+      : typeof variants === "string"
+        ? JSON.parse(variants)
+        : [];
+
+    return NextResponse.json({ variants: parsedVariants });
   } catch (error: any) {
     console.error("Fetch Suggestions Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -134,27 +134,9 @@ model UserProfile {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  resumeVariants ResumeVariant[]
+  resumeVariants String? @default("[]")
 
   @@map("user_profile")
-}
-
-model ResumeVariant {
-  id             String      @id @default(cuid())
-  profileId      String
-  profile        UserProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  title          String // e.g., "Senior Frontend Developer"
-  targetRole     String // e.g., "senior_frontend"
-  seniority      String // junior, middle, senior
-  matchScore     Int // 0-100 confidence score
-  reasoning      String?
-  selectedSkills String?
-  selectedExp    String?
-  keywords       String?     @default("[]")
-  createdAt      DateTime    @default(now())
-
-  @@index([profileId])
-  @@map("resume_variant")
 }
 
 model Post {

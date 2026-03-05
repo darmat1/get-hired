@@ -21,6 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
         "x-default": "/terms-of-service",
       },
     },
+    openGraph: {
+      url: canonical,
+    },
   };
 }
 

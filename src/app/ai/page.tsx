@@ -35,6 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description:
         "Automated resume scoring, ATS optimization, and AI-generated, actionable suggestions.",
       siteName: "GetHired",
+      url: canonical,
       images: [
         {
           url: "/og/ai-resume-analysis.png",
