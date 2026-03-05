@@ -72,7 +72,17 @@ export const translations: Translations = {
   "common.please_select": {
     en: "Please select",
     uk: "Будь ласка, оберіть",
-    ru: "Пожалуйста, выберите",
+    ru: "Пожалуйста, виберите",
+  },
+  "common.saving": {
+    en: "Saving",
+    uk: "Збереження",
+    ru: "Сохранение",
+  },
+  "common.saved": {
+    en: "Saved at",
+    uk: "Збережено о",
+    ru: "Сохранено в",
   },
   "auth.sign_in_required": {
     en: "Please sign in to create a resume",
@@ -1164,6 +1174,16 @@ export const translations: Translations = {
   "work.company": { en: "Company", uk: "Компанія", ru: "Компания" },
   "work.location": { en: "Location", uk: "Локація", ru: "Локация" },
   "work.period": { en: "Period", uk: "Період", ru: "Период" },
+  "work.delete_confirm_title": {
+    en: "Delete experience?",
+    uk: "Видалити досвід?",
+    ru: "Удалить опыт?",
+  },
+  "work.delete_confirm_desc": {
+    en: "Are you sure you want to delete this work experience?",
+    uk: "Ви впевнені, що хочете видалити цей досвід роботи?",
+    ru: "Вы уверены, что хотите удалить этот опыт работы?",
+  },
   "work.description": {
     en: "Description of responsibilities",
     uk: "Опис обов'язків",

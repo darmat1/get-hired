@@ -2,9 +2,16 @@
 
 import { WorkExperience } from "@/types/resume";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+  AlertTriangle,
+} from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { useState, useRef, useEffect } from "react";
+import { Modal } from "@/components/ui/modal";
 
 interface AutosizeTextareaProps {
   value: string;
@@ -53,6 +60,7 @@ interface ExperienceEditorProps {
 export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
   const { t } = useTranslation();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const addExperience = () => {
     const newExperience: WorkExperience = {
@@ -116,8 +124,15 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
   };
 
   const removeExperience = (index: number) => {
-    onChange(data.filter((_, i) => i !== index));
-    if (expandedIndex === index) setExpandedIndex(null);
+    setItemToDelete(index);
+  };
+
+  const confirmDelete = () => {
+    if (itemToDelete !== null) {
+      onChange(data.filter((_, i) => i !== itemToDelete));
+      if (expandedIndex === itemToDelete) setExpandedIndex(null);
+      setItemToDelete(null);
+    }
   };
 
   return (
@@ -363,6 +378,38 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
           </div>
         ))}
       </div>
+
+      <Modal
+        isOpen={itemToDelete !== null}
+        onClose={() => setItemToDelete(null)}
+        title={t("work.delete_confirm_title")}
+        footer={
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => setItemToDelete(null)}>
+              {t("common.cancel")}
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              {t("common.delete")}
+            </Button>
+          </div>
+        }
+      >
+        <div className="flex items-center gap-4 text-sm">
+          <div className="p-3 rounded-full bg-red-100 dark:bg-red-900/30">
+            <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 dark:text-white">
+              {t("work.delete_confirm_desc")}
+            </p>
+            {itemToDelete !== null && data[itemToDelete] && (
+              <p className="mt-1 text-muted-foreground italic">
+                {data[itemToDelete].title} @ {data[itemToDelete].company}
+              </p>
+            )}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

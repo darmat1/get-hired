@@ -50,6 +50,9 @@ export default function MyExperiencePage() {
   const [isAiProcessing, setIsAiProcessing] = useState(false);
   const [aiTimer, setAiTimer] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const initialLoadRef = useRef(true);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -89,8 +92,8 @@ export default function MyExperiencePage() {
     }
   };
 
-  const handleSave = async () => {
-    setIsSaving(true);
+  const handleSave = async (isAutosave = false) => {
+    if (!isAutosave) setIsSaving(true);
     try {
       const response = await fetch("/api/profile/experience", {
         method: "PUT",
@@ -98,18 +101,48 @@ export default function MyExperiencePage() {
         body: JSON.stringify(profile),
       });
       if (response.ok) {
-        setMessage({ type: "success", text: t("profile.save_success") });
+        if (!isAutosave) {
+          setMessage({ type: "success", text: t("profile.save_success") });
+          setTimeout(() => setMessage(null), 3000);
+        }
+        setLastSaved(new Date());
       } else {
-        throw new Error(t("profile.save_error"));
+        if (!isAutosave) throw new Error(t("profile.save_error"));
       }
-      setTimeout(() => setMessage(null), 3000);
     } catch (error) {
       console.error("Failed to save profile:", error);
-      setMessage({ type: "error", text: t("profile.save_error") });
+      if (!isAutosave)
+        setMessage({ type: "error", text: t("profile.save_error") });
     } finally {
       setIsSaving(false);
     }
   };
+
+  // Autosave logic
+  useEffect(() => {
+    if (initialLoadRef.current) {
+      if (profile) {
+        initialLoadRef.current = false;
+      }
+      return;
+    }
+
+    if (!profile) return;
+
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    saveTimeoutRef.current = setTimeout(() => {
+      handleSave(true);
+    }, 10000);
+
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [profile]);
 
   const updateProfile = (field: string, value: any) => {
     setProfile({ ...profile, [field]: value });
@@ -236,18 +269,39 @@ export default function MyExperiencePage() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={handleSave}
-                  disabled={isSaving}
-                >
-                  {isSaving ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Save className="h-4 w-4 mr-2" />
+                <div className="flex items-center gap-3">
+                  {isSaving && (
+                    <span className="text-xs text-muted-foreground animate-pulse">
+                      {t("common.saving")}...
+                    </span>
                   )}
-                  {t("common.save")}
-                </Button>
+                  {!isSaving && lastSaved && (
+                    <span className="text-xs text-muted-foreground">
+                      {t("common.saved")}{" "}
+                      {lastSaved.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  )}
+                  <Button
+                    variant="outline"
+                    onClick={() => handleSave(false)}
+                    disabled={isSaving}
+                    className={`transition-all duration-300 ${
+                      isSaving
+                        ? "ring-2 ring-primary/20 bg-primary/5 border-primary/30 animate-pulse"
+                        : ""
+                    }`}
+                  >
+                    {isSaving ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4 mr-2" />
+                    )}
+                    {isSaving ? `${t("common.save")}...` : t("common.save")}
+                  </Button>
+                </div>
                 <Button onClick={() => setShowSuggestions(true)}>
                   <Sparkles className="h-4 w-4 mr-2" />
                   {t("profile.suggest_btn")}

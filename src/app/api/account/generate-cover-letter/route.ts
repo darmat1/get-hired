@@ -301,7 +301,7 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 
 {
   "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "telegram": "", "summary": "2-3 powerful sentences tailored to the role" },
-  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
+  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "mainDescription": "1-2 sentence overview of role focus", "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
   "education": [{ "id": "edu-1", "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false }],
   "skills": [{ "id": "skill-1", "name": "", "category": "technical", "level": "advanced" }],
   "targetPosition": "job title extracted from JD",
@@ -311,6 +311,7 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 ### CRITICAL RULES
 - Output ONLY the JSON object, nothing else.
 - Use ONLY facts from the candidate profile. NEVER invent data.
+- For each work experience, provide a "mainDescription" (concise role overview) and a "description" array (3-5 bullet points for achievements/metrics).
 - Each work experience "description" array should have 3-5 bullet points.
 - Generate unique IDs for each item (use format like "we-1", "we-2", "edu-1", "skill-1", etc.).
 - Keep only RELEVANT positions. Filter out unrelated jobs.

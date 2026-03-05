@@ -46,7 +46,7 @@ INPUT: Existing profile as JSON + raw text from PDF/paste.
 GOAL: Extract and merge data. Return consolidated profile as strict JSON.
 
 MERGE RULES:
-- Same company+role = combine descriptions, use best dates
+- Same company+role = combine descriptions, use best dates, merge main role summaries
 - Normalize company names ("Boarding" = "b0arding.com")
 - Deduplicate skills and education
 - Prefer more detailed data
@@ -71,7 +71,8 @@ RETURN STRICT JSON:
       "startDate": "YYYY-MM",
       "endDate": "YYYY-MM",
       "current": false,
-      "description": ["string (detailed bullet point)"]
+      "mainDescription": "string (1-2 sentences summary of the role and key focus)",
+      "description": ["string (detailed bullet point achievement or responsibility)"]
     }
   ],
   "education": [
@@ -94,7 +95,8 @@ RETURN STRICT JSON:
 }
 
 RULES:
-- Extract experience descriptions as an array of detailed bullet points. Do NOT summarize into a single string. Preserve all specific accomplishments and metrics.
+- For each work experience, extract a "mainDescription" which is a concise 1-2 sentence overview of the core role.
+- Extract specific achievements, responsibilities, and metrics as an array of detailed bullet points in "description". Do NOT summarize into a single string. Preserve all specific accomplishments and metrics.
 - Return ONLY valid JSON (no markdown, no code fences, no extra text)
 - Do NOT invent data
 - Dates in YYYY-MM format`;
@@ -168,6 +170,7 @@ ${normalizedText}`;
         startDate: exp.startDate || "",
         endDate: exp.endDate || "",
         current: !!exp.current,
+        mainDescription: safeStr(exp.mainDescription),
         description: Array.isArray(exp.description)
           ? exp.description
           : [safeStr(exp.description)],
