@@ -33,7 +33,7 @@ export default function AILandingClient() {
                 </p>
 
                 <div className="flex gap-4">
-                  <Link href="/resume/new">
+                  <Link href="/dashboard">
                     <button className="rounded-full bg-slate-900 px-6 py-3 text-white font-semibold shadow hover:bg-slate-800 transition dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200">
                       {t("ai_landing.cta_analyze")}
                     </button>
@@ -241,7 +241,7 @@ export default function AILandingClient() {
         {/* CTA */}
         <section className="py-12">
           <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
-            <Link href="/resume/new">
+            <Link href="/dashboard">
               <button className="rounded-full bg-slate-900 px-8 py-3 text-white font-semibold shadow hover:bg-slate-800 transition dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200">
                 {t("ai_landing.cta_try_free")}
               </button>

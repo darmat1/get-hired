@@ -44,19 +44,12 @@ export default function LinkedInImportPage() {
                   <Link href="/dashboard">
                     <Button
                       size="lg"
-                      className="px-8 py-6 text-lg h-auto group"
+                      className="px-8 py-6 text-lg h-auto group bg-slate-900 hover:bg-slate-800 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200"
                     >
                       {t("li_landing.start_btn")}
                       <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                     </Button>
                   </Link>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="px-8 py-6 text-lg h-auto"
-                  >
-                    {t("nav.home")}
-                  </Button>
                 </div>
               </div>
 
@@ -131,16 +124,22 @@ export default function LinkedInImportPage() {
               </div>
 
               {/* Step 2 */}
-              <div className="flex flex-col items-center text-center relative">
-                <div className="h-20 w-20 rounded-2xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center text-purple-600 mb-8 group hover:scale-110 transition-transform">
-                  <Upload className="h-10 w-10" />
+              <div className="group bg-slate-50 dark:bg-slate-900/50 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 hover:border-slate-500/50 transition-all duration-300 mt-0 md:mt-12">
+                <div className="h-14 w-14 rounded-2xl bg-slate-100 dark:bg-slate-900/30 flex items-center justify-center text-slate-600 mb-6 group-hover:bg-slate-600 group-hover:text-white transition-colors">
+                  <Upload className="h-7 w-7" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">
+                <h3 className="text-2xl font-bold mb-4">
                   {t("li_landing.step2_title")}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 max-w-xs">
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
                   {t("li_landing.step2_desc")}
                 </p>
+                <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
+                  <div className="flex flex-col gap-2">
+                    <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full" />
+                    <div className="w-2/3 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full" />
+                  </div>
+                </div>
                 {/* Step Placeholder */}
                 <div className="mt-8 w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden">
                   <Image
@@ -258,24 +257,24 @@ export default function LinkedInImportPage() {
         </section>
 
         {/* Security / CTA */}
-        <section className="py-24 bg-slate-600 relative overflow-hidden">
-          <div className="absolute top-0 right-0 h-full w-1/2 bg-slate-500 pointer-events-none -skew-x-12 translate-x-1/2" />
+        <section className="py-24 bg-slate-900 relative overflow-hidden">
+          <div className="absolute top-0 right-0 h-full w-1/2 bg-slate-800/50 pointer-events-none -skew-x-12 translate-x-1/2" />
           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
             <div className="text-center max-w-3xl mx-auto">
-              <div className="h-16 w-16 bg-white/20 rounded-2xl flex items-center justify-center text-white mb-8 mx-auto backdrop-blur-sm">
+              <div className="h-16 w-16 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-8 mx-auto backdrop-blur-sm">
                 <Lock className="h-8 w-8" />
               </div>
               <h2 className="text-3xl font-bold text-white sm:text-4xl mb-6">
                 {t("li_landing.security_title")}
               </h2>
-              <p className="text-xl text-slate-100 mb-10 leading-relaxed">
+              <p className="text-xl text-slate-300 mb-10 leading-relaxed">
                 {t("li_landing.security_desc")}
               </p>
               <Link href="/dashboard">
                 <Button
                   size="lg"
                   variant="secondary"
-                  className="px-10 py-7 text-lg h-auto shadow-xl hover:scale-105 transition-transform"
+                  className="px-10 py-7 text-lg h-auto shadow-xl hover:scale-105 transition-transform bg-white text-slate-900 hover:bg-slate-50"
                 >
                   {t("li_landing.start_btn")}
                 </Button>

@@ -64,17 +64,17 @@ export default async function ResumeBuilderPage() {
         {/* HERO SECTION */}
         <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center overflow-hidden">
           {/* Animated Background blobs (Soft pastels) */}
-          <div className="absolute top-0 right-10 w-72 h-72 bg-sky-300/20 dark:bg-sky-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-0 right-10 w-72 h-72 bg-slate-300/20 dark:bg-slate-500/10 rounded-full blur-3xl animate-pulse"></div>
           <div
             className="absolute top-20 left-10 w-72 h-72 bg-slate-300/20 dark:bg-slate-500/10 rounded-full blur-3xl animate-pulse"
             style={{ animationDelay: "2s" }}
           ></div>
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 dark:bg-sky-900/30 border border-sky-100 dark:border-sky-800/50 text-sky-600 dark:text-sky-300 text-sm font-semibold mb-8 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800/50 text-slate-600 dark:text-slate-300 text-sm font-semibold mb-8 shadow-sm">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-slate-500"></span>
               </span>
               {t("resume_builder.hero_badge").replace(
                 "{year}",
@@ -85,7 +85,7 @@ export default async function ResumeBuilderPage() {
             <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-8">
               {t("resume_builder.hero_title")}{" "}
               <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-slate-400 dark:from-sky-400 dark:to-slate-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-500 to-slate-400 dark:from-slate-400 dark:to-slate-300">
                 {t("resume_builder.hero_title_highlight")}
               </span>
             </h1>
@@ -97,7 +97,7 @@ export default async function ResumeBuilderPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <Link
                 href="/dashboard"
-                className="w-full sm:w-auto px-10 py-5 text-lg bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-10 py-5 text-lg bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center justify-center gap-2 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200"
               >
                 {t("resume_builder.hero_cta")} <Zap className="w-5 h-5" />
               </Link>
@@ -159,7 +159,7 @@ export default async function ResumeBuilderPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
-                  icon: <LayoutTemplate className="w-6 h-6 text-sky-400" />,
+                  icon: <LayoutTemplate className="w-6 h-6 text-slate-400" />,
                   title: t("resume_builder.feature1_title"),
                   desc: t("resume_builder.feature1_desc"),
                 },
@@ -225,7 +225,7 @@ export default async function ResumeBuilderPage() {
                   },
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-500 dark:text-sky-400 flex items-center justify-center font-bold text-lg border border-sky-100 dark:border-sky-800/50">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-900/30 text-slate-500 dark:text-slate-400 flex items-center justify-center font-bold text-lg border border-slate-100 dark:border-slate-800/50">
                       {item.step}
                     </div>
                     <div>
@@ -243,7 +243,7 @@ export default async function ResumeBuilderPage() {
               <div className="pt-6">
                 <Link
                   href="/dashboard"
-                  className="inline-flex items-center gap-2 text-sky-500 dark:text-sky-400 font-semibold hover:underline text-lg"
+                  className="inline-flex items-center gap-2 text-slate-500 dark:text-slate-400 font-semibold hover:underline text-lg"
                 >
                   {t("resume_builder.steps_cta")} &rarr;
                 </Link>
@@ -251,10 +251,10 @@ export default async function ResumeBuilderPage() {
             </div>
 
             <div className="lg:w-1/2 relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-sky-400/10 to-slate-400/10 transform rotate-3 rounded-3xl blur-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-slate-400/10 to-slate-400/10 transform rotate-3 rounded-3xl blur-2xl"></div>
               <div className="relative bg-white dark:bg-slate-800/90 border border-slate-100 dark:border-slate-700/50 p-6 rounded-3xl shadow-xl transform -rotate-2 hover:rotate-0 transition duration-500">
                 <div className="space-y-4">
-                  <div className="h-8 w-1/2 bg-sky-50 dark:bg-sky-900/20 rounded"></div>
+                  <div className="h-8 w-1/2 bg-slate-50 dark:bg-slate-900/20 rounded"></div>
                   <div className="h-4 w-full bg-slate-50 dark:bg-slate-700/50 rounded"></div>
                   <div className="h-4 w-5/6 bg-slate-50 dark:bg-slate-700/50 rounded"></div>
                   <div className="py-4 my-4 border-y border-slate-50 dark:border-slate-700/50">
@@ -317,18 +317,18 @@ export default async function ResumeBuilderPage() {
         </section>
 
         {/* CTA SECTION */}
-        <section className="py-24 relative overflow-hidden bg-sky-500 dark:bg-sky-900 border-t border-sky-600 dark:border-sky-800">
+        <section className="py-24 relative overflow-hidden bg-slate-500 dark:bg-slate-900 border-t border-slate-600 dark:border-slate-800">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay"></div>
           <div className="relative max-w-4xl mx-auto px-4 text-center z-10">
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-sm">
               {t("resume_builder.cta_title")}
             </h2>
-            <p className="text-xl text-sky-50 dark:text-sky-100/80 mb-10 font-medium">
+            <p className="text-xl text-slate-50 dark:text-slate-100/80 mb-10 font-medium">
               {t("resume_builder.cta_desc")}
             </p>
             <Link
               href="/dashboard"
-              className="inline-block px-10 py-5 bg-white text-sky-600 dark:text-sky-800 hover:bg-sky-50 font-bold rounded-full text-lg shadow-xl hover:shadow-2xl transition hover:-translate-y-1"
+              className="inline-block px-10 py-5 bg-white text-slate-900 hover:bg-slate-50 font-bold rounded-full text-lg shadow-xl hover:shadow-2xl transition hover:-translate-y-1"
             >
               {t("resume_builder.cta_button")}
             </Link>

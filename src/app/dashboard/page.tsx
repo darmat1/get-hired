@@ -302,7 +302,10 @@ export default function MyExperiencePage() {
                     {isSaving ? `${t("common.save")}...` : t("common.save")}
                   </Button>
                 </div>
-                <Button onClick={() => setShowSuggestions(true)}>
+                <Button
+                  onClick={() => setShowSuggestions(true)}
+                  className="bg-amber-600 text-white hover:bg-amber-700 border-amber-700 shadow-sm"
+                >
                   <Sparkles className="h-4 w-4 mr-2" />
                   {t("profile.suggest_btn")}
                 </Button>

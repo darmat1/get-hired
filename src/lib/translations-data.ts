@@ -9,6 +9,7 @@ export interface Translations {
 export const translations: Translations = {
   "nav.logo": { en: "GetHired", uk: "GetHired", ru: "GetHired" },
   "nav.dashboard": { en: "My Resumes", uk: "Мої резюме", ru: "Мои резюме" },
+  "nav.blog": { en: "Blog", uk: "Блог", ru: "Блог" },
   "nav.ai_settings": {
     en: "AI Settings",
     uk: "Налаштування AI",

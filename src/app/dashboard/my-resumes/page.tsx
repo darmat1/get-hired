@@ -156,8 +156,8 @@ export default function Dashboard() {
 
                 <div className="flex gap-3">
                   <Button
-                    variant="outline"
                     onClick={() => setShowSuggestions(true)}
+                    className="bg-amber-600 text-white hover:bg-amber-700 border-amber-700 shadow-sm"
                   >
                     <Sparkles className="h-4 w-4 mr-2" />
                     {t("profile.suggest_btn")}
