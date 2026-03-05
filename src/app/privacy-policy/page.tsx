@@ -20,6 +20,9 @@ export async function generateMetadata(): Promise<Metadata> {
         "x-default": "/privacy-policy",
       },
     },
+    openGraph: {
+      url: canonical,
+    },
   };
 }
 

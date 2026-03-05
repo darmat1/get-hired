@@ -65,7 +65,7 @@ export async function generateMetadata({
       title,
       description: excerpt,
       type: "article",
-      url: `${siteUrl}/blog/${slug}`,
+      url: canonical,
       images: imageUrl
         ? [{ url: imageUrl, width: 1200, height: 630, alt: title }]
         : [],

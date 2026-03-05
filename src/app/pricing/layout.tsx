@@ -22,6 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
         "x-default": "/pricing",
       },
     },
+    openGraph: {
+      url: canonical,
+    },
   };
 }
 

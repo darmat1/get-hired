@@ -22,6 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
         "x-default": "/cover-letter",
       },
     },
+    openGraph: {
+      url: canonical,
+    },
   };
 }
 
