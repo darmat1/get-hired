@@ -131,17 +131,21 @@ RULES:
     const updatedProfile = await prisma.userProfile.update({
       where: { id: profile.id },
       data: {
-        resumeVariants: (parsed.variants || []).map((v: any) => ({
-          title: v.title,
-          targetRole: v.targetRole,
-          seniority: v.seniority,
-          matchScore: v.matchScore,
-          reasoning: v.reasoning,
-          selectedSkills: v.selectedSkills,
-          selectedExp: v.selectedExpIds,
-          keywords: v.keywords || [],
-          createdAt: new Date().toISOString(),
-        })) as any,
+        resumeVariants: (parsed.variants || []).map(
+          (v: any, index: number) => ({
+            // Generate a stable unique id — AI doesn't return one
+            id: `variant-${Date.now()}-${index}`,
+            title: v.title,
+            targetRole: v.targetRole,
+            seniority: v.seniority,
+            matchScore: v.matchScore,
+            reasoning: v.reasoning,
+            selectedSkills: v.selectedSkills || [],
+            selectedExp: v.selectedExpIds || [],
+            keywords: v.keywords || [],
+            createdAt: new Date().toISOString(),
+          }),
+        ) as any,
       },
     });
 

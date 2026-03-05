@@ -1129,20 +1129,14 @@ export const translations: Translations = {
     ru: "Чистый и минималистичный дизайн",
   },
   "template.professional": {
-    en: "Professional",
-    uk: "Професійний",
-    ru: "Профессиональный",
+    en: "Classic",
+    uk: "Класичний",
+    ru: "Классический",
   },
   "template.professional_desc": {
     en: "Classic business style",
     uk: "Класичний діловий стиль",
     ru: "Классический деловой стиль",
-  },
-  "template.creative": { en: "Creative", uk: "Креативний", ru: "Креативный" },
-  "template.creative_desc": {
-    en: "Bright and eye-catching design",
-    uk: "Яскравий та помітний дизайн",
-    ru: "Яркий и заметный дизайн",
   },
   "template.minimal": {
     en: "Minimalist",

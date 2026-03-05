@@ -253,11 +253,13 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
               </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {variants.map((variant) => {
+              {variants.map((variant, index) => {
                 const isCreated = existingResumes.includes(variant.title);
                 return (
                   <Card
-                    key={variant.id}
+                    key={
+                      variant.id ? `${variant.id}-${index}` : `variant-${index}`
+                    }
                     className={`p-4 flex flex-col justify-between border-2 transition-all group ${
                       isCreated
                         ? "bg-muted/30 border-muted"

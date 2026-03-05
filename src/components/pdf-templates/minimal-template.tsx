@@ -6,8 +6,11 @@ import {
   StyleSheet,
   Font,
   Image,
+  Svg,
+  Path,
 } from "@react-pdf/renderer";
 import { Resume } from "@/types/resume";
+import { FormattedText } from "@/lib/pdf-utils";
 import { getTranslation } from "@/lib/translations-data";
 
 const styles = StyleSheet.create({
@@ -108,16 +111,115 @@ export function MinimalTemplate({ resume }: TemplateProps) {
                 {resume.targetPosition}
               </Text>
             )}
-            <Text style={styles.contact}>
-              {personalInfo.email} • {personalInfo.phone}
-            </Text>
-            <Text style={styles.contact}>{personalInfo.location}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                gap: 6,
+                marginTop: 6,
+              }}
+            >
+              {[
+                { value: personalInfo.email, type: "email" },
+                { value: personalInfo.phone, type: "phone" },
+                { value: personalInfo.location, type: "location" },
+                { value: personalInfo.telegram, type: "telegram" },
+              ]
+                .filter((c) => !!c.value)
+                .map((item, i, arr) => (
+                  <View
+                    key={i}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    {item.type === "email" && (
+                      <Svg
+                        viewBox="0 0 24 24"
+                        width="8"
+                        height="8"
+                        style={{ marginRight: 3, marginBottom: 1 }}
+                      >
+                        <Path
+                          fill="#555"
+                          d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                        />
+                      </Svg>
+                    )}
+                    {item.type === "phone" && (
+                      <Svg
+                        viewBox="0 0 24 24"
+                        width="8"
+                        height="8"
+                        style={{ marginRight: 3, marginBottom: 1 }}
+                      >
+                        <Path
+                          fill="#555"
+                          d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+                        />
+                      </Svg>
+                    )}
+                    {item.type === "location" && (
+                      <Svg
+                        viewBox="0 0 24 24"
+                        width="8"
+                        height="8"
+                        style={{ marginRight: 3, marginBottom: 1 }}
+                      >
+                        <Path
+                          fill="#555"
+                          d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                        />
+                      </Svg>
+                    )}
+                    {item.type === "telegram" && (
+                      <Svg
+                        viewBox="0 0 24 24"
+                        width="8"
+                        height="8"
+                        style={{ marginRight: 3, marginBottom: 1 }}
+                      >
+                        <Path
+                          fill="#555"
+                          d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+                        />
+                      </Svg>
+                    )}
+                    <Text style={{ fontSize: 8, color: "#555" }}>
+                      {item.value}
+                    </Text>
+                    {i < arr.length - 1 && (
+                      <Text
+                        style={{ fontSize: 8, color: "#ccc", marginLeft: 6 }}
+                      >
+                        •
+                      </Text>
+                    )}
+                  </View>
+                ))}
+            </View>
+            {personalInfo.linkedin && (
+              <Text
+                style={[styles.contact, { color: "#2563eb", marginTop: 2 }]}
+              >
+                {personalInfo.linkedin}
+              </Text>
+            )}
+            {personalInfo.website && (
+              <Text style={[styles.contact, { color: "#2563eb" }]}>
+                {personalInfo.website}
+              </Text>
+            )}
           </View>
         </View>
 
         {personalInfo.summary && (
           <View style={{ marginBottom: 10 }}>
-            <Text style={{ textAlign: "justify" }}>{personalInfo.summary}</Text>
+            <FormattedText
+              html={personalInfo.summary}
+              style={{ textAlign: "justify" }}
+            />
           </View>
         )}
 
@@ -147,17 +249,33 @@ export function MinimalTemplate({ resume }: TemplateProps) {
                 </Text>
 
                 {exp.mainDescription && (
-                  <Text style={[styles.desc, { marginBottom: 3 }]}>
-                    {exp.mainDescription}
-                  </Text>
+                  <View style={{ marginBottom: 3 }}>
+                    <FormattedText
+                      html={exp.mainDescription}
+                      style={styles.desc}
+                    />
+                  </View>
                 )}
-
-                {exp.description.map((d, i) => {
-                  const isEmpty = !d || d.trim() === "";
+                {exp.description.map((desc, idx) => {
+                  const isEmpty =
+                    !desc || desc.replace(/<[^>]*>?/gm, "").trim() === "";
                   return (
-                    <Text key={i} style={styles.desc}>
-                      {isEmpty ? " " : `- ${d}`}
-                    </Text>
+                    <View
+                      key={idx}
+                      style={{ flexDirection: "row", marginBottom: 2 }}
+                    >
+                      {!isEmpty && (
+                        <Text
+                          style={[
+                            styles.desc,
+                            { marginRight: 4, flexShrink: 0 },
+                          ]}
+                        >
+                          -
+                        </Text>
+                      )}
+                      <FormattedText html={desc || " "} style={styles.desc} />
+                    </View>
                   );
                 })}
               </View>
