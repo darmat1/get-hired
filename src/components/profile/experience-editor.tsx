@@ -130,11 +130,11 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6 2xl:gap-4">
         {data.map((exp, index) => (
           <div
             key={exp.id}
-            className="flex flex-col border border-border rounded-xl bg-card overflow-hidden h-[600px] shadow-sm hover:shadow-md transition-shadow"
+            className="flex flex-col border border-border bg-card overflow-hidden h-[600px] shadow-sm hover:shadow-md transition-shadow"
           >
             {/* Header - Editable */}
             <div className="flex justify-between items-start p-4 border-b border-border bg-muted/30 gap-4">
