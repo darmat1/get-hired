@@ -399,7 +399,7 @@ export function ExperienceEditor({ data, onChange }: ExperienceEditorProps) {
             <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">
+            <p className="font-medium text-slate-900 dark:text-white">
               {t("work.delete_confirm_desc")}
             </p>
             {itemToDelete !== null && data[itemToDelete] && (

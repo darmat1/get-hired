@@ -228,7 +228,7 @@ export default async function BlogPostPage({
                   <Link
                     key={relatedPost.id}
                     href={`${localeBlogPrefix}/${relatedPost.slug}`}
-                    className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition no-underline"
+                    className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition no-underline"
                   >
                     {(relatedPost as any).imageUrl ? (
                       <div className="relative w-full h-40 overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -259,7 +259,7 @@ export default async function BlogPostPage({
                       </div>
                     )}
                     <div className="p-4 flex flex-col flex-1">
-                      <h3 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition line-clamp-2 mb-2">
+                      <h3 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-slate-600 dark:group-hover:text-slate-400 transition line-clamp-2 mb-2">
                         {relatedTitle}
                       </h3>
                       {relatedExcerpt && (

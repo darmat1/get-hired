@@ -229,7 +229,7 @@ const EditableText = ({
           className,
           !localValue &&
             !toolbarPos &&
-            "text-gray-300 italic min-w-[50px] after:content-[attr(data-placeholder)]",
+            "text-slate-300 italic min-w-[50px] after:content-[attr(data-placeholder)]",
         )}
         data-placeholder={placeholder}
       />
@@ -825,14 +825,17 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
             />
           </div>
           {(data as any).targetPosition && (
-            <div className="text-sm font-medium mt-1" style={{ color: sidebarColor }}>
+            <div
+              className="text-sm font-medium mt-1"
+              style={{ color: sidebarColor }}
+            >
               {(data as any).targetPosition}
             </div>
           )}
           <EditableText
             value={personalInfo.summary || ""}
             onChange={(v) => updatePersonalInfo("summary", v)}
-            className="text-[12px] leading-relaxed text-gray-600 text-justify mt-4 block"
+            className="text-[12px] leading-relaxed text-slate-600 text-justify mt-4 block"
             multiline
             placeholder="Professional Summary..."
             allowFormatting={true}
@@ -898,14 +901,14 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                               <div className="absolute -right-2 -top-2 flex gap-1 opacity-0 group-hover/item:opacity-100 transition-all duration-200 z-50">
                                 <div
                                   {...provided.dragHandleProps}
-                                  className="p-1.5 bg-white shadow-md border border-gray-100 rounded-md cursor-grab text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+                                  className="p-1.5 bg-white dark:bg-slate-800 shadow-md border border-slate-100 dark:border-slate-700 rounded-md cursor-grab text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
                                   title="Drag to reorder"
                                 >
                                   <GripVertical size={14} />
                                 </div>
                                 <button
                                   onClick={() => removeExperience(exp.id)}
-                                  className="p-1.5 bg-white shadow-md border border-gray-100 rounded-md text-red-400 hover:text-red-600 hover:bg-red-50"
+                                  className="p-1.5 bg-white shadow-md border border-slate-100 rounded-md text-red-400 hover:text-red-600 hover:bg-red-50"
                                   title="Delete experience"
                                 >
                                   <Trash2 size={14} />
@@ -959,7 +962,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                                   placeholder="End"
                                 />
                               </div>
-                              <div className="text-[10px] text-gray-500 italic mb-1 flex gap-1">
+                              <div className="text-[10px] text-slate-500 italic mb-1 flex gap-1">
                                 <EditableText
                                   value={exp.company || ""}
                                   onChange={(v) => {
@@ -987,7 +990,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                                         };
                                         updateSection("workExperience", newExp);
                                       }}
-                                      className="bg-transparent border-none p-0 m-0 outline-none text-[10px] text-gray-500 italic hover:text-blue-600 transition-colors cursor-pointer appearance-none"
+                                      className="bg-transparent border-none p-0 m-0 outline-none text-[10px] text-slate-500 italic hover:text-blue-600 transition-colors cursor-pointer appearance-none"
                                     >
                                       <option value="">
                                         {getTranslation(
@@ -1085,15 +1088,17 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                                   newExp[idx] = { ...newExp[idx], title: v };
                                   updateSection("workExperience", newExp);
                                 }}
-                                className="text-xs font-bold text-gray-800 uppercase block mb-2"
+                                className="text-xs font-bold text-slate-800 uppercase block mb-2"
                                 placeholder="Title"
                               />
-                              <div className="text-[12px] text-gray-600 space-y-1">
+                              <div className="text-[12px] text-slate-600 space-y-1">
                                 {(
                                   (Array.isArray(exp.description)
                                     ? exp.description
                                     : [exp.description]
-                                  ).filter((d) => d !== undefined && d !== null) as string[]
+                                  ).filter(
+                                    (d) => d !== undefined && d !== null,
+                                  ) as string[]
                                 ).map((d, dIdx) => (
                                   <div
                                     key={dIdx}

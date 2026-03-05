@@ -15,7 +15,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <nav className="space-y-2">
             <Link
               href="/admin/blog"
-              className="block px-4 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium"
+              className="block px-4 py-2 rounded-lg bg-slate-50 dark:bg-slate-900/30 text-slate-600 dark:text-slate-400 font-medium"
             >
               Blog
             </Link>

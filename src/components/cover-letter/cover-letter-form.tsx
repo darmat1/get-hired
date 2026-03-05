@@ -170,13 +170,13 @@ export function CoverLetterForm() {
       )}
 
       <div className="flex flex-col min-[1000px]:flex-row gap-8 items-start">
-        <div className="flex-1 w-full bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 min-[1000px]:sticky min-[1000px]:top-24">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <div className="flex-1 w-full bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 min-[1000px]:sticky min-[1000px]:top-24">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
             {t("cover_letter.job_description")}
           </h3>
           <form onSubmit={handleGenerateCoverLetter} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 {t("cover_letter.paste_job_description")}
               </label>
               <textarea
@@ -184,13 +184,13 @@ export function CoverLetterForm() {
                 onChange={(e) => setJobDescription(e.target.value)}
                 placeholder={t("cover_letter.job_description_placeholder")}
                 rows={10}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                 disabled={loading}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 {t("cover_letter.format_label")}
               </label>
               <div className="flex gap-2">
@@ -199,8 +199,8 @@ export function CoverLetterForm() {
                   onClick={() => setFormat("bullet")}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-all ${
                     format === "bullet"
-                      ? "bg-blue-50 border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-300 ring-2 ring-blue-200 dark:ring-blue-800"
-                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+                      ? "bg-slate-50 border-slate-300 text-slate-700 dark:bg-slate-900/30 dark:border-slate-600 dark:text-slate-300 ring-2 ring-slate-200 dark:ring-slate-800"
+                      : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
                   }`}
                 >
                   <List className="h-4 w-4" />
@@ -211,8 +211,8 @@ export function CoverLetterForm() {
                   onClick={() => setFormat("prose")}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-all ${
                     format === "prose"
-                      ? "bg-blue-50 border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-300 ring-2 ring-blue-200 dark:ring-blue-800"
-                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+                      ? "bg-slate-50 border-slate-300 text-slate-700 dark:bg-slate-900/30 dark:border-slate-600 dark:text-slate-300 ring-2 ring-slate-200 dark:ring-slate-800"
+                      : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
                   }`}
                 >
                   <FileText className="h-4 w-4" />
@@ -233,7 +233,7 @@ export function CoverLetterForm() {
                 checked={generateResume && !isLimitReached}
                 onChange={(e) => setGenerateResume(e.target.checked)}
                 disabled={loading || isLimitReached}
-                className={`mt-0.5 h-4 w-4 rounded border-gray-300 dark:border-gray-600 focus:ring-purple-500 cursor-pointer ${
+                className={`mt-0.5 h-4 w-4 rounded border-slate-300 dark:border-slate-600 focus:ring-purple-500 cursor-pointer ${
                   isLimitReached
                     ? "opacity-50 cursor-not-allowed"
                     : "text-purple-600"
@@ -244,11 +244,11 @@ export function CoverLetterForm() {
                 className={`select-none ${isLimitReached ? "cursor-not-allowed" : "cursor-pointer"}`}
               >
                 <span
-                  className={`block text-sm font-medium ${isLimitReached ? "text-amber-800 dark:text-amber-400" : "text-gray-900 dark:text-white"}`}
+                  className={`block text-sm font-medium ${isLimitReached ? "text-amber-800 dark:text-amber-400" : "text-slate-900 dark:text-white"}`}
                 >
                   {t("cover_letter.generate_resume")}
                 </span>
-                <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                <span className="block text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   {isLimitReached
                     ? t("profile.suggest_limit_desc")
                     : t("cover_letter.generate_resume_desc")}
@@ -262,7 +262,7 @@ export function CoverLetterForm() {
               className={`w-full px-4 py-2.5 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
                 generateResume
                   ? "bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400"
-                  : "bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400"
+                  : "bg-slate-600 hover:bg-slate-700 disabled:bg-slate-400"
               }`}
             >
               {loading ? (
@@ -283,20 +283,20 @@ export function CoverLetterForm() {
 
         <div className="flex-1 w-full">
           {coverLetter && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                   {t("cover_letter.generated")}
                 </h3>
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md transition-colors"
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-md transition-colors"
                 >
                   <Copy className="h-4 w-4" />
                   {copied ? t("cover_letter.copied") : t("cover_letter.copy")}
                 </button>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6 text-gray-900 dark:text-gray-100 whitespace-pre-wrap leading-relaxed text-sm">
+              <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-6 text-slate-900 dark:text-slate-100 whitespace-pre-wrap leading-relaxed text-sm">
                 {coverLetter}
               </div>
 
@@ -305,7 +305,7 @@ export function CoverLetterForm() {
                 <div className="mt-4 p-4 rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <FileText className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    <span className="text-sm font-medium text-slate-900 dark:text-white">
                       {t("cover_letter.generated_resume")}
                     </span>
                   </div>

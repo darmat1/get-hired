@@ -104,7 +104,7 @@ export default function CoverLetterPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Step 1 */}
               <div className="group bg-gray-50 dark:bg-gray-900/50 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 hover:border-purple-500/50 transition-all duration-300">
-                <div className="h-14 w-14 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <div className="h-14 w-14 rounded-2xl bg-slate-100 dark:bg-slate-900/30 flex items-center justify-center text-slate-600 mb-6 group-hover:bg-slate-600 group-hover:text-white transition-colors">
                   <Upload className="h-7 w-7" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4">
@@ -179,7 +179,7 @@ export default function CoverLetterPage() {
               </div>
 
               <div className="bg-white dark:bg-gray-800 p-10 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700">
-                <Zap className="h-12 w-12 text-blue-600 mb-6" />
+                <Zap className="h-12 w-12 text-slate-600 mb-6" />
                 <h4 className="text-xl font-bold mb-4">
                   {t("cl_landing.adv2_title")}
                 </h4>

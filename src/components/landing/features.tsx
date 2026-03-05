@@ -16,13 +16,13 @@ export function Features() {
 
   return (
     <section className="overflow-hidden bg-slate-50 dark:bg-slate-900/50 py-24 sm:py-32 relative">
-      <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-indigo-300/20 dark:bg-indigo-500/10 rounded-full blur-[80px] -z-10 pointer-events-none"></div>
+      <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-slate-300/20 dark:bg-slate-500/10 rounded-full blur-[80px] -z-10 pointer-events-none"></div>
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 items-center">
           <div className="lg:pr-8 lg:pt-4">
             <div className="lg:max-w-lg">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm font-semibold mb-6 flex-wrap">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900/30 text-slate-700 dark:text-slate-300 text-sm font-semibold mb-6 flex-wrap">
                 <FileText className="w-4 h-4" />
                 Killer Feature
               </div>
@@ -39,7 +39,7 @@ export function Features() {
               >
                 {benefits.map((benefit, idx) => (
                   <li key={idx} className="flex gap-x-4 items-start group">
-                    <div className="flex-none p-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                    <div className="flex-none p-1 rounded-full bg-slate-100 dark:bg-slate-900/30 text-slate-600 dark:text-slate-400 group-hover:scale-110 group-hover:bg-slate-600 group-hover:text-white transition-all">
                       <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <span className="leading-snug pt-0.5">{benefit}</span>
@@ -49,7 +49,7 @@ export function Features() {
             </div>
           </div>
           <div className="flex items-center justify-center lg:justify-start lg:order-last mt-10 lg:mt-0 w-full">
-            <div className="relative w-full rounded-2xl p-2 bg-gradient-to-br from-indigo-200 to-sky-200 dark:from-indigo-900/40 dark:to-sky-900/40 shadow-2xl transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
+            <div className="relative w-full rounded-2xl p-2 bg-gradient-to-br from-slate-200 to-sky-200 dark:from-slate-900/40 dark:to-sky-900/40 shadow-2xl transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
               <div className="overflow-hidden rounded-xl border border-white/50 dark:border-slate-700 bg-white dark:bg-slate-900 w-full">
                 <Image
                   src="/cover-letter1.jpg"

@@ -38,14 +38,14 @@ export function Header() {
   // Don't render session-dependent content until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               {!isApplicationPage && (
                 <LocalizedLink
                   href="/"
-                  className="text-xl font-bold text-gray-900 dark:text-white"
+                  className="text-xl font-bold text-slate-900 dark:text-white"
                 >
                   <Logo />
                 </LocalizedLink>
@@ -64,14 +64,14 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             {!isApplicationPage && (
               <LocalizedLink
                 href="/"
-                className="text-xl font-bold text-gray-900 dark:text-white"
+                className="text-xl font-bold text-slate-900 dark:text-white"
               >
                 <Logo />
               </LocalizedLink>
@@ -85,7 +85,7 @@ export function Header() {
             </div>
 
             {isPending ? (
-              <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div className="h-8 w-32 animate-pulse bg-slate-200 dark:bg-slate-700 rounded"></div>
             ) : session ? (
               <UserMenu
                 userName={session.user?.name || ""}
@@ -97,7 +97,7 @@ export function Header() {
             ) : (
               <LocalizedLink
                 href="/auth/signin"
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors text-sm font-medium text-gray-700 dark:text-gray-200 no-underline hover:no-underline"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-800 transition-colors text-sm font-medium text-slate-700 dark:text-slate-200 no-underline hover:no-underline"
               >
                 <LogIn className="h-4 w-4" />
                 {t("nav.sign_in")}

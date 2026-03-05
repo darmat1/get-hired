@@ -100,7 +100,7 @@ export function WorkExperienceForm({
               variant="outline"
               size="sm"
               type="button"
-              className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              className="text-slate-600 border-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900/20"
             >
               <Sparkles className="h-4 w-4 mr-2" />
               {t("profile.btn_import")}

@@ -26,11 +26,11 @@ export default function LinkedInImportPage() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative py-20 overflow-hidden">
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl opacity-50" />
+          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-slate-50 dark:bg-slate-900/10 rounded-full blur-3xl opacity-50" />
           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-900/30 text-slate-600 dark:text-slate-400 text-xs font-semibold mb-6">
                   <Zap className="h-3 w-3" />
                   <span>{t("li_landing.adv3_title")}</span>
                 </div>
@@ -69,8 +69,8 @@ export default function LinkedInImportPage() {
                     height={800}
                     className="w-full h-full object-contain"
                   />
-                  {/* <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-purple-500/5 pointer-events-none" />
-                  <FileText className="h-24 w-24 text-blue-500 mb-6 animate-pulse" />
+                  {/* <div className="absolute inset-0 bg-gradient-to-tr from-slate-500/5 to-purple-500/5 pointer-events-none" />
+                  <FileText className="h-24 w-24 text-slate-500 mb-6 animate-pulse" />
                   <div className="text-center">
                     <p className="font-semibold text-gray-500 dark:text-gray-400 mb-2">
                       [SCREENSHOT PLACEHOLDER]
@@ -109,7 +109,7 @@ export default function LinkedInImportPage() {
 
               {/* Step 1 */}
               <div className="flex flex-col items-center text-center relative">
-                <div className="h-20 w-20 rounded-2xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center text-blue-600 mb-8 group hover:scale-110 transition-transform">
+                <div className="h-20 w-20 rounded-2xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center text-slate-600 mb-8 group hover:scale-110 transition-transform">
                   <Download className="h-10 w-10" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">
@@ -185,10 +185,10 @@ export default function LinkedInImportPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div className="order-2 lg:order-1 relative">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="aspect-square bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center p-8">
+                  <div className="aspect-square bg-slate-100 dark:bg-slate-900/30 rounded-2xl flex items-center justify-center p-8">
                     <div className="text-center">
-                      <Lock className="h-12 w-12 text-blue-600 mb-3 mx-auto" />
-                      <p className="text-sm font-bold text-blue-900 dark:text-blue-100">
+                      <Lock className="h-12 w-12 text-slate-600 mb-3 mx-auto" />
+                      <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
                         Private
                       </p>
                     </div>
@@ -203,7 +203,7 @@ export default function LinkedInImportPage() {
                   </div>
                 </div>
                 {/* Decoration blob */}
-                <div className="absolute -z-10 top-0 left-0 w-full h-full bg-blue-500/5 blur-3xl rounded-full" />
+                <div className="absolute -z-10 top-0 left-0 w-full h-full bg-slate-500/5 blur-3xl rounded-full" />
               </div>
 
               <div className="order-1 lg:order-2">
@@ -213,7 +213,7 @@ export default function LinkedInImportPage() {
 
                 <div className="space-y-8">
                   <div className="flex gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-blue-600 flex-shrink-0 flex items-center justify-center text-white">
+                    <div className="h-12 w-12 rounded-xl bg-slate-600 flex-shrink-0 flex items-center justify-center text-white">
                       <ShieldCheck className="h-6 w-6" />
                     </div>
                     <div>
@@ -258,8 +258,8 @@ export default function LinkedInImportPage() {
         </section>
 
         {/* Security / CTA */}
-        <section className="py-24 bg-blue-600 relative overflow-hidden">
-          <div className="absolute top-0 right-0 h-full w-1/2 bg-blue-500 pointer-events-none -skew-x-12 translate-x-1/2" />
+        <section className="py-24 bg-slate-600 relative overflow-hidden">
+          <div className="absolute top-0 right-0 h-full w-1/2 bg-slate-500 pointer-events-none -skew-x-12 translate-x-1/2" />
           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
             <div className="text-center max-w-3xl mx-auto">
               <div className="h-16 w-16 bg-white/20 rounded-2xl flex items-center justify-center text-white mb-8 mx-auto backdrop-blur-sm">
@@ -268,7 +268,7 @@ export default function LinkedInImportPage() {
               <h2 className="text-3xl font-bold text-white sm:text-4xl mb-6">
                 {t("li_landing.security_title")}
               </h2>
-              <p className="text-xl text-blue-100 mb-10 leading-relaxed">
+              <p className="text-xl text-slate-100 mb-10 leading-relaxed">
                 {t("li_landing.security_desc")}
               </p>
               <Link href="/dashboard">

@@ -288,9 +288,9 @@ export default function MyExperiencePage() {
                     variant="outline"
                     onClick={() => handleSave(false)}
                     disabled={isSaving}
-                    className={`transition-all duration-300 ${
+                    className={`transition-all duration-500 ${
                       isSaving
-                        ? "ring-2 ring-primary/20 bg-primary/5 border-primary/30 animate-pulse"
+                        ? "bg-slate-50 dark:bg-slate-900/50 border-slate-300 dark:border-slate-700 opacity-80"
                         : ""
                     }`}
                   >
@@ -313,7 +313,7 @@ export default function MyExperiencePage() {
             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Upload className="h-5 w-5 text-blue-600" />
+                  <Upload className="h-5 w-5 text-slate-600 dark:text-slate-400" />
                   <h3 className="text-lg font-semibold">
                     {t("profile.import_data")}
                   </h3>
@@ -350,19 +350,19 @@ export default function MyExperiencePage() {
                     onDrop={handleDrop}
                     className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
                       isDragging
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400"
+                        ? "border-slate-500 bg-slate-50 dark:bg-slate-900/20"
+                        : "border-gray-300 dark:border-gray-600 hover:border-slate-500 dark:hover:border-slate-400"
                     }`}
                   >
                     <Upload
                       className={`h-8 w-8 mx-auto mb-2 transition-colors ${
-                        isDragging ? "text-blue-600" : "text-gray-400"
+                        isDragging ? "text-slate-600" : "text-slate-400"
                       }`}
                     />
                     <p
                       className={`text-sm transition-colors ${
                         isDragging
-                          ? "text-blue-700 dark:text-blue-300 font-medium"
+                          ? "text-slate-700 dark:text-slate-300 font-medium"
                           : "text-gray-600 dark:text-gray-400"
                       }`}
                     >
@@ -449,21 +449,21 @@ export default function MyExperiencePage() {
               )}
 
               {isAiProcessing && (
-                <div className="flex items-center gap-4 p-5 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 dark:border-blue-700 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="flex items-center gap-4 p-5 rounded-xl border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
                   <div className="relative">
-                    <Loader2 className="h-8 w-8 text-blue-600 dark:text-blue-400 animate-spin" />
-                    <Sparkles className="h-4 w-4 text-indigo-500 absolute -top-1 -right-1 animate-pulse" />
+                    <Loader2 className="h-8 w-8 text-slate-600 dark:text-slate-400 animate-spin" />
+                    <Sparkles className="h-4 w-4 text-slate-400 absolute -top-1 -right-1 animate-pulse" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                       {t("profile.ai_analyzing").replace(
                         "{seconds}",
                         String(aiTimer),
                       )}
                     </p>
-                    <div className="mt-2 h-1.5 w-full bg-blue-100 dark:bg-blue-800 rounded-full overflow-hidden">
+                    <div className="mt-2 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse"
+                        className="h-full bg-slate-900 dark:bg-slate-50 transition-all duration-300"
                         style={{
                           width: `${Math.min(95, aiTimer * 3)}%`,
                           transition: "width 1s ease",
@@ -471,7 +471,7 @@ export default function MyExperiencePage() {
                       />
                     </div>
                   </div>
-                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-300 tabular-nums">
+                  <span className="text-2xl font-bold text-slate-900 dark:text-slate-100 tabular-nums">
                     {aiTimer}s
                   </span>
                 </div>

@@ -10,11 +10,11 @@ export function Hero() {
 
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center overflow-hidden">
-      {/* Animated Background blobs (Soft pastels/glows) */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-500/20 dark:bg-blue-600/20 rounded-[100%] blur-[120px] -z-10 animate-pulse"></div>
+      {/* Animated Background blobs (Soft Slate/Neutral glows) */}
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-slate-400/10 dark:bg-slate-500/10 rounded-[100%] blur-[120px] -z-10 animate-pulse"></div>
 
       <div className="relative z-10">
-        <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800/50 text-blue-600 dark:text-blue-300 text-sm font-semibold mb-8 shadow-sm">
+        <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-slate-900 dark:text-slate-100 text-sm font-semibold mb-8 shadow-sm">
           AI Resume & Cover Letter Generator
         </div>
 
@@ -29,7 +29,7 @@ export function Hero() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/auth/signin"
-            className="w-full sm:w-auto px-10 py-4 text-lg bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-10 py-4 text-lg bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200 font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2"
           >
             {t("landing.hero.cta")} <ArrowRight className="w-5 h-5" />
           </Link>

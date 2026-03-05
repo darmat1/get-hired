@@ -27,11 +27,11 @@ export function MinimalPreview({ data }: Props) {
             {personalInfo.firstName} {personalInfo.lastName}
           </h1>
           {(data as any).targetPosition && (
-            <div className="text-sm font-medium text-gray-700 mt-1">
+            <div className="text-sm font-medium text-slate-700 mt-1">
               {(data as any).targetPosition}
             </div>
           )}
-          <div className="text-[10px] text-gray-600 flex gap-3 uppercase tracking-wider">
+          <div className="text-[10px] text-slate-600 flex gap-3 uppercase tracking-wider">
             <span>{personalInfo.email}</span>
             <span>•</span>
             <span>{personalInfo.phone}</span>
@@ -43,7 +43,7 @@ export function MinimalPreview({ data }: Props) {
 
       {personalInfo.summary && (
         <div className="mb-6">
-          <p className="text-xs text-gray-800 leading-relaxed text-justify">
+          <p className="text-xs text-slate-800 leading-relaxed text-justify">
             {personalInfo.summary}
           </p>
         </div>
@@ -51,7 +51,7 @@ export function MinimalPreview({ data }: Props) {
 
       {workExperience && workExperience.length > 0 && (
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-gray-900">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-slate-900">
             {getTranslation("form.work_experience", data.language || "en")}
           </h2>
           <div className="space-y-6">
@@ -61,11 +61,11 @@ export function MinimalPreview({ data }: Props) {
                   <h3 className="text-xs font-bold text-black uppercase">
                     {exp.title}
                   </h3>
-                  <span className="text-[10px] text-gray-500">
+                  <span className="text-[10px] text-slate-500">
                     {exp.startDate} — {exp.current ? "Present" : exp.endDate}
                   </span>
                 </div>
-                <div className="text-[10px] text-gray-600 mb-2 uppercase tracking-wide">
+                <div className="text-[10px] text-slate-600 mb-2 uppercase tracking-wide">
                   {exp.company}
                   {exp.employmentType &&
                     ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, data.language || "en")}`}{" "}
@@ -73,7 +73,7 @@ export function MinimalPreview({ data }: Props) {
                 </div>
 
                 {exp.description && (
-                  <ul className="text-[10px] text-gray-700 space-y-1 list-none">
+                  <ul className="text-[10px] text-slate-700 space-y-1 list-none">
                     {(Array.isArray(exp.description)
                       ? exp.description
                       : typeof exp.description === "string"
@@ -96,7 +96,7 @@ export function MinimalPreview({ data }: Props) {
 
       {education && education.length > 0 && (
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-gray-900 mt-6">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-slate-900 mt-6">
             {getTranslation("form.education", data.language || "en")}
           </h2>
           <div className="space-y-4">
@@ -106,11 +106,11 @@ export function MinimalPreview({ data }: Props) {
                   <h3 className="text-xs font-bold text-black uppercase">
                     {edu.institution}
                   </h3>
-                  <span className="text-[10px] text-gray-500">
+                  <span className="text-[10px] text-slate-500">
                     {edu.startDate} — {edu.current ? "Present" : edu.endDate}
                   </span>
                 </div>
-                <div className="text-[10px] text-gray-600 uppercase tracking-wide">
+                <div className="text-[10px] text-slate-600 uppercase tracking-wide">
                   {edu.degree}
                 </div>
               </div>
@@ -121,7 +121,7 @@ export function MinimalPreview({ data }: Props) {
 
       {skills && skills.length > 0 && (
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-gray-900 mt-6">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-slate-900 mt-6">
             {getTranslation("profile.tab_skills", data.language || "en")}
           </h2>
           <div className="flex flex-wrap gap-2">

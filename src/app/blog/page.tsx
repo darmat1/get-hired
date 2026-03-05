@@ -99,7 +99,7 @@ export default async function BlogListPage() {
                     loading="lazy"
                   />
                 )}
-                <h2 className="text-xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+                <h2 className="text-xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-slate-600 dark:group-hover:text-slate-400 transition">
                   {content.title}
                 </h2>
                 {excerpt && (

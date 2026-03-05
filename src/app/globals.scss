@@ -3,9 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #3b82f6;
+  --color-primary: #0f172a;
   --color-primary-foreground: #ffffff;
-  --color-primary-hover: #2563eb;
+  --color-primary-hover: #1e293b;
 
   --color-background: #fafbfc;
   --color-foreground: #09090b;
@@ -22,8 +22,8 @@
   --color-muted: #f1f5f9;
   --color-muted-foreground: #64748b;
 
-  --color-accent: #eff6ff;
-  --color-accent-foreground: #1e40af;
+  --color-accent: #f1f5f9;
+  --color-accent-foreground: #0f172a;
 
   --color-destructive: #ef4444;
   --color-destructive-foreground: #ffffff;
@@ -31,7 +31,7 @@
   --color-border: #e2e8f0;
   --color-input: #ffffff;
   --color-input-border: #cbd5e1;
-  --color-ring: #3b82f6;
+  --color-ring: #0f172a;
 
   --color-success: #22c55e;
   --color-success-foreground: #ffffff;
@@ -94,9 +94,9 @@
     --color-background: #0b0e14;
     --color-foreground: #e2e8f0;
 
-    --color-primary: #3b82f6;
-    --color-primary-foreground: #ffffff;
-    --color-primary-hover: #60a5fa;
+    --color-primary: #f8fafc;
+    --color-primary-foreground: #020617;
+    --color-primary-hover: #e2e8f0;
 
     --color-card: #151a25;
     --color-card-foreground: #f1f5f9;
@@ -110,8 +110,8 @@
     --color-muted: #1e293b;
     --color-muted-foreground: #94a3b8;
 
-    --color-accent: #1d283a;
-    --color-accent-foreground: #60a5fa;
+    --color-accent: #1e293b;
+    --color-accent-foreground: #f8fafc;
 
     --color-destructive: #ef4444;
     --color-destructive-foreground: #fef2f2;
@@ -125,7 +125,7 @@
     --color-border: #2d3748;
     --color-input: #1a202c;
     --color-input-border: #3f4961;
-    --color-ring: #3b82f6;
+    --color-ring: #f8fafc;
 
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
@@ -225,11 +225,11 @@
 @layer utilities {
 
   .bg-gradient-primary {
-    @apply bg-gradient-to-r from-blue-500 to-indigo-600;
+    @apply bg-slate-900;
   }
 
   .dark .bg-gradient-primary {
-    @apply from-blue-400 to-indigo-500;
+    @apply bg-slate-50;
   }
 
   .glass {
@@ -241,7 +241,11 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600;
+  }
+
+  .dark .text-gradient {
+    @apply from-slate-50 to-slate-400;
   }
 
   .resume-paper {
@@ -358,17 +362,17 @@
 
   /* Маркеры списков (точки) */
   .blog-content li::marker {
-    @apply text-blue-600 dark:text-blue-500;
+    @apply text-slate-900 dark:text-slate-100;
   }
 
   /* Ссылки */
   .blog-content a {
-    @apply no-underline border-b border-transparent transition-colors font-medium;
-    @apply text-blue-600 dark:text-blue-400;
+    @apply no-underline border-b border-slate-900/10 transition-colors font-medium;
+    @apply text-slate-900 dark:text-slate-100;
   }
 
   .blog-content a:hover {
-    @apply border-blue-600 dark:border-blue-400;
+    @apply border-slate-900 dark:border-slate-100;
   }
 
   /* Жирный текст */
@@ -380,7 +384,7 @@
   /* Цитаты */
   .blog-content blockquote {
     @apply border-l-4 pl-4 italic my-6 py-2 rounded-r;
-    @apply border-blue-500 bg-slate-50 dark:bg-slate-800/50;
+    @apply border-slate-400 bg-slate-50 dark:bg-slate-800/50;
     @apply text-slate-700 dark:text-slate-300;
   }
 }

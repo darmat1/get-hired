@@ -66,7 +66,7 @@ export default async function ResumeBuilderPage() {
           {/* Animated Background blobs (Soft pastels) */}
           <div className="absolute top-0 right-10 w-72 h-72 bg-sky-300/20 dark:bg-sky-500/10 rounded-full blur-3xl animate-pulse"></div>
           <div
-            className="absolute top-20 left-10 w-72 h-72 bg-indigo-300/20 dark:bg-indigo-500/10 rounded-full blur-3xl animate-pulse"
+            className="absolute top-20 left-10 w-72 h-72 bg-slate-300/20 dark:bg-slate-500/10 rounded-full blur-3xl animate-pulse"
             style={{ animationDelay: "2s" }}
           ></div>
 
@@ -85,7 +85,7 @@ export default async function ResumeBuilderPage() {
             <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-8">
               {t("resume_builder.hero_title")}{" "}
               <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-indigo-400 dark:from-sky-400 dark:to-indigo-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-slate-400 dark:from-sky-400 dark:to-slate-300">
                 {t("resume_builder.hero_title_highlight")}
               </span>
             </h1>
@@ -164,7 +164,7 @@ export default async function ResumeBuilderPage() {
                   desc: t("resume_builder.feature1_desc"),
                 },
                 {
-                  icon: <Briefcase className="w-6 h-6 text-indigo-400" />,
+                  icon: <Briefcase className="w-6 h-6 text-slate-400" />,
                   title: t("resume_builder.feature2_title"),
                   desc: t("resume_builder.feature2_desc"),
                 },
@@ -251,7 +251,7 @@ export default async function ResumeBuilderPage() {
             </div>
 
             <div className="lg:w-1/2 relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-sky-400/10 to-indigo-400/10 transform rotate-3 rounded-3xl blur-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-sky-400/10 to-slate-400/10 transform rotate-3 rounded-3xl blur-2xl"></div>
               <div className="relative bg-white dark:bg-slate-800/90 border border-slate-100 dark:border-slate-700/50 p-6 rounded-3xl shadow-xl transform -rotate-2 hover:rotate-0 transition duration-500">
                 <div className="space-y-4">
                   <div className="h-8 w-1/2 bg-sky-50 dark:bg-sky-900/20 rounded"></div>

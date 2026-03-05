@@ -33,7 +33,7 @@ export function FAQSEO() {
                   key={index}
                   className={`bg-white dark:bg-slate-800 rounded-2xl border ${
                     isOpen
-                      ? "border-blue-500 shadow-md"
+                      ? "border-slate-500 shadow-md"
                       : "border-slate-200 dark:border-slate-700 shadow-sm"
                   } transition-all duration-300 overflow-hidden`}
                 >
@@ -43,7 +43,7 @@ export function FAQSEO() {
                     aria-expanded={isOpen}
                   >
                     <h3
-                      className={`text-lg font-bold pr-8 ${isOpen ? "text-blue-600 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}
+                      className={`text-lg font-bold pr-8 ${isOpen ? "text-slate-600 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}
                     >
                       {faq.question}
                     </h3>

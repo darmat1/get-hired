@@ -14,26 +14,26 @@ export function ProfessionalPreview({ data }: Props) {
 
   return (
     <div className="font-serif space-y-6">
-      <div className="text-center border-b border-gray-900 pb-6 mb-6">
+      <div className="text-center border-b border-slate-900 pb-6 mb-6">
         <div className="flex justify-center items-center gap-6 mb-4">
           {personalInfo.avatarUrl && (
             <img
               src={personalInfo.avatarUrl}
               alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
-              className="w-20 h-20 rounded-full object-cover border-4 border-gray-50 shadow-sm"
+              className="w-20 h-20 rounded-full object-cover border-4 border-slate-50 shadow-sm"
             />
           )}
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-2 uppercase tracking-wide">
+        <h1 className="text-2xl font-bold text-slate-900 mb-2 uppercase tracking-wide">
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
         {(data as any).targetPosition && (
-          <div className="text-sm font-medium text-gray-700 mt-1">
+          <div className="text-sm font-medium text-slate-700 mt-1">
             {(data as any).targetPosition}
           </div>
         )}
-        <div className="flex flex-wrap justify-center gap-x-4 text-gray-700 text-xs">
+        <div className="flex flex-wrap justify-center gap-x-4 text-slate-700 text-xs">
           <span>{personalInfo.email}</span>
           <span>|</span>
           <span>{personalInfo.phone}</span>
@@ -41,7 +41,7 @@ export function ProfessionalPreview({ data }: Props) {
           <span>{personalInfo.location}</span>
         </div>
         {personalInfo.website && (
-          <div className="text-center text-xs text-gray-700 mt-1">
+          <div className="text-center text-xs text-slate-700 mt-1">
             {personalInfo.website}
           </div>
         )}
@@ -49,10 +49,10 @@ export function ProfessionalPreview({ data }: Props) {
 
       {personalInfo.summary && (
         <div>
-          <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+          <h2 className="text-sm font-bold text-slate-900 mb-2 uppercase border-b border-slate-300 pb-1">
             {getTranslation("form.professional_summary", data.language || "en")}
           </h2>
-          <p className="text-gray-800 text-xs leading-relaxed text-justify">
+          <p className="text-slate-800 text-xs leading-relaxed text-justify">
             {personalInfo.summary}
           </p>
         </div>
@@ -60,7 +60,7 @@ export function ProfessionalPreview({ data }: Props) {
 
       {workExperience && workExperience.length > 0 && (
         <div>
-          <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+          <h2 className="text-sm font-bold text-slate-900 mb-2 uppercase border-b border-slate-300 pb-1">
             {getTranslation("form.work_experience", data.language || "en")}
           </h2>
           <div className="space-y-4">
@@ -68,16 +68,16 @@ export function ProfessionalPreview({ data }: Props) {
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline mb-1">
                   <div>
-                    <h3 className="font-bold text-gray-900 text-xs">
+                    <h3 className="font-bold text-slate-900 text-xs">
                       {exp.title}
                     </h3>
-                    <p className="text-gray-700 text-xs italic">
+                    <p className="text-slate-700 text-xs italic">
                       {exp.company}
                       {exp.employmentType &&
                         ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, data.language || "en")}`}
                     </p>
                   </div>
-                  <div className="text-right text-[10px] text-gray-600">
+                  <div className="text-right text-[10px] text-slate-600">
                     <p>{exp.location}</p>
                     <p>
                       {exp.startDate} - {exp.current ? "Present" : exp.endDate}
@@ -94,7 +94,7 @@ export function ProfessionalPreview({ data }: Props) {
                     )
                       .filter((d) => d !== undefined && d !== null)
                       .map((desc, idx) => (
-                        <li key={idx} className="text-gray-800 text-xs pl-1">
+                        <li key={idx} className="text-slate-800 text-xs pl-1">
                           {desc}
                         </li>
                       ))}
@@ -108,7 +108,7 @@ export function ProfessionalPreview({ data }: Props) {
 
       {education && education.length > 0 && (
         <div>
-          <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+          <h2 className="text-sm font-bold text-slate-900 mb-2 uppercase border-b border-slate-300 pb-1">
             {getTranslation("form.education", data.language || "en")}
           </h2>
           <div className="space-y-3">
@@ -116,14 +116,14 @@ export function ProfessionalPreview({ data }: Props) {
               <div key={edu.id}>
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-bold text-gray-900 text-xs">
+                    <h3 className="font-bold text-slate-900 text-xs">
                       {edu.institution}
                     </h3>
-                    <p className="text-gray-700 text-xs italic">
+                    <p className="text-slate-700 text-xs italic">
                       {edu.degree} {edu.field && `- ${edu.field}`}
                     </p>
                   </div>
-                  <div className="text-right text-[10px] text-gray-600">
+                  <div className="text-right text-[10px] text-slate-600">
                     {edu.startDate} - {edu.current ? "Present" : edu.endDate}
                   </div>
                 </div>
@@ -135,12 +135,12 @@ export function ProfessionalPreview({ data }: Props) {
 
       {skills && skills.length > 0 && (
         <div>
-          <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+          <h2 className="text-sm font-bold text-slate-900 mb-2 uppercase border-b border-slate-300 pb-1">
             {getTranslation("profile.tab_skills", data.language || "en")}
           </h2>
           <div className="flex flex-wrap gap-x-4 gap-y-1">
             {skills.map((skill) => (
-              <span key={skill.id} className="text-xs text-gray-800">
+              <span key={skill.id} className="text-xs text-slate-800">
                 • {skill.name}
               </span>
             ))}

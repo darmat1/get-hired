@@ -286,7 +286,7 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
                         <span className="text-[10px] uppercase tracking-wider font-bold bg-muted px-2 py-0.5 rounded text-muted-foreground">
                           {variant.seniority}
                         </span>
-                        <span className="text-[10px] uppercase tracking-wider font-bold bg-blue-50 text-blue-600 dark:bg-blue-900/20 px-2 py-0.5 rounded">
+                        <span className="text-[10px] uppercase tracking-wider font-bold bg-slate-50 text-slate-600 dark:bg-slate-900/20 px-2 py-0.5 rounded">
                           {variant.targetRole.replace("_", " ")}
                         </span>
                       </div>
