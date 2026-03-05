@@ -52,27 +52,27 @@ export function UserMenu({
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
       >
         <Image
           width={32}
           height={32}
           src={userImage || gravatarUrl}
           alt={userName || userEmail}
-          className="h-8 w-8 rounded-full border border-gray-200 dark:border-gray-700 object-cover"
+          className="h-8 w-8 rounded-full border border-slate-200 dark:border-slate-700 object-cover"
         />
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline-block">
+        <span className="text-sm font-medium text-slate-700 dark:text-slate-200 hidden sm:inline-block">
           {userName || userEmail}
         </span>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
-          <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-            <p className="text-sm font-medium text-gray-900 dark:text-white">
+        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50">
+          <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700">
+            <p className="text-sm font-medium text-slate-900 dark:text-white">
               {userName}
             </p>
-            <p className="text-xs text-gray-600 dark:text-gray-400">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               {userEmail}
             </p>
           </div>
@@ -80,7 +80,7 @@ export function UserMenu({
           <LocalizedLink
             href="/dashboard"
             onClick={() => setIsOpen(false)}
-            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline"
+            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors no-underline hover:no-underline"
           >
             <LayoutDashboard className="h-4 w-4" />
             {t("nav.dashboard")}
@@ -90,7 +90,7 @@ export function UserMenu({
             <LocalizedLink
               href="/admin/blog"
               onClick={() => setIsOpen(false)}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline"
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors no-underline hover:no-underline"
             >
               <ShieldCheck className="h-4 w-4" />
               Admin
@@ -100,7 +100,7 @@ export function UserMenu({
           <LocalizedLink
             href="/dashboard/profile"
             onClick={() => setIsOpen(false)}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors no-underline hover:no-underline"
           >
             <Settings className="h-4 w-4" />
             {t("nav.profile")}
@@ -108,7 +108,7 @@ export function UserMenu({
 
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-left"
           >
             <LogOut className="h-4 w-4" />
             {t("nav.sign_out")}

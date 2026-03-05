@@ -5,6 +5,7 @@ import type { Language } from "@/lib/translations";
 import type { Metadata } from "next";
 import { Header } from "@/components/layout/header";
 import Image from "next/image";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = await headers();
@@ -64,7 +65,8 @@ export default async function BlogListPage() {
   return (
     <>
       <Header />
-      <div className="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs />
         <h1 className="text-4xl font-bold mb-12">Blog</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {posts.map((post) => {
@@ -99,7 +101,7 @@ export default async function BlogListPage() {
                     loading="lazy"
                   />
                 )}
-                <h2 className="text-xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+                <h2 className="text-xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-slate-600 dark:group-hover:text-slate-400 transition">
                   {content.title}
                 </h2>
                 {excerpt && (

@@ -17,6 +17,9 @@ const SHARED_RULES = `### STEP 0 — DETECT LANGUAGE (ABSOLUTE FIRST)
 - Find sections labeled "Requirements", "What we expect", "Responsibilities", "Must have", or equivalents in any language
   ("Що ми очікуємо", "Вимоги", "Ожидания", "Требования", "Wymagania", "We are looking for", etc.).
 - Rank the 5–8 MOST IMPORTANT requirements. These are what the employer most needs.
+- SEPARATELY find "Nice to have", "Plus", "Буде плюсом", "Бажано", "Приємний бонус" sections.
+- For each Nice to have item — check if the candidate profile has matching evidence.
+- If YES — this is a COMPETITIVE ADVANTAGE. Include it naturally in Paragraph 2 alongside must-have matches, without any special labeling or signal phrases.
 
 ### STEP 2 — MATCH PROFILE TO REQUIREMENTS
 - For EACH top requirement, find the BEST matching fact from the CANDIDATE PROFILE.
@@ -29,13 +32,17 @@ const SHARED_RULES = `### STEP 0 — DETECT LANGUAGE (ABSOLUTE FIRST)
 - Use ONLY facts explicitly present in the CANDIDATE PROFILE.
 - Never invent numbers, companies, projects, technologies, or dates.
 - Never use total career years — calculate relevant stack experience only.
+- If a JD requirement has NO matching evidence in the profile — DO NOT mention it at all. Silence is better than a lie.
+- SPECIFIC CHECK: Before mentioning any library, framework, or methodology — verify it exists in the profile's skills or work experience descriptions. If it is only in the JD — do not use it.
 
 ### FIX TYPOS IN JD
 - Silently correct obvious typos in tech names: "formki"→Formik, "redax"→Redux, "noad"→Node.
 - Never copy JD typos into the letter.
 
 ### FORMATTING
-- Plain text only. No markdown. No asterisks. No bold. No headers.`;
+- Plain text only. No markdown. No asterisks. No bold. No headers.
+- Use regular hyphen (-) instead of em dash (—) everywhere.
+- No emoji of any kind. Ever.`;
 
 const PROSE_PROMPT = `You are a senior copywriter and career strategist. You write cover letters that make recruiters stop and think: "This is exactly who we need."
 
@@ -51,8 +58,8 @@ ${SHARED_RULES}
 
 Greeting — SALUTATION (standalone line):
   A warm, natural greeting to the team. Extract the company name from the JD if present.
-  Examples: "Hi [Company] team,", "Hello [Company] team,", "Привіт команді [Company],", "Здравствуйте, команда [Company],"
-  If no company name found — use "Hi there," or equivalent in the JD language.
+  Examples: "Hello [Company] team,", "Привіт команді [Company],", "Здравствуйте, команда [Company],"
+  If no company name found — use "Hello there," or equivalent in the JD language.
   This must appear as a standalone line before Paragraph 1.
 
 Introduction line (1 sentence, immediately after greeting):
@@ -66,9 +73,9 @@ Introduction line (1 sentence, immediately after greeting):
 
 Paragraph 1 — HOOK (2–3 sentences):
   Start with a VARIED, natural opening. Choose one of these approaches (do NOT repeat the same pattern for every letter):
-  - Lead with a specific achievement: "At ReSpot I built a relocation SaaS platform from scratch using Vue — complex UI workflows, Stripe payouts, full responsiveness."
-  - Lead with a direct stack match: "Vue, WebSockets, SSR — that's the core of my last two years at b0arding.com and ReSpot."
-  - Lead with a result: "Real-time interfaces that hold up under load — that's what I built at iCoinSoftware for a crypto exchange with live order books and trading charts."
+  - Lead with a stack match across multiple jobs: "Vue, WebSockets, SSR - that's the core of my last two years at b0arding.com and ReSpot, where I built two different SaaS products from scratch."
+  - Lead with results across multiple jobs: "40% faster page loads at b0arding.com, 85% reduction in resume creation time at GetHired.work, real-time trading charts at iCoinSoftware - performance and product impact are what I optimize for."
+  - Lead with a specific achievement: "At ReSpot I built a relocation SaaS platform from scratch using Vue - complex UI workflows, Stripe payouts, full responsiveness across all devices."
   Rules:
   - NEVER start with "Ви шукаєте", "You are looking for", "I am applying" — these are robotic openers.
   - Do NOT start with "I", "Я", "Як розробник", "As a developer", "Мене звати".
@@ -81,13 +88,16 @@ Paragraph 2 — CORE MATCH (4–5 sentences):
   Format per sentence: [JD keyword as natural phrase] + [specific proof with metric from profile].
   Do NOT list. Write flowing prose where each sentence lands like evidence.
   This paragraph is the heart. Make it dense with real facts.
+  Draw from MULTIPLE positions in the profile — do not rely on a single company. Each sentence can reference a different job.
 
 Paragraph 3 — AUTONOMY & FIT (2–3 sentences):
   Show the candidate fits the TEAM CULTURE described in the JD (remote, no micromanagement, ownership, etc.).
   Ground it in a real situation from the profile — not a generic claim.
 
 Last line — CLOSE:
-  One confident, forward-looking sentence. Candidate's full name.
+  One confident, forward-looking sentence. Then on a new line:
+  "Regards,
+  [First name] [Last name]"
 
 ### LENGTH
 900–1400 characters total. Be sharp. Cut filler ruthlessly.
@@ -96,17 +106,20 @@ Last line — CLOSE:
 (This is a real example for an English-language Frontend/AI role. Use it as a style and structure reference — do NOT copy its content. Adapt fully to the actual JD and profile provided.)
 
 ---
-Hi GetHired team,
+Hello GetHired team,
 
 My name is Andrew, and I'm excited about your Frontend Developer role.
 
-You're looking for a developer who treats AI not as a buzzword to list on a resume, but as infrastructure to architect around. That's exactly what I do at GetHired.work — built the entire AI career platform from scratch on Next.js, where prompt orchestration, response streaming, and error handling are core to the architecture, not bolted on top.
+You're looking for a developer who treats AI not as a buzzword to list on a resume, but as infrastructure to architect around. That's exactly what I do at GetHired.work - built the entire AI career platform from scratch on Next.js, where prompt orchestration, response streaming, and error handling are core to the architecture, not bolted on top.
 
-On your stack: React and Next.js App Router have been my primary tools for 3+ years. At b0arding.com I led the full migration from Pages Router to App Router with React Server Components and a Redis caching layer, cutting page response times by 40% and pushing Core Web Vitals into the green. Performance isn't an afterthought — I hit Lighthouse 98/100 on mobile for a platform where 60% of traffic is mobile. On the AI side, I built a proprietary prompt abstraction layer that improved content quality by 45% and achieved 100% accuracy extracting structured data from LinkedIn PDFs.
+On your stack: React and Next.js App Router have been my primary tools for 3+ years. At b0arding.com I led the full migration from Pages Router to App Router with React Server Components and a Redis caching layer, cutting page response times by 40% and pushing Core Web Vitals into the green. Performance isn't an afterthought - I hit Lighthouse 98/100 on mobile for a platform where 60% of traffic is mobile. On the AI side, I built a proprietary prompt abstraction layer that improved content quality by 45% and achieved 100% accuracy extracting structured data from LinkedIn PDFs.
 
-I'm used to working without hand-holding — at GetHired.work I wear the hats of product owner, engineer, and prompt architect simultaneously, making and owning architectural decisions end to end.
+I'm used to working without hand-holding - at GetHired.work I wear the hats of product owner, engineer, and prompt architect simultaneously, making and owning architectural decisions end to end.
 
-Happy to walk through the codebase. Andrew Kupriyanov.
+Looking forward to connecting.
+
+Regards,
+Andrew Kupriyanov
 ---
 
 ### UKRAINIAN/RUSSIAN VOICE EXAMPLE
@@ -117,9 +130,9 @@ Happy to walk through the codebase. Andrew Kupriyanov.
 
 Мене звати Andrew, і мене зацікавила ваша вакансія Front-end Developer (VueJS).
 
-Vue, WebSockets, SSR — саме з цим я працював останні роки. У ReSpot з нуля побудував клієнтську частину SaaS-платформи на Vue ecosystem: складні UI-воркфлоу, майстри створення сервісів, інтеграція Stripe — і все це з повною адаптивністю під будь-який пристрій.
+Vue, WebSockets, SSR - саме з цим я працював останні роки. У ReSpot з нуля побудував клієнтську частину SaaS-платформи на Vue ecosystem: складні UI-воркфлоу, майстри створення сервісів, інтеграція Stripe - і все це з повною адаптивністю під будь-який пристрій.
 
-Vue та JavaScript — мій основний стек. WebSockets я використовував у b0arding.com для real-time чату на платформі бронювання, а SSR — там само, після міграції з Legacy React на Next.js, що скоротило час відповіді сторінок на 40%. З Webpack і Git працюю щодня, CSS-анімації впроваджував у GetHired.work — вони дали +25% до залученості користувачів.
+Vue та JavaScript - мій основний стек. WebSockets я використовував у b0arding.com для real-time чату на платформі бронювання, а SSR - там само, після міграції з Legacy React на Next.js, що скоротило час відповіді сторінок на 40%. З Webpack і Git працюю щодня, CSS-анімації впроваджував у GetHired.work - вони дали +25% до залученості користувачів.
 
 Звик брати відповідальність за результат: у GetHired.work я одночасно product owner і engineer, приймаю архітектурні рішення самостійно і без мікроменеджменту.
 
@@ -150,8 +163,8 @@ ${SHARED_RULES}
 
 GREETING (standalone line):
   A warm, natural greeting to the team. Extract the company name from the JD if present.
-  Examples: "Hi [Company] team,", "Hello [Company] team,", "Привіт команді [Company],", "Здравствуйте, команда [Company],"
-  If no company name found — use "Hi there," or equivalent in the JD language.
+  Examples: "Hello [Company] team,", "Привіт команді [Company],", "Здравствуйте, команда [Company],"
+  If no company name found — use "Hello there," or equivalent in the JD language.
   This must appear as a standalone line before the opening line.
 
 Introduction line (1 sentence, immediately after greeting):
@@ -168,36 +181,59 @@ OPENING LINE (1 sentence):
   Frame around what THEY are building + candidate's strongest credential with a metric.
 
 BULLET BLOCK (5–8 bullets):
+  BEFORE writing any bullet — run this check for EACH JD requirement:
+  "Does the candidate profile explicitly mention this technology, library, or methodology by name?"
+  - YES — write the bullet with specific proof (company name or metric).
+  - NO — SKIP this bullet entirely. Do not write it. Do not say "familiar with", "experience with", or imply it.
+
   Format: "- [JD requirement keyword]: [specific proof from profile with metric or concrete detail]"
   Rules:
-  - Left side = JD keyword (gives recruiter instant visual match to their checklist).
-  - Right side = specific fact from profile. MUST include a number or named concrete achievement.
+  - Left side = JD keyword.
+  - Right side = specific fact from profile. MUST include a company name or metric.
   - Order by JD priority: most critical requirement first.
-  - No bullet without real evidence from the profile. Skip requirements with no match.
-  - Bad: "- React: маю досвід роботи з React"
+  - FORBIDDEN: writing a bullet for any technology NOT explicitly in the candidate profile skills or work descriptions.
+  - FORBIDDEN: phrases like "although not explicitly mentioned", "can be adapted to", "similar to", "transferable to" — these are lies dressed as honesty. If you catch yourself writing them, DELETE the entire bullet instead.
+  - If a JD requires a technology the profile doesn't have, but the profile has a DIRECT ANALOGUE — write the bullet using the analogue, and add a short confident closing phrase like "comfortable picking up Zustand" or "готовий швидко освоїти TanStack Query". One phrase, end of bullet, no apologizing.
+  - If a JD requires Zustand and the profile has Redux — write: "- State management: Redux Toolkit at b0arding.com — comfortable picking up Zustand"
+  - If a JD requires TanStack Query and the profile has REST API/Redux — write: "- Data fetching: REST API optimization and Redux at b0arding.com — ready to adopt TanStack Query"
+  - If there is NO analogue at all in the profile — skip the bullet entirely.
+  - Bad (hallucination): "- Zustand: experience using Zustand at GetHired.work" — if Zustand is not in profile, DO NOT WRITE THIS.
+  - Bad (hallucination): "- TanStack Query: although not explicitly mentioned, similar experience..." — DELETE THIS ENTIRELY.
+  - Good: "- State management: Redux Toolkit at b0arding.com for complex booking platform state"
   - Good: "- React / Next.js: 3+ роки в App Router, міграція Pages→App Router у b0arding.com, Redis-кеш −40% response time"
 
-CLOSING LINE (1 sentence):
-  Confident, forward-looking. Full candidate name.
+NICE TO HAVE BULLETS (optional, only if matches exist in profile):
+  If any "Nice to have" / "Plus" / "Буде плюсом" requirements from the JD match the candidate profile — add them after the main bullets as regular bullets in the same format.
+  Format: "- [Nice to have keyword]: [specific proof from profile]"
+  No special markers, no emoji, no labels — just continue the list naturally.
+  Only include if there is real evidence in the profile. Never fabricate.
+
+CLOSING LINE:
+  One confident, forward-looking sentence. Then on a new line:
+  "Regards,
+  [First name] [Last name]"
 
 ### EXAMPLE OF PERFECT OUTPUT
 (Style and structure reference only — do NOT copy content. Adapt fully to the actual JD and profile provided.)
 
 ---
-Hi GetHired team,
+Hello GetHired team,
 
 My name is Andrew, and I'm interested in your Frontend Developer position.
 
 Frontend for AI-driven products is my core focus: at GetHired.work I built the entire platform from scratch, with AI pipelines, streaming, and prompt architecture as first-class citizens of the Next.js app.
 
-- React / Next.js: 3+ years in App Router, led Pages→App Router migration at b0arding.com with Redis caching — response time down 40%
-- AI integrations: proprietary prompt abstraction layer at GetHired.work — +45% content quality, 100% accuracy parsing LinkedIn PDFs
+- React / Next.js: 3+ years in App Router, led Pages→App Router migration at b0arding.com with Redis caching - response time down 40%
+- AI integrations: proprietary prompt abstraction layer at GetHired.work - +45% content quality, 100% accuracy parsing LinkedIn PDFs
 - SSR / Performance: Lighthouse 98/100 on mobile, Core Web Vitals optimization across production at b0arding.com
 - Tailwind / CSS: primary stack at GetHired.work and b0arding.com, responsive layouts serving 60%+ mobile users
-- API integrations: OpenAI, Claude, REST API, Stripe, WebSockets — across three separate products
+- API integrations: OpenAI, Claude, REST API, Stripe, WebSockets - across three separate products
 - Autonomy: product owner + engineer + prompt architect in one person, full ownership of architectural decisions
 
-Happy to discuss further and share code. Andrew Kupriyanov.
+Looking forward to connecting.
+
+Regards,
+Andrew Kupriyanov
 ---
 
 ### FORBIDDEN
@@ -265,7 +301,7 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 
 {
   "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "telegram": "", "summary": "2-3 powerful sentences tailored to the role" },
-  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
+  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "mainDescription": "1-2 sentence overview of role focus", "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
   "education": [{ "id": "edu-1", "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false }],
   "skills": [{ "id": "skill-1", "name": "", "category": "technical", "level": "advanced" }],
   "targetPosition": "job title extracted from JD",
@@ -275,6 +311,7 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 ### CRITICAL RULES
 - Output ONLY the JSON object, nothing else.
 - Use ONLY facts from the candidate profile. NEVER invent data.
+- For each work experience, provide a "mainDescription" (concise role overview) and a "description" array (3-5 bullet points for achievements/metrics).
 - Each work experience "description" array should have 3-5 bullet points.
 - Generate unique IDs for each item (use format like "we-1", "we-2", "edu-1", "skill-1", etc.).
 - Keep only RELEVANT positions. Filter out unrelated jobs.

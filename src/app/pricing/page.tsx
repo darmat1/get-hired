@@ -80,9 +80,9 @@ export default function PricingPage() {
               {/* Pro Plan */}
               <div className="relative group bg-white dark:bg-black p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-2xl overflow-hidden hover:shadow-3xl transition-all duration-300">
                 {/* Accent line */}
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600" />
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-slate-600 via-purple-600 to-slate-600" />
 
-                <div className="absolute top-8 right-8 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                <div className="absolute top-8 right-8 bg-slate-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                   {t("pricing_landing.pro_tag")}
                 </div>
 
@@ -100,7 +100,7 @@ export default function PricingPage() {
                       key={i}
                       className="flex items-center gap-3 text-gray-600 dark:text-gray-300"
                     >
-                      <Star className="h-5 w-5 text-blue-400 flex-shrink-0 fill-blue-400/20" />
+                      <Star className="h-5 w-5 text-slate-400 flex-shrink-0 fill-slate-400/20" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -132,7 +132,7 @@ export default function PricingPage() {
                 </p>
                 <div className="space-y-6">
                   <div className="flex gap-4">
-                    <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 shrink-0">
+                    <div className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-900/30 flex items-center justify-center text-slate-600 shrink-0">
                       <Zap className="h-5 w-5" />
                     </div>
                     <p className="text-gray-700 dark:text-gray-300">
@@ -170,7 +170,7 @@ export default function PricingPage() {
                     </p>
                   </div>
                 </div>
-                <div className="absolute -bottom-6 -right-6 bg-blue-600 text-white p-6 rounded-2xl shadow-xl">
+                <div className="absolute -bottom-6 -right-6 bg-slate-600 text-white p-6 rounded-2xl shadow-xl">
                   <p className="text-2xl font-bold">98%</p>
                   <p className="text-xs uppercase tracking-wider">
                     Hiring software pass rate

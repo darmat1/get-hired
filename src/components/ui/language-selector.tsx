@@ -29,7 +29,7 @@ export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 transition-colors"
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-800 transition-colors"
         title={mounted ? t("language.title") : "Language"}
         suppressHydrationWarning
       >
@@ -46,7 +46,7 @@ export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-20 min-w-[120px]">
+          <div className="absolute right-0 top-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md shadow-lg z-20 min-w-[120px]">
             {languages.map((lang) => (
               <button
                 key={lang.code}
@@ -54,10 +54,10 @@ export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
                   setLanguage(lang.code);
                   setIsOpen(false);
                 }}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
                   language === lang.code
-                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                    : "text-gray-700 dark:text-gray-300"
+                    ? "bg-slate-50 dark:bg-slate-900/20 text-slate-600 dark:text-slate-400"
+                    : "text-slate-700 dark:text-slate-300"
                 }`}
               >
                 {lang.name}

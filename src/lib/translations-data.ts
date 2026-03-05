@@ -9,6 +9,7 @@ export interface Translations {
 export const translations: Translations = {
   "nav.logo": { en: "GetHired", uk: "GetHired", ru: "GetHired" },
   "nav.dashboard": { en: "My Resumes", uk: "Мої резюме", ru: "Мои резюме" },
+  "nav.blog": { en: "Blog", uk: "Блог", ru: "Блог" },
   "nav.ai_settings": {
     en: "AI Settings",
     uk: "Налаштування AI",
@@ -72,7 +73,17 @@ export const translations: Translations = {
   "common.please_select": {
     en: "Please select",
     uk: "Будь ласка, оберіть",
-    ru: "Пожалуйста, выберите",
+    ru: "Пожалуйста, виберите",
+  },
+  "common.saving": {
+    en: "Saving",
+    uk: "Збереження",
+    ru: "Сохранение",
+  },
+  "common.saved": {
+    en: "Saved at",
+    uk: "Збережено о",
+    ru: "Сохранено в",
   },
   "auth.sign_in_required": {
     en: "Please sign in to create a resume",
@@ -1164,10 +1175,30 @@ export const translations: Translations = {
   "work.company": { en: "Company", uk: "Компанія", ru: "Компания" },
   "work.location": { en: "Location", uk: "Локація", ru: "Локация" },
   "work.period": { en: "Period", uk: "Період", ru: "Период" },
+  "work.delete_confirm_title": {
+    en: "Delete experience?",
+    uk: "Видалити досвід?",
+    ru: "Удалить опыт?",
+  },
+  "work.delete_confirm_desc": {
+    en: "Are you sure you want to delete this work experience?",
+    uk: "Ви впевнені, що хочете видалити цей досвід роботи?",
+    ru: "Вы уверены, что хотите удалить этот опыт работы?",
+  },
   "work.description": {
     en: "Description of responsibilities",
     uk: "Опис обов'язків",
     ru: "Описание обязанностей",
+  },
+  "work.main_description": {
+    en: "Role Description",
+    uk: "Опис ролі",
+    ru: "Описание роли",
+  },
+  "work.responsibilities_achievements": {
+    en: "Responsibilities and Achievements",
+    uk: "Обов'язки та досягнення",
+    ru: "Обязанности и достижения",
   },
   "work.current_position": {
     en: "Current position",
@@ -1203,6 +1234,16 @@ export const translations: Translations = {
     en: "Describe your responsibilities and achievements...",
     uk: "Опишіть ваші обов'язки та досягнення...",
     ru: "Опишите ваши обязанности и достижения...",
+  },
+  "work.placeholder.main_description": {
+    en: "Briefly describe your role and key focus...",
+    uk: "Коротко опишіть вашу роль та основний фокус...",
+    ru: "Кратко опишите вашу роль и основной фокус...",
+  },
+  "work.add_bullet": {
+    en: "Add responsibility/achievement",
+    uk: "Додати обов'язок/досягнення",
+    ru: "Добавить обязанность/достижение",
   },
   "work.new_position": {
     en: "New position",

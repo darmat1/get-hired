@@ -143,8 +143,8 @@ export function PersonalInfoForm({ data, onChange }: PersonalInfoFormProps) {
       text-sm 
       transition-all
       
-      bg-white border border-gray-300 text-gray-900
-      placeholder:text-gray-400
+      bg-white border border-slate-300 text-slate-900
+      placeholder:text-slate-400
 
       dark:bg-[var(--color-input)] 
       dark:border-[var(--color-border)] 

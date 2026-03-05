@@ -12,10 +12,10 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/80 dark:bg-gray-950/80 backdrop-blur-md transition-all duration-500 animate-in fade-in">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/80 dark:bg-slate-950/80 backdrop-blur-md transition-all duration-500 animate-in fade-in">
       <div className="relative flex flex-col items-center">
         {/* Animated Glow behind Logo */}
-        <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full blur-2xl animate-pulse" />
+        <div className="absolute -inset-4 bg-gradient-to-r from-slate-500/20 to-purple-500/20 rounded-full blur-2xl animate-pulse" />
 
         <div className="relative animate-bounce-gentle">
           <Logo className="h-12 w-auto" />
@@ -23,12 +23,12 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
 
         <div className="mt-8 flex flex-col items-center space-y-2">
           <div className="flex space-x-1.5">
-            <div className="w-2 h-2 bg-indigo-600 dark:bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-            <div className="w-2 h-2 bg-indigo-600 dark:bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-            <div className="w-2 h-2 bg-indigo-600 dark:bg-indigo-400 rounded-full animate-bounce" />
+            <div className="w-2 h-2 bg-slate-600 dark:bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
+            <div className="w-2 h-2 bg-slate-600 dark:bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
+            <div className="w-2 h-2 bg-slate-600 dark:bg-slate-400 rounded-full animate-bounce" />
           </div>
 
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400 animate-pulse">
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-400 animate-pulse">
             {message || t("form.loading") || "Loading..."}
           </p>
         </div>

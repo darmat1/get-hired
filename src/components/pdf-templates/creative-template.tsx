@@ -218,7 +218,14 @@ export function CreativeTemplate({ resume }: TemplateProps) {
             {personalInfo.firstName} {personalInfo.lastName}
           </Text>
           {resume.targetPosition ? (
-            <Text style={{ fontSize: 10, color: "#4b5563", marginBottom: 20, fontStyle: "italic" }}>
+            <Text
+              style={{
+                fontSize: 10,
+                color: "#4b5563",
+                marginBottom: 20,
+                fontStyle: "italic",
+              }}
+            >
               {resume.targetPosition}
             </Text>
           ) : (
@@ -258,12 +265,24 @@ export function CreativeTemplate({ resume }: TemplateProps) {
                       {exp.startDate} - {exp.current ? "Present" : exp.endDate}
                     </Text>
                   </View>
-                  {exp.description.map((d, i) => (
-                    <View key={i} style={{ flexDirection: "row" }}>
-                      <Text style={styles.bullet}>• </Text>
-                      <FormattedText html={d} style={styles.bullet} />
+                  {exp.mainDescription && (
+                    <View style={{ marginBottom: 5 }}>
+                      <FormattedText
+                        html={exp.mainDescription}
+                        style={{ fontSize: 9, lineHeight: 1.3 }}
+                      />
                     </View>
-                  ))}
+                  )}
+                  {exp.description.map((d, i) => {
+                    const isEmpty =
+                      !d || d.replace(/<[^>]*>?/gm, "").trim() === "";
+                    return (
+                      <View key={i} style={{ flexDirection: "row" }}>
+                        {!isEmpty && <Text style={styles.bullet}>- </Text>}
+                        <FormattedText html={d || " "} style={styles.bullet} />
+                      </View>
+                    );
+                  })}
                 </View>
               ))}
             </View>

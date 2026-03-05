@@ -8,6 +8,8 @@ import Link from "next/link";
 import { Header } from "@/components/layout/header";
 import { Metadata } from "next";
 import Script from "next/script";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { getT } from "@/lib/translations-data";
 
 const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
 
@@ -135,7 +137,7 @@ export default async function BlogPostPage({
 
   if (!content) {
     return (
-      <div className="max-w-3xl mx-auto py-20 px-4">
+      <div className="max-w-5xl mx-auto py-12 px-4">
         <h1 className="text-2xl font-bold">
           Content not available in your language
         </h1>
@@ -180,7 +182,18 @@ export default async function BlogPostPage({
           }),
         }}
       />
-      <article className="max-w-3xl mx-auto py-20 px-4">
+      <div className="max-w-7xl mx-auto pt-12 px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs
+          items={[
+            {
+              label: getT(locale)("nav.blog"),
+              href: locale === "en" ? "/blog" : `/${locale}/blog`,
+            },
+            { label: headerTitle, href: "#" },
+          ]}
+        />
+      </div>
+      <article className="max-w-3xl mx-auto pb-12 px-4">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-8 tracking-tight leading-tight text-slate-900 dark:text-white">
           {headerTitle}
         </h1>
@@ -228,7 +241,7 @@ export default async function BlogPostPage({
                   <Link
                     key={relatedPost.id}
                     href={`${localeBlogPrefix}/${relatedPost.slug}`}
-                    className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition no-underline"
+                    className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition no-underline"
                   >
                     {(relatedPost as any).imageUrl ? (
                       <div className="relative w-full h-40 overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -259,7 +272,7 @@ export default async function BlogPostPage({
                       </div>
                     )}
                     <div className="p-4 flex flex-col flex-1">
-                      <h3 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition line-clamp-2 mb-2">
+                      <h3 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-slate-600 dark:group-hover:text-slate-400 transition line-clamp-2 mb-2">
                         {relatedTitle}
                       </h3>
                       {relatedExcerpt && (

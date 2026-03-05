@@ -191,16 +191,16 @@ export function AIKeysForm() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600">
+          <div className="p-2 bg-slate-100 dark:bg-slate-900/30 rounded-lg text-slate-600">
             <Shield className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
               {t("ai_settings.title")}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               {t("ai_settings.subtitle")}
             </p>
           </div>
@@ -243,13 +243,13 @@ export function AIKeysForm() {
                   isGroq
                     ? "bg-amber-50/50 dark:bg-amber-900/10 border-amber-300 dark:border-amber-700 shadow-md scale-[1.01]"
                     : isPreferred
-                      ? "bg-blue-50/50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800"
-                      : "bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600"
+                      ? "bg-slate-50/50 dark:bg-slate-900/10 border-slate-200 dark:border-slate-800"
+                      : "bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600"
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-gray-900 dark:text-white">
+                    <span className="font-medium text-slate-900 dark:text-white">
                       {service.name}
                     </span>
                     {isGroq && (
@@ -265,7 +265,7 @@ export function AIKeysForm() {
                       </span>
                     )}
                     {isPreferred && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-800 dark:bg-slate-900/30 dark:text-slate-400">
                         <Zap className="h-3 w-3" />
                         {t("ai_settings.active")}
                       </span>
@@ -276,7 +276,7 @@ export function AIKeysForm() {
                       <button
                         onClick={() => handleSetPreferred(service.id)}
                         disabled={loading}
-                        className="text-xs px-3 py-1.5 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 rounded-md font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                        className="text-xs px-3 py-1.5 bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-300 rounded-md font-medium hover:bg-slate-200 dark:hover:bg-slate-900/50 transition-colors disabled:opacity-50 flex items-center gap-1.5"
                         title={t("ai_settings.set_active")}
                       >
                         <Zap className="h-3.5 w-3.5" />
@@ -287,7 +287,7 @@ export function AIKeysForm() {
                       <button
                         onClick={() => handleDelete(service.id)}
                         disabled={loading}
-                        className="p-1.5 text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50"
+                        className="p-1.5 text-slate-400 hover:text-red-600 transition-colors disabled:opacity-50"
                         title={t("ai_settings.unlink")}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -299,7 +299,7 @@ export function AIKeysForm() {
                 {!isConnected ? (
                   <div className="space-y-3">
                     <div className="flex justify-between items-start gap-4">
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         {t(`ai_service.${service.id}.description`)}
                       </p>
                       {isGroq && (
@@ -307,19 +307,19 @@ export function AIKeysForm() {
                           href="https://console.groq.com/keys"
                           target="_blank"
                           rel="noreferrer"
-                          className="text-[10px] text-blue-600 dark:text-blue-400 hover:underline flex-shrink-0"
+                          className="text-[10px] text-slate-600 dark:text-slate-400 hover:underline flex-shrink-0"
                         >
                           {t("ai_settings.get_groq_key") || "Get API Key ↗"}
                         </a>
                       )}
                     </div>
                     <div className="relative">
-                      <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                       <input
                         type="text"
                         name={`${service.id}_new_key_${randomSuffix}`}
                         placeholder={`${service.name} API Key`}
-                        className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                        className="w-full pl-10 pr-4 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 outline-none transition-shadow"
                         value={inputKeys[service.id] || ""}
                         autoComplete="new-password"
                         autoCorrect="off"
@@ -346,7 +346,7 @@ export function AIKeysForm() {
                             ? "bg-green-100 text-green-800"
                             : testStatus === "error"
                               ? "bg-red-100 text-red-800"
-                              : "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50"
+                              : "bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
                         }`}
                       >
                         {testStatus === "testing" ? (
@@ -362,7 +362,7 @@ export function AIKeysForm() {
                         <button
                           onClick={() => handleSave(service.id)}
                           disabled={loading}
-                          className="text-xs px-3 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
+                          className="text-xs px-3 py-2 bg-slate-600 text-white rounded-md font-medium hover:bg-slate-700 disabled:opacity-50 transition-colors shadow-sm"
                         >
                           {loading ? (
                             <Loader className="h-3 w-3 animate-spin mr-1 inline" />
@@ -376,21 +376,21 @@ export function AIKeysForm() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-green-500" />
-                      <p className="text-xs text-gray-500 dark:text-gray-400 italic">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 italic">
                         {t("ai_settings.key_hidden")}
                       </p>
                     </div>
 
                     {isPreferred && (
-                      <div className="mt-2 pt-2 border-t border-blue-100 dark:border-blue-800">
-                        <label className="block text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-1">
+                      <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
                           {t("ai_settings.default_model") || "Default Model"}
                         </label>
                         <div className="flex items-center gap-2">
-                          <Settings className="h-4 w-4 text-blue-400" />
+                          <Settings className="h-4 w-4 text-slate-400" />
                           {service.id === "gemini" ? (
                             <select
-                              className="flex-1 bg-transparent border-0 border-b border-blue-200 dark:border-blue-700 focus:border-blue-500 text-xs py-1 outline-none text-gray-900 dark:text-white"
+                              className="flex-1 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:border-slate-500 text-xs py-1 outline-none text-slate-900 dark:text-white"
                               value={
                                 userData.preferredAIModel || "gemini-2.5-flash"
                               }
@@ -422,7 +422,7 @@ export function AIKeysForm() {
                             <input
                               type="text"
                               placeholder="e.g. gpt-4o, claude-3-5-sonnet-latest"
-                              className="flex-1 bg-transparent border-0 border-b border-blue-200 dark:border-blue-700 focus:border-blue-500 text-xs py-1 outline-none text-gray-900 dark:text-white"
+                              className="flex-1 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:border-slate-500 text-xs py-1 outline-none text-slate-900 dark:text-white"
                               value={userData.preferredAIModel || ""}
                               onChange={(e) =>
                                 setUserData((prev) => ({
