@@ -1169,6 +1169,16 @@ export const translations: Translations = {
     uk: "Опис обов'язків",
     ru: "Описание обязанностей",
   },
+  "work.main_description": {
+    en: "Role Description",
+    uk: "Опис ролі",
+    ru: "Описание роли",
+  },
+  "work.responsibilities_achievements": {
+    en: "Responsibilities and Achievements",
+    uk: "Обов'язки та досягнення",
+    ru: "Обязанности и достижения",
+  },
   "work.current_position": {
     en: "Current position",
     uk: "Поточна посада",
@@ -1203,6 +1213,16 @@ export const translations: Translations = {
     en: "Describe your responsibilities and achievements...",
     uk: "Опишіть ваші обов'язки та досягнення...",
     ru: "Опишите ваши обязанности и достижения...",
+  },
+  "work.placeholder.main_description": {
+    en: "Briefly describe your role and key focus...",
+    uk: "Коротко опишіть вашу роль та основний фокус...",
+    ru: "Кратко опишите вашу роль и основной фокус...",
+  },
+  "work.add_bullet": {
+    en: "Add responsibility/achievement",
+    uk: "Додати обов'язок/досягнення",
+    ru: "Добавить обязанность/достижение",
   },
   "work.new_position": {
     en: "New position",

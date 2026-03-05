@@ -111,7 +111,12 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                 {personalInfo.firstName} {personalInfo.lastName}
               </Text>
               {resume.targetPosition && (
-                <Text style={[styles.contactInfo, { color: "#4b5563", fontStyle: "italic" }]}>
+                <Text
+                  style={[
+                    styles.contactInfo,
+                    { color: "#4b5563", fontStyle: "italic" },
+                  ]}
+                >
                   {resume.targetPosition}
                 </Text>
               )}
@@ -162,11 +167,19 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                     <Text style={styles.dateLocation}>{exp.location}</Text>
                   </View>
                 </View>
-                {exp.description.map((desc, idx) => (
-                  <Text key={idx} style={styles.bulletPoint}>
-                    • {desc}
+                {exp.mainDescription && (
+                  <Text style={[styles.bulletPoint, { marginBottom: 4 }]}>
+                    {exp.mainDescription}
                   </Text>
-                ))}
+                )}
+                {exp.description.map((desc, idx) => {
+                  const isEmpty = !desc || desc.trim() === "";
+                  return (
+                    <Text key={idx} style={styles.bulletPoint}>
+                      {isEmpty ? " " : `- ${desc}`}
+                    </Text>
+                  );
+                })}
               </View>
             ))}
           </View>

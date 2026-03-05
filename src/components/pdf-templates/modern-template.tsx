@@ -512,9 +512,7 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
           </Text>
 
           {resume.targetPosition && (
-            <Text style={styles.headerTitle}>
-              {resume.targetPosition}
-            </Text>
+            <Text style={styles.headerTitle}>{resume.targetPosition}</Text>
           )}
 
           {/* Fallback title if needed */}
@@ -560,9 +558,40 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                     </Text>
                     <Text style={styles.expTitle}>{exp.title}</Text>
 
-                    {exp.description.map((d, i) => (
-                      <FormattedText key={i} html={d} style={styles.expDesc} />
-                    ))}
+                    {exp.mainDescription && (
+                      <View style={{ marginBottom: 4 }}>
+                        <FormattedText
+                          html={exp.mainDescription}
+                          style={styles.expDesc}
+                        />
+                      </View>
+                    )}
+
+                    {exp.description.map((d, i) => {
+                      const isEmpty =
+                        !d || d.replace(/<[^>]*>?/gm, "").trim() === "";
+                      return (
+                        <View
+                          key={i}
+                          style={{ flexDirection: "row", marginBottom: 2 }}
+                        >
+                          {!isEmpty && (
+                            <Text
+                              style={[
+                                styles.expDesc,
+                                { marginRight: 4, flexShrink: 0 },
+                              ]}
+                            >
+                              -
+                            </Text>
+                          )}
+                          <FormattedText
+                            html={d || " "}
+                            style={styles.expDesc}
+                          />
+                        </View>
+                      );
+                    })}
                   </View>
                 </View>
               ))}

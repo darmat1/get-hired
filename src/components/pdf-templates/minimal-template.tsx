@@ -99,7 +99,12 @@ export function MinimalTemplate({ resume }: TemplateProps) {
               {personalInfo.firstName} {personalInfo.lastName}
             </Text>
             {resume.targetPosition && (
-              <Text style={[styles.contact, { color: "#6b7280", fontStyle: "italic" }]}>
+              <Text
+                style={[
+                  styles.contact,
+                  { color: "#6b7280", fontStyle: "italic" },
+                ]}
+              >
                 {resume.targetPosition}
               </Text>
             )}
@@ -141,11 +146,20 @@ export function MinimalTemplate({ resume }: TemplateProps) {
                   {exp.location ? ` • ${exp.location}` : ""}
                 </Text>
 
-                {exp.description.map((d, i) => (
-                  <Text key={i} style={styles.desc}>
-                    - {d}
+                {exp.mainDescription && (
+                  <Text style={[styles.desc, { marginBottom: 3 }]}>
+                    {exp.mainDescription}
                   </Text>
-                ))}
+                )}
+
+                {exp.description.map((d, i) => {
+                  const isEmpty = !d || d.trim() === "";
+                  return (
+                    <Text key={i} style={styles.desc}>
+                      {isEmpty ? " " : `- ${d}`}
+                    </Text>
+                  );
+                })}
               </View>
             ))}
           </View>

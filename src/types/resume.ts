@@ -20,6 +20,7 @@ export interface WorkExperience {
   startDate: string;
   endDate?: string;
   current: boolean;
+  mainDescription?: string;
   description: string[];
 }
 
