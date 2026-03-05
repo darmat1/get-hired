@@ -26,18 +26,13 @@ export function TemplateSelector({
       description: t("template.professional_desc"),
       preview: "/templates/professional.png",
     },
-    {
-      id: "creative",
-      name: t("template.creative"),
-      description: t("template.creative_desc"),
-      preview: "/templates/creative.png",
-    },
-    {
-      id: "minimal",
-      name: t("template.minimal"),
-      description: t("template.minimal_desc"),
-      preview: "/templates/minimal.png",
-    },
+
+    // {
+    //   id: "minimal",
+    //   name: t("template.minimal"),
+    //   description: t("template.minimal_desc"),
+    //   preview: "/templates/minimal.png",
+    // },
   ];
 
   return (

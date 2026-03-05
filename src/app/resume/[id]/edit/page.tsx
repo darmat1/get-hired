@@ -221,6 +221,7 @@ export default function EditResumePage() {
                   data={resumeData as Resume}
                   onChange={setResumeData}
                   isEditing={true}
+                  onTemplateChange={updateTemplate}
                 />
               </div>
 
