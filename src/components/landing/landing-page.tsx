@@ -15,15 +15,6 @@ export function LandingPage() {
   // We no longer automatically redirect to /dashboard here
   // to allow logged-in users to view the landing page.
 
-  // Prevent flash of content only while session is being determined
-  if (isPending) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
