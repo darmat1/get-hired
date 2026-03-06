@@ -835,6 +835,71 @@ export const translations: Translations = {
     uk: "Протестувати AI аналіз",
     ru: "Протестировать AI анализ",
   },
+  "ai.analyze_resume": {
+    en: "Analyze Resume",
+    uk: "Аналізувати резюме",
+    ru: "Анализировать резюме",
+  },
+  "ai.no_analysis_yet": {
+    en: "No analysis yet. Click the button below to start.",
+    uk: "Аналіз ще не проводився. Натисніть кнопку нижче, щоб почати.",
+    ru: "Анализ еще не проводился. Нажмите кнопку ниже, чтобы начать.",
+  },
+  "ai.resume_score": {
+    en: "Resume Score",
+    uk: "Оцінка резюме",
+    ru: "Оценка резюме",
+  },
+  "ai.analyze": {
+    en: "Analyze",
+    uk: "Аналізувати",
+    ru: "Анализировать",
+  },
+  "ai.analyze_company": {
+    en: "Analyze Company",
+    uk: "Аналізувати компанію",
+    ru: "Анализировать компанию",
+  },
+  "ai.company_score_title": {
+    en: "Company Analysis",
+    uk: "Аналіз компанії",
+    ru: "Анализ компании",
+  },
+  "ai.critical_issues": {
+    en: "Critical Issues",
+    uk: "Критичні проблеми",
+    ru: "Критические проблемы",
+  },
+  "ai.concerns": {
+    en: "Areas of Concern",
+    uk: "Проблемні питання",
+    ru: "Вопросы опасений",
+  },
+  "ai.reanalyze": {
+    en: "Re-analyze",
+    uk: "Переаналізувати",
+    ru: "Переанализировать",
+  },
+  "ai.analyze_all": {
+    en: "Analyze All",
+    uk: "Аналізувати всі",
+    ru: "Анализировать все",
+  },
+  "ai.data_changed": {
+    en: "Data changed",
+    uk: "Дані змінено",
+    ru: "Данные изменены",
+  },
+  "common.details": {
+    en: "Details",
+    uk: "Деталі",
+    ru: "Детали",
+  },
+  "common.clear": {
+    en: "Clear",
+    uk: "Очистити",
+    ru: "Очистить",
+  },
 
   "ai_settings.title": {
     en: "AI Settings",

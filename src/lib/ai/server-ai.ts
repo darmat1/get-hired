@@ -40,11 +40,23 @@ export async function aiComplete(
               );
               const decryptedKey = userKey.key ?? undefined;
 
-              // If this is the preferred provider, use preferred model if set
-              const modelOverride =
-                userKey.provider === user.preferredAIProvider
-                  ? user.preferredAIModel || request.model
-                  : request.model;
+              // ONLY use preferred model if it belongs to the CURRENT provider being tried
+              let modelOverride = request.model;
+              if (userKey.provider === user.preferredAIProvider && user.preferredAIModel) {
+                // Additional safety check: only use the model if it's likely meant for this provider
+                const isGeminiModel = user.preferredAIModel.startsWith('gemini-');
+                const isGroqModel = user.preferredAIModel.includes('llama') || user.preferredAIModel.includes('mixtral') || user.preferredAIModel.includes('gemma');
+                
+                if (userKey.provider === 'gemini' && isGeminiModel) {
+                  modelOverride = user.preferredAIModel;
+                } else if (userKey.provider === 'groq' && isGroqModel) {
+                  modelOverride = user.preferredAIModel;
+                } else if (userKey.provider === 'openrouter' || userKey.provider === 'openai' || userKey.provider === 'claude') {
+                  // These are usually fine with their own models
+                  modelOverride = user.preferredAIModel;
+                }
+                // If it's Groq but model is Gemini, modelOverride remains request.model (default)
+              }
 
               const response = await provider.complete({
                 ...request,

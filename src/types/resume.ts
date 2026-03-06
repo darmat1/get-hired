@@ -11,6 +11,17 @@ export interface PersonalInfo {
   summary: string;
 }
 
+export interface WorkExperienceAnalysis {
+  score: number;
+  scoreLabel: string;
+  summary: string;
+  contentHash: string;
+  analyzedAt: string;
+  red?: Array<{ field: string; issue: string; recommendation: string }>;
+  yellow?: Array<{ field: string; issue: string; recommendation: string }>;
+  green?: Array<{ field: string; strength: string }>;
+}
+
 export interface WorkExperience {
   id: string;
   title: string;
@@ -22,6 +33,7 @@ export interface WorkExperience {
   current: boolean;
   mainDescription?: string;
   description: string[];
+  analysis?: WorkExperienceAnalysis;
 }
 
 export interface Education {

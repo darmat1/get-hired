@@ -516,6 +516,7 @@ export default function MyExperiencePage() {
                   <ExperienceEditor
                     data={profile.workExperience || []}
                     onChange={(val) => updateProfile("workExperience", val)}
+                    onSave={() => handleSave(false)}
                   />
                 </TabsContent>
 
