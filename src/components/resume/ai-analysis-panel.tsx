@@ -1,32 +1,86 @@
 "use client";
 
 import { Resume } from "@/types/resume";
-import {
-  analyzeResume,
-  getResumeImprovementTips,
-  ImprovementTip,
-} from "@/lib/ai-analysis";
-import { useState, useEffect } from "react";
+import type { ResumeScore, FieldHighlight } from "@/types/resume-score";
+import { useState, useEffect, useCallback } from "react";
 import {
   Sparkles,
   TrendingUp,
   AlertTriangle,
-  CheckCircle2,
   AlertCircle,
-  Info,
-  CircleAlert,
+  CheckCircle2,
+  RefreshCw,
+  Loader2,
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 
 interface AIAnalysisPanelProps {
   resume: Partial<Resume>;
+  onHighlightsChange?: (highlights: FieldHighlight[]) => void;
 }
 
-export function AIAnalysisPanel({ resume }: AIAnalysisPanelProps) {
+export function AIAnalysisPanel({
+  resume,
+  onHighlightsChange,
+}: AIAnalysisPanelProps) {
   const { t, language } = useTranslation();
-  const [analysis, setAnalysis] = useState<any>(null);
+  const [analysis, setAnalysis] = useState<ResumeScore | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [tips, setTips] = useState<ImprovementTip[]>([]);
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const targetRole = resume.targetPosition || resume.targetCompany;
+
+  const performAnalysis = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/ai/resume-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "resume",
+          resume,
+          targetRole,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setAnalysis(result);
+
+        const highlights: FieldHighlight[] = [];
+
+        result.red?.forEach((issue: any) => {
+          highlights.push({
+            field: issue.field,
+            severity: "red",
+            message: issue.issue,
+          });
+        });
+
+        result.yellow?.forEach((issue: any) => {
+          highlights.push({
+            field: issue.field,
+            severity: "yellow",
+            message: issue.issue,
+          });
+        });
+
+        result.green?.forEach((item: any) => {
+          highlights.push({
+            field: item.field,
+            severity: "green",
+            message: item.strength,
+          });
+        });
+
+        onHighlightsChange?.(highlights);
+      }
+    } catch (error) {
+      console.error("AI analysis failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [resume, targetRole, onHighlightsChange]);
 
   useEffect(() => {
     if (
@@ -36,35 +90,36 @@ export function AIAnalysisPanel({ resume }: AIAnalysisPanelProps) {
     ) {
       performAnalysis();
     }
-  }, [resume]);
-
-  const performAnalysis = async () => {
-    setIsLoading(true);
-    try {
-      const result = await analyzeResume(resume as Resume, language);
-      setAnalysis(result);
-      setTips(getResumeImprovementTips(result));
-    } catch (error) {
-      console.error("AI analysis failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, []);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-emerald-600 dark:text-emerald-400";
-    if (score >= 60) return "text-warning";
-    return "text-destructive";
+    if (score >= 60) return "text-amber-600 dark:text-amber-400";
+    return "text-red-600 dark:text-red-400";
   };
 
-  const getScoreMessage = (score: number) => {
-    if (score >= 80) return t("ai.excellent");
-    if (score >= 60) return t("ai.good");
-    if (score >= 40) return t("ai.fair");
-    return t("ai.needs_work");
+  const getScoreBg = (score: number) => {
+    if (score >= 80) return "bg-emerald-500";
+    if (score >= 60) return "bg-amber-500";
+    return "bg-red-500";
   };
 
-  if (isLoading) {
+  const getScoreLabelColor = (label: string) => {
+    switch (label) {
+      case "Excellent":
+      case "Strong":
+        return "text-emerald-600 dark:text-emerald-400";
+      case "Good":
+        return "text-amber-600 dark:text-amber-400";
+      case "Fair":
+      case "Weak":
+        return "text-red-600 dark:text-red-400";
+      default:
+        return "text-muted-foreground";
+    }
+  };
+
+  if (isLoading && !analysis) {
     return (
       <div className="bg-card text-card-foreground rounded-lg border border-border shadow-sm p-6">
         <div className="flex items-center space-x-2">
@@ -75,168 +130,150 @@ export function AIAnalysisPanel({ resume }: AIAnalysisPanelProps) {
     );
   }
 
-  if (!analysis) {
-    return null;
-  }
-
   return (
-    <div className="bg-card text-card-foreground rounded-lg border border-border shadow-sm p-6">
-      <div className="flex items-center space-x-2 mb-4">
-        <Sparkles className="h-5 w-5 text-primary" />
-        <h3 className="text-lg font-semibold">{t("ai.title")}</h3>
-      </div>
-
-      <div className="mb-6 p-4 bg-background/50 rounded-lg border border-border/50">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-muted-foreground">
-            {t("ai.score")}
-          </span>
-          <div className="text-right">
+    <div className="bg-card text-card-foreground rounded-lg border border-border shadow-sm overflow-hidden">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
+      >
+        <div className="flex items-center space-x-2">
+          <Sparkles className="h-5 w-5 text-primary" />
+          <h3 className="text-lg font-semibold">{t("ai.resume_score")}</h3>
+        </div>
+        {analysis && (
+          <div className="flex items-center gap-3">
             <span
-              className={`text-2xl font-bold ${getScoreColor(analysis.score)}`}
+              className={`text-xl font-bold ${getScoreColor(analysis.score)}`}
             >
-              {analysis.score}/100
+              {analysis.score}
             </span>
-            <div className={`text-sm ${getScoreColor(analysis.score)}`}>
-              {getScoreMessage(analysis.score)}
+            <span
+              className={`text-sm font-medium ${getScoreLabelColor(analysis.scoreLabel)}`}
+            >
+              {analysis.scoreLabel}
+            </span>
+          </div>
+        )}
+      </button>
+
+      {isExpanded && analysis && (
+        <div className="p-4 pt-0 space-y-4">
+          <div className="p-3 bg-muted/50 rounded-lg">
+            <div className="w-full bg-muted rounded-full h-2 mb-2">
+              <div
+                className={`h-2 rounded-full transition-all ${getScoreBg(analysis.score)}`}
+                style={{ width: `${analysis.score}%` }}
+              />
             </div>
+            <p className="text-sm text-muted-foreground">{analysis.summary}</p>
           </div>
-        </div>
 
-        <div className="w-full bg-muted rounded-full h-2">
-          <div
-            className={`h-2 rounded-full transition-all duration-500 ${
-              analysis.score >= 80
-                ? "bg-emerald-500"
-                : analysis.score >= 60
-                  ? "bg-warning"
-                  : "bg-destructive"
-            }`}
-            style={{ width: `${analysis.score}%` }}
-          ></div>
-        </div>
-      </div>
-
-      {analysis.strengths.length > 0 && (
-        <div className="mb-4">
-          <div className="flex items-center space-x-2 mb-2">
-            <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-            <h4 className="font-medium text-emerald-600 dark:text-emerald-400">
-              {t("ai.strengths")}
-            </h4>
-          </div>
-          <ul className="space-y-1">
-            {analysis.strengths.map((strength: string, index: number) => (
-              <li
-                key={index}
-                className="text-sm text-foreground/90 flex items-start gap-2"
-              >
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
-                <span>{t(strength)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {analysis.weaknesses.length > 0 && (
-        <div className="mb-4">
-          <div className="flex items-center space-x-2 mb-2">
-            <AlertTriangle className="h-4 w-4 text-destructive" />
-            <h4 className="font-medium text-destructive dark:brightness-110">
-              {t("ai.weaknesses")}
-            </h4>
-          </div>
-          <ul className="space-y-1">
-            {analysis.weaknesses.map((weakness: string, index: number) => (
-              <li
-                key={index}
-                className="text-sm text-foreground/90 flex items-start gap-2"
-              >
-                <AlertCircle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
-                <span>{t(weakness)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {tips.length > 0 && (
-        <div className="mb-4">
-          <h4 className="font-medium text-primary mb-2">
-            {t("ai.recommendations")}
-          </h4>
-          <div className="space-y-2">
-            {tips.map((tip, index) => {
-              const Icon =
-                tip.type === "high"
-                  ? CircleAlert
-                  : tip.type === "medium"
-                    ? AlertTriangle
-                    : tip.type === "low"
-                      ? CheckCircle2
-                      : Info;
-
-              const bgColor =
-                tip.type === "high"
-                  ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
-                  : tip.type === "medium"
-                    ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
-                    : tip.type === "low"
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                      : "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20";
-
-              return (
-                <div
-                  key={index}
-                  className={`text-sm p-3 rounded-md border flex items-start gap-3 ${bgColor}`}
-                >
-                  <Icon className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <span className="leading-tight">{t(tip.message)}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {analysis.recommendations.length > 0 && (
-        <div>
-          <h4 className="font-medium text-muted-foreground mb-2">
-            {t("ai.detailed_recommendations")}
-          </h4>
-          <div className="space-y-2">
-            {analysis.recommendations
-              .filter((rec: any) => rec.priority === "high")
-              .map((rec: any, index: number) => (
-                <div
-                  key={index}
-                  className="text-sm p-3 bg-red-500/5 text-red-600 dark:text-red-400 border border-red-500/10 rounded-md flex items-start gap-3"
-                >
-                  <CircleAlert className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <div className="leading-tight">
-                    <span className="font-semibold">{t(rec.section)}:</span>{" "}
-                    {t(rec.suggestion)}
+          {analysis.red && analysis.red.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                <AlertCircle className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  {t("ai.critical_issues")} ({analysis.red.length})
+                </span>
+              </div>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {analysis.red.map((issue, index) => (
+                  <div
+                    key={index}
+                    className="p-3 bg-red-500/10 border border-red-500/20 rounded-md text-sm"
+                  >
+                    <p className="font-medium text-red-700 dark:text-red-300">
+                      {issue.field}
+                    </p>
+                    <p className="text-red-600 dark:text-red-400">
+                      {issue.issue}
+                    </p>
+                    {issue.recommendation && (
+                      <p className="text-muted-foreground mt-1 text-xs">
+                        {issue.recommendation}
+                      </p>
+                    )}
                   </div>
-                </div>
-              ))}
-            {analysis.recommendations
-              .filter((rec: any) => rec.priority === "medium")
-              .map((rec: any, index: number) => (
-                <div
-                  key={index}
-                  className="text-sm p-3 bg-amber-500/5 text-amber-600 dark:text-amber-400 border border-amber-500/10 rounded-md flex items-start gap-3"
-                >
-                  <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <div className="leading-tight">
-                    <span className="font-semibold">{t(rec.section)}:</span>{" "}
-                    {t(rec.suggestion)}
+                ))}
+              </div>
+            </div>
+          )}
+
+          {analysis.yellow && analysis.yellow.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                <AlertTriangle className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  {t("ai.concerns")} ({analysis.yellow.length})
+                </span>
+              </div>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {analysis.yellow.map((issue, index) => (
+                  <div
+                    key={index}
+                    className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-md text-sm"
+                  >
+                    <p className="font-medium text-amber-700 dark:text-amber-300">
+                      {issue.field}
+                    </p>
+                    <p className="text-amber-600 dark:text-amber-400">
+                      {issue.issue}
+                    </p>
+                    {issue.recommendation && (
+                      <p className="text-muted-foreground mt-1 text-xs">
+                        {issue.recommendation}
+                      </p>
+                    )}
                   </div>
-                </div>
-              ))}
-          </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {analysis.green && analysis.green.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle2 className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  {t("ai.strengths")} ({analysis.green.length})
+                </span>
+              </div>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {analysis.green.map((item, index) => (
+                  <div
+                    key={index}
+                    className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-sm"
+                  >
+                    <p className="font-medium text-emerald-700 dark:text-emerald-300">
+                      {item.field}
+                    </p>
+                    <p className="text-emerald-600 dark:text-emerald-400">
+                      {item.strength}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={performAnalysis}
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4 mr-2" />
+            )}
+            {t("ai.reanalyze")}
+          </Button>
         </div>
       )}
     </div>
   );
 }
+
+import { Button } from "@/components/ui/button";
