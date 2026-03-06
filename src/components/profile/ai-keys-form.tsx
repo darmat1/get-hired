@@ -423,7 +423,7 @@ export function AIKeysForm() {
                             <select
                               className="flex-1 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:border-slate-500 text-xs py-1 outline-none text-slate-900 dark:text-white"
                               value={
-                                userData.preferredAIModel || "llama-3.3-70b-versatile"
+                                userData.preferredAIModel || "openai/gpt-oss-120b"
                               }
                               onChange={(e) => {
                                 const val = e.target.value;
@@ -437,11 +437,11 @@ export function AIKeysForm() {
                                 });
                               }}
                             >
-                              <option value="llama-3.3-70b-versatile">
-                                Llama 3.3 70B Versatile
-                              </option>
                               <option value="openai/gpt-oss-120b">
                                 OpenAI GPT OSS 120B
+                              </option>
+                              <option value="llama-3.3-70b-versatile">
+                                Llama 3.3 70B Versatile
                               </option>
                             </select>
                           ) : (

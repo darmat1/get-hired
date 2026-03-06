@@ -142,6 +142,8 @@ ${normalizedText}`;
         systemPrompt,
         userPrompt,
         temperature: 0,
+        maxTokens: 8000, // Large output for complex profiles
+        responseFormat: { type: "json_object" }, // Explicitly request JSON
       },
       session.user.id,
     );
