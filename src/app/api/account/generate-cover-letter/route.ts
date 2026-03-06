@@ -7,9 +7,12 @@ import { aiComplete } from "@/lib/ai/server-ai";
 
 const SHARED_RULES = `### STEP 0 — DETECT LANGUAGE (ABSOLUTE FIRST)
 - Read the entire Job Description (JD).
-- Detect its PRIMARY language based ONLY on the main body text: job title, responsibilities, requirements, and company description.
+- Detect its PRIMARY language based ONLY on the BODY TEXT: responsibilities section, requirements section, and company description paragraph.
+- IGNORE the job title line — it is often in English even for Ukrainian/Russian vacancies. "Front-End Developer (Vue 3)" is NOT a language signal.
 - IGNORE completely: UI navigation words ("Підписатись", "Зберегти", "Сховати", "Відгукнутись", "Save", "Apply", "Войти"), section labels ("Вимоги до володіння мовами"), and technology names.
-- If the company description and requirements are written in English — the JD language is English, regardless of any Ukrainian or Russian UI words present on the page.
+- RULE: If the requirements and responsibilities are written in Ukrainian — write the ENTIRE letter in Ukrainian, even if the job title is in English.
+- RULE: If the requirements and responsibilities are written in English — write in English, even if there are Ukrainian UI words present.
+- When in doubt — count full sentences in the body. The language with more sentences wins.
 - The ENTIRE output — every word — must be in the JD's detected language.
 - All candidate facts from the profile must be TRANSLATED into the JD language.
 
@@ -301,7 +304,7 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 
 {
   "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "telegram": "", "summary": "2-3 powerful sentences tailored to the role" },
-  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "mainDescription": "1-2 sentence overview of role focus", "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
+  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
   "education": [{ "id": "edu-1", "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false }],
   "skills": [{ "id": "skill-1", "name": "", "category": "technical", "level": "advanced" }],
   "targetPosition": "job title extracted from JD",
@@ -311,7 +314,6 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 ### CRITICAL RULES
 - Output ONLY the JSON object, nothing else.
 - Use ONLY facts from the candidate profile. NEVER invent data.
-- For each work experience, provide a "mainDescription" (concise role overview) and a "description" array (3-5 bullet points for achievements/metrics).
 - Each work experience "description" array should have 3-5 bullet points.
 - Generate unique IDs for each item (use format like "we-1", "we-2", "edu-1", "skill-1", etc.).
 - Keep only RELEVANT positions. Filter out unrelated jobs.
