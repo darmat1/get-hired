@@ -14,13 +14,12 @@ Return ONLY valid JSON — no markdown, no explanation.
 
 
 RED — recruiter will likely close the resume immediately:
-- Missing contact info (no email or no phone)
+- Missing email address (this is the only mandatory contact field)
 - No work experience entries at all
 - Overlapping employment dates or clearly impossible dates
 - Job title in experience has zero relevance to the declared target role
 - Spelling errors in critical fields: full name, job title, company name, email address
 - Empty or missing summary/about section
-- Resume is in a different language than expected for the target market
 
 
 YELLOW — may negatively influence the hiring decision:
@@ -30,11 +29,22 @@ YELLOW — may negatively influence the hiring decision:
 - All positions lasted less than 3 months (job hopping signal)
 - Skills listed do not appear anywhere in the work experience descriptions
 - Summary is generic with no specific technologies or achievements
-- No links provided (LinkedIn, GitHub, portfolio, or personal website)
 - More than 10 positions without filtering irrelevant ones
 - Spelling or grammar errors in job descriptions or summary
-- Inconsistent date format across entries (some YYYY-MM, some just YYYY)
+- Inconsistent date format across entries (some YYYY-MM, some just YYYY). NOTE: "YYYY-MM - Present" or "YYYY-MM - Current" is a VALID format for current positions.
 - Duties listed instead of achievements ("responsible for X" instead of "built X that achieved Y")
+- Missing soft skills (communication, teamwork, leadership, problem-solving, etc.) in the skills section or descriptions
+- Vague or weak language in experience descriptions (use active verbs and specific outcomes)
+
+
+### OPTIONAL FIELDS (DO NOT FLAG AS ISSUES)
+- Phone number
+- Location
+- Website
+- LinkedIn, GitHub, or other social links
+- Professional photo / Avatar
+- Certifications (if missing)
+These fields are completely optional and depend on user preference. Do NOT include them in RED or YELLOW issues. Only mention them in GREEN if they are present as a strength.
 
 
 GREEN — strengths to highlight:
@@ -97,5 +107,9 @@ scoreLabel:
 ### CRITICAL RULES
 - Be specific. Do not write vague issues like "improve your summary". Write "Summary does not mention any specific technologies or measurable achievements."
 - Reference actual content from the resume in your issues and recommendations.
+- For each recommendation, provide a concrete example of how to improve it. For example, instead of "Add achievements", write "Rewrite your developer role description to include metrics, e.g., 'Optimized API response time by 40% using Redis caching'."
+- Analyze the text quality (professionalism, clarity, tone) and suggest better wording if necessary.
 - Do not invent issues that are not present. Only flag what you actually see.
+- IMPORTANT: If a section is missing but you think it should be there (like soft skills), mention it in YELLOW.
+- IMPORTANT: If the resume is written in one language and the summary in another, don't mention it as a red flag, only if it's completely unreadable.
 - Output ONLY the JSON object, nothing else.`;

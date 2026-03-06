@@ -835,6 +835,16 @@ export const translations: Translations = {
     uk: "Протестувати AI аналіз",
     ru: "Протестировать AI анализ",
   },
+  "ai.analyze_resume": {
+    en: "Analyze Resume",
+    uk: "Аналізувати резюме",
+    ru: "Анализировать резюме",
+  },
+  "ai.no_analysis_yet": {
+    en: "No analysis yet. Click the button below to start.",
+    uk: "Аналіз ще не проводився. Натисніть кнопку нижче, щоб почати.",
+    ru: "Анализ еще не проводился. Нажмите кнопку ниже, чтобы начать.",
+  },
   "ai.resume_score": {
     en: "Resume Score",
     uk: "Оцінка резюме",
