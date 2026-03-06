@@ -154,6 +154,11 @@ export const translations: Translations = {
     ru: "Мой опыт",
   },
   "nav.home": { en: "Home", uk: "Додому", ru: "Главная" },
+  "dashboard.sidebar.review_prompt": {
+    en: "Enjoying our service? Share your review!",
+    uk: "Подобається наш сервіс? Поділіться відгуком!",
+    ru: "Нравится наш сервис? Поделитесь отзывом!",
+  },
   "profile.title": {
     en: "My Profile",
     uk: "Мій профіль",

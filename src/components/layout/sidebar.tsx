@@ -6,6 +6,7 @@ import { FileText, PlusCircle, FileCheck, Briefcase } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Logo from "../ui/icons/logo";
 import { stripLocale } from "@/lib/i18n-config";
+import { TrustpilotWidget } from "@/components/promo/trustpilot-widget";
 
 export function Sidebar() {
   const { t } = useTranslation();
@@ -79,6 +80,12 @@ export function Sidebar() {
           </li>
         </ul>
       </nav>
+      <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+        <p className="text-xs text-center text-muted-foreground mb-3">
+          {t("dashboard.sidebar.review_prompt") || "Enjoying our service? Share your review!"}
+        </p>
+        <TrustpilotWidget />
+      </div>
     </aside>
   );
 }
