@@ -39,7 +39,7 @@ export function Header() {
   if (!mounted) {
     return (
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
-        <div className="mx-auto px-8">
+        <div className={isApplicationPage ? "mx-auto px-8" : "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"}>
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               {!isApplicationPage && (
@@ -65,7 +65,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
-      <div className="mx-auto px-8">
+      <div className={isApplicationPage ? "mx-auto px-8" : "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"}>
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             {!isApplicationPage && (

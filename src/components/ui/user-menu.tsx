@@ -98,7 +98,7 @@ export function UserMenu({
         </div>
 
         <div className="space-y-1">
-          {userRole === "admin" && (
+          {["superadmin", "admin", "publisher"].includes(userRole?.toLowerCase() || "") && (
             <LocalizedLink
               href="/admin/blog"
               className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors no-underline hover:no-underline"
@@ -189,7 +189,7 @@ export function UserMenu({
             {t("nav.dashboard")}
           </LocalizedLink>
 
-          {userRole === "admin" && (
+          {["superadmin", "admin", "publisher"].includes(userRole?.toLowerCase() || "") && (
             <LocalizedLink
               href="/admin/blog"
               onClick={() => setIsOpen(false)}
