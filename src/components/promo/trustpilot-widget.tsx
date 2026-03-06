@@ -1,16 +1,30 @@
-// components/promo/trustpilot-widget.tsx
 "use client";
 
 import Script from "next/script";
+import { useEffect, useRef } from "react";
 
 export function TrustpilotWidget() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current && (window as any).Trustpilot) {
+      (window as any).Trustpilot.loadFromElement(ref.current, true);
+    }
+  }, []);
+
   return (
     <>
       <Script
         src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js"
         strategy="afterInteractive"
+        onLoad={() => {
+          if (ref.current && (window as any).Trustpilot) {
+            (window as any).Trustpilot.loadFromElement(ref.current, true);
+          }
+        }}
       />
       <div
+        ref={ref}
         className="trustpilot-widget"
         data-locale="en-US"
         data-template-id="56278e9abfbbba0bdcd568bc"
