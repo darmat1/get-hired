@@ -163,14 +163,19 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { preferredAIProvider, preferredAIModel } = await req.json();
+    const body = await req.json();
+    const updateData: any = {};
+
+    if (body.preferredAIProvider !== undefined) {
+      updateData.preferredAIProvider = body.preferredAIProvider || null;
+    }
+    if (body.preferredAIModel !== undefined) {
+      updateData.preferredAIModel = body.preferredAIModel || null;
+    }
 
     await prisma.user.update({
       where: { id: session.user.id },
-      data: {
-        preferredAIProvider: preferredAIProvider || null,
-        preferredAIModel: preferredAIModel || null,
-      },
+      data: updateData,
     });
 
     return NextResponse.json({ success: true });

@@ -45,7 +45,11 @@ export async function aiComplete(
               if (userKey.provider === user.preferredAIProvider && user.preferredAIModel) {
                 // Additional safety check: only use the model if it's likely meant for this provider
                 const isGeminiModel = user.preferredAIModel.startsWith('gemini-');
-                const isGroqModel = user.preferredAIModel.includes('llama') || user.preferredAIModel.includes('mixtral') || user.preferredAIModel.includes('gemma');
+                const isGroqModel = 
+                  user.preferredAIModel.includes('llama') || 
+                  user.preferredAIModel.includes('mixtral') || 
+                  user.preferredAIModel.includes('gemma') ||
+                  user.preferredAIModel === 'openai/gpt-oss-120b';
                 
                 if (userKey.provider === 'gemini' && isGeminiModel) {
                   modelOverride = user.preferredAIModel;
