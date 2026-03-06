@@ -22,7 +22,7 @@ export function isAppRoute(pathname: string) {
     ? segments.slice(1)
     : segments;
   const appPath = rest[0];
-  return appPath === "dashboard" || appPath === "resume";
+  return appPath === "dashboard" || appPath === "resume" || appPath === "admin";
 }
 
 export function stripLocale(pathname: string) {

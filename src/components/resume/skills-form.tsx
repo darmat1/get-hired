@@ -155,11 +155,20 @@ export function SkillsForm({
           >
             <option value="beginner">{t("skill.level.beginner")}</option>
             <option value="elementary">{t("skill.level.elementary")}</option>
+            <option value="pre-intermediate">
+              {t("skill.level.pre-intermediate")}
+            </option>
             <option value="intermediate">
               {t("skill.level.intermediate")}
             </option>
+            <option value="upper-intermediate">
+              {t("skill.level.upper-intermediate")}
+            </option>
             <option value="advanced">{t("skill.level.advanced")}</option>
+            <option value="fluent">{t("skill.level.fluent")}</option>
+            <option value="proficient">{t("skill.level.proficient")}</option>
             <option value="expert">{t("skill.level.expert")}</option>
+            <option value="native">{t("skill.level.native")}</option>
           </select>
         )}
 

@@ -39,7 +39,7 @@ export function Header() {
   if (!mounted) {
     return (
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className={isApplicationPage ? "mx-auto px-8" : "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"}>
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               {!isApplicationPage && (
@@ -65,7 +65,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className={isApplicationPage ? "mx-auto px-8" : "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"}>
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             {!isApplicationPage && (
@@ -84,24 +84,28 @@ export function Header() {
               <LanguageSelector />
             </div>
 
-            {isPending ? (
-              <div className="h-8 w-32 animate-pulse bg-slate-200 dark:bg-slate-700 rounded"></div>
-            ) : session ? (
-              <UserMenu
-                userName={session.user?.name || ""}
-                userEmail={session.user?.email || ""}
-                userImage={session.user?.image || undefined}
-                gravatarUrl={gravatarUrl}
-                userRole={(session.user as any)?.role}
-              />
-            ) : (
-              <LocalizedLink
-                href="/auth/signin"
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-800 transition-colors text-sm font-medium text-slate-700 dark:text-slate-200 no-underline hover:no-underline"
-              >
-                <LogIn className="h-4 w-4" />
-                {t("nav.sign_in")}
-              </LocalizedLink>
+            {!isApplicationPage && (
+              <>
+                {isPending ? (
+                  <div className="h-8 w-32 animate-pulse bg-slate-200 dark:bg-slate-700 rounded"></div>
+                ) : session ? (
+                  <UserMenu
+                    userName={session.user?.name || ""}
+                    userEmail={session.user?.email || ""}
+                    userImage={session.user?.image || undefined}
+                    gravatarUrl={gravatarUrl}
+                    userRole={(session.user as any)?.role}
+                  />
+                ) : (
+                  <LocalizedLink
+                    href="/auth/signin"
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-800 transition-colors text-sm font-medium text-slate-700 dark:text-slate-200 no-underline hover:no-underline"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    {t("nav.sign_in")}
+                  </LocalizedLink>
+                )}
+              </>
             )}
           </nav>
         </div>

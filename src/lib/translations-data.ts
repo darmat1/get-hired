@@ -155,14 +155,14 @@ export const translations: Translations = {
   },
   "nav.home": { en: "Home", uk: "Додому", ru: "Главная" },
   "dashboard.sidebar.review_prompt": {
-    en: "Enjoying our service? Share your review!",
-    uk: "Подобається наш сервіс? Поділіться відгуком!",
-    ru: "Нравится наш сервис? Поделитесь отзывом!",
+    en: "Enjoying our service?",
+    uk: "Подобається наш сервіс?",
+    ru: "Нравится наш сервис?",
   },
   "profile.title": {
-    en: "My Profile",
-    uk: "Мій профіль",
-    ru: "Мой профиль",
+    en: "Settings",
+    uk: "Налаштування",
+    ru: "Настройки",
   },
   "profile.subtitle": {
     en: "Manage your personal information",
@@ -1342,17 +1342,82 @@ export const translations: Translations = {
     uk: "Початківець",
     ru: "Начинающий",
   },
+  "skill.level.elementary": {
+    en: "Elementary",
+    uk: "Елементарний",
+    ru: "Элементарный",
+  },
+  "skill.level.pre-intermediate": {
+    en: "Pre-Intermediate",
+    uk: "Нижче середнього",
+    ru: "Ниже среднего",
+  },
   "skill.level.intermediate": {
     en: "Intermediate",
     uk: "Середній",
     ru: "Средний",
+  },
+  "skill.level.upper-intermediate": {
+    en: "Upper-Intermediate",
+    uk: "Вище середнього",
+    ru: "Выше среднего",
   },
   "skill.level.advanced": {
     en: "Advanced",
     uk: "Просунутий",
     ru: "Продвинутый",
   },
+  "skill.level.fluent": {
+    en: "Fluent",
+    uk: "Вільно",
+    ru: "Свободно",
+  },
+  "skill.level.proficient": {
+    en: "Proficient",
+    uk: "Професійний",
+    ru: "Профессиональный",
+  },
   "skill.level.expert": { en: "Expert", uk: "Експерт", ru: "Эксперт" },
+  "skill.level.native": {
+    en: "Native",
+    uk: "Рідна",
+    ru: "Родной",
+  },
+  "skill.level.Native or Bilingual": {
+    en: "Native or Bilingual",
+    uk: "Рідна",
+    ru: "Родной",
+  },
+  "skill.level.Professional Working": {
+    en: "Professional Working",
+    uk: "Професійний",
+    ru: "Профессиональный",
+  },
+  "skill.level.Full Professional": {
+    en: "Full Professional",
+    uk: "Вільно",
+    ru: "Свободно",
+  },
+  "skill.level.Limited Working": {
+    en: "Limited Working",
+    uk: "Елементарний",
+    ru: "Элементарный",
+  },
+  "skill.level.Professional Working Proficiency": {
+    en: "Professional Working Proficiency",
+    uk: "Професійний",
+    ru: "Профессиональный",
+  },
+  "skill.level.Full Professional Proficiency": {
+    en: "Full Professional Proficiency",
+    uk: "Вільно",
+    ru: "Свободно",
+  },
+  "skill.level.Native or Bilingual Proficiency": {
+    en: "Native or Bilingual Proficiency",
+    uk: "Рідна",
+    ru: "Родной",
+  },
   "skills.placeholder.skill": {
     en: "JavaScript",
     uk: "JavaScript",
@@ -1746,7 +1811,7 @@ export const translations: Translations = {
   },
 
   // Profile Page
-  "nav.profile": { en: "Profile", uk: "Профіль", ru: "Профиль" },
+  "nav.profile": { en: "Settings", uk: "Налаштування", ru: "Настройки" },
   "nav.cover_letter": {
     en: "Cover Letter",
     uk: "Супровідний лист",
@@ -2638,11 +2703,6 @@ export const translations: Translations = {
     en: "Add description point",
     uk: "Додати пункт опису",
     ru: "Добавить пункт описания",
-  },
-  "skill.level.elementary": {
-    en: "Elementary",
-    uk: "Елементарний",
-    ru: "Элементарный",
   },
   "form.experience": {
     en: "Experience",

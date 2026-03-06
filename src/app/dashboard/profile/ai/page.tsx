@@ -28,7 +28,7 @@ export default function AISettingsPage() {
   if (!session) return null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="max-w-full mx-auto space-y-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           {t("ai_settings.title")}

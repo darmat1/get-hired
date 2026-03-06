@@ -9,7 +9,8 @@ export default async function BlogAdminPage() {
     headers: await headers(),
   });
 
-  if (!session || session.user.role !== "admin") {
+  const userRole = (session?.user as any)?.role?.toLowerCase();
+  if (!session || !["superadmin", "admin", "publisher"].includes(userRole)) {
     redirect("/");
   }
 

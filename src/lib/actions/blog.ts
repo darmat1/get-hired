@@ -16,7 +16,8 @@ export async function createPost(data: {
     headers: await headers(),
   });
 
-  if (!session || session.user.role !== "admin") {
+  const userRole = (session?.user as any)?.role?.toLowerCase();
+  if (!session || !["superadmin", "admin", "publisher"].includes(userRole)) {
     throw new Error("Unauthorized");
   }
 
@@ -62,7 +63,8 @@ export async function updatePost(
     headers: await headers(),
   });
 
-  if (!session || session.user.role !== "admin") {
+  const userRole = (session?.user as any)?.role?.toLowerCase();
+  if (!session || !["superadmin", "admin", "publisher"].includes(userRole)) {
     throw new Error("Unauthorized");
   }
 
