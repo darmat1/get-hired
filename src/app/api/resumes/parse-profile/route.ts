@@ -189,11 +189,31 @@ ${normalizedText}`;
       current: !!edu.current,
     }));
 
+    const normalizeLevel = (level: string): string => {
+      const l = (level || "").toLowerCase();
+      if (l.includes("native") || l.includes("bilingual")) return "native";
+      if (l.includes("full professional") || l.includes("fluent"))
+        return "fluent";
+      if (l.includes("professional working") || l.includes("proficient"))
+        return "proficient";
+      if (l.includes("limited working")) return "elementary";
+      if (l.includes("elementary")) return "elementary";
+      if (l.includes("beginner")) return "beginner";
+      if (l.includes("advanced")) return "advanced";
+      if (l.includes("intermediate")) {
+        if (l.includes("upper")) return "upper-intermediate";
+        if (l.includes("pre")) return "pre-intermediate";
+        return "intermediate";
+      }
+      if (l.includes("expert")) return "expert";
+      return level || "advanced";
+    };
+
     const finalSkills = (parsedData.skills || []).map((skill: any) => ({
       id: skill.id || crypto.randomUUID(),
       name: typeof skill === "string" ? skill : skill.name,
       category: skill.category || "technical",
-      level: skill.level || "advanced",
+      level: normalizeLevel(typeof skill === "string" ? "" : skill.level),
     }));
 
     if (existingProfile) {

@@ -2,17 +2,26 @@
 
 import { LocalizedLink } from "@/components/ui/localized-link";
 import { useTranslation } from "@/lib/translations";
-import { FileText, PlusCircle, FileCheck, Briefcase } from "lucide-react";
+import { FileText, PlusCircle, FileCheck, Briefcase, Settings, Cpu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Logo from "../ui/icons/logo";
 import { stripLocale } from "@/lib/i18n-config";
 import { TrustpilotWidget } from "@/components/promo/trustpilot-widget";
+import { UserMenu } from "@/components/ui/user-menu";
+import { useSession } from "@/lib/auth-client";
+import { MD5 } from "crypto-js";
 
 export function Sidebar() {
   const { t } = useTranslation();
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   const isActive = (path: string) => stripLocale(pathname || "") === path;
+
+  const emailHash = session?.user?.email
+    ? MD5(session.user.email.toLowerCase().trim()).toString()
+    : "";
+  const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?d=mp`;
 
   return (
     <aside className="w-64 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 h-full flex flex-col">
@@ -80,11 +89,28 @@ export function Sidebar() {
           </li>
         </ul>
       </nav>
-      <div className="p-4 border-t border-slate-200 dark:border-slate-700">
-        <p className="text-xs text-center text-muted-foreground mb-3">
-          {t("dashboard.sidebar.review_prompt") || "Enjoying our service? Share your review!"}
-        </p>
-        <TrustpilotWidget />
+      <div className="py-4 space-y-4">
+
+          <p className="px-4 text-[10px] text-center text-muted-foreground mb-2 uppercase tracking-wider font-bold">
+            {t("dashboard.sidebar.review_prompt") || "Enjoying our service? Share your review!"}
+          </p>
+          <div className="px-2">
+            <TrustpilotWidget />
+          </div>
+        
+        {session && (
+          <div className="px-4 pt-2 border-t border-slate-200 dark:border-slate-700">
+            <UserMenu
+              userName={session.user?.name || ""}
+              userEmail={session.user?.email || ""}
+              userImage={session.user?.image || undefined}
+              gravatarUrl={gravatarUrl}
+              userRole={(session.user as any)?.role}
+              isExpanded={true}
+              className="w-full"
+            />
+          </div>
+        )}
       </div>
     </aside>
   );
