@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "4mb",
-    },
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: {
+//       sizeLimit: "4mb",
+//     },
+//   },
+// };
 
 export async function GET(request: NextRequest) {
   try {
@@ -73,7 +73,12 @@ export async function POST(req: NextRequest) {
     let certificates = body.certificates;
 
     // Check if we need to pre-fill from profile (only if these fields are missing from body)
-    const needsPrefill = !personalInfo && !workExperience && !education && !skills && !certificates;
+    const needsPrefill =
+      !personalInfo &&
+      !workExperience &&
+      !education &&
+      !skills &&
+      !certificates;
 
     if (needsPrefill) {
       const profile = await prisma.userProfile.findUnique({
