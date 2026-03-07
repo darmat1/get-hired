@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useTranslation } from "@/lib/translations";
 import { useRouter } from "next/navigation";
+import { useProfileStore } from "@/stores/profile-store";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Button } from "@/components/ui/button";
@@ -29,18 +30,21 @@ export default function MyExperiencePage() {
   const { t } = useTranslation();
   const router = useRouter();
   const { data: session, isPending } = useSession();
+  const {
+    profile,
+    isLoading,
+    isSaving,
+    lastSaved,
+    updateField,
+    loadFromDb,
+    saveToDb,
+    reset: resetProfileStore,
+    needsLoad,
+  } = useProfileStore();
   const [mounted, setMounted] = useState(false);
-  const [profile, setProfile] = useState<any>({
-    personalInfo: {},
-    workExperience: [],
-    education: [],
-    skills: [],
-    certificates: [],
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [importMode, setImportMode] = useState<"pdf" | "paste" | null>(null);
   const [profileText, setProfileText] = useState("");
+  const [isImportLoading, setIsImportLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [message, setMessage] = useState<{
@@ -50,7 +54,6 @@ export default function MyExperiencePage() {
   const [isAiProcessing, setIsAiProcessing] = useState(false);
   const [aiTimer, setAiTimer] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const initialLoadRef = useRef(true);
 
@@ -62,11 +65,14 @@ export default function MyExperiencePage() {
 
   useEffect(() => {
     if (session) {
-      fetchProfile();
+      if (needsLoad()) {
+        loadFromDb();
+      }
     } else if (!isPending && session === null) {
+      resetProfileStore();
       router.push("/");
     }
-  }, [session, isPending, router]);
+  }, [session, isPending, router, needsLoad, loadFromDb, resetProfileStore]);
 
   // AI processing timer
   useEffect(() => {
@@ -78,56 +84,33 @@ export default function MyExperiencePage() {
     return () => clearInterval(interval);
   }, [isAiProcessing]);
 
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch("/api/profile/experience");
-      if (response.ok) {
-        const data = await response.json();
-        setProfile(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch profile:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleSave = async (isAutosave = false) => {
-    if (!isAutosave) setIsSaving(true);
-    try {
-      const response = await fetch("/api/profile/experience", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
-      });
-      if (response.ok) {
-        if (!isAutosave) {
-          setMessage({ type: "success", text: t("profile.save_success") });
-          setTimeout(() => setMessage(null), 3000);
-        }
-        setLastSaved(new Date());
+    const ok = await saveToDb(isAutosave);
+    if (!isAutosave) {
+      if (ok) {
+        setMessage({ type: "success", text: t("profile.save_success") });
+        setTimeout(() => setMessage(null), 3000);
       } else {
-        if (!isAutosave) throw new Error(t("profile.save_error"));
-      }
-    } catch (error) {
-      console.error("Failed to save profile:", error);
-      if (!isAutosave)
         setMessage({ type: "error", text: t("profile.save_error") });
-    } finally {
-      setIsSaving(false);
+      }
     }
   };
 
   // Autosave logic
   useEffect(() => {
     if (initialLoadRef.current) {
-      if (profile) {
+      if (profile.personalInfo && Object.keys(profile.personalInfo).length > 0) {
         initialLoadRef.current = false;
       }
       return;
     }
 
-    if (!profile) return;
+    if (
+      !profile.personalInfo &&
+      !profile.workExperience?.length &&
+      !profile.education?.length
+    )
+      return;
 
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
@@ -144,8 +127,8 @@ export default function MyExperiencePage() {
     };
   }, [profile]);
 
-  const updateProfile = (field: string, value: any) => {
-    setProfile({ ...profile, [field]: value });
+  const updateProfile = (field: string, value: unknown) => {
+    updateField(field as keyof typeof profile, value);
   };
 
   const processFile = async (file: File) => {
@@ -155,7 +138,7 @@ export default function MyExperiencePage() {
     }
 
     setFileName(file.name);
-    setIsLoading(true);
+    setIsImportLoading(true);
     setMessage({ type: "warning", text: t("profile.pdf_processing") });
 
     try {
@@ -169,7 +152,7 @@ export default function MyExperiencePage() {
         text:
           error instanceof Error ? error.message : t("profile.import_error"),
       });
-      setIsLoading(false);
+      setIsImportLoading(false);
     }
   };
 
@@ -211,7 +194,7 @@ export default function MyExperiencePage() {
     const text = textToUse || profileText;
     if (!text) return;
 
-    setIsLoading(true);
+    setIsImportLoading(true);
     setIsAiProcessing(true);
     if (!textToUse) setMessage(null);
 
@@ -229,7 +212,7 @@ export default function MyExperiencePage() {
       }
 
       setMessage({ type: "success", text: t("profile.import_success") });
-      fetchProfile(); // Refresh profile data
+      loadFromDb(); // Refresh profile data into store
       setImportMode(null);
       setProfileText("");
       setFileName(null);
@@ -241,7 +224,7 @@ export default function MyExperiencePage() {
           error instanceof Error ? error.message : t("profile.import_error"),
       });
     } finally {
-      setIsLoading(false);
+      setIsImportLoading(false);
       setIsAiProcessing(false);
     }
   };
@@ -418,9 +401,9 @@ export default function MyExperiencePage() {
                   <Button
                     className="w-full"
                     onClick={() => handleImport()}
-                    disabled={isLoading || !profileText}
+                    disabled={isImportLoading || !profileText}
                   >
-                    {isLoading ? (
+                    {isImportLoading ? (
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     ) : (
                       <ClipboardList className="h-4 w-4 mr-2" />
@@ -481,14 +464,14 @@ export default function MyExperiencePage() {
               )}
             </div>
 
-            {isLoading && !profile ? (
+            {isLoading ? (
               <div className="flex flex-col items-center justify-center py-20 space-y-4">
                 <Loader2 className="h-10 w-10 text-primary animate-spin" />
                 <p className="text-muted-foreground animate-pulse">
                   {t("profile.loading_profile")}
                 </p>
               </div>
-            ) : profile ? (
+            ) : (
               <Tabs defaultValue="experience" className="w-full">
                 <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
                   <TabsTrigger value="info">
@@ -507,14 +490,14 @@ export default function MyExperiencePage() {
 
                 <TabsContent value="info" className="mt-6">
                   <PersonalInfoForm
-                    data={profile.personalInfo || {}}
+                    data={(profile.personalInfo || {}) as any}
                     onChange={(val) => updateProfile("personalInfo", val)}
                   />
                 </TabsContent>
 
                 <TabsContent value="experience" className="mt-6">
                   <ExperienceEditor
-                    data={profile.workExperience || []}
+                    data={(profile.workExperience || []) as any}
                     onChange={(val) => updateProfile("workExperience", val)}
                     onSave={() => handleSave(false)}
                   />
@@ -522,25 +505,19 @@ export default function MyExperiencePage() {
 
                 <TabsContent value="education" className="mt-6">
                   <EducationEditor
-                    data={profile.education || []}
+                    data={(profile.education || []) as any}
                     onChange={(val) => updateProfile("education", val)}
                   />
                 </TabsContent>
 
                 <TabsContent value="skills" className="mt-6">
                   <SkillsForm
-                    data={profile.skills || []}
+                    data={(profile.skills || []) as any}
                     onChange={(val) => updateProfile("skills", val)}
                     hideImport={true}
                   />
                 </TabsContent>
               </Tabs>
-            ) : (
-              <div className="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
-                <p className="text-muted-foreground">
-                  {t("profile.load_error")}
-                </p>
-              </div>
             )}
 
             {showSuggestions && (

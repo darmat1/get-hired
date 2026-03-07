@@ -1,9 +1,13 @@
 "use server";
 
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+
+const BLOG_TAG = "blog";
 
 export async function createPost(data: {
   slug: string;
@@ -33,21 +37,48 @@ export async function createPost(data: {
   });
 
   revalidatePath("/blog");
+  revalidateTag(BLOG_TAG, "max");
   return post;
 }
 
 export async function getPosts() {
-  return await prisma.post.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-  });
+  return unstable_cache(
+    () =>
+      prisma.post.findMany({
+        where: { published: true },
+        orderBy: { createdAt: "desc" },
+      }),
+    ["blog-posts-all"],
+    { revalidate: 3600, tags: [BLOG_TAG] },
+  )();
 }
 
-export async function getPostBySlug(slug: string) {
-  return await prisma.post.findUnique({
-    where: { slug },
-  });
+export async function getCachedPostsPage(skip: number, take: number) {
+  return unstable_cache(
+    async () => {
+      const [posts, totalCount] = await Promise.all([
+        prisma.post.findMany({
+          where: { published: true },
+          orderBy: { createdAt: "desc" },
+          skip,
+          take,
+        }),
+        prisma.post.count({ where: { published: true } }),
+      ]);
+      return { posts, totalCount };
+    },
+    ["blog-posts-page", String(skip), String(take)],
+    { revalidate: 3600, tags: [BLOG_TAG] },
+  )();
 }
+
+export const getPostBySlug = cache(async (slug: string) => {
+  return unstable_cache(
+    () => prisma.post.findUnique({ where: { slug } }),
+    ["blog-post", slug],
+    { revalidate: 3600, tags: [BLOG_TAG] },
+  )();
+});
 
 export async function updatePost(
   id: string,
@@ -81,6 +112,7 @@ export async function updatePost(
 
   revalidatePath("/blog");
   revalidatePath(`/blog/${data.slug}`);
+  revalidateTag(BLOG_TAG, "max");
   return post;
 }
 
@@ -98,4 +130,5 @@ export async function deletePost(id: string) {
   });
 
   revalidatePath("/blog");
+  revalidateTag(BLOG_TAG, "max");
 }

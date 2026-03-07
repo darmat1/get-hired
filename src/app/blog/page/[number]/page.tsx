@@ -1,3 +1,4 @@
+import { getCachedPostsPage } from "@/lib/actions/blog";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { headers, cookies } from "next/headers";
@@ -31,6 +32,21 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  try {
+    const total = await prisma.post.count({ where: { published: true } });
+    const totalPages = Math.max(1, Math.ceil(total / 10));
+    return Array.from(
+      { length: Math.min(totalPages, 20) },
+      (_, i) => ({ number: String(i + 1) }),
+    );
+  } catch {
+    return [{ number: "1" }];
+  }
+}
+
 const POSTS_PER_PAGE = 10;
 
 const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
@@ -54,15 +70,10 @@ export default async function BlogListPage({
   const page = parseInt(number) || 1;
   const skip = (page - 1) * POSTS_PER_PAGE;
 
-  const [posts, totalCount] = await Promise.all([
-    prisma.post.findMany({
-      where: { published: true },
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: POSTS_PER_PAGE,
-    }),
-    prisma.post.count({ where: { published: true } }),
-  ]);
+  const { posts, totalCount } = await getCachedPostsPage(
+    skip,
+    POSTS_PER_PAGE,
+  );
 
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 

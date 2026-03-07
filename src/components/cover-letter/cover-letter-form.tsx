@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "@/lib/translations";
+import { useProfileStore } from "@/stores/profile-store";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
@@ -19,6 +20,7 @@ type CoverLetterFormat = "prose" | "bullet";
 export function CoverLetterForm() {
   const { t, language } = useTranslation();
   const router = useRouter();
+  const { profile, needsLoad, loadFromDb } = useProfileStore();
   const [jobDescription, setJobDescription] = useState("");
   const [format, setFormat] = useState<CoverLetterFormat>("bullet");
   const [generateResume, setGenerateResume] = useState(false);
@@ -44,6 +46,10 @@ export function CoverLetterForm() {
   useEffect(() => {
     return () => clearTimer();
   }, []);
+
+  useEffect(() => {
+    if (needsLoad()) loadFromDb();
+  }, [needsLoad, loadFromDb]);
 
   useEffect(() => {
     fetch("/api/resumes")
@@ -95,6 +101,14 @@ export function CoverLetterForm() {
           language: language,
           format: format,
           generateResume: generateResume,
+          profile: profile.personalInfo || profile.workExperience?.length
+            ? {
+                personalInfo: profile.personalInfo,
+                workExperience: profile.workExperience,
+                education: profile.education,
+                skills: profile.skills,
+              }
+            : undefined,
         }),
       });
 

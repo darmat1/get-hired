@@ -334,6 +334,7 @@ export async function POST(request: Request) {
       jobDescription,
       format = "prose",
       generateResume = false,
+      profile: clientProfile,
     } = await request.json();
 
     if (!jobDescription) {
@@ -360,10 +361,14 @@ export async function POST(request: Request) {
       }
     }
 
-    // Get user profile (not resumes)
-    const profile = await prisma.userProfile.findUnique({
-      where: { userId: session.user.id },
-    });
+    // Use profile from client store if provided, else fetch from DB
+    let profile = clientProfile;
+    if (!profile?.personalInfo && !profile?.workExperience?.length) {
+      const dbProfile = await prisma.userProfile.findUnique({
+        where: { userId: session.user.id },
+      });
+      profile = dbProfile;
+    }
 
     if (!profile) {
       return NextResponse.json(
@@ -374,10 +379,10 @@ export async function POST(request: Request) {
 
     // Encode profile data as TOON for token efficiency
     const profileData = {
-      personalInfo: profile.personalInfo,
-      workExperience: profile.workExperience,
-      education: profile.education,
-      skills: profile.skills,
+      personalInfo: profile.personalInfo ?? {},
+      workExperience: profile.workExperience ?? [],
+      education: profile.education ?? [],
+      skills: profile.skills ?? [],
     };
     const profileToon = encode(profileData);
 
