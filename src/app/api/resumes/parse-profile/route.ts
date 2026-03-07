@@ -4,6 +4,14 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { aiComplete } from "@/lib/ai/server-ai";
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "4mb",
+    },
+  },
+};
+
 export async function POST(request: Request) {
   try {
     const session = await auth.api.getSession({
@@ -152,7 +160,7 @@ ${normalizedText}`;
     const safeStr = (val: any) => (typeof val === "string" ? val : "");
 
     // Prepare combined data (trusting AI to have merged, but ensuring structure/IDs)
-    const finalPersonalInfo = {
+    let finalPersonalInfo = {
       firstName: safeStr(parsedData.personalInfo?.firstName),
       lastName: safeStr(parsedData.personalInfo?.lastName),
       email: safeStr(parsedData.personalInfo?.email),
@@ -162,6 +170,19 @@ ${normalizedText}`;
       linkedin: safeStr(parsedData.personalInfo?.linkedin),
       telegram: safeStr(parsedData.personalInfo?.telegram),
     };
+
+    // If AI failed to find name, try to use name from session/auth
+    if (!finalPersonalInfo.firstName && session.user.name) {
+      const names = session.user.name.split(" ");
+      finalPersonalInfo.firstName = names[0];
+      if (names.length > 1) {
+        finalPersonalInfo.lastName = names.slice(1).join(" ");
+      }
+    }
+
+    if (!finalPersonalInfo.email && session.user.email) {
+      finalPersonalInfo.email = session.user.email;
+    }
 
     const finalWorkExperience = (parsedData.workExperience || []).map(
       (exp: any) => ({

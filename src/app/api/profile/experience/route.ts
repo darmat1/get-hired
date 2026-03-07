@@ -27,40 +27,25 @@ export async function GET() {
       });
     }
 
-    const parseField = (field: any) => {
-      if (!field) return {};
-      if (typeof field === 'object') return field;
-      if (typeof field === 'string') {
+    const parseJsonIfNeeded = (val: any) => {
+      if (typeof val === "string") {
         try {
-          return JSON.parse(field);
-        } catch {
-          return field;
+          return JSON.parse(val);
+        } catch (e) {
+          return val;
         }
       }
-      return {};
-    };
-
-    const parseArrayField = (field: any) => {
-      if (!field) return [];
-      if (Array.isArray(field)) return field;
-      if (typeof field === 'string') {
-        try {
-          return JSON.parse(field);
-        } catch {
-          return [];
-        }
-      }
-      return [];
+      return val;
     };
 
     return NextResponse.json({
       id: profile.id,
       userId: profile.userId,
-      personalInfo: parseField(profile.personalInfo),
-      workExperience: parseArrayField(profile.workExperience),
-      education: parseArrayField(profile.education),
-      skills: parseArrayField(profile.skills),
-      certificates: parseArrayField(profile.certificates),
+      personalInfo: parseJsonIfNeeded(profile.personalInfo) || {},
+      workExperience: parseJsonIfNeeded(profile.workExperience) || [],
+      education: parseJsonIfNeeded(profile.education) || [],
+      skills: parseJsonIfNeeded(profile.skills) || [],
+      certificates: parseJsonIfNeeded(profile.certificates) || [],
       createdAt: profile.createdAt,
       updatedAt: profile.updatedAt,
     });
@@ -82,28 +67,22 @@ export async function PUT(request: Request) {
 
     const body = await request.json();
 
-    const toJsonString = (data: any) => {
-      if (!data) return null;
-      if (typeof data === 'string') return data;
-      return JSON.stringify(data);
-    };
-
     const profile = await (prisma.userProfile.upsert as any)({
       where: { userId: session.user.id },
       update: {
-        personalInfo: toJsonString(body.personalInfo),
-        workExperience: toJsonString(body.workExperience),
-        education: toJsonString(body.education),
-        skills: toJsonString(body.skills),
-        certificates: toJsonString(body.certificates),
+        personalInfo: body.personalInfo,
+        workExperience: body.workExperience,
+        education: body.education,
+        skills: body.skills,
+        certificates: body.certificates,
       },
       create: {
         userId: session.user.id,
-        personalInfo: toJsonString(body.personalInfo),
-        workExperience: toJsonString(body.workExperience),
-        education: toJsonString(body.education),
-        skills: toJsonString(body.skills),
-        certificates: toJsonString(body.certificates),
+        personalInfo: body.personalInfo,
+        workExperience: body.workExperience,
+        education: body.education,
+        skills: body.skills,
+        certificates: body.certificates,
       },
     });
 
