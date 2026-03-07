@@ -15,6 +15,11 @@ const ENCRYPTED_FIELDS_BY_MODEL: Record<string, string[]> = {
   account: ["accessToken", "refreshToken", "idToken", "password"],
 };
 
+// Relation name -> model name (Prisma relation names don't always match model names)
+const RELATION_TO_MODEL: Record<string, string> = {
+  aiKeys: "aiCredential",
+};
+
 // Fields that are stored as JSON and need stringify/parse (Legacy, now using native Json type)
 const JSON_FIELDS = new Set<string>([]);
 
@@ -71,12 +76,9 @@ export const prisma = prismaBase.$extends({
                 } else if (key === "data") {
                   nextModel = currentModel;
                 } else {
-                  // If key matches a model name (e.g. 'aiKeys', 'profile'), use it
-                  // This is a heuristic: prisma relation names often match model names
-                  const potentialModel = key.endsWith("s") ? key.slice(0, -1) : key;
-                  if (ENCRYPTED_FIELDS_BY_MODEL[potentialModel]) {
-                    nextModel = potentialModel;
-                  }
+                  // Prefer explicit mapping, then heuristic
+                  nextModel = RELATION_TO_MODEL[key] ?? (key.endsWith("s") ? key.slice(0, -1) : key);
+                  if (!ENCRYPTED_FIELDS_BY_MODEL[nextModel]) nextModel = null;
                 }
                 encryptRecursive(value, nextModel);
               }
@@ -138,12 +140,8 @@ export const prisma = prismaBase.$extends({
               for (const key of Object.keys(item)) {
                 const value = item[key];
                 if (value && typeof value === "object") {
-                  // Heuristic for nested relations
-                  let nextModel: string | null = null;
-                  const potentialModel = key.endsWith("s") ? key.slice(0, -1) : key;
-                  if (ENCRYPTED_FIELDS_BY_MODEL[potentialModel]) {
-                    nextModel = potentialModel;
-                  }
+                  let nextModel: string | null = RELATION_TO_MODEL[key] ?? (key.endsWith("s") ? key.slice(0, -1) : key);
+                  if (!ENCRYPTED_FIELDS_BY_MODEL[nextModel]) nextModel = null;
                   decryptRecursive(value, nextModel);
                 }
               }

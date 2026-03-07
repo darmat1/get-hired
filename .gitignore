@@ -48,4 +48,4 @@ next-env.d.ts
 .env.sentry-build-plugin
 
 /backups
-/scriptses
+/scripts
