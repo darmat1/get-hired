@@ -91,7 +91,7 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
       const response = await fetch("/api/profile/experience");
       if (response.ok) {
         const data = await response.json();
-        setWorkExperience(data.workExperience || []);
+        setWorkExperience(Array.isArray(data.workExperience) ? data.workExperience : []);
       }
     } catch (error) {
       console.error("Failed to fetch experience:", error);
@@ -302,13 +302,15 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
                         </div>
                         {variant.selectedExp &&
                           variant.selectedExp.length > 0 &&
+                          Array.isArray(workExperience) &&
                           workExperience.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {variant.selectedExp
                                 .map(
                                   (expId) =>
-                                    workExperience.find((e) => e.id === expId)
-                                      ?.company,
+                                    Array.isArray(workExperience) 
+                                      ? workExperience.find((e) => e.id === expId)?.company 
+                                      : undefined,
                                 )
                                 .filter(Boolean)
                                 .map((company, idx) => (

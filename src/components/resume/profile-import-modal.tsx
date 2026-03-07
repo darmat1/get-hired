@@ -51,11 +51,11 @@ export function ProfileImportModal({
     if (!profileData) return [];
     switch (type) {
       case "experience":
-        return profileData.workExperience || [];
+        return Array.isArray(profileData.workExperience) ? profileData.workExperience : [];
       case "education":
-        return profileData.education || [];
+        return Array.isArray(profileData.education) ? profileData.education : [];
       case "skills":
-        return profileData.skills || [];
+        return Array.isArray(profileData.skills) ? profileData.skills : [];
       default:
         return [];
     }

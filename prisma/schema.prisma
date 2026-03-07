@@ -104,12 +104,12 @@ model Resume {
   id             String   @id @default(cuid())
   title          String
   template       String   @default("modern")
-  personalInfo   String?
-  workExperience String?
-  education      String?
-  skills         String?
-  certificates   String?
-  customization  String?
+  personalInfo   Json?
+  workExperience Json?
+  education      Json?
+  skills         Json?
+  certificates   Json?
+  customization  Json?
   language       String   @default("en")
   targetPosition String?
   targetCompany  String?
@@ -126,15 +126,15 @@ model UserProfile {
   id             String   @id @default(cuid())
   userId         String   @unique
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  personalInfo   String? // firstName, lastName, email, phone, etc.
-  workExperience String? // Array of all work experience entries
-  education      String? // Array of all education entries  
-  skills         String? // Array of all skills
-  certificates   String? // Array of all certificates
+  personalInfo   Json? // firstName, lastName, email, phone, etc.
+  workExperience Json? // Array of all work experience entries
+  education      Json? // Array of all education entries  
+  skills         Json? // Array of all skills
+  certificates   Json? // Array of all certificates
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  resumeVariants String? @default("[]")
+  resumeVariants Json? @default("[]")
 
   @@map("user_profile")
 }
@@ -153,5 +153,6 @@ model Post {
   relatedPostIds String[] @default([])
 
   @@index([authorId])
+  @@index([published, createdAt(sort: Desc)])
   @@map("post")
 }

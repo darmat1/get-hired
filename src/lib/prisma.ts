@@ -13,37 +13,10 @@ const ENCRYPTED_FIELDS_BY_MODEL: Record<string, string[]> = {
   user: ["accessToken", "refreshToken"],
   aiCredential: ["key"],
   account: ["accessToken", "refreshToken", "idToken", "password"],
-  userProfile: [
-    "personalInfo",
-    "workExperience",
-    "education",
-    "skills",
-    "certificates",
-    "resumeVariants",
-  ],
-  resume: [
-    "personalInfo",
-    "workExperience",
-    "education",
-    "skills",
-    "certificates",
-    "customization",
-  ],
 };
 
-// Fields that are stored as JSON and need stringify/parse
-const JSON_FIELDS = new Set([
-  "personalInfo",
-  "workExperience",
-  "education",
-  "skills",
-  "certificates",
-  "customization",
-  "selectedSkills",
-  "selectedExp",
-  "keywords",
-  "resumeVariants",
-]);
+// Fields that are stored as JSON and need stringify/parse (Legacy, now using native Json type)
+const JSON_FIELDS = new Set<string>([]);
 
 /**
  * Transparently encrypt/decrypt sensitive fields
@@ -61,21 +34,17 @@ export const prisma = prismaBase.$extends({
             operation,
           )
         ) {
-          const encryptRecursive = (data: any) => {
+          const encryptRecursive = (data: any, currentModel: string | null) => {
             if (!data || typeof data !== "object") return;
 
             if (Array.isArray(data)) {
-              data.forEach(encryptRecursive);
+              data.forEach((item) => encryptRecursive(item, currentModel));
               return;
             }
 
-            // Check if this object contains any fields that need encryption for ANY model
-            for (const [mKey, fields] of Object.entries(
-              ENCRYPTED_FIELDS_BY_MODEL,
-            )) {
-              for (const field of fields) {
-                // IMPORTANT: Only encrypt if it's not already encrypted (to avoid double encryption)
-                // and if it exists in the current object
+            // If we know the model, only check its specific fields
+            if (currentModel && ENCRYPTED_FIELDS_BY_MODEL[currentModel]) {
+              for (const field of ENCRYPTED_FIELDS_BY_MODEL[currentModel]) {
                 if (data[field] !== undefined && data[field] !== null) {
                   const val = data[field];
                   // If it's a string that already matches our encryption format, skip it
@@ -93,23 +62,38 @@ export const prisma = prismaBase.$extends({
 
             // Recurse into nested fields (e.g. data: { aiKeys: { create: { ... } } })
             for (const key of Object.keys(data)) {
-              if (data[key] && typeof data[key] === "object") {
-                encryptRecursive(data[key]);
+              const value = data[key];
+              if (value && typeof value === "object") {
+                // Determine model for nested relations if possible
+                let nextModel: string | null = null;
+                if (key === "create" || key === "update" || key === "upsert" || key === "connectOrCreate") {
+                  nextModel = currentModel;
+                } else if (key === "data") {
+                  nextModel = currentModel;
+                } else {
+                  // If key matches a model name (e.g. 'aiKeys', 'profile'), use it
+                  // This is a heuristic: prisma relation names often match model names
+                  const potentialModel = key.endsWith("s") ? key.slice(0, -1) : key;
+                  if (ENCRYPTED_FIELDS_BY_MODEL[potentialModel]) {
+                    nextModel = potentialModel;
+                  }
+                }
+                encryptRecursive(value, nextModel);
               }
             }
           };
 
           if (operation === "upsert") {
-            encryptRecursive((args as any).create);
-            encryptRecursive((args as any).update);
+            encryptRecursive((args as any).create, modelLower);
+            encryptRecursive((args as any).update, modelLower);
           } else if (operation === "createMany" || operation === "updateMany") {
             if (Array.isArray((args as any).data)) {
-              (args as any).data.forEach(encryptRecursive);
+              (args as any).data.forEach((item: any) => encryptRecursive(item, modelLower));
             } else {
-              encryptRecursive((args as any).data);
+              encryptRecursive((args as any).data, modelLower);
             }
           } else {
-            encryptRecursive((args as any).data);
+            encryptRecursive((args as any).data, modelLower);
           }
         }
 
@@ -118,20 +102,17 @@ export const prisma = prismaBase.$extends({
 
         // 3. Handle Reads (Decrypt results recursively)
         if (result) {
-          const decryptRecursive = (item: any) => {
+          const decryptRecursive = (item: any, currentModel: string | null) => {
             if (!item || typeof item !== "object") return;
 
             if (Array.isArray(item)) {
-              item.forEach(decryptRecursive);
+              item.forEach((i) => decryptRecursive(i, currentModel));
               return;
             }
 
-            // Check if this object has any fields that we know should be encrypted
-            // We search through all models in our map to be safe with nested relations
-            for (const [modelKey, fields] of Object.entries(
-              ENCRYPTED_FIELDS_BY_MODEL,
-            )) {
-              for (const field of fields) {
+            // Only check fields for the current model to avoid unnecessary loops
+            if (currentModel && ENCRYPTED_FIELDS_BY_MODEL[currentModel]) {
+              for (const field of ENCRYPTED_FIELDS_BY_MODEL[currentModel]) {
                 if (item[field] && typeof item[field] === "string") {
                   try {
                     let val = item[field];
@@ -142,29 +123,33 @@ export const prisma = prismaBase.$extends({
                       wasEncrypted = true;
                     }
 
-                    // If it's a JSON field, parse it
-                    if (JSON_FIELDS.has(field)) {
-                      item[field] = JSON.parse(val);
-                    } else if (wasEncrypted) {
-                      // If it was encrypted but not a JSON field, update with decrypted value
+                    // If it was encrypted, update with decrypted value
+                    if (wasEncrypted) {
                       item[field] = val;
                     }
                   } catch (e) {
-                    // Decryption or parsing failed - likely not encrypted/JSON or wrong key, ignore
+                    // Ignore failures
                   }
                 }
               }
             }
 
-            // Recurse into all properties to catch relations (e.g. user.aiKeys)
-            for (const key of Object.keys(item)) {
-              if (item[key] && typeof item[key] === "object") {
-                decryptRecursive(item[key]);
+            // Recurse into relations
+              for (const key of Object.keys(item)) {
+                const value = item[key];
+                if (value && typeof value === "object") {
+                  // Heuristic for nested relations
+                  let nextModel: string | null = null;
+                  const potentialModel = key.endsWith("s") ? key.slice(0, -1) : key;
+                  if (ENCRYPTED_FIELDS_BY_MODEL[potentialModel]) {
+                    nextModel = potentialModel;
+                  }
+                  decryptRecursive(value, nextModel);
+                }
               }
-            }
           };
 
-          decryptRecursive(result);
+          decryptRecursive(result, modelLower);
         }
 
         return result;

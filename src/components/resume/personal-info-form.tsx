@@ -2,6 +2,9 @@
 
 import { PersonalInfo } from "@/types/resume";
 import { useTranslation } from "@/lib/translations";
+import { Button } from "@/components/ui/button";
+import { Sparkles, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 interface PersonalInfoFormProps {
   data: PersonalInfo;
@@ -11,17 +14,55 @@ interface PersonalInfoFormProps {
 
 export function PersonalInfoForm({ data, onChange }: PersonalInfoFormProps) {
   const { t } = useTranslation();
+  const [isImporting, setIsImporting] = useState(false);
 
   const updateField = (field: keyof PersonalInfo, value: string) => {
     onChange({ ...data, [field]: value });
   };
 
+  const handleImportProfile = async () => {
+    setIsImporting(true);
+    try {
+      const response = await fetch("/api/profile/experience");
+      if (response.ok) {
+        const profile = await response.json();
+        if (profile.personalInfo) {
+          onChange({
+            ...data,
+            ...profile.personalInfo,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to import profile:", error);
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <div className="">
-        <h2 className="text-xl font-semibold mb-4 text-foreground">
-          {t("form.personal_info")}
-        </h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-foreground">
+            {t("form.personal_info")}
+          </h2>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleImportProfile}
+            disabled={isImporting}
+            className="text-xs flex items-center gap-2"
+          >
+            {isImporting ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <Sparkles className="h-3 w-3" />
+            )}
+            {t("profile.import_from_profile") || "Import from Profile"}
+          </Button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-foreground">
           <div>
