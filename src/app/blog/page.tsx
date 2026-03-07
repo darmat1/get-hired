@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getCachedPostsPage } from "@/lib/actions/blog";
 import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import type { Language } from "@/lib/translations";
@@ -32,6 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const revalidate = 3600;
+
 const POSTS_PER_PAGE = 10;
 
 const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
@@ -53,13 +55,7 @@ export default async function BlogListPage() {
     cookieStore.get("NEXT_LOCALE")?.value ||
     "en") as Language;
 
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-    take: POSTS_PER_PAGE,
-  });
-
-  const totalCount = await prisma.post.count({ where: { published: true } });
+  const { posts, totalCount } = await getCachedPostsPage(0, POSTS_PER_PAGE);
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 
   return (

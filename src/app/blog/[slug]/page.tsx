@@ -1,6 +1,7 @@
 import { getPostBySlug } from "@/lib/actions/blog";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 import { headers, cookies } from "next/headers";
 import type { Language } from "@/lib/translations";
 import Image from "next/image";
@@ -10,6 +11,23 @@ import { Metadata } from "next";
 import Script from "next/script";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { getT } from "@/lib/translations-data";
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const slugs = await unstable_cache(
+    () =>
+      prisma.post
+        .findMany({
+          where: { published: true },
+          select: { slug: true },
+        })
+        .then((r) => r.map((p) => ({ slug: p.slug }))),
+    ["blog-slugs"],
+    { revalidate: 3600, tags: ["blog"] },
+  )();
+  return slugs;
+}
 
 const SUPABASE_STORAGE_HOST = "nqxpyxpqgdzpoasqexcm.supabase.co";
 

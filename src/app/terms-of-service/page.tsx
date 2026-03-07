@@ -2,6 +2,8 @@ import { Header } from "@/components/layout/header";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 
+export const revalidate = 86400;
+
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = await headers();
   const locale = headerList.get("x-locale") || "en";

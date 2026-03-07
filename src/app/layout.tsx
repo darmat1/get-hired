@@ -46,6 +46,10 @@ export const metadata: Metadata = {
       "application/rss+xml": "https://gethired.work/feed.xml",
     },
   },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
