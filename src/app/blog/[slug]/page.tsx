@@ -177,9 +177,10 @@ export default async function BlogPostPage({
             headline: title,
             description: excerpt,
             image: imageUrl || undefined,
-            datePublished: post.createdAt.toISOString(),
-            dateModified:
-              post.updatedAt?.toISOString() || post.createdAt.toISOString(),
+            datePublished: new Date(post.createdAt).toISOString(),
+            dateModified: post.updatedAt
+              ? new Date(post.updatedAt).toISOString()
+              : new Date(post.createdAt).toISOString(),
             author: {
               "@type": "Organization",
               name: "GetHired",
