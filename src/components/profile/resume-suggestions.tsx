@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useProfileStore } from "@/stores/profile-store";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -68,6 +69,7 @@ interface ResumeSuggestionsProps {
 export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
   const { t } = useTranslation();
   const router = useRouter();
+  const { needsLoad, loadFromDb } = useProfileStore();
   const [variants, setVariants] = useState<ResumeVariant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRegenerating, setIsRegenerating] = useState(false);
@@ -87,15 +89,9 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
   }, []);
 
   const fetchWorkExperience = async () => {
-    try {
-      const response = await fetch("/api/profile/experience");
-      if (response.ok) {
-        const data = await response.json();
-        setWorkExperience(Array.isArray(data.workExperience) ? data.workExperience : []);
-      }
-    } catch (error) {
-      console.error("Failed to fetch experience:", error);
-    }
+    if (needsLoad()) await loadFromDb();
+    const prof = useProfileStore.getState().profile;
+    setWorkExperience(Array.isArray(prof.workExperience) ? prof.workExperience : []);
   };
 
   const fetchExistingResumes = async () => {
@@ -153,15 +149,16 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
   const createResumeFromVariant = async (variant: ResumeVariant) => {
     setIsCreating(variant.id);
     try {
-      // Fetch profile to get base data
-      const profileRes = await fetch("/api/profile/experience");
-      const profile = await profileRes.json();
+      if (needsLoad()) await loadFromDb();
+      const profile = useProfileStore.getState().profile;
 
       // Filter experience/skills based on variant selection
-      const filteredExp = profile.workExperience.filter((exp: any) =>
+      const workExp = Array.isArray(profile.workExperience) ? profile.workExperience : [];
+      const skills = Array.isArray(profile.skills) ? profile.skills : [];
+      const filteredExp = workExp.filter((exp: any) =>
         variant.selectedExp.includes(exp.id),
       );
-      const filteredSkills = profile.skills.filter((skill: any) =>
+      const filteredSkills = skills.filter((skill: any) =>
         variant.selectedSkills.includes(skill.name),
       );
 

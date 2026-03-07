@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "@/lib/auth-client";
+import { useResumeStore } from "@/stores/resume-store";
 import { PersonalInfoForm } from "@/components/resume/personal-info-form";
 import { WorkExperienceForm } from "@/components/resume/work-experience-form";
 import { EducationForm } from "@/components/resume/education-form";
@@ -33,139 +34,86 @@ export default function EditResumePage() {
   const params = useParams();
   const id = params?.id as string;
 
+  const {
+    resume: resumeData,
+    isLoading,
+    isSaving,
+    setResume,
+    updateField,
+    loadFromDb,
+    saveToDb,
+    reset: resetResumeStore,
+    needsLoad: needsLoadResume,
+  } = useResumeStore();
+
   const [step, setStep] = useState(1);
   const [mounted, setMounted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [resumeData, setResumeData] = useState<Partial<Resume>>({
-    personalInfo: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      location: "",
-      summary: "",
-    },
-    workExperience: [],
-    education: [],
-    skills: [],
-    template: "modern",
-  });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (session?.user && id) {
-      fetchResume();
-    } else if (!isPending && session === null) {
-      router.push("/");
-    }
-  }, [session, isPending, id, router]);
-
-  const fetchResume = async () => {
-    try {
-      const response = await fetch(`/api/resumes/${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setResumeData(data);
-        lastSavedDataRef.current = JSON.stringify(data);
-      } else {
-        console.error("Failed to fetch resume");
-      }
-    } catch (error) {
-      console.error("Error fetching resume:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updatePersonalInfo = (info: PersonalInfo) => {
-    setResumeData((prev) => ({ ...prev, personalInfo: info }));
-  };
-
-  const updateWorkExperience = (experience: WorkExperience[]) => {
-    setResumeData((prev) => ({ ...prev, workExperience: experience }));
-  };
-
-  const updateEducation = (education: Education[]) => {
-    setResumeData((prev) => ({ ...prev, education }));
-  };
-
-  const updateSkills = (skills: Skill[]) => {
-    setResumeData((prev) => ({ ...prev, skills }));
-  };
-
-  const updateTemplate = (template: string) => {
-    setResumeData((prev) => ({ ...prev, template }));
-  };
-
-  // Keep refs for data tracking
-  const resumeDataRef = useRef(resumeData);
   const lastSavedDataRef = useRef<string>("");
 
   useEffect(() => {
-    resumeDataRef.current = resumeData;
-  }, [resumeData]);
+    setMounted(true);
+    return () => resetResumeStore();
+  }, [resetResumeStore]);
+
+  useEffect(() => {
+    if (session?.user && id) {
+      if (needsLoadResume(id)) {
+        loadFromDb(id).then((ok) => {
+          if (ok) {
+            lastSavedDataRef.current = JSON.stringify(
+              useResumeStore.getState().resume,
+            );
+          }
+        });
+      }
+    } else if (!isPending && session === null) {
+      router.push("/");
+    }
+  }, [session, isPending, id, router, needsLoadResume, loadFromDb]);
+
+  const updatePersonalInfo = (info: PersonalInfo) => {
+    updateField("personalInfo", info);
+  };
+
+  const updateWorkExperience = (experience: WorkExperience[]) => {
+    updateField("workExperience", experience);
+  };
+
+  const updateEducation = (education: Education[]) => {
+    updateField("education", education);
+  };
+
+  const updateSkills = (skills: Skill[]) => {
+    updateField("skills", skills);
+  };
+
+  const updateTemplate = (template: string) => {
+    updateField("template", template);
+  };
 
   // Auto-save every 15 seconds, but only if there are unsaved changes
   useEffect(() => {
     if (!id || !session?.user) return;
 
     const interval = setInterval(async () => {
-      const currentDataStr = JSON.stringify(resumeDataRef.current);
+      const current = useResumeStore.getState().resume;
+      const currentDataStr = JSON.stringify(current);
 
-      // Skip if data hasn't changed since last save
       if (currentDataStr === lastSavedDataRef.current) return;
 
-      setIsSaving(true);
-      try {
-        const response = await fetch(`/api/resumes/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: currentDataStr,
-        });
-
-        if (response.ok) {
-          lastSavedDataRef.current = currentDataStr;
-        } else {
-          console.error("Failed to auto-save resume");
-        }
-      } catch (error) {
-        console.error("Failed to auto-save resume:", error);
-      } finally {
-        setIsSaving(false);
+      const ok = await saveToDb();
+      if (ok) {
+        lastSavedDataRef.current = currentDataStr;
       }
-    }, 15000); // 15 seconds
+    }, 15000);
 
     return () => clearInterval(interval);
-  }, [id, session]);
+  }, [id, session, saveToDb]);
 
   const saveResume = async () => {
-    setIsSaving(true);
-    try {
-      const currentDataStr = JSON.stringify(resumeDataRef.current);
-      const response = await fetch(`/api/resumes/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: currentDataStr,
-      });
-
-      if (response.ok) {
-        lastSavedDataRef.current = currentDataStr;
-        // Handle success
-      } else {
-        console.error("Failed to update resume");
-      }
-    } catch (error) {
-      console.error("Failed to save resume:", error);
-    } finally {
-      setIsSaving(false);
+    const ok = await saveToDb();
+    if (ok) {
+      lastSavedDataRef.current = JSON.stringify(resumeData);
     }
   };
 
@@ -173,7 +121,8 @@ export default function EditResumePage() {
     window.open(`/api/resumes/${id}/pdf`, "_blank");
   };
 
-  if (!mounted || isPending)
+  const waitingForData = id && needsLoadResume(id) && !resumeData.id;
+  if (!mounted || isPending || isLoading || waitingForData)
     return <LoadingScreen message={t("profile.loading_profile")} />;
   if (!session) return null;
 
@@ -219,7 +168,7 @@ export default function EditResumePage() {
               <div className="flex-1 w-full max-w-[950px]">
                 <ResumePreview
                   data={resumeData as Resume}
-                  onChange={setResumeData}
+                  onChange={(data) => setResume(data as Partial<Resume>)}
                   isEditing={true}
                   onTemplateChange={updateTemplate}
                 />
