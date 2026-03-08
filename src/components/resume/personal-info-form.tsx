@@ -47,21 +47,6 @@ export function PersonalInfoForm({ data, onChange }: PersonalInfoFormProps) {
           <h2 className="text-xl font-semibold text-foreground">
             {t("form.personal_info")}
           </h2>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleImportProfile}
-            disabled={isImporting}
-            className="text-xs flex items-center gap-2"
-          >
-            {isImporting ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
-            ) : (
-              <Sparkles className="h-3 w-3" />
-            )}
-            {t("profile.import_from_profile") || "Import from Profile"}
-          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-foreground">

@@ -479,7 +479,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                     : cat === "soft"
                       ? getTranslation("skills.soft", data.language || "en")
                       : getTranslation(
-                          "skills.language",
+                          "skills.languages",
                           data.language || "en",
                         )}
                 </h3>
