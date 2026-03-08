@@ -4,14 +4,6 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { aiComplete } from "@/lib/ai/server-ai";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "4mb",
-    },
-  },
-};
-
 export async function POST(request: Request) {
   try {
     const session = await auth.api.getSession({
