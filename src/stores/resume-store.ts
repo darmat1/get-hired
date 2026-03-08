@@ -38,10 +38,7 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
   isSaving: false,
   lastSaved: null,
 
-  needsLoad: (id: string) => {
-    const { currentId } = get();
-    return currentId !== id;
-  },
+  needsLoad: (id: string) => get().currentId !== id,
 
   setResume: (resume) =>
     set((s) => ({
@@ -55,28 +52,27 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
     })),
 
   loadFromDb: async (id: string) => {
+    if (get().currentId === id) return true;
+
     set({ isLoading: true });
     try {
       const res = await fetch(`/api/resumes/${id}`);
-      if (res.ok) {
-        const data = await res.json();
-        set({
-          currentId: id,
-          resume: data,
-        });
-        return true;
-      }
+      if (!res.ok) throw new Error("Failed to fetch");
+      const data = await res.json();
+      set({ currentId: id, resume: data });
+      return true;
     } catch (e) {
       console.error("Failed to load resume:", e);
+      return false;
     } finally {
       set({ isLoading: false });
     }
-    return false;
   },
 
   saveToDb: async () => {
-    const { currentId, resume } = get();
-    if (!currentId) return false;
+    const { currentId, resume, isSaving } = get();
+    if (!currentId || isSaving) return false;
+
     set({ isSaving: true });
     try {
       const res = await fetch(`/api/resumes/${currentId}`, {
@@ -86,10 +82,7 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
       });
       if (res.ok) {
         const data = await res.json();
-        set({
-          lastSaved: new Date(),
-          resume: { ...resume, ...data },
-        });
+        set({ lastSaved: new Date(), resume: { ...resume, ...data } });
         return true;
       }
     } catch (e) {
