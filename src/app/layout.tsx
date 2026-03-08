@@ -9,6 +9,8 @@ import { AIKeyWarning } from "@/components/layout/ai-key-warning";
 import { Header } from "@/components/layout/header";
 import { getBaseUrl } from "@/lib/i18n-config";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -110,6 +112,8 @@ export default async function RootLayout({
             {children}
             <Footer />
           </LanguageProvider>
+          <Analytics />
+          <SpeedInsights />
         </AuthProvider>
       </body>
     </html>

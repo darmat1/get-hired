@@ -419,7 +419,7 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                     ) === "work.employment_types.language"
                       ? "Languages"
                       : getTranslation(
-                          "skills.language",
+                          "skills.languages",
                           resume.language || "en",
                         )}
                   </Text>
