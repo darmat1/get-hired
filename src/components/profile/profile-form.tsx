@@ -13,10 +13,10 @@ import {
   AlertCircle,
   CheckCircle,
   Loader,
-  Linkedin,
   Trash2,
   AlertTriangle,
 } from "lucide-react";
+import { LinkedinIcon } from "@/components/ui/icons/linkedin";
 import { useTranslation } from "@/lib/translations";
 
 export function ProfileForm() {
@@ -264,7 +264,7 @@ export function ProfileForm() {
             <div
               className={`p-2 rounded-full ${hasLinkedIn ? "bg-slate-100 dark:bg-slate-900/30 text-slate-600" : "bg-slate-100 dark:bg-slate-700 text-slate-400"}`}
             >
-              <Linkedin className="h-5 w-5" />
+              <LinkedinIcon className="h-5 w-5 fill-current" />
             </div>
             <div>
               <p className="text-sm font-medium text-slate-900 dark:text-white">
