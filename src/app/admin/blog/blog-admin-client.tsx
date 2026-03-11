@@ -8,6 +8,7 @@ import {
   Trash2,
   Plus,
   Link2,
+  Copy,
 } from "lucide-react";
 import { createPost, deletePost, updatePost } from "@/lib/actions/blog";
 import { createClient } from "@supabase/supabase-js";
@@ -63,6 +64,7 @@ export default function BlogAdminClient({
     topic: "",
     requirements: "",
     provider: defaultProvider,
+    published: true,
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +97,7 @@ export default function BlogAdminClient({
       topic: "",
       requirements: "",
       provider: defaultProvider,
+      published: true,
     });
     clearImage();
     setRelatedPostIds([]);
@@ -118,6 +121,7 @@ export default function BlogAdminClient({
       topic: "",
       requirements: "",
       provider: defaultProvider,
+      published: post.published ?? false,
     });
     setCurrentImageUrl(post.imageUrl || null);
     setImagePreview(post.imageUrl || null);
@@ -183,7 +187,7 @@ export default function BlogAdminClient({
           slug: formData.slug,
           content,
           imageUrl: uploadedImageUrl || undefined,
-          published: true,
+          published: formData.published,
           relatedPostIds,
         });
         setPosts(posts.map((p) => (p.id === editingPostId ? updatedPost : p)));
@@ -192,7 +196,7 @@ export default function BlogAdminClient({
           slug: formData.slug,
           content,
           imageUrl: uploadedImageUrl || undefined,
-          published: true,
+          published: formData.published,
           relatedPostIds,
         });
         setPosts([newPost, ...posts]);
@@ -277,6 +281,11 @@ export default function BlogAdminClient({
   const noKeysAvailable = !hasGeminiKey && !hasOpenRouterKey && !hasGroqKey;
   const availableForRelated = posts.filter((p) => p.id !== editingPostId);
 
+  const copyAllSlugs = () => {
+    const slugs = posts.map((p) => p.slug).join("\n");
+    navigator.clipboard.writeText(slugs);
+  };
+
   return (
     <div className="flex flex-col lg:flex-row gap-8 items-start">
       {/* Main Content Area: Editor */}
@@ -350,6 +359,30 @@ export default function BlogAdminClient({
             />
           </div>
 
+          {/* Published Toggle */}
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Published
+            </label>
+            <button
+              type="button"
+              onClick={() =>
+                setFormData({ ...formData, published: !formData.published })
+              }
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                formData.published
+                  ? "bg-emerald-500"
+                  : "bg-slate-300 dark:bg-slate-600"
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  formData.published ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
+
           {/* AI Generation */}
           <div className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-800">
             <h3 className="font-bold text-lg text-slate-800 dark:text-slate-200">
@@ -393,9 +426,14 @@ export default function BlogAdminClient({
                 className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
               >
                 {hasGeminiKey && (
-                  <option value="gemini">
-                    ✨ Gemini 2.5 Flash (recommended)
-                  </option>
+                  <>
+                    <option value="gemini">
+                      ✨ Gemini 2.5 Flash (recommended)
+                    </option>
+                    <option value="gemini-lite">
+                      Gemini 3.1 Flash Lite
+                    </option>
+                  </>
                 )}
                 {hasGroqKey && (
                   <option value="groq">Groq (Llama 3.3 70B)</option>
@@ -616,13 +654,22 @@ export default function BlogAdminClient({
       <div className="w-full lg:w-96 flex-shrink-0 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm sticky top-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Posts ({posts.length})</h2>
-          <button
-            onClick={clearForm}
-            className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 rounded-lg transition"
-            title="New Post"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={copyAllSlugs}
+              className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 rounded-lg transition"
+              title="Copy all slugs"
+            >
+              <Copy className="w-4 h-4" />
+            </button>
+            <button
+              onClick={clearForm}
+              className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 rounded-lg transition"
+              title="New Post"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         <div className="space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto pr-2 custom-scrollbar">
@@ -654,6 +701,15 @@ export default function BlogAdminClient({
                   {post.slug}
                 </div>
                 <div className="flex items-center gap-2 mt-1">
+                  <div
+                    className={`text-xs px-1.5 py-0.5 rounded ${
+                      post.published
+                        ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                        : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                    }`}
+                  >
+                    {post.published ? "Published" : "Draft"}
+                  </div>
                   <div
                     className="text-xs text-slate-500 dark:text-slate-400"
                     suppressHydrationWarning

@@ -10,6 +10,7 @@ import { prisma } from "@/lib/prisma";
 const TRINITY_MODEL = "arcee-ai/trinity-large-preview:free";
 const STEPFUN_MODEL = "stepfun/step-3.5-flash:free";
 const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_LITE_MODEL = "gemini-3.1-flash-lite-preview";
 
 const OPENROUTER_MODELS: Record<string, string> = {
   "openrouter-trinity": TRINITY_MODEL,
@@ -97,12 +98,13 @@ async function generateWithGemini(
   apiKey: string,
   systemPrompt: string,
   userPrompt: string,
+  modelName: string = GEMINI_MODEL,
 ) {
-  console.log("[Gemini] Starting request with model:", GEMINI_MODEL);
+  console.log("[Gemini] Starting request with model:", modelName);
 
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
-    model: GEMINI_MODEL,
+    model: modelName,
     systemInstruction: systemPrompt,
     generationConfig: {
       responseMimeType: "application/json",
@@ -288,6 +290,29 @@ REMINDER: The entire response must be a valid JSON object. ALL text content must
       const responses = await Promise.all(
         prompts.map((p) =>
           generateWithGemini(geminiKey, p.systemPrompt, p.userPrompt),
+        ),
+      );
+      results = { en: responses[0], ru: responses[1], uk: responses[2] };
+    } else if (provider === "gemini-lite") {
+      const geminiKey = await getUserApiKey(userId, "gemini");
+      if (!geminiKey) {
+        return NextResponse.json(
+          {
+            error:
+              "Gemini API key not found. Please add it in your profile settings.",
+          },
+          { status: 400 },
+        );
+      }
+
+      const responses = await Promise.all(
+        prompts.map((p) =>
+          generateWithGemini(
+            geminiKey,
+            p.systemPrompt,
+            p.userPrompt,
+            GEMINI_LITE_MODEL,
+          ),
         ),
       );
       results = { en: responses[0], ru: responses[1], uk: responses[2] };
