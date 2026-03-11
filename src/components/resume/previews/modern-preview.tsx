@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 import {
   Settings2,
   Palette,
-  Linkedin,
   Send,
   GripVertical,
   Plus,
@@ -13,6 +12,7 @@ import {
   X,
   Import,
 } from "lucide-react";
+import { LinkedinIcon } from "@/components/ui/icons/linkedin";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { cn } from "@/lib/utils";
 import { ProfileImportModal } from "../profile-import-modal";
@@ -258,7 +258,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
               />
               <SidebarToggle
                 label="LinkedIn"
-                icon={Linkedin}
+                icon={LinkedinIcon}
                 checked={showLinkedin}
                 onChange={(v) => updateCustomization("showLinkedin", v)}
               />

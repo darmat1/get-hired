@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useTranslation } from "@/lib/translations";
-import { ArrowRight, Linkedin, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { LinkedinIcon } from "@/components/ui/icons/linkedin";
 import Image from "next/image";
 
 export function Hero() {
@@ -37,7 +38,7 @@ export function Hero() {
             href="/auth/signin?method=linkedin"
             className="w-full sm:w-auto px-10 py-4 text-lg bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 text-slate-700 dark:text-white font-bold rounded-full border border-slate-200 dark:border-white/10 transition-all duration-300 shadow-sm flex items-center justify-center gap-2"
           >
-            <Linkedin className="w-5 h-5 text-[#0A66C2]" />
+            <LinkedinIcon className="w-5 h-5 fill-current" />
             {t("landing.hero.cta_secondary")}
           </Link>
         </div>
