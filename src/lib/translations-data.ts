@@ -1935,6 +1935,21 @@ export const translations: Translations = {
     uk: "Відкрити редактор резюме",
     ru: "Открыть редактор резюме",
   },
+  "cover_letter.resume_language_label": {
+    en: "Resume language",
+    uk: "Мова резюме",
+    ru: "Язык резюме",
+  },
+  "cover_letter.resume_lang_en": {
+    en: "English",
+    uk: "Англійська",
+    ru: "Английский",
+  },
+  "cover_letter.resume_lang_jd": {
+    en: "Job description language",
+    uk: "Мова вакансії",
+    ru: "Язык вакансии",
+  },
 
   // LinkedIn Import
   "resume.import_from_linkedin": {
