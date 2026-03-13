@@ -229,7 +229,7 @@ export function MinimalTemplate({ resume }: TemplateProps) {
               {getTranslation("form.work_experience", resume.language || "en")}
             </Text>
             {workExperience.map((exp, index) => (
-              <View key={index} style={styles.jobBlock}>
+              <View key={index} style={styles.jobBlock} wrap={false}>
                 <View
                   style={{
                     flexDirection: "row",
@@ -289,7 +289,7 @@ export function MinimalTemplate({ resume }: TemplateProps) {
               {getTranslation("form.education", resume.language || "en")}
             </Text>
             {education.map((edu, index) => (
-              <View key={index} style={styles.jobBlock}>
+              <View key={index} style={styles.jobBlock} wrap={false}>
                 <View
                   style={{
                     flexDirection: "row",

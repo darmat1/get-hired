@@ -253,7 +253,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
               {getTranslation("form.work_experience", resume.language || "en")}
             </Text>
             {workExperience.map((exp, index) => (
-              <View key={index} style={{ marginBottom: 10 }}>
+              <View key={index} style={{ marginBottom: 10 }} wrap={false}>
                 <View style={styles.jobHeader}>
                   <View>
                     <Text style={styles.jobTitle}>{exp.title}</Text>
@@ -314,7 +314,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
               {getTranslation("form.education", resume.language || "en")}
             </Text>
             {education.map((edu, index) => (
-              <View key={index} style={{ marginBottom: 8 }}>
+              <View key={index} style={{ marginBottom: 8 }} wrap={false}>
                 <View style={styles.jobHeader}>
                   <View>
                     <Text style={styles.jobTitle}>{edu.institution}</Text>
