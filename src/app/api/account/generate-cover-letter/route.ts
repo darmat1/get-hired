@@ -174,9 +174,9 @@ Introduction line (1 sentence, immediately after greeting):
   Candidate introduces themselves by FIRST NAME ONLY and states interest in the specific position.
   Extract the exact job title from the JD.
   Examples:
-  - "Мене звати Andrew, і мене зацікавила ваша вакансія Front-end Developer (VueJS)."
+  - "Мене звати Андрій, і мене зацікавила ваша вакансія Front-end Developer (VueJS)."
   - "My name is Andrew, and I'm excited about your Front-end Developer role."
-  - "Меня зовут Andrew, и я заинтересован в вашей вакансии Senior React Developer."
+  - "Меня зовут Андрей, и я заинтересован в вашей вакансии Senior React Developer."
   This must be natural and concise — one sentence only.
 
 OPENING LINE (1 sentence):
@@ -189,10 +189,11 @@ BULLET BLOCK (5–8 bullets):
   - YES — write the bullet with specific proof (company name or metric).
   - NO — SKIP this bullet entirely. Do not write it. Do not say "familiar with", "experience with", or imply it.
 
-  Format: "- [JD requirement keyword]: [specific proof from profile with metric or concrete detail]"
+Format: "- [JD requirement keyword]: [action verb] + [specific proof from profile with metric or concrete detail]"
   Rules:
   - Left side = JD keyword.
-  - Right side = specific fact from profile. MUST include a company name or metric.
+  - Right side MUST start with a past-tense action verb (e.g. built, migrated, reduced, implemented — or equivalent in the JD language).
+  - Right side MUST include a company name or metric.
   - Order by JD priority: most critical requirement first.
   - FORBIDDEN: writing a bullet for any technology NOT explicitly in the candidate profile skills or work descriptions.
   - FORBIDDEN: phrases like "although not explicitly mentioned", "can be adapted to", "similar to", "transferable to" — these are lies dressed as honesty. If you catch yourself writing them, DELETE the entire bullet instead.
