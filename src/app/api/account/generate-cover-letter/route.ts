@@ -308,6 +308,7 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
   "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
   "education": [{ "id": "edu-1", "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false }],
   "skills": [{ "id": "skill-1", "name": "", "category": "technical", "level": "advanced" }],
+  "detectedLanguage": "ISO 639-1 code of the JD language (en, uk, ru, pl, de, etc.)",
   "targetPosition": "job title extracted from JD",
   "targetCompany": "company name extracted from JD"
 }
@@ -335,6 +336,7 @@ export async function POST(request: Request) {
       jobDescription,
       format = "prose",
       generateResume = false,
+      resumeLanguage = "en",
       profile: clientProfile,
     } = await request.json();
 
@@ -419,13 +421,17 @@ Write the cover letter now. Use ONLY facts from the profile above.`;
 
     // Generate tailored resume if requested
     if (generateResume) {
-      const resumeUserPrompt = `=== JOB DESCRIPTION (use for keyword matching ONLY) ===
+      const languageInstruction = resumeLanguage === "jd"
+        ? `Detect the PRIMARY language of the Job Description above. Write the ENTIRE resume content (summary, descriptions, skills, job titles) in THAT language. If the profile is in a different language, TRANSLATE all content to the JD language. Include the detected language as "detectedLanguage" in the output JSON (ISO 639-1 code: en, uk, ru, pl, de, etc.).`
+        : `Write the ENTIRE resume content (summary, descriptions, skills, job titles) in ENGLISH regardless of the JD or profile language. Translate all content to English if needed. Set "detectedLanguage" to "en" in the output JSON.`;
+
+      const resumeUserPrompt = `=== JOB DESCRIPTION ===
 ${jobDescription}
 
 === CANDIDATE FULL PROFILE (source of ALL facts — use ONLY what is here) ===
 ${profileToon}
 
-IMPORTANT: Write the resume content in the SAME LANGUAGE as the candidate profile above. Do NOT use the JD language — use the PROFILE language for all text (summary, descriptions, skills). Only match JD keywords by meaning, not by copying foreign-language terms.
+IMPORTANT: ${languageInstruction}
 Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY relevant experience. Filter out unrelated jobs. Maximize keyword matches from the JD. Use metrics and numbers from the profile.`;
 
       const resumeResponse = await aiComplete(
@@ -498,7 +504,7 @@ Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY rele
         data: {
           title: resumeTitle,
           template: "modern",
-          language: "en",
+          language: resumeJson.detectedLanguage || "en",
           personalInfo: resumeJson.personalInfo || {},
           workExperience: resumeJson.workExperience || [],
           education: resumeJson.education || [],

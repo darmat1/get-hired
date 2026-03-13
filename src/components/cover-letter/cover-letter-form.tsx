@@ -12,10 +12,12 @@ import {
   FileText,
   List,
   ExternalLink,
+  Globe,
 } from "lucide-react";
 import Link from "next/link";
 
 type CoverLetterFormat = "prose" | "bullet";
+type ResumeLanguage = "en" | "jd";
 
 export function CoverLetterForm() {
   const { t, language } = useTranslation();
@@ -24,6 +26,7 @@ export function CoverLetterForm() {
   const [jobDescription, setJobDescription] = useState("");
   const [format, setFormat] = useState<CoverLetterFormat>("bullet");
   const [generateResume, setGenerateResume] = useState(false);
+  const [resumeLanguage, setResumeLanguage] = useState<ResumeLanguage>("en");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
@@ -101,6 +104,7 @@ export function CoverLetterForm() {
           language: language,
           format: format,
           generateResume: generateResume,
+          resumeLanguage: generateResume ? resumeLanguage : undefined,
           profile: profile.personalInfo || profile.workExperience?.length
             ? {
                 personalInfo: profile.personalInfo,
@@ -269,6 +273,40 @@ export function CoverLetterForm() {
                 </span>
               </label>
             </div>
+
+            {/* Resume Language Selector */}
+            {generateResume && !isLimitReached && (
+              <div className="p-4 rounded-lg border border-purple-100 dark:border-purple-900 bg-purple-25 dark:bg-purple-900/10">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+                  <Globe className="h-4 w-4" />
+                  {t("cover_letter.resume_language_label")}
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setResumeLanguage("en")}
+                    className={`flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+                      resumeLanguage === "en"
+                        ? "bg-purple-50 border-purple-300 text-purple-700 dark:bg-purple-900/30 dark:border-purple-600 dark:text-purple-300 ring-2 ring-purple-200 dark:ring-purple-800"
+                        : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
+                    }`}
+                  >
+                    {t("cover_letter.resume_lang_en")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setResumeLanguage("jd")}
+                    className={`flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+                      resumeLanguage === "jd"
+                        ? "bg-purple-50 border-purple-300 text-purple-700 dark:bg-purple-900/30 dark:border-purple-600 dark:text-purple-300 ring-2 ring-purple-200 dark:ring-purple-800"
+                        : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
+                    }`}
+                  >
+                    {t("cover_letter.resume_lang_jd")}
+                  </button>
+                </div>
+              </div>
+            )}
 
             <button
               type="submit"
