@@ -2925,6 +2925,36 @@ export const translations: Translations = {
     uk: "Почати зараз — це безкоштовно",
     ru: "Начать сейчас — это бесплатно",
   },
+  "error.404.title": {
+    en: "404 - Page Not Found",
+    uk: "404 - Сторінку не знайдено",
+    ru: "404 - Страница не найдена",
+  },
+  "error.404.subtitle": {
+    en: "The page you are looking for doesn't exist or has been moved.",
+    uk: "Сторінка, яку ви шукаєте, не існує або була перенесена.",
+    ru: "Страница, которую вы ищете, не существует или была перенесена.",
+  },
+  "error.500.title": {
+    en: "500 - Something Went Wrong",
+    uk: "500 - Щось пішло не так",
+    ru: "500 - Что-то пошло не так",
+  },
+  "error.500.subtitle": {
+    en: "An unexpected error occurred. Our team has been notified.",
+    uk: "Сталася неочікувана помилка. Наша команда вже отримала сповіщення.",
+    ru: "Произошла непредвиденная ошибка. Наша команда уже уведомлена.",
+  },
+  "error.back_home": {
+    en: "Back to Home",
+    uk: "На головну",
+    ru: "На главную",
+  },
+  "error.retry": {
+    en: "Try Again",
+    uk: "Спробувати ще раз",
+    ru: "Попробовать снова",
+  },
 };
 
 /** Server-side helper */
