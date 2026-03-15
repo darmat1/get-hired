@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signIn, signUp, authClient } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
+import { signIn, signUp, authClient, useSession } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header";
@@ -18,6 +18,13 @@ export default function SignUpPage() {
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

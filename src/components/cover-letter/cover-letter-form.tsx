@@ -15,6 +15,7 @@ import {
   Globe,
 } from "lucide-react";
 import Link from "next/link";
+import { refreshAiQuota } from "@/components/ui/ai-quota-display";
 
 type CoverLetterFormat = "prose" | "bullet";
 type ResumeLanguage = "en" | "jd";
@@ -139,6 +140,7 @@ export function CoverLetterForm() {
           text: t("cover_letter.success.generated"),
         });
       }
+      refreshAiQuota();
     } catch (error) {
       setMessage({
         type: "error",

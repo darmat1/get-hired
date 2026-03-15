@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { useTranslation } from "@/lib/translations";
+import { refreshAiQuota } from "@/components/ui/ai-quota-display";
 
 interface ResumeVariant {
   id: string;
@@ -137,6 +138,7 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
         const data = await response.json();
         const variantsArray = Array.isArray(data.variants) ? data.variants : [];
         setVariants(variantsArray);
+        refreshAiQuota();
       }
     } catch (error) {
       console.error("Failed to generate suggestions:", error);

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { AIService, getAvailableAIServices } from "@/lib/ai-services";
+import { Modal } from "@/components/ui/modal";
 
 export function AIKeysForm() {
   const { t } = useTranslation();
@@ -35,6 +36,12 @@ export function AIKeysForm() {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    serviceId: string | null;
+    serviceName: string | null;
+  }>({ isOpen: false, serviceId: null, serviceName: null });
 
   // console.log("[AIKeysForm] Rendered. Services scope:", services.length);
 
@@ -131,8 +138,14 @@ export function AIKeysForm() {
     }
   };
 
-  const handleDelete = async (serviceId: string) => {
-    if (!confirm(t("ai_settings.unlink"))) return;
+  const confirmDelete = (serviceId: string, serviceName: string) => {
+    setDeleteModal({ isOpen: true, serviceId, serviceName });
+  };
+
+  const handleDelete = async () => {
+    if (!deleteModal.serviceId) return;
+    const serviceId = deleteModal.serviceId;
+    setDeleteModal({ isOpen: false, serviceId: null, serviceName: null });
 
     setLoading(true);
     setMessage(null);
@@ -285,7 +298,7 @@ export function AIKeysForm() {
                     )}
                     {isConnected && (
                       <button
-                        onClick={() => handleDelete(service.id)}
+                        onClick={() => confirmDelete(service.id, service.name)}
                         disabled={loading}
                         className="p-1.5 text-slate-400 hover:text-red-600 transition-colors disabled:opacity-50"
                         title={t("ai_settings.unlink")}
@@ -474,6 +487,43 @@ export function AIKeysForm() {
           })}
         </div>
       </div>
+
+      <Modal
+        isOpen={deleteModal.isOpen}
+        onClose={() =>
+          setDeleteModal({ isOpen: false, serviceId: null, serviceName: null })
+        }
+        title={t("ai_settings.unlink") || "Unlink API Key"}
+        footer={
+          <>
+            <button
+              onClick={() =>
+                setDeleteModal({
+                  isOpen: false,
+                  serviceId: null,
+                  serviceName: null,
+                })
+              }
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-200 rounded-md transition-colors"
+            >
+              {t("common.cancel") || "Cancel"}
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors flex items-center justify-center gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              {t("ai_settings.unlink") || "Unlink"}
+            </button>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-4 text-slate-600 dark:text-slate-400">
+          <p>
+            {t("ai_settings.unlink_confirm")} <strong>{deleteModal.serviceName}</strong>?
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }

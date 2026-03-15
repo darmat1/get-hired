@@ -25,6 +25,7 @@ import {
 import { ResumeSuggestions } from "@/components/profile/resume-suggestions";
 import { extractTextFromPDF } from "@/components/resume/linkedin-import-button";
 import { LoadingScreen } from "@/components/ui/loading-screen";
+import { refreshAiQuota } from "@/components/ui/ai-quota-display";
 
 export default function MyExperiencePage() {
   const { t } = useTranslation();
@@ -213,6 +214,7 @@ export default function MyExperiencePage() {
 
       setMessage({ type: "success", text: t("profile.import_success") });
       loadFromDb(); // Refresh profile data into store
+      refreshAiQuota();
       setImportMode(null);
       setProfileText("");
       setFileName(null);

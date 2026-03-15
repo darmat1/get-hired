@@ -942,6 +942,11 @@ export const translations: Translations = {
     uk: "Видалити ключ",
     ru: "Удалить ключ",
   },
+  "ai_settings.unlink_confirm": {
+    en: "Are you sure you want to unlink your API key for",
+    uk: "Ви впевнені, що хочете видалити свій API ключ для",
+    ru: "Вы уверены, что хотите удалить свой API ключ для",
+  },
   "ai_settings.test_success": { en: "Success", uk: "Успішно", ru: "Успешно" },
   "ai_settings.test_failed": { en: "Failed", uk: "Помилка", ru: "Ошибка" },
   "ai_settings.key_hidden": {
@@ -2731,9 +2736,9 @@ export const translations: Translations = {
     ru: "Настройка AI",
   },
   "ai_warning.description": {
-    en: "To use AI features, please connect at least one AI provider. Groq offers free models for testing.",
-    uk: "Для використання AI функцій, додайте хоча б один ключ. Groq надає безкоштовні моделі.",
-    ru: "Для использования AI функций добавьте хотя бы один ключ. Groq предоставляет бесплатные модели.",
+    en: "To use AI features without daily limits, please connect at least one AI provider. This 10-request daily quota resets at 00:00 UTC.",
+    uk: "Щоб користуватися AI без обмежень, підключіть хоча б одного провайдера. Денна квота (10 запитів) оновлюється о 00:00 UTC.",
+    ru: "Чтобы использовать AI без ограничений, подключите хотя бы одного провайдера. Дневная квота (10 запросов) обнуляется в 00:00 UTC.",
   },
   "ai_warning.setup_link": {
     en: "Setup Keys",
@@ -2744,6 +2749,26 @@ export const translations: Translations = {
     en: "Get Free Groq Key",
     uk: "Отримати ключ Groq",
     ru: "Получить ключ Groq",
+  },
+  "ai_warning.quota_exhausted_title": {
+    en: "AI Quota Exhausted",
+    uk: "Ліміт AI вичерпано",
+    ru: "Лимит AI исчерпан",
+  },
+  "ai_warning.quota_exhausted_desc": {
+    en: "You have used all 10 daily free AI generations. The quota resets at 00:00 UTC. Please connect your own API key to continue.",
+    uk: "Ви вичерпали ліміт (10 запитів на день). Квота оновиться о 00:00 UTC. Підключіть власний ключ, щоб продовжити.",
+    ru: "Вы исчерпали лимит (10 запросов в день). Квота обнулится в 00:00 UTC. Подключите собственный ключ, чтобы продолжить.",
+  },
+  "ai_quota.daily_label": {
+    en: "Daily Free AI",
+    uk: "Щоденний AI",
+    ru: "Ежедневный AI",
+  },
+  "ai_quota.reset_hint": {
+    en: "Daily quota resets at 00:00 UTC",
+    uk: "Квота оновлюється щодня о 00:00 UTC",
+    ru: "Квота обнуляется ежедневно в 00:00 UTC",
   },
   "ai.analyze_job": {
     en: "Analyze Job Description",

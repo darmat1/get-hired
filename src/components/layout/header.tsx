@@ -12,6 +12,7 @@ import { usePathname } from "next/navigation";
 import { MD5 } from "crypto-js";
 import { LogIn } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AiQuotaDisplay } from "@/components/ui/ai-quota-display";
 
 export function Header() {
   const { data: session, isPending } = useSession();
@@ -82,6 +83,7 @@ export function Header() {
             <div className="flex items-center space-x-2">
               <ThemeToggle />
               <LanguageSelector />
+              {isApplicationPage && session && <AiQuotaDisplay />}
             </div>
 
             {!isApplicationPage && (
@@ -89,13 +91,15 @@ export function Header() {
                 {isPending ? (
                   <div className="h-8 w-32 animate-pulse bg-slate-200 dark:bg-slate-700 rounded"></div>
                 ) : session ? (
-                  <UserMenu
-                    userName={session.user?.name || ""}
-                    userEmail={session.user?.email || ""}
-                    userImage={session.user?.image || undefined}
-                    gravatarUrl={gravatarUrl}
-                    userRole={(session.user as any)?.role}
-                  />
+                  <div className="flex items-center space-x-4">
+                    <UserMenu
+                      userName={session.user?.name || ""}
+                      userEmail={session.user?.email || ""}
+                      userImage={session.user?.image || undefined}
+                      gravatarUrl={gravatarUrl}
+                      userRole={(session.user as any)?.role}
+                    />
+                  </div>
                 ) : (
                   <LocalizedLink
                     href="/auth/signin"
