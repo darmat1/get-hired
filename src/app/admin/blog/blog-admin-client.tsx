@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Loader,
   Image as ImageIcon,
@@ -9,8 +9,15 @@ import {
   Plus,
   Link2,
   Copy,
+  FileJson,
 } from "lucide-react";
-import { createPost, deletePost, updatePost } from "@/lib/actions/blog";
+import {
+  createPost,
+  deletePost,
+  updatePost,
+  getNextPendingPost,
+  checkBlogPostsJsonExists,
+} from "@/lib/actions/blog";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -30,8 +37,14 @@ export default function BlogAdminClient({
   hasGroqKey?: boolean;
 }) {
   const [posts, setPosts] = useState(initialPosts);
+  useEffect(() => {
+    checkBlogPostsJsonExists().then(setHasPostsJson);
+  }, []);
+
   const [isCreating, setIsCreating] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isFilling, setIsFilling] = useState(false);
+  const [hasPostsJson, setHasPostsJson] = useState<boolean>(false);
 
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"en" | "ru" | "uk">("en");
@@ -266,6 +279,35 @@ export default function BlogAdminClient({
     }
   };
 
+  const handleFillFromJson = async () => {
+    setIsFilling(true);
+    try {
+      const result = await getNextPendingPost();
+      if ("error" in result) {
+        alert(result.error);
+        return;
+      }
+
+      if (!result.nextPost) {
+        alert("No more pending posts in posts.json!");
+        return;
+      }
+
+      const { slug, topic, prompt } = result.nextPost;
+      setFormData({
+        ...formData,
+        slug,
+        topic,
+        requirements: prompt,
+      });
+    } catch (err) {
+      console.error("[Blog] Fill from JSON error:", err);
+      alert("Error filling from JSON");
+    } finally {
+      setIsFilling(false);
+    }
+  };
+
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!confirm("Are you sure?")) return;
@@ -300,6 +342,21 @@ export default function BlogAdminClient({
               className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-lg transition"
             >
               Cancel Edit
+            </button>
+          )}
+          {!editingPostId && hasPostsJson && (
+            <button
+              type="button"
+              onClick={handleFillFromJson}
+              disabled={isFilling}
+              className="px-4 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg transition flex items-center gap-2 border border-emerald-100 dark:border-emerald-800/50 shadow-sm"
+            >
+              {isFilling ? (
+                <Loader className="h-4 w-4 animate-spin" />
+              ) : (
+                <FileJson className="h-4 w-4" />
+              )}
+              Auto-generate post
             </button>
           )}
         </div>
@@ -430,9 +487,7 @@ export default function BlogAdminClient({
                     <option value="gemini">
                       ✨ Gemini 2.5 Flash (recommended)
                     </option>
-                    <option value="gemini-lite">
-                      Gemini 3.1 Flash Lite
-                    </option>
+                    <option value="gemini-lite">Gemini 3.1 Flash Lite</option>
                   </>
                 )}
                 {hasGroqKey && (
@@ -576,9 +631,9 @@ export default function BlogAdminClient({
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
             <div className="flex space-x-2 border-b border-slate-200 dark:border-slate-700 mb-6">
               {[
-                { id: "en", label: "English 🇬🇧" },
-                { id: "ru", label: "Russian 🇷🇺" },
-                { id: "uk", label: "Ukrainian 🇺🇦" },
+                { id: "en", label: "English" },
+                { id: "ru", label: "Russian" },
+                { id: "uk", label: "Ukrainian" },
               ].map((tab) => (
                 <button
                   key={tab.id}

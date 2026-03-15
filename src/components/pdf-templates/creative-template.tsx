@@ -253,7 +253,7 @@ export function CreativeTemplate({ resume }: TemplateProps) {
                 )}
               </Text>
               {workExperience.map((exp, index) => (
-                <View key={index} style={styles.jobBlock}>
+                <View key={index} style={styles.jobBlock} wrap={false}>
                   <Text style={styles.jobTitle}>{exp.title}</Text>
                   <View style={styles.jobMeta}>
                     <Text style={{ fontStyle: "italic" }}>
@@ -294,7 +294,7 @@ export function CreativeTemplate({ resume }: TemplateProps) {
                 {getTranslation("form.education", resume.language || "en")}
               </Text>
               {education.map((edu, index) => (
-                <View key={index} style={styles.jobBlock}>
+                <View key={index} style={styles.jobBlock} wrap={false}>
                   <Text style={styles.jobTitle}>{edu.institution}</Text>
                   <View style={styles.jobMeta}>
                     <Text>{edu.degree}</Text>

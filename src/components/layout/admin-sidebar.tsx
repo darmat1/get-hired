@@ -10,8 +10,15 @@ import { UserMenu } from "@/components/ui/user-menu";
 import { useSession } from "@/lib/auth-client";
 import { MD5 } from "crypto-js";
 
+import { useState, useEffect } from "react";
+
 export function AdminSidebar() {
   const { t } = useTranslation();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const pathname = usePathname();
   const { data: session } = useSession();
 
@@ -57,7 +64,7 @@ export function AdminSidebar() {
               Blog
             </LocalizedLink>
           </li>
-          {["superadmin", "admin"].includes(userRole) && (
+          {isMounted && ["superadmin", "admin"].includes(userRole) && (
             <li>
               <LocalizedLink
                 href="/admin/users"
@@ -75,7 +82,7 @@ export function AdminSidebar() {
         </ul>
       </nav>
       <div className="py-4 mt-auto">
-        {session && (
+        {isMounted && session && (
           <div className="px-4 pt-2 border-t border-slate-200 dark:border-slate-700">
             <UserMenu
               userName={session.user?.name || ""}
