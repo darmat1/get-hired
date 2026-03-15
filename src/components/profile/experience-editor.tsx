@@ -16,6 +16,7 @@ import {
 import { useTranslation } from "@/lib/translations";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Modal } from "@/components/ui/modal";
+import { refreshAiQuota } from "@/components/ui/ai-quota-display";
 
 interface AutosizeTextareaProps {
   value: string;
@@ -197,6 +198,7 @@ export function ExperienceEditor({ data, onChange, onSave }: ExperienceEditorPro
           setSelectedExp(null);
           setIsModalOpen(false);
         }
+        refreshAiQuota();
       }
     } catch (error) {
       console.error("Failed to analyze company:", error);

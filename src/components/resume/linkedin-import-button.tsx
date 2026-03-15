@@ -10,6 +10,7 @@ import {
   ClipboardList,
   Upload,
 } from "lucide-react";
+import { refreshAiQuota } from "@/components/ui/ai-quota-display";
 
 interface SmartImportButtonProps {
   onImportSuccess: () => void;
@@ -117,6 +118,8 @@ export function LinkedInImportButton({
       if (!response.ok) {
         throw new Error(data.error || t("resume.error.linkedin_import_failed"));
       }
+
+      refreshAiQuota();
 
       setMessage({
         type: "success",

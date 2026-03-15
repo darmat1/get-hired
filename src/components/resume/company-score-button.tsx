@@ -14,6 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
+import { refreshAiQuota } from "@/components/ui/ai-quota-display";
 
 interface CompanyScoreButtonProps {
   experience: WorkExperience;
@@ -50,6 +51,7 @@ export function CompanyScoreButton({
         const result = await response.json();
         setScore(result);
         onScoreUpdate?.(experience.id, result);
+        refreshAiQuota();
       }
     } catch (error) {
       console.error("Failed to analyze company:", error);

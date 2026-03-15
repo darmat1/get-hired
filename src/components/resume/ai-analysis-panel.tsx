@@ -13,6 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
+import { refreshAiQuota } from "@/components/ui/ai-quota-display";
 
 interface AIAnalysisPanelProps {
   resume: Partial<Resume>;
@@ -109,6 +110,7 @@ export function AIAnalysisPanel({
           highlights.push({ field: item.field, severity: "green", message: item.strength });
         });
         onHighlightsChange?.(highlights);
+        refreshAiQuota();
       } else {
         const errorData = await response.json().catch(() => ({}));
         setError(errorData.error || "Failed to analyze resume. Please try again.");

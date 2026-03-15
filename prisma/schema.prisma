@@ -36,6 +36,10 @@ model User {
   role                String  @default("user")
   posts               Post[]
 
+  // Free AI Quota
+  freeAiGenerationsCount Int       @default(0)
+  lastFreeAiUsage        DateTime?
+
   @@map("user")
 }
 

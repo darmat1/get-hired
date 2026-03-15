@@ -11,7 +11,7 @@ export class GroqProvider implements AIProvider {
   name = "Groq";
 
   isAvailable(): boolean {
-    return !!process.env.GROQ_API_KEY;
+    return !!(process.env.GROQ_API_KEY || process.env.GH_GROQ_API_KEY);
   }
 
   async complete(request: AICompletionRequest): Promise<AICompletionResponse> {
@@ -22,7 +22,7 @@ export class GroqProvider implements AIProvider {
     request: AICompletionRequest,
     isRetry = false,
   ): Promise<AICompletionResponse> {
-    const apiKey = request.apiKey || process.env.GROQ_API_KEY;
+    const apiKey = request.apiKey || process.env.GROQ_API_KEY || process.env.GH_GROQ_API_KEY;
     if (!apiKey) throw new Error("[AI] Groq API key is missing");
 
     const model =

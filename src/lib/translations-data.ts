@@ -942,6 +942,11 @@ export const translations: Translations = {
     uk: "Видалити ключ",
     ru: "Удалить ключ",
   },
+  "ai_settings.unlink_confirm": {
+    en: "Are you sure you want to unlink your API key for",
+    uk: "Ви впевнені, що хочете видалити свій API ключ для",
+    ru: "Вы уверены, что хотите удалить свой API ключ для",
+  },
   "ai_settings.test_success": { en: "Success", uk: "Успішно", ru: "Успешно" },
   "ai_settings.test_failed": { en: "Failed", uk: "Помилка", ru: "Ошибка" },
   "ai_settings.key_hidden": {
@@ -2726,14 +2731,24 @@ export const translations: Translations = {
   },
 
   "ai_warning.title": {
+    en: "⏳ Daily AI Limit Reached",
+    uk: "⏳ Денний ліміт AI вичерпано!",
+    ru: "⏳ Дневной лимит AI исчерпан!",
+  },
+  "ai_warning.available_title": {
     en: "AI Configuration Required",
     uk: "Налаштування AI",
     ru: "Настройка AI",
   },
   "ai_warning.description": {
-    en: "To use AI features, please connect at least one AI provider. Groq offers free models for testing.",
-    uk: "Для використання AI функцій, додайте хоча б один ключ. Groq надає безкоштовні моделі.",
-    ru: "Для использования AI функций добавьте хотя бы один ключ. Groq предоставляет бесплатные модели.",
+    en: "To use AI features without daily limits, please connect at least one AI provider. This 10-request daily quota resets at 00:00 UTC.",
+    uk: "Щоб користуватися AI без обмежень, підключіть хоча б одного провайдера. Денна квота (10 запитів) оновлюється о 00:00 UTC.",
+    ru: "Чтобы использовать AI без ограничений, подключите хотя бы одного провайдера. Дневная квота (10 запросов) обнуляется в 00:00 UTC.",
+  },
+  "ai_warning.quota_exhausted_title": {
+    en: "AI Quota Exhausted for Today!",
+    uk: "Ви вичерпали всі 10 безкоштовних генерацій!",
+    ru: "Вы использовали все 10 бесплатных генераций!",
   },
   "ai_warning.setup_link": {
     en: "Setup Keys",
@@ -2744,6 +2759,36 @@ export const translations: Translations = {
     en: "Get Free Groq Key",
     uk: "Отримати ключ Groq",
     ru: "Получить ключ Groq",
+  },
+  "ai_warning.quota_exhausted_desc": {
+    en: "Your balance will automatically refill in {timer}. Need more right now? Connect your personal Groq key in 1 minute — it's absolutely free!",
+    uk: "Ваш баланс автоматично поповниться через {timer}. Потрібно більше прямо зараз? Підключіть власний ключ Groq за 1 хвилину — це абсолютно безкоштовно!",
+    ru: "Ваш баланс автоматически пополнится через {timer}. Нужно больше прямо сейчас? Подключите собственный ключ Groq за 1 минуту — это абсолютно бесплатно!",
+  },
+  "ai_warning.setup_link_free": {
+    en: "Connect Your Key (Free)",
+    uk: "Підключити свій ключ (Безкоштовно)",
+    ru: "Подключить свой ключ (Бесплатно)",
+  },
+  "ai.hours": {
+    en: "h",
+    uk: "год",
+    ru: "ч",
+  },
+  "ai.minutes": {
+    en: "m",
+    uk: "хв",
+    ru: "мин",
+  },
+  "ai_quota.daily_label": {
+    en: "Daily Free AI",
+    uk: "Щоденний AI",
+    ru: "Ежедневный AI",
+  },
+  "ai_quota.reset_hint": {
+    en: "Daily quota resets at 00:00 UTC",
+    uk: "Квота оновлюється щодня о 00:00 UTC",
+    ru: "Квота обнуляется ежедневно в 00:00 UTC",
   },
   "ai.analyze_job": {
     en: "Analyze Job Description",

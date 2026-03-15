@@ -95,12 +95,65 @@ export async function aiComplete(
     );
   }
 
+  // 2.1 Enforce Free Quota
+  let userForQuota: { freeAiGenerationsCount: number; lastFreeAiUsage: Date | null; } | null = null;
+  if (userId) {
+    userForQuota = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { freeAiGenerationsCount: true, lastFreeAiUsage: true }
+    });
+
+    if (userForQuota) {
+      let count = userForQuota.freeAiGenerationsCount;
+
+      if (userForQuota.lastFreeAiUsage) {
+        const lastUsageDate = new Date(userForQuota.lastFreeAiUsage);
+        const today = new Date();
+        if (
+          lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
+          lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
+          lastUsageDate.getUTCDate() !== today.getUTCDate()
+        ) {
+          count = 0;
+        }
+      }
+
+      if (count >= 10) {
+        throw new Error("You have exhausted your 10 free AI generations for today. Please connect your own API key in your profile settings to continue.");
+      }
+    }
+  }
+
   for (const provider of systemProviders) {
     try {
       console.log(
         `[AI] Trying system provider: ${provider.name} (${provider.id})`,
       );
       const response = await provider.complete(request);
+      
+      // 2.2 Increment Quota on Success
+      if (userId && userForQuota) {
+         let count = userForQuota.freeAiGenerationsCount;
+         if (userForQuota.lastFreeAiUsage) {
+            const lastUsageDate = new Date(userForQuota.lastFreeAiUsage);
+            const today = new Date();
+             if (
+              lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
+              lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
+              lastUsageDate.getUTCDate() !== today.getUTCDate()
+            ) {
+              count = 0;
+            }
+         }
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            freeAiGenerationsCount: count + 1,
+            lastFreeAiUsage: new Date()
+          }
+        });
+      }
+
       console.log(
         `[AI] Success (System): ${provider.name}, model: ${response.model}`,
       );
