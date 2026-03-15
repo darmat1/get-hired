@@ -10,6 +10,9 @@ import {
   Link2,
   Copy,
   FileJson,
+  Share2,
+  AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 import {
   createPost,
@@ -17,8 +20,11 @@ import {
   updatePost,
   getNextPendingPost,
   checkBlogPostsJsonExists,
+  publishToBlogger,
 } from "@/lib/actions/blog";
 import { createClient } from "@supabase/supabase-js";
+import { BlogContentEditor } from "@/components/admin/blog-content-editor";
+import { Modal } from "@/components/ui/modal";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -44,10 +50,25 @@ export default function BlogAdminClient({
   const [isCreating, setIsCreating] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isFilling, setIsFilling] = useState(false);
+  const [isPublishing, setIsPublishing] = useState<string | null>(null);
   const [hasPostsJson, setHasPostsJson] = useState<boolean>(false);
 
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"en" | "ru" | "uk">("en");
+
+  // Modal State
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    type: "confirm" | "success" | "error";
+    message: string | React.ReactNode;
+    onConfirm?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    type: "confirm",
+    message: "",
+  });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -216,9 +237,14 @@ export default function BlogAdminClient({
       }
 
       clearForm();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Error saving post or uploading image");
+      setModal({
+        isOpen: true,
+        title: "Error",
+        type: "error",
+        message: "Error saving post or uploading image: " + (err.message || String(err)),
+      });
     } finally {
       setIsCreating(false);
     }
@@ -308,16 +334,77 @@ export default function BlogAdminClient({
     }
   };
 
+  const handlePublishToBlogger = async (e: React.MouseEvent, postId: string) => {
+    e.stopPropagation();
+    
+    setModal({
+      isOpen: true,
+      title: "Publish to Blogger",
+      type: "confirm",
+      message: "Are you sure you want to publish this post to Blogspot immediately?",
+      onConfirm: async () => {
+        setModal((prev) => ({ ...prev, isOpen: false }));
+        setIsPublishing(postId);
+        try {
+          const result = await publishToBlogger(postId);
+          if (result.success) {
+            setModal({
+              isOpen: true,
+              title: "Publication Successful",
+              type: "success",
+              message: (
+                <div className="space-y-4">
+                  <p>Successfully published to Blogger!</p>
+                  <a 
+                    href={result.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white transition break-all"
+                  >
+                    {result.url}
+                  </a>
+                </div>
+              )
+            });
+          }
+        } catch (error: any) {
+          setModal({
+            isOpen: true,
+            title: "Publication Failed",
+            type: "error",
+            message: error.message || "Failed to publish to Blogger",
+          });
+        } finally {
+          setIsPublishing(null);
+        }
+      }
+    });
+  };
+
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm("Are you sure?")) return;
-    try {
-      await deletePost(id);
-      setPosts(posts.filter((p) => p.id !== id));
-      if (editingPostId === id) clearForm();
-    } catch (err) {
-      alert("Error deleting post");
-    }
+    
+    setModal({
+      isOpen: true,
+      title: "Confirm Deletion",
+      type: "confirm",
+      message: "Are you sure you want to delete this post? This action cannot be undone.",
+      onConfirm: async () => {
+        setModal((prev) => ({ ...prev, isOpen: false }));
+        try {
+          await deletePost(id);
+          setPosts(posts.filter((p) => p.id !== id));
+          if (editingPostId === id) clearForm();
+        } catch (err: any) {
+          setModal({
+            isOpen: true,
+            title: "Deletion Failed",
+            type: "error",
+            message: err.message || "Error deleting post",
+          });
+        }
+      }
+    });
   };
 
   const noKeysAvailable = !hasGeminiKey && !hasOpenRouterKey && !hasGroqKey;
@@ -676,19 +763,20 @@ export default function BlogAdminClient({
                   })
                 }
               />
-              <textarea
-                placeholder={`Body (${activeTab.toUpperCase()}) - HTML supported`}
-                required={activeTab === "en"}
-                rows={15}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white font-mono text-sm"
-                value={(formData as any)[`body_${activeTab}`]}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    [`body_${activeTab}`]: e.target.value,
-                  })
-                }
-              />
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Body ({activeTab.toUpperCase()}) - HTML supported
+                </label>
+                <BlogContentEditor
+                  value={(formData as any)[`body_${activeTab}`]}
+                  onChange={(val) =>
+                    setFormData({
+                      ...formData,
+                      [`body_${activeTab}`]: val,
+                    })
+                  }
+                />
+              </div>
             </div>
           </div>
 
@@ -780,13 +868,30 @@ export default function BlogAdminClient({
                 </div>
               </div>
 
-              <button
-                onClick={(e) => handleDelete(post.id, e)}
-                className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition ml-auto"
-                title="Delete Post"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1 ml-auto">
+                {post.published && (
+                  <button
+                    onClick={(e) => handlePublishToBlogger(e, post.id)}
+                    disabled={isPublishing === post.id}
+                    className="p-2 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-md transition"
+                    title="Publish to Blogspot"
+                  >
+                    {isPublishing === post.id ? (
+                      <Loader className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Share2 className="h-4 w-4" />
+                    )}
+                  </button>
+                )}
+
+                <button
+                  onClick={(e) => handleDelete(post.id, e)}
+                  className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition"
+                  title="Delete Post"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           ))}
           {posts.length === 0 && (
@@ -796,6 +901,45 @@ export default function BlogAdminClient({
           )}
         </div>
       </div>
+
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal((prev) => ({ ...prev, isOpen: false }))}
+        title={modal.title}
+        footer={
+          <div className="flex gap-2">
+            <button
+              onClick={() => setModal((prev) => ({ ...prev, isOpen: false }))}
+              className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700 transition"
+            >
+              Cancel
+            </button>
+            {modal.type === "confirm" && (
+              <button
+                onClick={modal.onConfirm}
+                className="px-4 py-2 text-sm font-medium text-white bg-slate-600 rounded-lg hover:bg-slate-700 transition shadow-sm"
+              >
+                Confirm
+              </button>
+            )}
+          </div>
+        }
+      >
+        <div className="flex items-start gap-4">
+          <div className={`p-2 rounded-full flex-shrink-0 ${
+            modal.type === "success" ? "bg-emerald-100 text-emerald-600" :
+            modal.type === "error" ? "bg-red-100 text-red-600" :
+            "bg-slate-100 text-slate-600"
+          }`}>
+            {modal.type === "success" ? <CheckCircle2 className="w-6 h-6" /> :
+             modal.type === "error" ? <AlertCircle className="w-6 h-6" /> :
+             <Share2 className="w-6 h-6" />}
+          </div>
+          <div className="flex-1 text-sm text-slate-600 dark:text-slate-400">
+            {modal.message}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
