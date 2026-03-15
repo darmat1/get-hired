@@ -19,6 +19,7 @@ import {
   checkBlogPostsJsonExists,
 } from "@/lib/actions/blog";
 import { createClient } from "@supabase/supabase-js";
+import { BlogContentEditor } from "@/components/admin/blog-content-editor";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -676,19 +677,20 @@ export default function BlogAdminClient({
                   })
                 }
               />
-              <textarea
-                placeholder={`Body (${activeTab.toUpperCase()}) - HTML supported`}
-                required={activeTab === "en"}
-                rows={15}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white font-mono text-sm"
-                value={(formData as any)[`body_${activeTab}`]}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    [`body_${activeTab}`]: e.target.value,
-                  })
-                }
-              />
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Body ({activeTab.toUpperCase()}) - HTML supported
+                </label>
+                <BlogContentEditor
+                  value={(formData as any)[`body_${activeTab}`]}
+                  onChange={(val) =>
+                    setFormData({
+                      ...formData,
+                      [`body_${activeTab}`]: val,
+                    })
+                  }
+                />
+              </div>
             </div>
           </div>
 
