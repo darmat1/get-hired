@@ -132,3 +132,53 @@ export async function deletePost(id: string) {
   revalidatePath("/blog");
   revalidateTag(BLOG_TAG, "max");
 }
+
+export async function getNextPendingPost() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const userRole = (session?.user as any)?.role?.toLowerCase();
+  if (!session || !["superadmin", "admin", "publisher"].includes(userRole)) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const postsJsonPath = path.join(process.cwd(), "posts.json");
+
+    if (!fs.existsSync(postsJsonPath)) {
+      return { error: "posts.json not found" };
+    }
+
+    const fileContent = fs.readFileSync(postsJsonPath, "utf-8");
+    const blogTopics = JSON.parse(fileContent);
+
+    const existingPosts = await prisma.post.findMany({
+      select: { slug: true },
+    });
+    const existingSlugs = new Set(existingPosts.map((p) => p.slug));
+
+    const nextPost = blogTopics.find(
+      (topic: any) => !existingSlugs.has(topic.slug),
+    );
+
+    return { nextPost: nextPost || null };
+  } catch (error) {
+    console.error("Error reading posts.json:", error);
+    return { error: "Failed to read posts.json" };
+  }
+}
+
+export async function checkBlogPostsJsonExists() {
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const postsJsonPath = path.join(process.cwd(), "posts.json");
+    return fs.existsSync(postsJsonPath);
+  } catch (error) {
+    console.error("Error checking posts.json existence:", error);
+    return false;
+  }
+}

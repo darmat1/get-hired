@@ -2955,6 +2955,21 @@ export const translations: Translations = {
     uk: "Спробувати ще раз",
     ru: "Попробовать снова",
   },
+  "cookie.message": {
+    en: "This website uses cookies to ensure you get the best experience on our website.",
+    uk: "Цей сайт використовує файли cookie для покращення вашої взаємодії з ним.",
+    ru: "Этот сайт использует файлы cookie для улучшения вашего пользовательского опыта.",
+  },
+  "cookie.accept": {
+    en: "Accept",
+    uk: "Прийняти",
+    ru: "Принять",
+  },
+  "cookie.settings": {
+    en: "Cookie Settings",
+    uk: "Налаштування cookie",
+    ru: "Настройки cookie",
+  },
 };
 
 /** Server-side helper */
