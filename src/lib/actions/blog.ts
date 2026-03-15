@@ -171,6 +171,100 @@ export async function getNextPendingPost() {
   }
 }
 
+export async function publishToBlogger(postId: string) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const userRole = (session?.user as any)?.role?.toLowerCase();
+  if (!session || !["superadmin", "admin"].includes(userRole)) {
+    throw new Error("Unauthorized");
+  }
+
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+  });
+
+  if (!post) throw new Error("Post not found");
+
+  const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+  const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+  const GOOGLE_REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
+  const BLOGGER_BLOG_ID = process.env.BLOGGER_BLOG_ID;
+
+  if (
+    !GOOGLE_CLIENT_ID ||
+    !GOOGLE_CLIENT_SECRET ||
+    !GOOGLE_REFRESH_TOKEN ||
+    !BLOGGER_BLOG_ID
+  ) {
+    throw new Error("Missing Blogger configuration in environment variables");
+  }
+
+  // 1. Get Access Token from Refresh Token
+  const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
+      refresh_token: GOOGLE_REFRESH_TOKEN,
+      grant_type: "refresh_token",
+    }),
+  });
+
+  const tokenData = await tokenResponse.json();
+  if (!tokenData.access_token) {
+    console.error("Token error:", tokenData);
+    throw new Error("Failed to refresh Google access token");
+  }
+
+  const accessToken = tokenData.access_token;
+
+  // 2. Prepare content (English version)
+  const content = post.content as any;
+  const title = content.en?.title || "Untitled";
+  let body = content.en?.body || "";
+
+  // 3. Transform image URLs in body if they match internal storage
+  if (post.imageUrl) {
+    const filename = post.imageUrl.split("/").pop();
+    const cdnImageUrl = `https://gethired.work/storage/v1/object/public/blog/${filename}`;
+    
+    // If post has an image, we can prepend it to the body for Blogger
+    body = `<img src="${cdnImageUrl}" alt="${title}" style="width:100%; max-width:800px; height:auto; display:block; margin: 0 auto 20px;" />\n${body}`;
+  }
+
+  // 4. Add link to original post
+  const originalUrl = `https://gethired.work/blog/${post.slug}`;
+  body += `<br/><br/><hr/><p>Original post: <a href="${originalUrl}">${originalUrl}</a></p>`;
+
+  // 5. Publish to Blogger
+  const bloggerResponse = await fetch(
+    `https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts/?isDraft=false`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        kind: "blogger#post",
+        title: title,
+        content: body,
+      }),
+    }
+  );
+
+  const result = await bloggerResponse.json();
+  if (result.error) {
+    console.error("Blogger API error:", result.error);
+    throw new Error(result.error.message || "Failed to publish to Blogger");
+  }
+
+  return { success: true, url: result.url };
+}
+
 export async function checkBlogPostsJsonExists() {
   try {
     const fs = require("fs");
