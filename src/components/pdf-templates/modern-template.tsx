@@ -10,6 +10,7 @@ import {
 import { Resume } from "@/types/resume";
 import { FormattedText } from "@/lib/pdf-utils";
 import { getTranslation } from "@/lib/translations-data";
+import { formatResumeDate } from "@/lib/format-resume-date";
 
 // Register fonts
 Font.register({
@@ -293,11 +294,9 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
               {education.map((edu, idx) => (
                 <View key={idx} style={{ marginBottom: 10 }}>
                   <Text style={{ fontSize: 9, fontWeight: "bold" }}>
-                    {edu.startDate?.split("-")[0] || ""}
+                    {formatResumeDate(edu.startDate)}
                     {edu.endDate || edu.current
-                      ? ` - ${
-                          edu.current ? "Present" : edu.endDate?.split("-")[0]
-                        }`
+                      ? ` - ${edu.current ? "Present" : formatResumeDate(edu.endDate)}`
                       : ""}
                   </Text>
                   <Text
@@ -547,8 +546,8 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                   {/* Content Column */}
                   <View style={styles.contentColumn}>
                     <Text style={styles.dateRange}>
-                      {exp.startDate ? exp.startDate.split("-")[0] : ""} -{" "}
-                      {exp.current ? "Present" : exp.endDate?.split("-")[0]}
+                      {formatResumeDate(exp.startDate)} -{" "}
+                      {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                     </Text>
                     <Text style={styles.expCompany}>
                       {exp.company}

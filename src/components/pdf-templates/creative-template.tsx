@@ -10,6 +10,7 @@ import {
 import { Resume } from "@/types/resume";
 import { FormattedText } from "@/lib/pdf-utils";
 import { getTranslation } from "@/lib/translations-data";
+import { formatResumeDate } from "@/lib/format-resume-date";
 
 Font.register({
   family: "Roboto",
@@ -262,7 +263,7 @@ export function CreativeTemplate({ resume }: TemplateProps) {
                         ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
                     </Text>
                     <Text>
-                      {exp.startDate} - {exp.current ? "Present" : exp.endDate}
+                      {formatResumeDate(exp.startDate)} - {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                     </Text>
                   </View>
                   {exp.mainDescription && (
@@ -299,7 +300,7 @@ export function CreativeTemplate({ resume }: TemplateProps) {
                   <View style={styles.jobMeta}>
                     <Text>{edu.degree}</Text>
                     <Text>
-                      {edu.startDate} - {edu.current ? "Present" : edu.endDate}
+                      {formatResumeDate(edu.startDate)} - {edu.current ? "Present" : formatResumeDate(edu.endDate)}
                     </Text>
                   </View>
                 </View>

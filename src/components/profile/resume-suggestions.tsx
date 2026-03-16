@@ -155,14 +155,23 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
       const profile = useProfileStore.getState().profile;
 
       // Filter experience/skills based on variant selection
-      const workExp = Array.isArray(profile.workExperience) ? profile.workExperience : [];
+      const workExp = Array.isArray(profile.workExperience)
+        ? profile.workExperience
+        : [];
       const skills = Array.isArray(profile.skills) ? profile.skills : [];
       const filteredExp = workExp.filter((exp: any) =>
         variant.selectedExp.includes(exp.id),
       );
-      const filteredSkills = skills.filter((skill: any) =>
-        variant.selectedSkills.includes(skill.name),
-      );
+      const selectedSkillNames = new Set(variant.selectedSkills || []);
+
+      const filteredSkills = skills.filter((skill: any) => {
+        // Always include all soft skills and languages to avoid losing them
+        if (skill?.category === "soft" || skill?.category === "language") {
+          return true;
+        }
+        // For technical skills, follow AI-selected skills
+        return selectedSkillNames.has(skill?.name);
+      });
 
       const response = await fetch("/api/resumes", {
         method: "POST",

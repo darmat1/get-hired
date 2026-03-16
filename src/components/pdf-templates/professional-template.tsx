@@ -11,6 +11,7 @@ import {
 import { Resume } from "@/types/resume";
 import { FormattedText } from "@/lib/pdf-utils";
 import { getTranslation } from "@/lib/translations-data";
+import { formatResumeDate } from "@/lib/format-resume-date";
 
 const styles = StyleSheet.create({
   page: {
@@ -101,6 +102,29 @@ interface TemplateProps {
 
 export function ProfessionalTemplate({ resume }: TemplateProps) {
   const { personalInfo, workExperience, education, skills } = resume;
+
+  const getLevelLabel = (level?: string) => {
+    if (!level) return "";
+    const lang = resume.language || "en";
+
+    const variants = [
+      level,
+      level.toLowerCase(),
+      level.toUpperCase(),
+      level
+        .split(" ")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" "),
+    ];
+
+    for (const v of variants) {
+      const key = `skill.level.${v}`;
+      const translated = getTranslation(key, lang);
+      if (translated !== key) return translated;
+    }
+
+    return level;
+  };
 
   return (
     <Document>
@@ -265,7 +289,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                   </View>
                   <View>
                     <Text style={styles.dateLocation}>
-                      {exp.startDate} — {exp.current ? "Present" : exp.endDate}
+                      {formatResumeDate(exp.startDate)} — {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                     </Text>
                     <Text style={styles.dateLocation}>{exp.location}</Text>
                   </View>
@@ -324,7 +348,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                   </View>
                   <View>
                     <Text style={styles.dateLocation}>
-                      {edu.startDate} — {edu.current ? "Present" : edu.endDate}
+                      {formatResumeDate(edu.startDate)} — {edu.current ? "Present" : formatResumeDate(edu.endDate)}
                     </Text>
                   </View>
                 </View>
@@ -334,18 +358,47 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
         )}
 
         {skills.length > 0 && (
-          <View>
-            <Text style={styles.sectionTitle}>
-              {getTranslation("form.skills", resume.language || "en")}
-            </Text>
-            <View style={styles.skillsContainer}>
-              {skills.map((skill, index) => (
-                <Text key={index} style={styles.skillText}>
-                  • {skill.name}
+          <>
+            {/* Technical & Soft Skills */}
+            {(skills.some((s) => s.category === "technical") ||
+              skills.some((s) => s.category === "soft")) && (
+              <View>
+                <Text style={styles.sectionTitle}>
+                  {getTranslation("form.skills", resume.language || "en")}
                 </Text>
-              ))}
-            </View>
-          </View>
+                <View style={styles.skillsContainer}>
+                  {skills
+                    .filter(
+                      (s) => s.category === "technical" || s.category === "soft",
+                    )
+                    .map((skill, index) => (
+                      <Text key={index} style={styles.skillText}>
+                        • {skill.name}
+                      </Text>
+                    ))}
+                </View>
+              </View>
+            )}
+
+            {/* Languages */}
+            {skills.some((s) => s.category === "language") && (
+              <View>
+                <Text style={styles.sectionTitle}>
+                  {getTranslation("skills.languages", resume.language || "en")}
+                </Text>
+                <View style={styles.skillsContainer}>
+                  {skills
+                    .filter((s) => s.category === "language")
+                    .map((skill, index) => (
+                      <Text key={index} style={styles.skillText}>
+                        • {skill.name}
+                        {skill.level && ` (${getLevelLabel(skill.level)})`}
+                      </Text>
+                    ))}
+                </View>
+              </View>
+            )}
+          </>
         )}
       </Page>
     </Document>
