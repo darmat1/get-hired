@@ -16,14 +16,7 @@ import {
 import { useTranslation } from "@/lib/translations";
 import { Modal } from "@/components/ui/modal";
 import { ResumeSuggestions } from "@/components/profile/resume-suggestions";
-
-interface ResumeData {
-  id: string;
-  title: string;
-  template: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { useResumeListStore } from "@/stores/resume-list-store";
 
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -33,8 +26,13 @@ export default function Dashboard() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
   const [mounted, setMounted] = useState(false);
-  const [resumes, setResumes] = useState<ResumeData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    resumes,
+    isLoading,
+    loadFromDb: loadResumes,
+    needsLoad: needsLoadResumes,
+    removeResume,
+  } = useResumeListStore();
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
     resumeId: string | null;
@@ -48,25 +46,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (session) {
-      fetchResumes();
+      if (needsLoadResumes()) {
+        loadResumes();
+      }
     } else if (!isPending && session === null) {
       router.push("/");
     }
   }, [session, isPending, router]);
-
-  const fetchResumes = async () => {
-    try {
-      const response = await fetch("/api/resumes");
-      if (response.ok) {
-        const data = await response.json();
-        setResumes(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch resumes:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleDeleteClick = (id: string) => {
     setDeleteModal({ isOpen: true, resumeId: id });
@@ -80,7 +66,7 @@ export default function Dashboard() {
         method: "DELETE",
       });
       if (response.ok) {
-        setResumes(resumes.filter((r) => r.id !== deleteModal.resumeId));
+        removeResume(deleteModal.resumeId);
         setDeleteModal({ isOpen: false, resumeId: null });
       }
     } catch (error) {
