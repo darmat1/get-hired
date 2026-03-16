@@ -21,6 +21,32 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
   const [importType, setImportType] = useState<"experience" | "skills">(
     "experience",
   );
+  const [importSkillsCategory, setImportSkillsCategory] = useState<
+    "technical" | "soft" | "language" | null
+  >(null);
+
+  const getLevelLabel = (level?: string) => {
+    if (!level) return "";
+    const lang = data.language || "en";
+
+    const variants = [
+      level,
+      level.toLowerCase(),
+      level.toUpperCase(),
+      level
+        .split(" ")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" "),
+    ];
+
+    for (const v of variants) {
+      const key = `skill.level.${v}`;
+      const translated = getTranslation(key, lang);
+      if (translated !== key) return translated;
+    }
+
+    return level;
+  };
 
   if (!personalInfo) return null;
 
@@ -185,6 +211,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                 <button
                   onClick={() => {
                     setImportType("experience");
+                    setImportSkillsCategory(null);
                     setIsImportModalOpen(true);
                   }}
                   className="text-[10px] text-slate-500 hover:text-slate-800 flex items-center gap-1 px-2 py-1 rounded-md transition-all hover:bg-slate-100"
@@ -610,75 +637,109 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
         </div>
       </div>
 
-      {/* Skills */}
-      {skills && skills.length > 0 && (
-        <div>
-          <div className="flex justify-between items-end mb-3 border-b border-slate-300 pb-1">
-            <h2 className="text-sm font-bold text-slate-900 uppercase">
-              {getTranslation("profile.tab_skills", data.language || "en")}
-            </h2>
-            {isEditing && (
-              <div className="flex gap-1 ml-4">
-                <button
-                  onClick={() => {
-                    setImportType("skills");
-                    setIsImportModalOpen(true);
-                  }}
-                  className="text-[9px] text-slate-500 hover:text-slate-800 flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-slate-100"
-                >
-                  <Import size={10} />
-                </button>
-                <button
-                  onClick={() =>
-                    updateSection("skills", [
-                      ...(skills || []),
-                      createSkill("technical"),
-                    ])
-                  }
-                  className="text-[9px] text-slate-500 hover:text-slate-800 flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-slate-100"
-                >
-                  <Plus size={10} /> Add
-                </button>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            {skills.map((skill) => (
-              <div key={skill.id} className="relative group/skill">
-                <EditableText
-                  value={skill.name || ""}
-                  onChange={(v) => {
-                    const newSkills = [...(skills || [])];
-                    const sIdx = newSkills.findIndex((s) => s.id === skill.id);
-                    newSkills[sIdx] = { ...newSkills[sIdx], name: v };
-                    updateSection("skills", newSkills);
-                  }}
-                  className="text-xs text-slate-800"
-                />
+      {/* Skills: Technical, Soft, Languages */}
+      <div className="space-y-4">
+        {(["technical", "soft", "language"] as const).map((cat) => {
+          const categorySkills = (skills || []).filter((s) => s.category === cat);
+          const showSection = isEditing || categorySkills.length > 0;
+          if (!showSection) return null;
+          return (
+            <div key={cat}>
+              <div className="flex justify-between items-end mb-3 border-b border-slate-300 pb-1">
+                <h2 className="text-sm font-bold text-slate-900 uppercase">
+                  {cat === "technical"
+                    ? getTranslation("profile.tab_skills", data.language || "en")
+                    : cat === "soft"
+                      ? getTranslation("skills.soft", data.language || "en")
+                      : getTranslation("skills.languages", data.language || "en")}
+                </h2>
                 {isEditing && (
-                  <button
-                    onClick={() =>
-                      updateSection(
-                        "skills",
-                        (skills || []).filter((s) => s.id !== skill.id),
-                      )
-                    }
-                    className="absolute -top-1.5 -right-1.5 opacity-0 group-hover/skill:opacity-100 bg-red-500 shadow-sm rounded-full p-0.5 text-white hover:bg-red-600 transition-all scale-75 hover:scale-100"
-                  >
-                    <Trash2 size={8} />
-                  </button>
+                  <div className="flex gap-1 ml-4">
+                    <button
+                      onClick={() => {
+                        setImportType("skills");
+                        setImportSkillsCategory(cat);
+                        setIsImportModalOpen(true);
+                      }}
+                      className="text-[9px] text-slate-500 hover:text-slate-800 flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-slate-100"
+                    >
+                      <Import size={10} />
+                    </button>
+                    <button
+                      onClick={() =>
+                        updateSection("skills", [
+                          ...(skills || []),
+                          createSkill(cat),
+                        ])
+                      }
+                      className="text-[9px] text-slate-500 hover:text-slate-800 flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-slate-100"
+                    >
+                      <Plus size={10} /> Add
+                    </button>
+                  </div>
                 )}
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+              <div className="flex flex-wrap gap-x-4 gap-y-1">
+                {categorySkills.map((skill) => (
+                  <div key={skill.id} className="relative group/skill">
+                    <EditableText
+                      value={
+                        cat === "language"
+                          ? `${skill.name}${
+                              skill.level ? ` (${getLevelLabel(skill.level)})` : ""
+                            }`
+                          : skill.name || ""
+                      }
+                      onChange={(v) => {
+                        const newSkills = [...(skills || [])];
+                        const sIdx = newSkills.findIndex((s) => s.id === skill.id);
+
+                        if (cat === "language") {
+                          // Parse back "Name (Level)" into name only, keep level
+                          const match = v.match(/^(.+?)\s*\((.+)\)\s*$/);
+                          const nameOnly = match ? match[1] : v;
+                          newSkills[sIdx] = {
+                            ...newSkills[sIdx],
+                            name: nameOnly,
+                          };
+                        } else {
+                          newSkills[sIdx] = { ...newSkills[sIdx], name: v };
+                        }
+
+                        updateSection("skills", newSkills);
+                      }}
+                      className="text-xs text-slate-800"
+                    />
+                    {isEditing && (
+                      <button
+                        onClick={() =>
+                          updateSection(
+                            "skills",
+                            (skills || []).filter((s) => s.id !== skill.id),
+                          )
+                        }
+                        className="absolute -top-1.5 -right-1.5 opacity-0 group-hover/skill:opacity-100 bg-red-500 shadow-sm rounded-full p-0.5 text-white hover:bg-red-600 transition-all scale-75 hover:scale-100"
+                      >
+                        <Trash2 size={8} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       <ProfileImportModal
         isOpen={isImportModalOpen}
-        onClose={() => setIsImportModalOpen(false)}
+        onClose={() => {
+          setIsImportModalOpen(false);
+          setImportSkillsCategory(null);
+        }}
         onImport={handleImport}
         type={importType}
+        skillsCategory={importSkillsCategory ?? undefined}
       />
     </div>
   );

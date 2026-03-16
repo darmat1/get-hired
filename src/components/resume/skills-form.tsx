@@ -22,6 +22,9 @@ export function SkillsForm({
 }: SkillsFormProps) {
   const { t } = useTranslation();
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [importCategory, setImportCategory] = useState<
+    "technical" | "soft" | "language" | null
+  >(null);
 
   // State for input values
   const [technicalInput, setTechnicalInput] = useState("");
@@ -94,9 +97,25 @@ export function SkillsForm({
     setInput: (val: string) => void,
   ) => (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium text-foreground/80 uppercase tracking-wider">
-        {title}
-      </h3>
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-sm font-medium text-foreground/80 uppercase tracking-wider">
+          {title}
+        </h3>
+        {!hideImport && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              setImportCategory(category);
+              setIsImportModalOpen(true);
+            }}
+          >
+            <Sparkles className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
 
       {/* Skills List (Badges) */}
       <div className="flex flex-wrap gap-2 mb-3">
@@ -199,18 +218,6 @@ export function SkillsForm({
           <h2 className="text-xl font-semibold text-foreground">
             {t("form.skills")}
           </h2>
-          {!hideImport && (
-            <Button
-              onClick={() => setIsImportModalOpen(true)}
-              variant="outline"
-              size="sm"
-              type="button"
-              className="text-slate-600 border-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900/20"
-            >
-              <Sparkles className="h-4 w-4 mr-2" />
-              {t("profile.btn_import")}
-            </Button>
-          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-foreground">
@@ -249,10 +256,14 @@ export function SkillsForm({
       </div>
 
       <ProfileImportModal
-        isOpen={isImportModalOpen}
-        onClose={() => setIsImportModalOpen(false)}
+        isOpen={isImportModalOpen && importCategory !== null}
+        onClose={() => {
+          setIsImportModalOpen(false);
+          setImportCategory(null);
+        }}
         onImport={handleImport}
         type="skills"
+        skillsCategory={importCategory ?? undefined}
       />
     </form>
   );

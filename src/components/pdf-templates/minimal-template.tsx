@@ -12,6 +12,7 @@ import {
 import { Resume } from "@/types/resume";
 import { FormattedText } from "@/lib/pdf-utils";
 import { getTranslation } from "@/lib/translations-data";
+import { formatResumeDate } from "@/lib/format-resume-date";
 
 const styles = StyleSheet.create({
   page: {
@@ -238,7 +239,7 @@ export function MinimalTemplate({ resume }: TemplateProps) {
                 >
                   <Text style={styles.jobTitle}>{exp.title}</Text>
                   <Text style={{ fontSize: 8 }}>
-                    {exp.startDate} — {exp.current ? "Present" : exp.endDate}
+                    {formatResumeDate(exp.startDate)} — {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                   </Text>
                 </View>
                 <Text style={styles.companyMeta}>
@@ -298,7 +299,7 @@ export function MinimalTemplate({ resume }: TemplateProps) {
                 >
                   <Text style={styles.jobTitle}>{edu.institution}</Text>
                   <Text style={{ fontSize: 8 }}>
-                    {edu.startDate} — {edu.current ? "Present" : edu.endDate}
+                    {formatResumeDate(edu.startDate)} — {edu.current ? "Present" : formatResumeDate(edu.endDate)}
                   </Text>
                 </View>
                 <Text style={styles.companyMeta}>{edu.degree}</Text>

@@ -54,6 +54,9 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
   const [importType, setImportType] = useState<"experience" | "skills">(
     "experience",
   );
+  const [importSkillsCategory, setImportSkillsCategory] = useState<
+    "technical" | "soft" | "language" | null
+  >(null);
 
   // Default values
   const sidebarColor = customization?.sidebarColor || "#2e3a4e";
@@ -488,6 +491,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                     <button
                       onClick={() => {
                         setImportType("skills");
+                        setImportSkillsCategory(cat);
                         setIsImportModalOpen(true);
                       }}
                       className="text-[9px] bg-white/10 text-white/50 hover:text-white flex items-center gap-1.5 px-1.5 py-0.5 rounded transition-all hover:bg-white/10"
@@ -583,6 +587,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                   <button
                     onClick={() => {
                       setImportType("experience");
+                      setImportSkillsCategory(null);
                       setIsImportModalOpen(true);
                     }}
                     className="text-[10px] text-blue-600/70 hover:text-blue-600 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-blue-50 border border-transparent hover:border-blue-100"
@@ -917,9 +922,13 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
 
       <ProfileImportModal
         isOpen={isImportModalOpen}
-        onClose={() => setIsImportModalOpen(false)}
+        onClose={() => {
+          setIsImportModalOpen(false);
+          setImportSkillsCategory(null);
+        }}
         onImport={handleImport}
         type={importType}
+        skillsCategory={importSkillsCategory ?? undefined}
       />
     </div>
   );

@@ -490,6 +490,16 @@ export const translations: Translations = {
     uk: "Не вдалося змінити пароль",
     ru: "Ошибка при изменении пароле",
   },
+  "profile.error.linkedin_link_failed": {
+    en: "Failed to connect LinkedIn. Please try again or sign in with LinkedIn.",
+    uk: "Не вдалося підключити LinkedIn. Спробуйте ще раз або увійдіть через LinkedIn.",
+    ru: "Не удалось подключить LinkedIn. Попробуйте еще раз или войдите через LinkedIn.",
+  },
+  "profile.error.linkedin_already_linked": {
+    en: "This LinkedIn account is linked to a profile with a different email. Please log in using that email (or sign in with LinkedIn).",
+    uk: "Цей обліковий запис LinkedIn прив'язаний до профілю з іншою електронною поштою. Увійдіть, використовуючи цю пошту (або через LinkedIn).",
+    ru: "Этот аккаунт LinkedIn привязан к профилю с другой почтой. Войдите, используя ту почту (или через LinkedIn).",
+  },
   "profile.danger_zone": {
     en: "Danger Zone",
     uk: "Зона ризику",

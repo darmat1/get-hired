@@ -12,6 +12,7 @@ interface ProfileImportModalProps {
   onClose: () => void;
   onImport: (items: any[]) => void;
   type: "experience" | "education" | "skills";
+  skillsCategory?: "technical" | "soft" | "language";
 }
 
 export function ProfileImportModal({
@@ -19,6 +20,7 @@ export function ProfileImportModal({
   onClose,
   onImport,
   type,
+  skillsCategory,
 }: ProfileImportModalProps) {
   const { t } = useTranslation();
   const [profileData, setProfileData] = useState<any>(null);
@@ -55,7 +57,11 @@ export function ProfileImportModal({
       case "education":
         return Array.isArray(profileData.education) ? profileData.education : [];
       case "skills":
-        return Array.isArray(profileData.skills) ? profileData.skills : [];
+        if (!Array.isArray(profileData.skills)) return [];
+        if (!skillsCategory) return profileData.skills;
+        return profileData.skills.filter(
+          (s: Skill) => s.category === skillsCategory,
+        );
       default:
         return [];
     }
@@ -85,6 +91,15 @@ export function ProfileImportModal({
       case "education":
         return t("profile.import_education");
       case "skills":
+        if (skillsCategory === "technical") {
+          return t("skills.technical");
+        }
+        if (skillsCategory === "soft") {
+          return t("skills.soft");
+        }
+        if (skillsCategory === "language") {
+          return t("skills.languages");
+        }
         return t("profile.import_skills");
       default:
         return "";

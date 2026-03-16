@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { LinkedinIcon } from "@/components/ui/icons/linkedin";
 import { useTranslation } from "@/lib/translations";
+import { Modal } from "@/components/ui/modal";
 
 export function ProfileForm() {
   const { data: session } = useSession();
@@ -37,6 +38,7 @@ export function ProfileForm() {
     text: string;
   } | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showLinkedInConflict, setShowLinkedInConflict] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -189,7 +191,25 @@ export function ProfileForm() {
       });
     } catch (error) {
       console.error("LinkedIn link error:", error);
-      setMessage({ type: "error", text: t("message.error") });
+
+      let errorKey = "profile.error.linkedin_link_failed";
+      const rawMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : "";
+      const lowerMessage = rawMessage.toLowerCase();
+
+      if (
+        lowerMessage.includes("already linked") ||
+        lowerMessage.includes("already exists")
+      ) {
+        errorKey = "profile.error.linkedin_already_linked";
+        setShowLinkedInConflict(true);
+      } else {
+        setMessage({ type: "error", text: t(errorKey) });
+      }
     } finally {
       setLoading(false);
     }
@@ -473,6 +493,25 @@ export function ProfileForm() {
           </div>
         </div>
       )}
+      {/* LinkedIn Conflict Modal */}
+      <Modal
+        isOpen={showLinkedInConflict}
+        onClose={() => setShowLinkedInConflict(false)}
+        title={t("profile.social_connections")}
+        maxWidth="sm"
+        footer={
+          <button
+            onClick={() => setShowLinkedInConflict(false)}
+            className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg text-sm font-medium"
+          >
+            {t("common.cancel")}
+          </button>
+        }
+      >
+        <p className="text-sm text-slate-700 dark:text-slate-200">
+          {t("profile.error.linkedin_already_linked")}
+        </p>
+      </Modal>
     </div>
   );
 }
