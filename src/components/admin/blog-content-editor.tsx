@@ -9,15 +9,18 @@ interface BlogContentEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
   language?: string;
+  onImageUpload?: (file: File) => Promise<string>;
 }
 
 export function BlogContentEditor({
   value,
   onChange,
   language = "html",
+  onImageUpload,
 }: BlogContentEditorProps) {
   const [theme, setTheme] = useState<"vs-dark" | "light">("vs-dark");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     // Sync with app theme
@@ -76,14 +79,75 @@ export function BlogContentEditor({
       </div>
 
       <div className={isFullscreen ? "h-[calc(100vh-80px)]" : "h-[500px]"}>
+        {isUploading && (
+          <div className="absolute inset-x-0 top-[40px] bottom-0 z-[101] bg-white/50 dark:bg-slate-900/50 backdrop-blur-[1px] flex items-center justify-center">
+            <div className="flex flex-col items-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700">
+              <Loader2 className="w-5 h-5 animate-spin text-emerald-500" />
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                Uploading image...
+              </span>
+            </div>
+          </div>
+        )}
         <Editor
           height="100%"
           language={language}
           theme={theme}
           value={value}
           onChange={(val) => onChange(val || "")}
-          onMount={(editor) => {
-            // Add custom keybind for formatting if needed, though Alt+Shift+F works by default
+          onMount={(editor, monaco) => {
+            const container = editor.getDomNode();
+            if (container && onImageUpload) {
+              container.addEventListener(
+                "paste",
+                async (e: ClipboardEvent) => {
+                  const items = e.clipboardData?.items;
+                  if (!items) return;
+
+                  for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf("image") !== -1) {
+                      const file = items[i].getAsFile();
+                      if (file) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsUploading(true);
+                        try {
+                          const url = await onImageUpload(file);
+                          const insertText =
+                            language === "html"
+                              ? `<img src="${url}" alt="" />`
+                              : `![image](${url})`;
+
+                          const selection = editor.getSelection();
+                          if (!selection) return;
+
+                          const range = new monaco.Range(
+                            selection.startLineNumber,
+                            selection.startColumn,
+                            selection.endLineNumber,
+                            selection.endColumn,
+                          );
+
+                          editor.executeEdits("paste-image", [
+                            {
+                              range,
+                              text: insertText,
+                              forceMoveMarkers: true,
+                            },
+                          ]);
+                        } catch (err) {
+                          console.error("Image upload failed:", err);
+                        } finally {
+                          setIsUploading(false);
+                        }
+                        break;
+                      }
+                    }
+                  }
+                },
+                true,
+              );
+            }
           }}
           options={{
             minimap: { enabled: false },

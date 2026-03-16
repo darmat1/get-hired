@@ -110,10 +110,50 @@ export default function BlogAdminClient({
     }
   };
 
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          setImageFile(file);
+          setImagePreview(URL.createObjectURL(file));
+          setCurrentImageUrl(null);
+          break;
+        }
+      }
+    }
+  };
+
   const clearImage = () => {
+    if (imagePreview && !imagePreview.startsWith("http")) {
+      URL.revokeObjectURL(imagePreview);
+    }
     setImageFile(null);
     setImagePreview(null);
     setCurrentImageUrl(null);
+  };
+
+  const handleEditorImageUpload = async (file: File): Promise<string> => {
+    let fileExt = file.name.split(".").pop();
+    if (!fileExt || fileExt === file.name) {
+      fileExt = file.type.split("/")[1] || "png";
+    }
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("blog")
+      .upload(fileName, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data: publicUrlData } = supabase.storage
+      .from("blog")
+      .getPublicUrl(fileName);
+
+    return publicUrlData.publicUrl;
   };
 
   const clearForm = () => {
@@ -182,7 +222,11 @@ export default function BlogAdminClient({
 
     try {
       if (imageFile) {
-        const fileExt = imageFile.name.split(".").pop();
+        let fileExt = imageFile.name.split(".").pop();
+        // If file from buffer, it might have type but no real name/ext
+        if (!fileExt || fileExt === imageFile.name) {
+          fileExt = imageFile.type.split("/")[1] || "png";
+        }
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
@@ -448,7 +492,7 @@ export default function BlogAdminClient({
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} onPaste={handlePaste} className="space-y-6">
           {/* Cover Image */}
           <div>
             <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
@@ -769,6 +813,7 @@ export default function BlogAdminClient({
                 </label>
                 <BlogContentEditor
                   value={(formData as any)[`body_${activeTab}`]}
+                  onImageUpload={handleEditorImageUpload}
                   onChange={(val) =>
                     setFormData({
                       ...formData,
