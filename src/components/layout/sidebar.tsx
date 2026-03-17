@@ -10,11 +10,17 @@ import { TrustpilotWidget } from "@/components/promo/trustpilot-widget";
 import { UserMenu } from "@/components/ui/user-menu";
 import { useSession } from "@/lib/auth-client";
 import { MD5 } from "crypto-js";
+import { useEffect, useState } from "react";
 
 export function Sidebar() {
   const { t } = useTranslation();
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isActive = (path: string) => stripLocale(pathname || "") === path;
 
@@ -98,7 +104,7 @@ export function Sidebar() {
             <TrustpilotWidget />
           </div>
         
-        {session && (
+        {mounted && session && (
           <div className="px-4 pt-2 border-t border-slate-200 dark:border-slate-700">
             <UserMenu
               userName={session.user?.name || ""}
