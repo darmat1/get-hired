@@ -142,9 +142,10 @@ ${formattedResume}`;
 
       const aiResponse = await aiComplete(
         {
-          systemPrompt: "You are an expert resume analyst. Return ONLY valid JSON.",
+          systemPrompt: "You are an expert resume analyst. Return ONLY valid JSON, no other text, no markdown code blocks, no explanations. The output must be parseable by JSON.parse().",
           userPrompt: prompt,
-          temperature: 0.3,
+          temperature: 0.2,
+          maxTokens: 8000,
           responseFormat: { type: "json_object" },
         },
         session.user.id,
@@ -152,10 +153,13 @@ ${formattedResume}`;
 
       let score: ResumeScore;
       try {
+        console.log("[Resume Score] Raw AI response:", aiResponse.content);
         score = JSON.parse(aiResponse.content) as ResumeScore;
-      } catch {
+      } catch (err) {
+        console.error("[Resume Score] Failed to parse JSON:", err);
+        console.error("[Resume Score] Response content:", aiResponse.content);
         return NextResponse.json(
-          { error: "Failed to parse AI response" },
+          { error: "Failed to parse AI response", rawResponse: aiResponse.content.substring(0, 200) },
           { status: 500 },
         );
       }
@@ -213,9 +217,10 @@ ${formattedExperience}`;
 
       const aiResponse = await aiComplete(
         {
-          systemPrompt: "You are an expert resume analyst. Return ONLY valid JSON.",
+          systemPrompt: "You are an expert resume analyst. Return ONLY valid JSON, no other text, no markdown code blocks, no explanations. The output must be parseable by JSON.parse().",
           userPrompt: companyPrompt,
-          temperature: 0.3,
+          temperature: 0.2,
+          maxTokens: 8000,
           responseFormat: { type: "json_object" },
         },
         session.user.id,
@@ -223,10 +228,13 @@ ${formattedExperience}`;
 
       let score: CompanyScore;
       try {
+        console.log("[Resume Score] Raw AI response:", aiResponse.content);
         score = JSON.parse(aiResponse.content) as CompanyScore;
-      } catch {
+      } catch (err) {
+        console.error("[Resume Score] Failed to parse JSON:", err);
+        console.error("[Resume Score] Response content:", aiResponse.content);
         return NextResponse.json(
-          { error: "Failed to parse AI response" },
+          { error: "Failed to parse AI response", rawResponse: aiResponse.content.substring(0, 200) },
           { status: 500 },
         );
       }

@@ -26,6 +26,7 @@ import { ResumeSuggestions } from "@/components/profile/resume-suggestions";
 import { extractTextFromPDF } from "@/components/resume/linkedin-import-button";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { refreshAiQuota } from "@/components/ui/ai-quota-display";
+import { VoiceInputButton } from "@/components/ui/voice-input-button";
 
 export default function MyExperiencePage() {
   const { t } = useTranslation();
@@ -372,11 +373,12 @@ export default function MyExperiencePage() {
 
               {importMode === "paste" && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <textarea
-                    value={profileText}
-                    onChange={(e) => setProfileText(e.target.value)}
-                    placeholder={t("profile.paste_text_placeholder")}
-                    className="
+                  <div className="relative">
+                    <textarea
+                      value={profileText}
+                      onChange={(e) => setProfileText(e.target.value)}
+                      placeholder={t("profile.paste_text_placeholder")}
+                      className="
     w-full px-4 py-3 
     rounded-lg 
     text-sm 
@@ -395,11 +397,21 @@ export default function MyExperiencePage() {
     focus:ring-[var(--color-ring)] 
     focus:border-transparent
 
-    [field-sizing:content] 
+    [field-sizing=content] 
     min-h-[160px] 
     resize-none   
   "
-                  />
+                    />
+                    <div className="absolute bottom-3 right-3">
+                      <VoiceInputButton
+                        size="icon"
+                        variant="ghost"
+                        onTranscript={(text) => {
+                          setProfileText((prev) => prev + (prev ? " " : "") + text);
+                        }}
+                      />
+                    </div>
+                  </div>
                   <Button
                     className="w-full"
                     onClick={() => handleImport()}
