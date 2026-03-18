@@ -145,7 +145,7 @@ ${formattedResume}`;
           systemPrompt: "You are an expert resume analyst. Return ONLY valid JSON, no other text, no markdown code blocks, no explanations. The output must be parseable by JSON.parse().",
           userPrompt: prompt,
           temperature: 0.2,
-          maxTokens: 8000,
+          maxTokens: 16000,
           responseFormat: { type: "json_object" },
         },
         session.user.id,
@@ -154,12 +154,30 @@ ${formattedResume}`;
       let score: ResumeScore;
       try {
         console.log("[Resume Score] Raw AI response:", aiResponse.content);
-        score = JSON.parse(aiResponse.content) as ResumeScore;
+        
+        // Handle truncated responses by finding the last valid JSON closing
+        let content = aiResponse.content;
+        
+        // Remove markdown code blocks if present
+        content = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+        
+        // Find the last closing brace and extract JSON
+        const lastBraceIndex = content.lastIndexOf('}');
+        if (lastBraceIndex !== -1) {
+          content = content.substring(0, lastBraceIndex + 1);
+        }
+        
+        score = JSON.parse(content) as ResumeScore;
       } catch (err) {
         console.error("[Resume Score] Failed to parse JSON:", err);
-        console.error("[Resume Score] Response content:", aiResponse.content);
+        console.error("[Resume Score] Response content length:", aiResponse.content.length);
+        console.error("[Resume Score] Response ends with:", aiResponse.content.slice(-200));
         return NextResponse.json(
-          { error: "Failed to parse AI response", rawResponse: aiResponse.content.substring(0, 200) },
+          { 
+            error: "Failed to parse AI response",
+            detail: String(err),
+            rawResponse: aiResponse.content.substring(0, 500)
+          },
           { status: 500 },
         );
       }
@@ -220,7 +238,7 @@ ${formattedExperience}`;
           systemPrompt: "You are an expert resume analyst. Return ONLY valid JSON, no other text, no markdown code blocks, no explanations. The output must be parseable by JSON.parse().",
           userPrompt: companyPrompt,
           temperature: 0.2,
-          maxTokens: 8000,
+          maxTokens: 16000,
           responseFormat: { type: "json_object" },
         },
         session.user.id,
@@ -229,12 +247,30 @@ ${formattedExperience}`;
       let score: CompanyScore;
       try {
         console.log("[Resume Score] Raw AI response:", aiResponse.content);
-        score = JSON.parse(aiResponse.content) as CompanyScore;
+        
+        // Handle truncated responses by finding the last valid JSON closing
+        let content = aiResponse.content;
+        
+        // Remove markdown code blocks if present
+        content = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+        
+        // Find the last closing brace and extract JSON
+        const lastBraceIndex = content.lastIndexOf('}');
+        if (lastBraceIndex !== -1) {
+          content = content.substring(0, lastBraceIndex + 1);
+        }
+        
+        score = JSON.parse(content) as CompanyScore;
       } catch (err) {
         console.error("[Resume Score] Failed to parse JSON:", err);
-        console.error("[Resume Score] Response content:", aiResponse.content);
+        console.error("[Resume Score] Response content length:", aiResponse.content.length);
+        console.error("[Resume Score] Response ends with:", aiResponse.content.slice(-200));
         return NextResponse.json(
-          { error: "Failed to parse AI response", rawResponse: aiResponse.content.substring(0, 200) },
+          { 
+            error: "Failed to parse AI response",
+            detail: String(err),
+            rawResponse: aiResponse.content.substring(0, 500)
+          },
           { status: 500 },
         );
       }
