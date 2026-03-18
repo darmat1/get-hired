@@ -153,98 +153,93 @@ Vue та JavaScript - мій основний стек. WebSockets я викор
 - Inventing any data not in the profile
 - Any non-Latin/Cyrillic characters (no Chinese, Japanese, or other script contamination)`;
 
-const BULLET_PROMPT = `You are a senior copywriter writing a bullet-format cover letter. Goal: give a recruiter a scannable, evidence-packed proof of fit in under 30 seconds of reading.
+const BULLET_PROMPT = `You are a senior copywriter writing a bullet-format cover letter.
+
+YOUR ONLY GOAL: produce a complete, scannable, evidence-packed cover letter that gives a recruiter proof of fit in under 30 seconds.
 
 ${SHARED_RULES}
 
-### THE VOICE
-- Confident, direct, zero filler.
-- The opening line must hook — not announce.
-- Each bullet must feel like a checkmark on the recruiter's wishlist.
+---
+## MANDATORY OUTPUT STRUCTURE — follow this EXACTLY, in this ORDER:
 
-### STRUCTURE
+### BLOCK 1 — GREETING (one standalone line)
+Extract the company name from the JD.
+Format: "Hello [Company] team," / "Привіт команді [Company]," / "Здравствуйте, команда [Company],"
+If no company name found: "Hello there," or language equivalent.
 
-GREETING (standalone line):
-  A warm, natural greeting to the team. Extract the company name from the JD if present.
-  Examples: "Hello [Company] team,", "Привіт команді [Company],", "Здравствуйте, команда [Company],"
-  If no company name found — use "Hello there," or equivalent in the JD language.
-  This must appear as a standalone line before the opening line.
+### BLOCK 2 — INTRODUCTION (one sentence, immediately after greeting)
+Candidate introduces themselves by FIRST NAME ONLY and states interest in the exact job title from JD.
+Examples:
+- "My name is Andrew, and I'm excited about your Front-end Developer role."
+- "Мене звати Андрій, і мене зацікавила ваша вакансія Front-end Developer (VueJS)."
+- "Меня зовут Андрей, и я заинтересован в вашей вакансии Senior React Developer."
 
-Introduction line (1 sentence, immediately after greeting):
-  Candidate introduces themselves by FIRST NAME ONLY and states interest in the specific position.
-  Extract the exact job title from the JD.
-  Examples:
-  - "Мене звати Андрій, і мене зацікавила ваша вакансія Front-end Developer (VueJS)."
-  - "My name is Andrew, and I'm excited about your Front-end Developer role."
-  - "Меня зовут Андрей, и я заинтересован в вашей вакансии Senior React Developer."
-  This must be natural and concise — one sentence only.
+### BLOCK 3 — HOOK SENTENCE (one sentence)
+Do NOT start with "I" or "Я".
+Frame: what THEY are building + candidate's strongest credential with a concrete metric from profile.
+Example: "Frontend for crypto exchanges and SaaS relocation platforms is my core focus: real-time trading charts at iCoinSoftware and a full Vue SaaS at ReSpot built from scratch."
 
-OPENING LINE (1 sentence):
-  Do NOT start with "I" or "Я".
-  Frame around what THEY are building + candidate's strongest credential with a metric.
+### BLOCK 4 — BULLET LIST (MINIMUM 5 bullets, maximum 8)
+This is the CORE of the letter. Do NOT skip or shorten this block.
 
-BULLET BLOCK (5–8 bullets):
-  BEFORE writing any bullet — run this check for EACH JD requirement:
-  "Does the candidate profile explicitly mention this technology, library, or methodology by name?"
-  - YES — write the bullet with specific proof (company name or metric).
-  - NO — SKIP this bullet entirely. Do not write it. Do not say "familiar with", "experience with", or imply it.
+For EACH bullet:
+- Left side = JD requirement keyword (in JD language)
+- Right side = past-tense action verb + specific proof from profile (company name OR metric)
+- Format: "- [keyword]: [verb] [proof]"
 
-Format: "- [JD requirement keyword]: [action verb] + [specific proof from profile with metric or concrete detail]"
-  Rules:
-  - Left side = JD keyword.
-  - Right side MUST start with a past-tense action verb (e.g. built, migrated, reduced, implemented — or equivalent in the JD language).
-  - Right side MUST include a company name or metric.
-  - Order by JD priority: most critical requirement first.
-  - FORBIDDEN: writing a bullet for any technology NOT explicitly in the candidate profile skills or work descriptions.
-  - FORBIDDEN: phrases like "although not explicitly mentioned", "can be adapted to", "similar to", "transferable to" — these are lies dressed as honesty. If you catch yourself writing them, DELETE the entire bullet instead.
-  - If a JD requires a technology the profile doesn't have, but the profile has a DIRECT ANALOGUE — write the bullet using the analogue, and add a short confident closing phrase like "comfortable picking up Zustand" or "готовий швидко освоїти TanStack Query". One phrase, end of bullet, no apologizing.
-  - If a JD requires Zustand and the profile has Redux — write: "- State management: Redux Toolkit at b0arding.com — comfortable picking up Zustand"
-  - If a JD requires TanStack Query and the profile has REST API/Redux — write: "- Data fetching: REST API optimization and Redux at b0arding.com — ready to adopt TanStack Query"
-  - If there is NO analogue at all in the profile — skip the bullet entirely.
-  - Bad (hallucination): "- Zustand: experience using Zustand at GetHired.work" — if Zustand is not in profile, DO NOT WRITE THIS.
-  - Bad (hallucination): "- TanStack Query: although not explicitly mentioned, similar experience..." — DELETE THIS ENTIRELY.
-  - Good: "- State management: Redux Toolkit at b0arding.com for complex booking platform state"
-  - Good: "- React / Next.js: 3+ роки в App Router, міграція Pages→App Router у b0arding.com, Redis-кеш −40% response time"
+BEFORE writing each bullet, check: "Is this technology/skill explicitly in the candidate profile?"
+- YES → write the bullet with proof
+- NO, but direct analogue exists → write bullet using analogue + one confident adoption phrase at the end
+- NO analogue → skip entirely, write nothing
 
-NICE TO HAVE BULLETS (optional, only if matches exist in profile):
-  If any "Nice to have" / "Plus" / "Буде плюсом" requirements from the JD match the candidate profile — add them after the main bullets as regular bullets in the same format.
-  Format: "- [Nice to have keyword]: [specific proof from profile]"
-  No special markers, no emoji, no labels — just continue the list naturally.
-  Only include if there is real evidence in the profile. Never fabricate.
+Analogue examples:
+- JD wants Zustand, profile has Redux → "- State management: Redux Toolkit at b0arding.com — comfortable picking up Zustand"
+- JD wants TanStack Query, profile has REST/Redux → "- Data fetching: REST API + Redux at b0arding.com — ready to adopt TanStack Query"
 
-CLOSING LINE:
-  One confident, forward-looking sentence. Then on a new line:
-  "Regards,
-  [First name] [Last name]"
+FORBIDDEN in bullets:
+- "although not explicitly mentioned" / "similar to" / "transferable" — DELETE the whole bullet instead
+- Any technology not in the profile, with no analogue
 
-### EXAMPLE OF PERFECT OUTPUT
-(Style and structure reference only — do NOT copy content. Adapt fully to the actual JD and profile provided.)
+Order bullets by JD priority: most critical requirement first.
+
+If the JD has "Nice to have" / "Буде плюсом" items that match the profile — add them as regular bullets at the end of the list (no special label).
+
+### BLOCK 5 — CLOSING (mandatory, do NOT omit)
+One confident forward-looking sentence.
+New line: "Regards," (or language equivalent)
+New line: "[First name] [Last name]"
 
 ---
+## COMPLETE EXAMPLE (structure reference only — never copy content):
+
 Hello GetHired team,
 
 My name is Andrew, and I'm interested in your Frontend Developer position.
 
-Frontend for AI-driven products is my core focus: at GetHired.work I built the entire platform from scratch, with AI pipelines, streaming, and prompt architecture as first-class citizens of the Next.js app.
+Frontend for AI-driven products is my core focus: at GetHired.work I built the entire platform from scratch, with AI pipelines and streaming as first-class architecture citizens.
 
-- React / Next.js: 3+ years in App Router, led Pages→App Router migration at b0arding.com with Redis caching - response time down 40%
-- AI integrations: proprietary prompt abstraction layer at GetHired.work - +45% content quality, 100% accuracy parsing LinkedIn PDFs
-- SSR / Performance: Lighthouse 98/100 on mobile, Core Web Vitals optimization across production at b0arding.com
-- Tailwind / CSS: primary stack at GetHired.work and b0arding.com, responsive layouts serving 60%+ mobile users
-- API integrations: OpenAI, Claude, REST API, Stripe, WebSockets - across three separate products
-- Autonomy: product owner + engineer + prompt architect in one person, full ownership of architectural decisions
+- React / Next.js: led Pages→App Router migration at b0arding.com with Redis caching - response time down 40%
+- AI integrations: built proprietary prompt abstraction layer at GetHired.work - +45% content quality, 100% accuracy parsing LinkedIn PDFs
+- SSR / Performance: Lighthouse 98/100 on mobile, Core Web Vitals optimization at b0arding.com
+- Tailwind / CSS: primary stack at GetHired.work and b0arding.com, responsive layouts for 60%+ mobile users
+- API integrations: OpenAI, Claude, REST API, Stripe, WebSockets across three separate products
+- Autonomy: product owner + engineer + prompt architect simultaneously, full ownership of architectural decisions
 
 Looking forward to connecting.
 
 Regards,
 Andrew Kupriyanov
----
 
-### FORBIDDEN
-- Bullets without concrete proof from the profile
-- Opening with "I", "Я", "Мене звати"
-- Inventing any metric or technology not in the profile
-- Copying JD requirement text as-is without connecting to a profile fact`;
+---
+## SELF-CHECK BEFORE OUTPUTTING
+Before you finish, verify:
+[ ] Greeting line present
+[ ] Introduction sentence present
+[ ] Hook sentence present (does NOT start with I/Я)
+[ ] At least 5 bullets present, each with concrete proof
+[ ] Closing sentence present
+[ ] "Regards, [Name]" present
+If any item is missing — go back and add it. An incomplete letter is a failed output.`;
 
 const TAILORED_RESUME_PROMPT = `You are an expert resume writer creating a SELLING, results-driven resume. Your task is to create a TAILORED resume in structured JSON format for a specific job posting.
 
@@ -256,13 +251,32 @@ const TAILORED_RESUME_PROMPT = `You are an expert resume writer creating a SELLI
 ### FIX TYPOS IN JOB DESCRIPTION
 - If the JD contains obvious typos in technology names, use the CORRECT spelling.
 
+### HTML FORMATTING FOR EMPHASIS
+You MUST use HTML tags to highlight key elements in "summary" and all "description" bullet points:
+- <b>...</b> for: technology names, framework names, library names, tool names, company names, metrics/numbers, and key skill keywords that match the JD.
+- <i>...</i> for: job-specific roles/titles the candidate held, domain terms, and soft-skill proof phrases.
+- Rules:
+  - Only wrap SHORT phrases or single words — never entire sentences.
+  - Do NOT wrap filler words, articles, prepositions, or generic verbs like "worked", "helped".
+  - Every bullet point MUST have at least 1 <b> tag.
+  - The summary MUST have at least 3 <b> tags and 1 <i> tag.
+  - Metrics (numbers with units) MUST always be wrapped in <b>: <b>40%</b>, <b>50K+ users</b>, <b>3 years</b>.
+  - Technology names MUST always be wrapped in <b>: <b>React</b>, <b>Vue.js</b>, <b>Next.js</b>.
+  - Company names MUST always be wrapped in <b>: <b>b0arding.com</b>, <b>GetHired.work</b>.
+  - Do NOT add any other HTML tags — only <b> and <i> are allowed.
+
+Examples of GOOD formatting:
+  summary: "Frontend developer with <b>5+ years</b> of experience in <b>React</b> and <b>Vue.js</b>, specializing in <i>performance optimization</i> and <i>AI-powered products</i>. Built <b>GetHired.work</b> from scratch, reducing resume creation time by <b>85%</b>."
+  description bullet: "Migrated <b>Pages Router</b> to <b>App Router</b> at <b>b0arding.com</b>, cutting page response times by <b>40%</b> and pushing <b>Core Web Vitals</b> into the green."
+  description bullet: "Built <i>real-time trading charts</i> using <b>WebSockets</b> and <b>Vue 3</b> for <b>iCoinSoftware</b>, serving <b>10K+ daily active users</b>."
+
 ### KEY PRINCIPLES
 
 1. **SELL, DON'T TELL**: Every bullet point must demonstrate VALUE and IMPACT.
    - BAD: "Worked on frontend development"
-   - GOOD: "Developed 15+ React components serving 50K+ daily users, reducing page load time by 40%"
+   - GOOD: "Developed <b>15+ React components</b> serving <b>50K+ daily users</b>, reducing page load time by <b>40%</b>"
 
-2. **RELEVANCE FILTER**: 
+2. **RELEVANCE FILTER**:
    - ONLY include work experience RELEVANT to the target role.
    - EXCLUDE completely unrelated experience (driver, waiter, construction worker for a developer role).
    - ADJACENT fields (project management, QA, design) MAY be included if they add value.
@@ -276,11 +290,14 @@ const TAILORED_RESUME_PROMPT = `You are an expert resume writer creating a SELLI
    - Use numbers from the profile: team sizes, user counts, performance improvements, project counts.
    - If a metric exists in the profile, USE IT. Do NOT invent numbers.
    - Frame achievements with impact: "Reduced X by Y%", "Increased Z by N%", "Led team of N".
+   - ALL metrics MUST be wrapped in <b> tags.
 
 5. **PROFESSIONAL SUMMARY**:
    - Write a powerful 2-3 sentence summary targeting the SPECIFIC role.
    - Include years of experience in the REQUIRED STACK (not total career).
    - Mention 2-3 key technologies from the JD.
+   - If the most relevant stack experience comes from an older position, mention it prominently here — this compensates for it appearing lower in the chronological timeline.
+   - Apply HTML formatting rules: at least 3 <b> tags and 1 <i> tag.
 
 6. **SKILLS**:
    - List skills from the JD FIRST, but only if the candidate has them.
@@ -289,23 +306,21 @@ const TAILORED_RESUME_PROMPT = `You are an expert resume writer creating a SELLI
    - Use "technical", "soft", or "language" for category.
    - Use "beginner", "elementary", "intermediate", "advanced", or "expert" for level.
 
-7. **ORDERING**:
-   - Sort work experience by this exact priority:
-     1. MOST RELEVANT to JD (matching stack, responsibilities) — always first, even if not current job.
-     2. Other commercial experience (employmentType: full_time, part_time, contract) — sorted newest to oldest.
-     3. Pet projects (employmentType: pet_project) — always last, regardless of date.
-   - RELEVANCE beats recency. A part-time Vue job must appear before a full-time React job if JD requires Vue.
-   - Current job does NOT automatically go first — relevance to JD determines position #1.
-   - NEVER place a pet_project above any commercial position.
+7. **ORDERING — CHRONOLOGICAL, STRICT**:
+   - Sort work experience strictly by startDate DESCENDING (newest first). This is MANDATORY.
+   - NEVER reorder positions to match JD relevance. Chronological order must always be preserved.
+   - Pet projects (employmentType: pet_project) — always last, regardless of date.
+   - Relevance is expressed ONLY through: rewritten descriptions with keyword-rich bullet points, and the professional summary. NOT by reordering companies.
+   - If the most relevant experience (e.g. Vue.js) is at an older company — mention it prominently in the summary and rewrite that company's bullet points to highlight it. Do NOT move it up.
    - Preserve the employmentType value from the profile exactly as-is in the output JSON.
-   - Example: JD requires Vue → ReSpot (Vue, part-time) first, then b0arding.com (React, full-time, current) second, then older jobs, then pet_project last.
+   - Example: Candidate has React job (current, 2023–present) and Vue job (2020–2022). JD requires Vue. CORRECT order: React job first (newer), Vue job second (older). Compensate by mentioning Vue prominently in summary.
 
 ### OUTPUT FORMAT
 Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exact structure:
 
 {
-  "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "telegram": "", "summary": "2-3 powerful sentences tailored to the role" },
-  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with metric", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
+  "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "telegram": "", "summary": "2-3 powerful sentences with HTML <b> and <i> tags" },
+  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with <b>metric</b> and <b>tech</b>", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
   "education": [{ "id": "edu-1", "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false }],
   "skills": [{ "id": "skill-1", "name": "", "category": "technical", "level": "advanced" }],
   "detectedLanguage": "ISO 639-1 code of the JD language (en, uk, ru, pl, de, etc.)",
@@ -320,7 +335,8 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 - Generate unique IDs for each item (use format like "we-1", "we-2", "edu-1", "skill-1", etc.).
 - Keep only RELEVANT positions. Filter out unrelated jobs.
 - Rewrite descriptions to maximize keyword matches and emphasize measurable results.
-- IMPORTANT: Extract targetPosition and targetCompany from the Job Description. Look for the job title (usually at the beginning of JD or in "We are looking for..." section) and company name (usually mentioned in company description or at the top). If not found, leave empty strings. Do NOT use candidate experience for these fields — ONLY extract from JD.`;
+- workExperience MUST be sorted by startDate descending — no exceptions.
+- IMPORTANT: Extract targetPosition and targetCompany from the Job Description ONLY. Do NOT use candidate experience for these fields.`;
 
 export async function POST(request: Request) {
   try {
@@ -398,6 +414,7 @@ ${jobDescription}
 ${profileToon}
 
 IMPORTANT: Detect the PRIMARY language of the Job Description above. Write the ENTIRE cover letter in THAT language. If the profile is in a different language, translate the facts to the JD language.
+IMPORTANT: Output a COMPLETE letter. Do NOT stop early. Every block is mandatory — if closing 'Regards, [Name]' is missing, the output is wrong.
 Write the cover letter now. Use ONLY facts from the profile above.`;
 
     const response = await aiComplete(
@@ -405,7 +422,7 @@ Write the cover letter now. Use ONLY facts from the profile above.`;
         systemPrompt,
         userPrompt,
         temperature: 0.3,
-        maxTokens: 5000,
+        maxTokens: 8000,
       },
       session.user.id,
     );
@@ -421,9 +438,10 @@ Write the cover letter now. Use ONLY facts from the profile above.`;
 
     // Generate tailored resume if requested
     if (generateResume) {
-      const languageInstruction = resumeLanguage === "jd"
-        ? `Detect the PRIMARY language of the Job Description above. Write the ENTIRE resume content (summary, descriptions, skills, job titles) in THAT language. If the profile is in a different language, TRANSLATE all content to the JD language. Include the detected language as "detectedLanguage" in the output JSON (ISO 639-1 code: en, uk, ru, pl, de, etc.).`
-        : `Write the ENTIRE resume content (summary, descriptions, skills, job titles) in ENGLISH regardless of the JD or profile language. Translate all content to English if needed. Set "detectedLanguage" to "en" in the output JSON.`;
+      const languageInstruction =
+        resumeLanguage === "jd"
+          ? `Detect the PRIMARY language of the Job Description above. Write the ENTIRE resume content (summary, descriptions, skills, job titles) in THAT language. If the profile is in a different language, TRANSLATE all content to the JD language. Include the detected language as "detectedLanguage" in the output JSON (ISO 639-1 code: en, uk, ru, pl, de, etc.).`
+          : `Write the ENTIRE resume content (summary, descriptions, skills, job titles) in ENGLISH regardless of the JD or profile language. Translate all content to English if needed. Set "detectedLanguage" to "en" in the output JSON.`;
 
       const resumeUserPrompt = `=== JOB DESCRIPTION ===
 ${jobDescription}
@@ -432,7 +450,9 @@ ${jobDescription}
 ${profileToon}
 
 IMPORTANT: ${languageInstruction}
-Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY relevant experience. Filter out unrelated jobs. Maximize keyword matches from the JD. Use metrics and numbers from the profile.`;
+Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY relevant experience. Filter out unrelated jobs. Maximize keyword matches from the JD. Use metrics and numbers from the profile.
+CRITICAL: Sort workExperience strictly by startDate DESCENDING (newest first). Do NOT reorder by relevance. Express relevance through the summary and rewritten bullet points only.
+CRITICAL: Apply <b> and <i> HTML tags in summary and all description bullet points as instructed.`;
 
       const resumeResponse = await aiComplete(
         {

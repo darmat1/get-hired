@@ -58,34 +58,9 @@ GREEN — strengths to highlight:
 
 
 ### OUTPUT FORMAT
-Return ONLY this JSON structure:
+Return ONLY this JSON structure, exactly as shown, no other text:
 
-
-{
-  "score": 0-100,
-  "scoreLabel": "Weak | Fair | Good | Strong | Excellent",
-  "summary": "2 sentence overall assessment",
-  "red": [
-    {
-      "field": "field or section name",
-      "issue": "specific description of the problem",
-      "recommendation": "concrete fix"
-    }
-  ],
-  "yellow": [
-    {
-      "field": "field or section name",
-      "issue": "specific description of the problem",
-      "recommendation": "concrete fix"
-    }
-  ],
-  "green": [
-    {
-      "field": "field or section name",
-      "strength": "specific description of what is done well"
-    }
-  ]
-}
+{"score":0,"scoreLabel":"Weak","summary":"string","red":[{"field":"string","issue":"string","recommendation":"string"}],"yellow":[{"field":"string","issue":"string","recommendation":"string"}],"green":[{"field":"string","strength":"string"}]}
 
 
 ### SCORING LOGIC
@@ -107,9 +82,8 @@ scoreLabel:
 ### CRITICAL RULES
 - Be specific. Do not write vague issues like "improve your summary". Write "Summary does not mention any specific technologies or measurable achievements."
 - Reference actual content from the resume in your issues and recommendations.
-- For each recommendation, provide a concrete example of how to improve it. For example, instead of "Add achievements", write "Rewrite your developer role description to include metrics, e.g., 'Optimized API response time by 40% using Redis caching'."
+- For each recommendation, provide a concrete example of how to improve it.
 - Analyze the text quality (professionalism, clarity, tone) and suggest better wording if necessary.
 - Do not invent issues that are not present. Only flag what you actually see.
 - IMPORTANT: If a section is missing but you think it should be there (like soft skills), mention it in YELLOW.
-- IMPORTANT: If the resume is written in one language and the summary in another, don't mention it as a red flag, only if it's completely unreadable.
-- Output ONLY the JSON object, nothing else.`;
+- Output ONLY the JSON object, no other text, no markdown.`;
