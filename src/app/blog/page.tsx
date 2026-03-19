@@ -106,7 +106,11 @@ export default async function BlogListPage() {
                   </p>
                 )}
                 <div className="text-slate-500 dark:text-slate-400 text-sm">
-                  {new Date(post.createdAt).toISOString().slice(0, 10)}
+                  {new Date(post.updatedAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </div>
               </Link>
             );
@@ -116,7 +120,7 @@ export default async function BlogListPage() {
           <p className="text-slate-500 dark:text-slate-400">No posts yet.</p>
         )}
 
-        {totalPages > 1 && (
+        {/* {totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 mt-12">
             <span className="text-slate-500 dark:text-slate-400">
               Page 1 of {totalPages}
@@ -126,6 +130,68 @@ export default async function BlogListPage() {
               className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition"
             >
               Next
+            </Link>
+          </div>
+        )} */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-12">
+            {/* Previous — задизейблен на первой странице */}
+            <span className="w-10 h-10 flex items-center justify-center rounded-lg text-slate-300 dark:text-slate-600 bg-slate-100 dark:bg-slate-800 pointer-events-none">
+              ‹
+            </span>
+
+            {/* Page numbers */}
+            {(() => {
+              const currentPage = 1;
+              const pages: (number | "...")[] = [];
+
+              if (totalPages <= 7) {
+                for (let i = 1; i <= totalPages; i++) pages.push(i);
+              } else {
+                pages.push(1);
+                if (currentPage > 3) pages.push("...");
+                for (
+                  let i = Math.max(2, currentPage - 1);
+                  i <= Math.min(totalPages - 1, currentPage + 1);
+                  i++
+                ) {
+                  pages.push(i);
+                }
+                if (currentPage < totalPages - 2) pages.push("...");
+                pages.push(totalPages);
+              }
+
+              return pages.map((p, i) =>
+                p === "..." ? (
+                  <span
+                    key={`dots-${i}`}
+                    className="w-10 h-10 flex items-center justify-center text-slate-400 dark:text-slate-500"
+                  >
+                    …
+                  </span>
+                ) : (
+                  <Link
+                    key={p}
+                    href={p === 1 ? "/blog" : `/blog/page/${p}`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-lg font-medium transition
+              ${
+                p === currentPage
+                  ? "bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              }`}
+                  >
+                    {p}
+                  </Link>
+                ),
+              );
+            })()}
+
+            {/* Next */}
+            <Link
+              href="/blog/page/2"
+              className="w-10 h-10 flex items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+            >
+              ›
             </Link>
           </div>
         )}

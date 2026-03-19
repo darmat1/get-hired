@@ -8,7 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/layout/header";
 import { Metadata } from "next";
-import Script from "next/script";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { getT } from "@/lib/translations-data";
 
@@ -134,10 +133,9 @@ export default async function BlogPostPage({
   return (
     <>
       <Header />
-      <Script
+      <script
         id="blog-posting-schema"
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -159,7 +157,7 @@ export default async function BlogPostPage({
               "@type": "WebPage",
               "@id": `${siteUrl}/blog/${slug}`,
             },
-          }),
+          }).replace(/</g, "\\u003c"),
         }}
       />
       <div className="max-w-7xl mx-auto pt-12 px-4 sm:px-6 lg:px-8">

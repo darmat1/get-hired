@@ -8,6 +8,7 @@ import { Button } from "./button";
 interface VoiceInputButtonProps {
   onTranscript: (text: string) => void;
   apiKey?: string;
+  userId?: string;
   className?: string;
   size?: "default" | "sm" | "lg" | "icon";
   variant?: "default" | "outline" | "ghost" | "secondary";
@@ -16,6 +17,7 @@ interface VoiceInputButtonProps {
 export function VoiceInputButton({
   onTranscript,
   apiKey,
+  userId,
   className = "",
   size = "default",
   variant = "outline",
@@ -25,6 +27,7 @@ export function VoiceInputButton({
   const { state, startRecording, stopRecording, isRecording, interimTranscript } =
     useVoiceInput({
       apiKey,
+      userId,
       onTranscript: (text) => {
         onTranscript(text);
         setError(null);

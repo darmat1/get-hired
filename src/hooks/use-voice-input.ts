@@ -2,20 +2,27 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 
-export type VoiceInputState = "idle" | "connecting" | "recording" | "processing" | "error";
+export type VoiceInputState =
+  | "idle"
+  | "connecting"
+  | "recording"
+  | "processing"
+  | "error";
 
 export interface UseVoiceInputOptions {
   onTranscript?: (text: string) => void;
   onError?: (error: Error) => void;
   wsUrl?: string;
   apiKey?: string;
+  userId?: string;
 }
 
-export function useVoiceInput({ 
-  onTranscript, 
+export function useVoiceInput({
+  onTranscript,
   onError,
-  wsUrl = process.env.NEXT_PUBLIC_VOICE_WS_URL || "ws://localhost:3001",
+  wsUrl = process.env.NEXT_PUBLIC_VOICE_WS_URL || "localhost:3001",
   apiKey: providedApiKey,
+  userId,
 }: UseVoiceInputOptions) {
   const [state, setState] = useState<VoiceInputState>("idle");
   const [interimTranscript, setInterimTranscript] = useState("");
@@ -31,6 +38,7 @@ export function useVoiceInput({
     isRecordingRef.current = false;
 
     if (processorRef.current) {
+      (processorRef.current as any).port?.close();
       processorRef.current.disconnect();
       processorRef.current = null;
     }
@@ -46,7 +54,6 @@ export function useVoiceInput({
     }
 
     if (socketRef.current) {
-      socketRef.current.send(JSON.stringify({ clientContent: { turns: [], endOfTurn: true } }));
       socketRef.current.close();
       socketRef.current = null;
     }
@@ -60,9 +67,7 @@ export function useVoiceInput({
     try {
       setState("connecting");
       fullTranscriptRef.current = "";
-      
-      const apiKey = providedApiKey || "";
-      
+
       const wsProtocol = wsUrl.startsWith("https") ? "wss" : "ws";
       const wsUrlHost = wsUrl.replace(/^https?:\/\//, "");
       const ws = new WebSocket(`${wsProtocol}://${wsUrlHost}/gemini-live`);
@@ -70,18 +75,15 @@ export function useVoiceInput({
 
       ws.onopen = () => {
         console.log("[Voice] WebSocket connected");
-        
-        ws.send(JSON.stringify({
-          setup: {
-            model: "models/gemini-2.5-flash-native-audio-preview-12-2025",
-            generation_config: {
-              response_modalities: ["TEXT"],
-              speech_config: {
-                language_code: "ru-RU",
-              },
+
+        // Только идентификатор пользователя — модель и конфиг настраиваются на бэкенде
+        ws.send(
+          JSON.stringify({
+            setup: {
+              asUserId: userId,
             },
-          },
-        }));
+          }),
+        );
       };
 
       ws.onmessage = (event) => {
@@ -93,21 +95,28 @@ export function useVoiceInput({
           return;
         }
 
-        if (message.serverContent?.inputTranscription?.text) {
-          const text = message.serverContent.inputTranscription.text;
-          if (message.serverContent.inputTranscription.finish) {
-            fullTranscriptRef.current += " " + text;
-            onTranscript?.(fullTranscriptRef.current.trim());
+        if (message.transcript) {
+          const { text, isFinal, fullTranscript } = message.transcript;
+          if (isFinal) {
+            fullTranscriptRef.current = fullTranscript;
+            onTranscript?.(fullTranscript.trim());
+            setInterimTranscript("");
           } else {
-            setInterimTranscript(fullTranscriptRef.current + " " + text);
+            setInterimTranscript(fullTranscript);
           }
         }
 
-        if (message.serverContent?.turnComplete) {
+        if (message.audio) {
+          playAudio(message.audio.data, message.audio.mimeType);
+        }
+
+        if (message.turnComplete) {
           console.log("[Voice] Turn complete");
-          if (fullTranscriptRef.current.trim()) {
-            onTranscript?.(fullTranscriptRef.current.trim());
-          }
+        }
+
+        if (message.sessionClosed) {
+          console.log("[Voice] Session closed by server");
+          stopRecording();
         }
 
         if (message.error) {
@@ -131,19 +140,19 @@ export function useVoiceInput({
       };
     } catch (err) {
       console.error("[Voice] Failed to start:", err);
-      onError?.(err instanceof Error ? err : new Error("Failed to start recording"));
+      onError?.(
+        err instanceof Error ? err : new Error("Failed to start recording"),
+      );
       setState("error");
     }
-  }, [onTranscript, onError, wsUrl]);
+  }, [onTranscript, onError, wsUrl, userId]);
 
   const startAudioCapture = async () => {
     try {
       setState("recording");
-      console.log("[Voice] Starting audio capture...");
 
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          sampleRate: 16000,
           channelCount: 1,
           echoCancellation: true,
           noiseSuppression: true,
@@ -154,43 +163,85 @@ export function useVoiceInput({
       const audioContext = new AudioContext({ sampleRate: 16000 });
       audioContextRef.current = audioContext;
 
+      // Inline worklet processor
+      const workletCode = `
+      class PCMProcessor extends AudioWorkletProcessor {
+        process(inputs) {
+          const input = inputs[0][0];
+          if (input) this.port.postMessage(input);
+          return true;
+        }
+      }
+      registerProcessor('pcm-processor', PCMProcessor);
+    `;
+      const blob = new Blob([workletCode], { type: "application/javascript" });
+      const url = URL.createObjectURL(blob);
+      await audioContext.audioWorklet.addModule(url);
+      URL.revokeObjectURL(url);
+
       const source = audioContext.createMediaStreamSource(stream);
-      const processor = audioContext.createScriptProcessor(4096, 1, 1);
-      processorRef.current = processor;
+      const workletNode = new AudioWorkletNode(audioContext, "pcm-processor");
 
-      source.connect(processor);
-      processor.connect(audioContext.destination);
+      workletNode.port.onmessage = (e) => {
+        if (
+          !socketRef.current ||
+          socketRef.current.readyState !== WebSocket.OPEN
+        )
+          return;
 
-      processor.onaudioprocess = (e) => {
-        if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) return;
-
-        const inputData = e.inputBuffer.getChannelData(0);
-        
-        const pcmData = new Int16Array(inputData.length);
-        for (let i = 0; i < inputData.length; i++) {
-          pcmData[i] = Math.max(-1, Math.min(1, inputData[i])) * 0x7fff;
+        const float32 = e.data;
+        const pcm16 = new Int16Array(float32.length);
+        for (let i = 0; i < float32.length; i++) {
+          pcm16[i] = Math.max(-32768, Math.min(32767, float32[i] * 32767));
         }
 
-        const base64 = btoa(String.fromCharCode(...new Uint8Array(pcmData.buffer)));
+        const base64 = btoa(
+          String.fromCharCode(...new Uint8Array(pcm16.buffer)),
+        );
 
-        socketRef.current.send(JSON.stringify({
-          realtimeInput: {
-            mediaChunks: [
-              {
-                mimeType: "audio/pcm;rate=16000",
-                data: base64,
-              },
-            ],
-          },
-        }));
+        socketRef.current.send(
+          JSON.stringify({
+            realtimeInput: {
+              media_chunks: [
+                { mime_type: "audio/pcm;rate=16000", data: base64 },
+              ],
+            },
+          }),
+        );
       };
 
+      source.connect(workletNode);
+      workletNode.connect(audioContext.destination);
+
+      // Store workletNode for cleanup
+      processorRef.current = workletNode as any;
       isRecordingRef.current = true;
       console.log("[Voice] Recording started");
     } catch (err) {
       console.error("[Voice] Audio capture error:", err);
-      onError?.(err instanceof Error ? err : new Error("Failed to capture audio"));
+      onError?.(
+        err instanceof Error ? err : new Error("Failed to capture audio"),
+      );
       setState("error");
+    }
+  };
+
+  const playAudio = async (base64Data: string, mimeType: string) => {
+    try {
+      const binary = atob(base64Data);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+
+      const audioContext = new AudioContext();
+      const buffer = await audioContext.decodeAudioData(bytes.buffer);
+      const source = audioContext.createBufferSource();
+      source.buffer = buffer;
+      source.connect(audioContext.destination);
+      source.start();
+    } catch (err) {
+      console.error("[Voice] Failed to play audio:", err);
     }
   };
 
