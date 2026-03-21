@@ -406,6 +406,7 @@ export default function MyExperiencePage() {
                       <VoiceInputButton
                         size="icon"
                         variant="ghost"
+                        userId={session?.user?.id}
                         onTranscript={(text) => {
                           setProfileText((prev) => prev + (prev ? " " : "") + text);
                         }}
