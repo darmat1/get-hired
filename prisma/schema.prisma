@@ -24,7 +24,8 @@ model User {
   image         String?
 
   // Relations
-  resumes  Resume[]
+  resumes      Resume[]
+  coverLetters CoverLetter[]
   sessions Session[]
   accounts Account[]
   profile  UserProfile?
@@ -123,7 +124,28 @@ model Resume {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  coverLetters CoverLetter[]
+
   @@index([userId])
+}
+
+model CoverLetter {
+  id              String   @id @default(cuid())
+  jobDescription  String
+  coverLetterText String
+  format          String   @default("bullet")
+  language        String   @default("en")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  resumeId String?
+  resume   Resume? @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@map("cover_letter")
 }
 
 model UserProfile {

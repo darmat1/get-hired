@@ -1832,6 +1832,66 @@ export const translations: Translations = {
     uk: "Супровідний лист",
     ru: "Сопроводительное письмо",
   },
+  "nav.my_cover_letters": {
+    en: "My Cover Letters",
+    uk: "Мої листи",
+    ru: "Мои письма",
+  },
+  "my_cover_letters.title": {
+    en: "My Cover Letters",
+    uk: "Мої супровідні листи",
+    ru: "Мои сопроводительные письма",
+  },
+  "my_cover_letters.subtitle": {
+    en: "View and manage your generated cover letters",
+    uk: "Переглядайте та керуйте згенерованими листами",
+    ru: "Просматривайте и управляйте сгенерированными письмами",
+  },
+  "my_cover_letters.no_letters": {
+    en: "No cover letters yet",
+    uk: "Поки немає листів",
+    ru: "Пока нет писем",
+  },
+  "my_cover_letters.no_letters_desc": {
+    en: "Generate your first cover letter to get started",
+    uk: "Згенеруйте свій перший лист, щоб почати",
+    ru: "Сгенерируйте первое письмо, чтобы начать",
+  },
+  "my_cover_letters.go_generate": {
+    en: "Generate Cover Letter",
+    uk: "Згенерувати лист",
+    ru: "Сгенерировать письмо",
+  },
+  "my_cover_letters.linked_resume": {
+    en: "Linked Resume",
+    uk: "Прив'язане резюме",
+    ru: "Привязанное резюме",
+  },
+  "my_cover_letters.format": {
+    en: "Format",
+    uk: "Формат",
+    ru: "Формат",
+  },
+  "my_cover_letters.job_description": {
+    en: "Job Description",
+    uk: "Опис вакансії",
+    ru: "Описание вакансии",
+  },
+  "my_cover_letters.delete_modal_title": {
+    en: "Delete Cover Letter",
+    uk: "Видалити лист",
+    ru: "Удалить письмо",
+  },
+  "my_cover_letters.delete_confirm_title": {
+    en: "Are you sure?",
+    uk: "Ви впевнені?",
+    ru: "Вы уверены?",
+  },
+  "my_cover_letters.delete_confirm_desc": {
+    en: "This action cannot be undone. This will permanently delete this cover letter.",
+    uk: "Цю дію неможливо скасувати. Лист буде видалено назавжди.",
+    ru: "Это действие нельзя отменить. Письмо будет удалено навсегда.",
+  },
 
   // Cover Letter Page
   "cover_letter.title": {

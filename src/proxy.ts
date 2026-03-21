@@ -3,39 +3,69 @@ import type { NextRequest } from "next/server";
 
 const SUPPORTED_LOCALES = ["uk", "ru"];
 
+// === CORS for Chrome Extension ===
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+  return (
+    origin.startsWith("chrome-extension://") ||
+    origin === "http://localhost:3000"
+  );
+}
+
+function withCorsHeaders(response: NextResponse, origin: string): NextResponse {
+  response.headers.set("Access-Control-Allow-Origin", origin);
+  response.headers.set("Access-Control-Allow-Credentials", "true");
+  response.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS",
+  );
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization",
+  );
+  return response;
+}
+
+// === Main proxy ===
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+  const origin = request.headers.get("origin");
+  const isApi = pathname.startsWith("/api/");
 
+  // Handle CORS preflight for API
+  if (request.method === "OPTIONS" && isApi && isAllowedOrigin(origin)) {
+    return withCorsHeaders(new NextResponse(null, { status: 204 }), origin!);
+  }
+
+  // Skip locale handling for static files, API, sitemap, robots
   if (
     pathname.startsWith("/_next") ||
     pathname.includes(".") ||
-    pathname.startsWith("/api") ||
+    isApi ||
     pathname === "/sitemap.xml" ||
     pathname === "/robots.txt"
   ) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    if (isApi && isAllowedOrigin(origin)) {
+      return withCorsHeaders(response, origin!);
+    }
+    return response;
   }
 
-  // Создаем копию заголовков, чтобы добавить свой
   const requestHeaders = new Headers(request.headers);
   const segments = pathname.split("/").filter(Boolean);
   const firstSegment = segments[0]?.toLowerCase();
 
-  // 3. Если в начале пути наш язык (uk или ru)
+  // If path starts with a supported locale
   if (firstSegment && SUPPORTED_LOCALES.includes(firstSegment)) {
     const locale = firstSegment;
     const internalPath = "/" + segments.slice(1).join("/");
     const url = new URL(internalPath + search, request.url);
 
-    // ВАЖНО: Устанавливаем заголовок локали для сервера
     requestHeaders.set("x-locale", locale);
 
-    console.log(`✨ MATCH! Locale: ${locale}. Rewriting to: ${internalPath}`);
-
     const res = NextResponse.rewrite(url, {
-      request: {
-        headers: requestHeaders,
-      },
+      request: { headers: requestHeaders },
     });
 
     res.cookies.set("NEXT_LOCALE", locale, {
@@ -45,17 +75,17 @@ export function proxy(request: NextRequest) {
     return res;
   }
 
-  // 4. Логика для главной и дефолтного языка
+  // Default language from cookie or "en"
   const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
   const initialLocale =
     cookieLocale && SUPPORTED_LOCALES.includes(cookieLocale)
       ? cookieLocale
       : "en";
 
-  requestHeaders.set("x-locale", initialLocale); // Устанавливаем из куки или en
+  requestHeaders.set("x-locale", initialLocale);
 
+  // Redirect root to locale path if cookie is set
   if (pathname === "/") {
-    const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
     if (cookieLocale && SUPPORTED_LOCALES.includes(cookieLocale)) {
       return NextResponse.redirect(
         new URL(`/${cookieLocale}${search}`, request.url),
@@ -64,9 +94,7 @@ export function proxy(request: NextRequest) {
   }
 
   return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
+    request: { headers: requestHeaders },
   });
 }
 

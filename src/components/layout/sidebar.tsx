@@ -93,6 +93,19 @@ export function Sidebar() {
               {t("nav.cover_letter")}
             </LocalizedLink>
           </li>
+          <li>
+            <LocalizedLink
+              href="/dashboard/my-cover-letters"
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
+                isActive("/dashboard/my-cover-letters")
+                  ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
+                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+              }`}
+            >
+              <FileText className="mr-3 h-5 w-5 flex-shrink-0" />
+              {t("nav.my_cover_letters")}
+            </LocalizedLink>
+          </li>
         </ul>
       </nav>
       <div className="py-4 space-y-4">

@@ -276,51 +276,73 @@ Examples of GOOD formatting:
    - BAD: "Worked on frontend development"
    - GOOD: "Developed <b>15+ React components</b> serving <b>50K+ daily users</b>, reducing page load time by <b>40%</b>"
 
-2. **RELEVANCE FILTER**:
-   - ONLY include work experience RELEVANT to the target role.
-   - EXCLUDE completely unrelated experience (driver, waiter, construction worker for a developer role).
-   - ADJACENT fields (project management, QA, design) MAY be included if they add value.
+2. **RELEVANCE SCORING — CRITICAL, DO THIS FIRST**:
+   Before writing ANY descriptions, score EACH position for relevance to this specific JD on a scale 1-3:
 
-3. **KEYWORD SATURATION**:
+   Score 3 — HIGHLY RELEVANT: Stack, domain, or responsibilities directly match JD requirements.
+   → Write 3-5 detailed bullet points. Every bullet must have a concrete action + result. At least 1 must have a metric.
+
+   Score 2 — ADJACENT: Some overlap (different framework but same domain, or same stack but different role type).
+   → Write EXACTLY 1 short summary sentence in the description array. No bullet points, no metrics needed.
+   → Format: "Developed [what] using [tech] at [company], focusing on [brief relevant aspect]."
+   → Example: "Developed client-side of a relocation SaaS platform using <b>Vue.js</b> at <b>ReSpot</b>, including complex UI workflows and <b>Stripe</b> payment integration."
+
+   Score 1 — IRRELEVANT: No meaningful tech or domain overlap with JD.
+   → EXCLUDE this position entirely. Do not add it to workExperience array.
+
+   Scoring examples for a React/Next.js Frontend JD:
+   - b0arding.com (React, Next.js, Redis) → Score 3 → full bullets
+   - ReSpot (Vue.js SaaS) → Score 2 → one sentence
+   - iCoinSoftware (JS, FinTech charts) → Score 2 → one sentence
+   - Pocketfied (React, Shopify) → Score 2 → one sentence
+   - Re-mote (HTML/CSS team lead) → Score 2 → one sentence
+   - Khaztech (PHP, WordPress, MySQL) → Score 1 → EXCLUDE
+   - GetHired.work (Next.js, AI, pet project) → Score 3 → full bullets
+
+3. **OVERLAPPING DATES — HANDLE EXPLICITLY**:
+   - If two positions have overlapping date ranges, always use correct employmentType (part_time, contract).
+   - For Score 2 positions with overlapping dates, start the summary sentence with "Concurrently developed..."
+   - This prevents resume score warnings about date conflicts.
+
+4. **KEYWORD SATURATION**:
    - Identify ALL key technologies, skills, and buzzwords from the JD.
-   - Weave them naturally into summary, descriptions, and skills.
+   - Weave them naturally into summary and Score 3 descriptions.
    - Ensure maximum ATS keyword match.
 
-4. **METRICS AND RESULTS**:
-   - Use numbers from the profile: team sizes, user counts, performance improvements, project counts.
-   - If a metric exists in the profile, USE IT. Do NOT invent numbers.
-   - Frame achievements with impact: "Reduced X by Y%", "Increased Z by N%", "Led team of N".
+5. **METRICS AND RESULTS — MANDATORY FOR SCORE 3**:
+   - Every Score 3 position MUST have at least 1 bullet with a concrete metric from the profile.
+   - Use numbers from the profile: percentages, user counts, performance improvements, team sizes.
+   - NEVER invent metrics. If none exist in the profile for this position, skip the metric requirement.
    - ALL metrics MUST be wrapped in <b> tags.
 
-5. **PROFESSIONAL SUMMARY**:
+6. **PROFESSIONAL SUMMARY**:
    - Write a powerful 2-3 sentence summary targeting the SPECIFIC role.
-   - Include years of experience in the REQUIRED STACK (not total career).
-   - Mention 2-3 key technologies from the JD.
-   - If the most relevant stack experience comes from an older position, mention it prominently here — this compensates for it appearing lower in the chronological timeline.
-   - Apply HTML formatting rules: at least 3 <b> tags and 1 <i> tag.
+   - Include years of experience in the REQUIRED STACK (not total career years).
+   - Lead with the strongest metric from the most relevant Score 3 position.
+   - Mention 2-3 key technologies directly from the JD.
+   - If relevant stack experience is from an older position, still mention it prominently here.
+   - Apply HTML formatting: at least 3 <b> tags and 1 <i> tag.
 
-6. **SKILLS**:
-   - List skills from the JD FIRST, but only if the candidate has them.
-   - Add complementary skills from the profile.
-   - Remove skills irrelevant to the role.
+7. **SKILLS**:
+   - List skills matching the JD FIRST, but only if the candidate actually has them.
+   - Add complementary skills from the profile that support the role.
+   - Remove skills with no relevance to the target role.
    - Use "technical", "soft", or "language" for category.
    - Use "beginner", "elementary", "intermediate", "advanced", or "expert" for level.
 
-7. **ORDERING — CHRONOLOGICAL, STRICT**:
-   - Sort work experience strictly by startDate DESCENDING (newest first). This is MANDATORY.
-   - NEVER reorder positions to match JD relevance. Chronological order must always be preserved.
-   - Pet projects (employmentType: pet_project) — always last, regardless of date.
-   - Relevance is expressed ONLY through: rewritten descriptions with keyword-rich bullet points, and the professional summary. NOT by reordering companies.
-   - If the most relevant experience (e.g. Vue.js) is at an older company — mention it prominently in the summary and rewrite that company's bullet points to highlight it. Do NOT move it up.
-   - Preserve the employmentType value from the profile exactly as-is in the output JSON.
-   - Example: Candidate has React job (current, 2023–present) and Vue job (2020–2022). JD requires Vue. CORRECT order: React job first (newer), Vue job second (older). Compensate by mentioning Vue prominently in summary.
+8. **ORDERING — CHRONOLOGICAL, STRICT**:
+   - Sort work experience strictly by startDate DESCENDING (newest first). MANDATORY, no exceptions.
+   - NEVER reorder positions to match relevance. Chronological order is sacred.
+   - Pet projects (employmentType: pet_project) — always last regardless of date.
+   - Relevance is shown ONLY via bullet depth (Score 3 = full bullets, Score 2 = one sentence) and the summary. NOT by reordering.
+   - Preserve the employmentType value from the profile exactly as given.
 
 ### OUTPUT FORMAT
 Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exact structure:
 
 {
   "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "telegram": "", "summary": "2-3 powerful sentences with HTML <b> and <i> tags" },
-  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with <b>metric</b> and <b>tech</b>", "Another achievement"], "employmentType": "full_time or part_time or contract or pet_project" }],
+  "workExperience": [{ "id": "we-1", "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM or empty", "current": false, "description": ["Achievement with <b>metric</b> and <b>tech</b>"], "employmentType": "full_time or part_time or contract or pet_project" }],
   "education": [{ "id": "edu-1", "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false }],
   "skills": [{ "id": "skill-1", "name": "", "category": "technical", "level": "advanced" }],
   "detectedLanguage": "ISO 639-1 code of the JD language (en, uk, ru, pl, de, etc.)",
@@ -331,12 +353,10 @@ Return ONLY valid JSON (no markdown, no backticks, no explanation) with this exa
 ### CRITICAL RULES
 - Output ONLY the JSON object, nothing else.
 - Use ONLY facts from the candidate profile. NEVER invent data.
-- Each work experience "description" array should have 3-5 bullet points.
-- Generate unique IDs for each item (use format like "we-1", "we-2", "edu-1", "skill-1", etc.).
-- Keep only RELEVANT positions. Filter out unrelated jobs.
-- Rewrite descriptions to maximize keyword matches and emphasize measurable results.
+- Score 3 positions: 3-5 items in description array. Score 2 positions: exactly 1 item in description array. Score 1: omit from array entirely.
+- Generate unique IDs for each item (we-1, we-2, edu-1, skill-1, etc.).
 - workExperience MUST be sorted by startDate descending — no exceptions.
-- IMPORTANT: Extract targetPosition and targetCompany from the Job Description ONLY. Do NOT use candidate experience for these fields.`;
+- Extract targetPosition and targetCompany from the JD ONLY, never from candidate profile.`;
 
 export async function POST(request: Request) {
   try {
@@ -350,6 +370,7 @@ export async function POST(request: Request) {
 
     const {
       jobDescription,
+      language,
       format = "prose",
       generateResume = false,
       resumeLanguage = "en",
@@ -431,6 +452,7 @@ Write the cover letter now. Use ONLY facts from the profile above.`;
       success: boolean;
       coverLetter: string;
       resumeId?: string;
+      coverLetterId?: string;
     } = {
       success: true,
       coverLetter: response.content.trim(),
@@ -450,9 +472,11 @@ ${jobDescription}
 ${profileToon}
 
 IMPORTANT: ${languageInstruction}
-Create a tailored, selling resume now. Output ONLY valid JSON. Include ONLY relevant experience. Filter out unrelated jobs. Maximize keyword matches from the JD. Use metrics and numbers from the profile.
-CRITICAL: Sort workExperience strictly by startDate DESCENDING (newest first). Do NOT reorder by relevance. Express relevance through the summary and rewritten bullet points only.
-CRITICAL: Apply <b> and <i> HTML tags in summary and all description bullet points as instructed.`;
+Create a tailored, selling resume now. Output ONLY valid JSON.
+CRITICAL: Score each position 1-3 for relevance to this JD BEFORE writing anything. Score 3 = full 3-5 bullets. Score 2 = exactly one summary sentence. Score 1 = exclude entirely.
+CRITICAL: Sort workExperience strictly by startDate DESCENDING (newest first). Do NOT reorder by relevance.
+CRITICAL: Apply <b> and <i> HTML tags in summary and all description items as instructed.
+CRITICAL: Every Score 3 position must have at least 1 item with a concrete metric from the profile.`;
 
       const resumeResponse = await aiComplete(
         {
@@ -468,7 +492,6 @@ CRITICAL: Apply <b> and <i> HTML tags in summary and all description bullet poin
       // Parse the AI response as JSON
       let resumeJson;
       try {
-        // Clean up potential markdown code blocks
         let content = resumeResponse.content.trim();
         if (content.startsWith("```json")) {
           content = content.slice(7);
@@ -480,15 +503,12 @@ CRITICAL: Apply <b> and <i> HTML tags in summary and all description bullet poin
         }
         content = content.trim();
 
-        // Attempt to recover truncated JSON (e.g. MAX_TOKENS cut it mid-way)
         try {
           resumeJson = JSON.parse(content);
         } catch {
-          // Find the last valid closing brace and try to close the JSON
           const lastBrace = content.lastIndexOf("}");
           if (lastBrace !== -1) {
             const truncated = content.slice(0, lastBrace + 1);
-            // Count unclosed brackets/braces and close them
             let fixed = truncated;
             const openArrays =
               (fixed.match(/\[/g) || []).length -
@@ -515,11 +535,9 @@ CRITICAL: Apply <b> and <i> HTML tags in summary and all description bullet poin
         );
       }
 
-      // Extract the first line from JD to use as a title hint
       const firstLine = jobDescription.trim().split("\n")[0].slice(0, 80);
       const resumeTitle = `Tailored: ${firstLine}`;
 
-      // Save the tailored resume to the database
       const savedResume = await (prisma.resume.create as any)({
         data: {
           title: resumeTitle,
@@ -538,6 +556,34 @@ CRITICAL: Apply <b> and <i> HTML tags in summary and all description bullet poin
 
       result.resumeId = savedResume.id;
     }
+
+    // Save cover letter to DB (enforce 2-record limit)
+    const existingCount = await prisma.coverLetter.count({
+      where: { userId: session.user.id },
+    });
+
+    if (existingCount >= 2) {
+      const oldest = await prisma.coverLetter.findFirst({
+        where: { userId: session.user.id },
+        orderBy: { createdAt: "asc" },
+      });
+      if (oldest) {
+        await prisma.coverLetter.delete({ where: { id: oldest.id } });
+      }
+    }
+
+    const savedCoverLetter = await prisma.coverLetter.create({
+      data: {
+        jobDescription,
+        coverLetterText: result.coverLetter,
+        format,
+        language: language || "en",
+        userId: session.user.id,
+        resumeId: result.resumeId || null,
+      },
+    });
+
+    result.coverLetterId = savedCoverLetter.id;
 
     return NextResponse.json(result);
   } catch (error) {

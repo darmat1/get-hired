@@ -49,5 +49,6 @@ next-env.d.ts
 
 /backups
 /scripts
+/chrome-extension
 
 posts.json
