@@ -29,7 +29,7 @@ export function TrustpilotWidget() {
         data-locale="en-US"
         data-template-id="56278e9abfbbba0bdcd568bc"
         data-businessunit-id="69a8525ee76eb2190507f770"
-        data-style-height="52px"
+        data-style-height="40px"
         data-style-width="100%"
         data-token="739721ae-c1db-408f-be15-49d017af8ad4"
       >
