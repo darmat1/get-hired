@@ -3,6 +3,37 @@ import { auth } from "@/lib/auth";
 import { generatePDF } from "@/lib/pdf-generator";
 import { prisma } from "@/lib/prisma";
 
+function isAvatarUrlExpired(url: string | null | undefined): boolean {
+  if (!url) return true;
+  try {
+    const urlObj = new URL(url);
+    const expiresParam = urlObj.searchParams.get("e");
+    if (!expiresParam) return true;
+    const expiresAt = parseInt(expiresParam, 10);
+    if (isNaN(expiresAt)) return true;
+    return Math.floor(Date.now() / 1000) > expiresAt;
+  } catch {
+    return true;
+  }
+}
+
+async function getFreshLinkedInAvatar(userId: string): Promise<string | null> {
+  const linkedInAccount = await prisma.account.findFirst({
+    where: { userId, providerId: "linkedin" },
+  });
+  if (!linkedInAccount?.accessToken) return null;
+  try {
+    const response = await fetch("https://api.linkedin.com/v2/userinfo", {
+      headers: { Authorization: `Bearer ${linkedInAccount.accessToken}` },
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.picture || null;
+  } catch {
+    return null;
+  }
+}
+
 function getFilenameForResume(resume: any): string {
   try {
     const personalInfo =
@@ -70,7 +101,49 @@ export async function GET(
       return NextResponse.json({ error: "Resume not found", status: 404 });
     }
 
-    const pdfBuffer = await generatePDF(resume as any);
+    let personalInfo = (resume.personalInfo as any) || {};
+    let avatarUrl = personalInfo.avatarUrl;
+
+    if (!avatarUrl || isAvatarUrlExpired(avatarUrl)) {
+      const userProfile = await prisma.userProfile.findUnique({
+        where: { userId: session.user.id },
+      });
+      let profileAvatar = (userProfile?.personalInfo as any)?.avatarUrl;
+
+      if (!profileAvatar || isAvatarUrlExpired(profileAvatar)) {
+        const freshAvatar = await getFreshLinkedInAvatar(session.user.id);
+        if (freshAvatar) {
+          profileAvatar = freshAvatar;
+          if (userProfile) {
+            await prisma.userProfile.update({
+              where: { id: userProfile.id },
+              data: {
+                personalInfo: {
+                  ...((userProfile.personalInfo as any) || {}),
+                  avatarUrl: freshAvatar,
+                },
+              },
+            });
+          }
+        }
+      }
+
+      if (!avatarUrl && profileAvatar) {
+        avatarUrl = profileAvatar;
+      } else if (isAvatarUrlExpired(avatarUrl) && profileAvatar) {
+        avatarUrl = profileAvatar;
+      }
+    }
+
+    const resumeWithAvatar = {
+      ...resume,
+      personalInfo: {
+        ...personalInfo,
+        avatarUrl,
+      },
+    };
+
+    const pdfBuffer = await generatePDF(resumeWithAvatar as any);
     const filename = getFilenameForResume(resume);
 
     return new NextResponse(pdfBuffer as any, {

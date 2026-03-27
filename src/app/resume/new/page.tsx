@@ -77,7 +77,7 @@ export default function NewResumePage() {
           <div className="max-w-2xl mx-auto">
             <div className="mb-8">
               <LocalizedLink
-                href="/dashboard"
+                href="/dashboard/my-resumes"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -121,12 +121,12 @@ export default function NewResumePage() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
-                  <LocalizedLink href="/dashboard">
-                    <Button variant="ghost" type="button">
-                      {t("common.cancel")}
-                    </Button>
-                  </LocalizedLink>
+                  <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <LocalizedLink href="/dashboard/my-resumes">
+                      <Button variant="ghost" type="button">
+                        {t("common.cancel")}
+                      </Button>
+                    </LocalizedLink>
                   <Button
                     type="submit"
                     disabled={!title.trim() || isCreating}

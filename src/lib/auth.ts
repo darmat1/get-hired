@@ -40,7 +40,6 @@ export const auth = betterAuth({
           `,
         });
       },
-      // Use OTP for email verification upon sign up
       sendVerificationOnSignUp: true,
     }),
   ],
@@ -95,5 +94,116 @@ export const auth = betterAuth({
         },
       },
     },
+    account: {
+      create: {
+        after: async (account) => {
+          if (account.providerId === "linkedin" && account.accessToken) {
+            await syncLinkedInAvatar(account.userId, account.accessToken);
+          }
+        },
+      },
+    },
+    session: {
+      create: {
+        after: async (session) => {
+          await syncAvatarOnLogin(session.userId);
+        },
+      },
+    },
   },
 });
+
+async function syncAvatarOnLogin(userId: string) {
+  try {
+    const linkedInAccount = await prisma.account.findFirst({
+      where: {
+        userId,
+        providerId: "linkedin",
+      },
+    });
+
+    if (!linkedInAccount?.accessToken) {
+      return;
+    }
+
+    await syncLinkedInAvatar(userId, linkedInAccount.accessToken);
+  } catch (e) {
+    console.error("[Auth] Error syncing avatar on login:", e);
+  }
+}
+
+async function syncLinkedInAvatar(userId: string, accessToken: string) {
+  try {
+    const response = await fetch("https://api.linkedin.com/v2/userinfo", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!response.ok) {
+      console.warn("[Auth] Failed to fetch LinkedIn avatar:", response.status);
+      return;
+    }
+
+    const data = await response.json();
+    const newAvatarUrl = data.picture;
+
+    if (!newAvatarUrl) {
+      return;
+    }
+
+    const profile = await prisma.userProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!profile) {
+      return;
+    }
+
+    const currentInfo = (profile.personalInfo as any) || {};
+    const currentAvatarUrl = currentInfo.avatarUrl;
+
+    if (currentAvatarUrl === newAvatarUrl) {
+      return;
+    }
+
+    const isCurrentExpired = isAvatarUrlExpired(currentAvatarUrl);
+
+    if (!isCurrentExpired && currentAvatarUrl) {
+      return;
+    }
+
+    await prisma.userProfile.update({
+      where: { id: profile.id },
+      data: {
+        personalInfo: {
+          ...currentInfo,
+          avatarUrl: newAvatarUrl,
+        },
+      },
+    });
+
+    console.log("[Auth] LinkedIn avatar updated");
+  } catch (e) {
+    console.error("[Auth] Error syncing LinkedIn avatar:", e);
+  }
+}
+
+function isAvatarUrlExpired(url: string | null | undefined): boolean {
+  if (!url) return true;
+  
+  try {
+    const urlObj = new URL(url);
+    const expiresParam = urlObj.searchParams.get("e");
+    
+    if (!expiresParam) {
+      return true;
+    }
+    
+    const expiresAt = parseInt(expiresParam, 10);
+    if (isNaN(expiresAt)) return true;
+    
+    const now = Math.floor(Date.now() / 1000);
+    return now > expiresAt;
+  } catch {
+    return true;
+  }
+}

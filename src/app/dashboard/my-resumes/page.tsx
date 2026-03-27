@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import {
@@ -176,15 +177,20 @@ export default function Dashboard() {
                       className="bg-card text-card-foreground rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow p-6"
                     >
                       <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-lg font-semibold">
-                            {resume.title}
-                          </h3>
+                        <div className="flex-1 min-w-0">
+                          <Link
+                            href={`/resume/${resume.id}/edit`}
+                            className="block"
+                          >
+                            <h3 className="text-lg font-semibold hover:text-primary transition-colors">
+                              {resume.title}
+                            </h3>
+                          </Link>
                           <p className="text-sm text-muted-foreground capitalize">
                             {t("dashboard.template")}: {resume.template}
                           </p>
                         </div>
-                        <FileText className="h-6 w-6 text-primary" />
+                        <FileText className="h-6 w-6 text-primary flex-shrink-0 ml-2" />
                       </div>
 
                       <div className="text-sm text-muted-foreground mb-4">

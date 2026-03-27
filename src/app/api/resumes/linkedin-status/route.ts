@@ -5,6 +5,27 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+function isAvatarUrlExpired(url: string | null | undefined): boolean {
+  if (!url) return true;
+  
+  try {
+    const urlObj = new URL(url);
+    const expiresParam = urlObj.searchParams.get("e");
+    
+    if (!expiresParam) {
+      return true;
+    }
+    
+    const expiresAt = parseInt(expiresParam, 10);
+    if (isNaN(expiresAt)) return true;
+    
+    const now = Math.floor(Date.now() / 1000);
+    return now > expiresAt;
+  } catch {
+    return true;
+  }
+}
+
 export async function GET() {
   try {
     const session = await auth.api.getSession({
@@ -17,12 +38,10 @@ export async function GET() {
 
     const userId = session.user.id;
 
-    // 1. Get User Profile to check/update
-    const profile = await prisma.userProfile.findUnique({
+    const userProfile = await prisma.userProfile.findUnique({
       where: { userId },
     });
 
-    // 2. Check LinkedIn Account
     const linkedInAccount = await prisma.account.findFirst({
       where: {
         userId,
@@ -30,16 +49,16 @@ export async function GET() {
       },
     });
 
-    let avatarUrl: string | null = null;
     const hasLinkedIn = !!linkedInAccount;
+    let avatarUrl: string | null = null;
 
-    // 3. If linked, try to fetch/sync avatar
+    const currentInfo = (userProfile?.personalInfo as any) || {};
+    const currentAvatarUrl = currentInfo.avatarUrl;
+
     if (linkedInAccount && linkedInAccount.accessToken) {
-      // Check if profile already has avatar
-      const currentInfo = (profile?.personalInfo as any) || {};
+      const needsRefresh = isAvatarUrlExpired(currentAvatarUrl);
 
-      if (!currentInfo.avatarUrl) {
-        // Fetch from LinkedIn
+      if (needsRefresh) {
         try {
           const response = await fetch("https://api.linkedin.com/v2/userinfo", {
             headers: { Authorization: `Bearer ${linkedInAccount.accessToken}` },
@@ -47,38 +66,41 @@ export async function GET() {
 
           if (response.ok) {
             const data = await response.json();
-            if (data.picture) {
-              avatarUrl = data.picture;
+            const newAvatarUrl = data.picture;
 
-              console.log("Avatar URL:", avatarUrl);
+            if (newAvatarUrl) {
+              avatarUrl = newAvatarUrl;
 
-              // Persist to Profile if profile exists
-              if (profile) {
+              if (userProfile) {
                 await prisma.userProfile.update({
-                  where: { id: profile.id },
+                  where: { id: userProfile.id },
                   data: {
                     personalInfo: {
                       ...currentInfo,
-                      avatarUrl, // Add avatarUrl
+                      avatarUrl: newAvatarUrl,
                     },
                   },
                 });
-                // Update local variable to return it
-                currentInfo.avatarUrl = avatarUrl;
               }
             }
+          } else {
+            avatarUrl = currentAvatarUrl;
           }
         } catch (e) {
           console.error("Failed to fetch LinkedIn avatar", e);
+          avatarUrl = currentAvatarUrl;
         }
       } else {
-        avatarUrl = currentInfo.avatarUrl;
+        avatarUrl = currentAvatarUrl;
       }
+    } else {
+      avatarUrl = currentAvatarUrl;
     }
 
     return NextResponse.json({
       hasLinkedIn,
       avatarUrl,
+      avatarExpired: avatarUrl ? isAvatarUrlExpired(avatarUrl) : true,
     });
   } catch (error) {
     console.error("Error checking LinkedIn status:", error);
