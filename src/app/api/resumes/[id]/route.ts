@@ -2,6 +2,72 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+function isAvatarUrlExpired(url: string | null | undefined): boolean {
+  if (!url) return true;
+  
+  try {
+    const urlObj = new URL(url);
+    const expiresParam = urlObj.searchParams.get("e");
+    
+    if (!expiresParam) {
+      return true;
+    }
+    
+    const expiresAt = parseInt(expiresParam, 10);
+    if (isNaN(expiresAt)) return true;
+    
+    const now = Math.floor(Date.now() / 1000);
+    return now > expiresAt;
+  } catch {
+    return true;
+  }
+}
+
+async function getFreshLinkedInAvatar(userId: string): Promise<string | null> {
+  const linkedInAccount = await prisma.account.findFirst({
+    where: { userId, providerId: "linkedin" },
+  });
+
+  if (!linkedInAccount?.accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await fetch("https://api.linkedin.com/v2/userinfo", {
+      headers: { Authorization: `Bearer ${linkedInAccount.accessToken}` },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data.picture || null;
+  } catch {
+    return null;
+  }
+}
+
+async function updateProfileAvatar(userId: string, avatarUrl: string) {
+  const profile = await prisma.userProfile.findUnique({
+    where: { userId },
+  });
+
+  if (!profile) return;
+
+  const currentInfo = (profile.personalInfo as any) || {};
+  
+  await prisma.userProfile.update({
+    where: { id: profile.id },
+    data: {
+      personalInfo: {
+        ...currentInfo,
+        avatarUrl,
+      },
+    },
+  });
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -27,70 +93,42 @@ export async function GET(
       return NextResponse.json({ error: "Resume not found" }, { status: 404 });
     }
 
-    // Inject avatarUrl from UserProfile if missing in resume
-    const personalInfo = (resume.personalInfo as any) || {};
-    if (!personalInfo.avatarUrl) {
-      const userProfile = await prisma.userProfile.findUnique({
-        where: { userId: session.user.id },
-      });
+    let personalInfo = (resume.personalInfo as any) || {};
+    let avatarUrl = personalInfo.avatarUrl;
 
-      let profileAvatar = (userProfile?.personalInfo as any)?.avatarUrl;
+    const userProfile = await prisma.userProfile.findUnique({
+      where: { userId: session.user.id },
+    });
 
-      // If missing in profile, try to fetch from LinkedIn directly
-      if (!profileAvatar) {
-        const linkedInAccount = await prisma.account.findFirst({
-          where: { userId: session.user.id, providerId: "linkedin" },
-        });
+    let profileAvatar = (userProfile?.personalInfo as any)?.avatarUrl;
 
-        if (linkedInAccount?.accessToken) {
-          try {
-            const response = await fetch(
-              "https://api.linkedin.com/v2/userinfo",
-              {
-                headers: {
-                  Authorization: `Bearer ${linkedInAccount.accessToken}`,
-                },
-              },
-            );
-            if (response.ok) {
-              const data = await response.json();
-              if (data.picture) {
-                profileAvatar = data.picture;
-                console.log("Fetched Avatar in Resume Editor:", profileAvatar);
-
-                // Persist to Profile
-                if (userProfile) {
-                  await (prisma.userProfile.update as any)({
-                    where: { id: userProfile.id },
-                    data: {
-                      personalInfo: {
-                        ...((userProfile.personalInfo as any) || {}),
-                        avatarUrl: profileAvatar,
-                      },
-                    },
-                  });
-                }
-              }
-            }
-          } catch (e) {
-            console.error("Error fetching LinkedIn avatar in editor:", e);
-          }
-        }
-      }
-
-      if (profileAvatar) {
-        // Return resume with injected avatarUrl
-        return NextResponse.json({
-          ...resume,
-          personalInfo: {
-            ...personalInfo,
-            avatarUrl: profileAvatar,
-          },
-        });
+    if (!profileAvatar || isAvatarUrlExpired(profileAvatar)) {
+      const freshAvatar = await getFreshLinkedInAvatar(session.user.id);
+      if (freshAvatar) {
+        profileAvatar = freshAvatar;
+        await updateProfileAvatar(session.user.id, freshAvatar);
       }
     }
 
-    return NextResponse.json(resume);
+    if (!avatarUrl) {
+      avatarUrl = profileAvatar;
+    } else if (isAvatarUrlExpired(avatarUrl) && profileAvatar) {
+      avatarUrl = profileAvatar;
+    }
+
+    if (!avatarUrl && profileAvatar) {
+      avatarUrl = profileAvatar;
+    }
+
+    const finalResume = {
+      ...resume,
+      personalInfo: {
+        ...personalInfo,
+        avatarUrl,
+      },
+    };
+
+    return NextResponse.json(finalResume);
   } catch (error) {
     console.error("Error fetching resume:", error);
     return NextResponse.json(
@@ -116,7 +154,6 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    // Verify ownership
     const existingResume = await prisma.resume.findUnique({
       where: {
         id: id,
@@ -128,7 +165,7 @@ export async function PUT(
       return NextResponse.json({ error: "Resume not found" }, { status: 404 });
     }
 
-    const updatedResume = await (prisma.resume.update as any)({
+    const updatedResume = await prisma.resume.update({
       where: {
         id: id,
       },
@@ -141,6 +178,9 @@ export async function PUT(
         skills: body.skills,
         certificates: body.certificates,
         customization: body.customization,
+        language: body.language,
+        targetPosition: body.targetPosition,
+        targetCompany: body.targetCompany,
         updatedAt: new Date(),
       },
     });
@@ -170,7 +210,6 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // Verify ownership
     const existingResume = await prisma.resume.findUnique({
       where: {
         id: id,

@@ -15,7 +15,7 @@ import { formatResumeDate } from "@/lib/format-resume-date";
 
 const styles = StyleSheet.create({
   page: {
-    fontFamily: "Times-Roman",
+    fontFamily: "Helvetica",
     fontSize: 10,
     padding: 40,
     lineHeight: 1.5,

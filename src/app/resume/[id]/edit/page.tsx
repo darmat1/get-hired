@@ -136,12 +136,14 @@ export default function EditResumePage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <Link
-                  href="/dashboard"
+                  href="/dashboard/my-resumes"
                   className="text-muted-foreground hover:text-foreground"
                 >
                   <ChevronLeft className="h-6 w-6" />
                 </Link>
-                <h1 className="text-2xl font-bold">{t("nav.create_resume")}</h1>
+                <h1 className="text-2xl font-bold">
+                  {(resumeData as any)?.title || t("nav.create_resume")}
+                </h1>
               </div>
               <div className="flex gap-2">
                 <Button

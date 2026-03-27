@@ -95,7 +95,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
   };
 
   return (
-    <div className="font-serif space-y-6 p-8 bg-white h-full min-h-[1056px]">
+    <div className="font-sans space-y-6 p-8 bg-white h-full min-h-[1056px]">
       {/* Header */}
       <div className="text-center border-b border-slate-900 pb-6 mb-6">
         {personalInfo.avatarUrl && (
