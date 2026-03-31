@@ -10,6 +10,7 @@ import { LinkedinIcon } from "@/components/ui/icons/linkedin";
 import { Instagram, Facebook, Youtube } from "lucide-react";
 import { RedditIcon } from "../ui/icons/reddit";
 import { TrustpilotWidget } from "../promo/trustpilot-widget";
+import Logo from "../ui/icons/logo";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -24,11 +25,18 @@ export function Footer() {
     <footer className="border-t border-border bg-background/50">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <h3 className="font-semibold mb-4">{t("footer.about")}</h3>
+          <div className="flex flex-col items-center justify-between gap-2">
+            {/* <h3 className="font-semibold mb-4">{t("footer.about")}</h3>
             <p className="text-sm text-muted-foreground">
               {t("footer.about_text")}
-            </p>
+            </p> */}
+            <LocalizedLink
+              href="/"
+              className="text-xl font-bold text-slate-900 dark:text-white"
+            >
+              <Logo />
+            </LocalizedLink>
+            <TrustpilotWidget />
           </div>
 
           {/* Column 2: Product */}
@@ -137,7 +145,16 @@ export function Footer() {
               width="200"
             />
           </a>
-          <TrustpilotWidget />
+          <a
+            href="https://www.saashub.com/gethired-work?utm_source=badge&utm_campaign=badge&utm_content=gethired-work&badge_variant=color&badge_kind=approved"
+            target="_blank"
+          >
+            <img
+              src="https://cdn-b.saashub.com/img/badges/approved-color.png?v=1"
+              alt="GetHired.work badge"
+              style={{ maxWidth: "150px", marginRight: "auto" }}
+            />
+          </a>
         </div>
         <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-center md:text-left text-sm text-muted-foreground">

@@ -534,7 +534,16 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
               </Text>
 
               {workExperience.map((exp, index) => (
-                <View key={index} style={styles.experienceIten} wrap={false}>
+                <View
+                  key={index}
+                  style={[
+                    styles.experienceIten,
+                    index === workExperience.length - 1
+                      ? { marginBottom: 0 }
+                      : {},
+                  ]}
+                  wrap={false}
+                >
                   {/* Timeline Column */}
                   <View style={styles.timelineColumn}>
                     <View style={styles.timelineDot} />
