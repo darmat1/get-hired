@@ -15,6 +15,7 @@ import {
   Loader,
   Trash2,
   AlertTriangle,
+  Upload,
 } from "lucide-react";
 import { LinkedinIcon } from "@/components/ui/icons/linkedin";
 import { useTranslation } from "@/lib/translations";
@@ -39,6 +40,10 @@ export function ProfileForm() {
   } | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showLinkedInConflict, setShowLinkedInConflict] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarLoading, setAvatarLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -172,13 +177,95 @@ export function ProfileForm() {
     checkLinkedInStatus();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (avatarPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
+
   const checkLinkedInStatus = async () => {
     try {
       const response = await fetch("/api/resumes/linkedin-status");
       const data = await response.json();
       setHasLinkedIn(data.hasLinkedIn);
+      setAvatarUrl(data.avatarUrl || null);
     } catch (error) {
       console.error("Error checking LinkedIn status:", error);
+    }
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setMessage({
+        type: "error",
+        text: "Only JPG, PNG, and WEBP files are supported.",
+      });
+      return;
+    }
+
+    if (file.size > 200 * 1024) {
+      setMessage({
+        type: "error",
+        text: "Avatar must be 200 KB or smaller.",
+      });
+      return;
+    }
+
+    if (avatarPreview?.startsWith("blob:")) {
+      URL.revokeObjectURL(avatarPreview);
+    }
+
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+    setMessage(null);
+  };
+
+  const handleAvatarUpload = async () => {
+    if (!avatarFile) return;
+
+    try {
+      setAvatarLoading(true);
+      setMessage(null);
+
+      const formData = new FormData();
+      formData.append("file", avatarFile);
+
+      const response = await fetch("/api/account/avatar", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to upload avatar");
+      }
+
+      if (avatarPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+
+      setAvatarUrl(data.avatarUrl);
+      setAvatarPreview(null);
+      setAvatarFile(null);
+      setMessage({
+        type: "success",
+        text: "Avatar uploaded successfully.",
+      });
+      router.refresh();
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: error instanceof Error ? error.message : "Failed to upload avatar",
+      });
+    } finally {
+      setAvatarLoading(false);
     }
   };
 
@@ -275,6 +362,55 @@ export function ProfileForm() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+          Avatar
+        </h3>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="h-24 w-24 overflow-hidden rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-700">
+            {avatarPreview || avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarPreview || avatarUrl || ""}
+                alt="Avatar preview"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-slate-400">
+                <User className="h-8 w-8" />
+              </div>
+            )}
+          </div>
+          <div className="flex-1 space-y-3">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Upload JPG, PNG, or WEBP. Max size 200 KB.
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700">
+                <Upload className="h-4 w-4" />
+                Choose avatar
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={handleAvatarChange}
+                  disabled={avatarLoading}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={handleAvatarUpload}
+                disabled={!avatarFile || avatarLoading}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700 disabled:bg-slate-400"
+              >
+                {avatarLoading && <Loader className="h-4 w-4 animate-spin" />}
+                Upload avatar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
           {t("profile.social_connections")}

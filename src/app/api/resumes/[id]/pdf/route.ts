@@ -1,21 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { isAvatarUrlExpired } from "@/lib/avatar-utils";
 import { generatePDF } from "@/lib/pdf-generator";
 import { prisma } from "@/lib/prisma";
-
-function isAvatarUrlExpired(url: string | null | undefined): boolean {
-  if (!url) return true;
-  try {
-    const urlObj = new URL(url);
-    const expiresParam = urlObj.searchParams.get("e");
-    if (!expiresParam) return true;
-    const expiresAt = parseInt(expiresParam, 10);
-    if (isNaN(expiresAt)) return true;
-    return Math.floor(Date.now() / 1000) > expiresAt;
-  } catch {
-    return true;
-  }
-}
 
 async function getFreshLinkedInAvatar(userId: string): Promise<string | null> {
   const linkedInAccount = await prisma.account.findFirst({
