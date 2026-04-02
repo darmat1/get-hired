@@ -6,6 +6,7 @@ export interface PersonalInfo {
   location: string;
   website?: string;
   linkedin?: string;
+  github?: string;
   telegram?: string;
   avatarUrl?: string;
   summary: string;
@@ -87,6 +88,8 @@ export interface Resume {
     showEmail?: boolean;
     showAddress?: boolean;
     showLinkedin?: boolean;
+    showGithub?: boolean;
+    showWebsite?: boolean;
     showTelegram?: boolean;
   };
   language: string;

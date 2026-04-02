@@ -11,6 +11,8 @@ import {
   Trash2,
   X,
   Import,
+  Github,
+  Globe,
 } from "lucide-react";
 import { LinkedinIcon } from "@/components/ui/icons/linkedin";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -52,12 +54,12 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
     };
   }, [isSettingsOpen]);
   const [importType, setImportType] = useState<"experience" | "skills">(
-    "experience",
+    "experience"
   );
   const [importSkillsCategory, setImportSkillsCategory] = useState<
     "technical" | "soft" | "language" | null
   >(null);
-
+  const [isImportingPersonalInfo, setIsImportingPersonalInfo] = useState(false);
   // Default values
   const sidebarColor = customization?.sidebarColor || "#2e3a4e";
   const showAvatar = customization?.showAvatar !== false;
@@ -65,6 +67,8 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
   const showEmail = customization?.showEmail !== false;
   const showAddress = customization?.showAddress !== false;
   const showLinkedin = customization?.showLinkedin !== false;
+  const showGithub = customization?.showGithub !== false;
+  const showWebsite = customization?.showWebsite !== false;
   const showTelegram = customization?.showTelegram !== false;
 
   if (!personalInfo) return null;
@@ -146,7 +150,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
     );
   };
 
-  const handleImport = (selectedItems: any[]) => {
+  const handleImport = async (selectedItems: any[]) => {
     if (importType === "experience") {
       const itemsWithNewIds = selectedItems.map((item) => ({
         ...item,
@@ -156,7 +160,7 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
         ...(workExperience || []),
         ...itemsWithNewIds,
       ]);
-    } else {
+    } else if (importType === "skills") {
       // Merge skills by name to avoid duplicates
       const existingNames = new Set(
         (skills || []).map((s) => s.name.toLowerCase()),
@@ -170,6 +174,29 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
       if (newSkills.length > 0) {
         updateSection("skills", [...(skills || []), ...newSkills]);
       }
+    }
+  };
+
+  const importPersonalInfo = async () => {
+    setIsImportingPersonalInfo(true);
+    try {
+      const response = await fetch("/api/profile/experience");
+      if (response.ok) {
+        const profile = await response.json();
+        if (profile.personalInfo && onChange) {
+          onChange({
+            ...data,
+            personalInfo: {
+              ...personalInfo,
+              ...profile.personalInfo,
+            },
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to import personal info:", error);
+    } finally {
+      setIsImportingPersonalInfo(false);
     }
   };
 
@@ -266,6 +293,18 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                 onChange={(v) => updateCustomization("showLinkedin", v)}
               />
               <SidebarToggle
+                label="GitHub"
+                icon={Github}
+                checked={showGithub}
+                onChange={(v) => updateCustomization("showGithub", v)}
+              />
+              <SidebarToggle
+                label="Website"
+                icon={Globe}
+                checked={showWebsite}
+                onChange={(v) => updateCustomization("showWebsite", v)}
+              />
+              <SidebarToggle
                 label="Telegram"
                 icon={Send}
                 checked={showTelegram}
@@ -309,12 +348,28 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
 
         {/* Contact */}
         <div className="mb-8">
-          <h3 className="text-sm font-bold uppercase border-b border-white/20 pb-2 mb-4 text-white/90">
-            {getTranslation("form.personal_info", data.language || "en") ===
-            "form.personal_info"
-              ? "Contact"
-              : getTranslation("form.personal_info", data.language || "en")}
-          </h3>
+          <div className="flex justify-between items-center border-b border-white/20 pb-2 mb-4">
+            <h3 className="text-sm font-bold uppercase text-white/90">
+              {getTranslation("form.personal_info", data.language || "en") ===
+              "form.personal_info"
+                ? "Contact"
+                : getTranslation("form.personal_info", data.language || "en")}
+            </h3>
+            {isEditing && (
+              <button
+                onClick={importPersonalInfo}
+                disabled={isImportingPersonalInfo}
+                className="text-[9px] bg-white/10 text-white/50 hover:text-white flex items-center gap-1.5 px-1.5 py-0.5 rounded transition-all hover:bg-white/20"
+                title="Import from Profile"
+              >
+                {isImportingPersonalInfo ? (
+                  <div className="w-2.5 h-2.5 border border-t-white border-white/30 rounded-full animate-spin" />
+                ) : (
+                  <Import size={10} />
+                )}
+              </button>
+            )}
+          </div>
           <div className="space-y-3">
             {showEmail && (
               <div>
@@ -352,6 +407,32 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
                   onChange={(v) => updatePersonalInfo("linkedin", v)}
                   className="text-[10px] text-white/90 break-words"
                   placeholder="LinkedIn URL"
+                />
+              </div>
+            )}
+            {showGithub && (
+              <div>
+                <div className="text-[10px] font-bold text-white/60 uppercase">
+                  GitHub
+                </div>
+                <EditableText
+                  value={personalInfo.github || ""}
+                  onChange={(v) => updatePersonalInfo("github", v)}
+                  className="text-[10px] text-white/90 break-words"
+                  placeholder="GitHub URL"
+                />
+              </div>
+            )}
+            {showWebsite && (
+              <div>
+                <div className="text-[10px] font-bold text-white/60 uppercase">
+                  Website
+                </div>
+                <EditableText
+                  value={personalInfo.website || ""}
+                  onChange={(v) => updatePersonalInfo("website", v)}
+                  className="text-[10px] text-white/90 break-words"
+                  placeholder="Website URL"
                 />
               </div>
             )}

@@ -1,30 +1,10 @@
 import { auth } from "@/lib/auth";
+import { isAvatarUrlExpired } from "@/lib/avatar-utils";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
-
-function isAvatarUrlExpired(url: string | null | undefined): boolean {
-  if (!url) return true;
-  
-  try {
-    const urlObj = new URL(url);
-    const expiresParam = urlObj.searchParams.get("e");
-    
-    if (!expiresParam) {
-      return true;
-    }
-    
-    const expiresAt = parseInt(expiresParam, 10);
-    if (isNaN(expiresAt)) return true;
-    
-    const now = Math.floor(Date.now() / 1000);
-    return now > expiresAt;
-  } catch {
-    return true;
-  }
-}
 
 export async function GET() {
   try {

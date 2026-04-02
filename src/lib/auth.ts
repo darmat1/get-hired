@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
 import { emailOTP } from "better-auth/plugins";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { isAvatarUrlExpired } from "@/lib/avatar-utils";
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
@@ -184,26 +185,5 @@ async function syncLinkedInAvatar(userId: string, accessToken: string) {
     console.log("[Auth] LinkedIn avatar updated");
   } catch (e) {
     console.error("[Auth] Error syncing LinkedIn avatar:", e);
-  }
-}
-
-function isAvatarUrlExpired(url: string | null | undefined): boolean {
-  if (!url) return true;
-  
-  try {
-    const urlObj = new URL(url);
-    const expiresParam = urlObj.searchParams.get("e");
-    
-    if (!expiresParam) {
-      return true;
-    }
-    
-    const expiresAt = parseInt(expiresParam, 10);
-    if (isNaN(expiresAt)) return true;
-    
-    const now = Math.floor(Date.now() / 1000);
-    return now > expiresAt;
-  } catch {
-    return true;
   }
 }

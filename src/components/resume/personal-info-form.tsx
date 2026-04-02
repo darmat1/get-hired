@@ -143,6 +143,19 @@ export function PersonalInfoForm({ data, onChange }: PersonalInfoFormProps) {
 
           <div>
             <label className="block text-sm font-medium text-muted-foreground mb-1">
+              GitHub
+            </label>
+            <input
+              type="url"
+              value={data.github || ""}
+              onChange={(e) => updateField("github", e.target.value)}
+              className="w-full px-3 py-2 border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors text-foreground"
+              placeholder="https://github.com/..."
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               Telegram
             </label>
             <input

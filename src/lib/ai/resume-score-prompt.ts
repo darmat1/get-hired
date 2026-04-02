@@ -16,7 +16,7 @@ Return ONLY valid JSON — no markdown, no explanation.
 RED — recruiter will likely close the resume immediately:
 - Missing email address (this is the only mandatory contact field)
 - No work experience entries at all
-- Overlapping employment dates or clearly impossible dates
+- Clearly impossible dates, or overlapping employment dates that are not plausibly concurrent based on employment type
 - Job title in experience has zero relevance to the declared target role
 - Spelling errors in critical fields: full name, job title, company name, email address
 - Empty or missing summary/about section
@@ -86,4 +86,7 @@ scoreLabel:
 - Analyze the text quality (professionalism, clarity, tone) and suggest better wording if necessary.
 - Do not invent issues that are not present. Only flag what you actually see.
 - IMPORTANT: If a section is missing but you think it should be there (like soft skills), mention it in YELLOW.
+- IMPORTANT: Always consider Employment Type when reviewing overlapping dates.
+- Do NOT flag overlapping dates as RED if at least one overlapping role is marked as part_time, freelance, contract, or pet_project, or if the resume clearly explains the roles were concurrent.
+- Only flag overlap as RED when the dates are impossible or when overlapping roles look like unexplained simultaneous full_time commitments that create a real credibility issue.
 - Output ONLY the JSON object, no other text, no markdown.`;

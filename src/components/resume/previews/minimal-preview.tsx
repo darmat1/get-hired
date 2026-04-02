@@ -19,8 +19,9 @@ export function MinimalPreview({ data, onChange, isEditing }: Props) {
   const { personalInfo, workExperience, education, skills } = data;
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [importType, setImportType] = useState<"experience" | "skills">(
-    "experience",
+    "experience"
   );
+  const [isImportingPersonalInfo, setIsImportingPersonalInfo] = useState(false);
 
   if (!personalInfo) return null;
 
@@ -55,7 +56,7 @@ export function MinimalPreview({ data, onChange, isEditing }: Props) {
         ...(workExperience || []),
         ...itemsWithNewIds,
       ]);
-    } else {
+    } else if (importType === "skills") {
       const existingNames = new Set(
         (skills || []).map((s) => s.name.toLowerCase()),
       );
@@ -68,10 +69,48 @@ export function MinimalPreview({ data, onChange, isEditing }: Props) {
     }
   };
 
+  const importPersonalInfo = async () => {
+    setIsImportingPersonalInfo(true);
+    try {
+      const response = await fetch("/api/profile/experience");
+      if (response.ok) {
+        const profile = await response.json();
+        if (profile.personalInfo && onChange) {
+          onChange({
+            ...data,
+            personalInfo: {
+              ...personalInfo,
+              ...profile.personalInfo,
+            },
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to import personal info:", error);
+    } finally {
+      setIsImportingPersonalInfo(false);
+    }
+  };
+
   return (
     <div className="font-sans text-black space-y-8 p-8 bg-white h-full min-h-[1056px]">
       {/* Header */}
-      <div className="flex items-center gap-6 mb-8">
+      <div className="relative flex items-center gap-6 mb-8 group/header">
+        {isEditing && (
+          <button
+            onClick={importPersonalInfo}
+            disabled={isImportingPersonalInfo}
+            className="absolute top-0 right-0 text-[10px] text-slate-400 hover:text-slate-800 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-slate-100 opacity-0 group-hover/header:opacity-100"
+            title="Import from Profile"
+          >
+            {isImportingPersonalInfo ? (
+              <div className="w-3 h-3 border border-t-slate-500 border-slate-200 rounded-full animate-spin" />
+            ) : (
+              <Import size={12} />
+            )}
+            Import
+          </button>
+        )}
         {personalInfo.avatarUrl && (
           <img
             src={personalInfo.avatarUrl}

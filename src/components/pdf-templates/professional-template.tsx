@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 24,
-    fontFamily: "Times-Bold",
+    fontFamily: "Helvetica-Bold",
     paddingBottom: 25,
     marginBottom: 2,
     textTransform: "uppercase",
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   sectionTitle: {
-    fontFamily: "Times-Bold",
+    fontFamily: "Helvetica-Bold",
     fontSize: 12,
     marginBottom: 6,
     marginTop: 6,
@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   jobTitle: {
-    fontFamily: "Times-Bold",
+    fontFamily: "Helvetica-Bold",
     fontSize: 11,
   },
   company: {
     fontSize: 10,
-    fontFamily: "Times-Italic",
+    fontFamily: "Helvetica-Oblique",
   },
   dateLocation: {
     fontSize: 9,
@@ -248,6 +248,11 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                   ]}
                 >
                   {personalInfo.linkedin}
+                </Text>
+              )}
+              {personalInfo.github && (
+                <Text style={[styles.contactInfo, { color: "#2563eb" }]}>
+                  {personalInfo.github}
                 </Text>
               )}
               {personalInfo.website && (

@@ -24,6 +24,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
   const [importSkillsCategory, setImportSkillsCategory] = useState<
     "technical" | "soft" | "language" | null
   >(null);
+  const [isImportingPersonalInfo, setIsImportingPersonalInfo] = useState(false);
 
   const getLevelLabel = (level?: string) => {
     if (!level) return "";
@@ -81,7 +82,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
         ...(workExperience || []),
         ...itemsWithNewIds,
       ]);
-    } else {
+    } else if (importType === "skills") {
       const existingNames = new Set(
         (skills || []).map((s) => s.name.toLowerCase()),
       );
@@ -94,10 +95,42 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
     }
   };
 
+  const importPersonalInfo = async () => {
+    setIsImportingPersonalInfo(true);
+    try {
+      const response = await fetch("/api/profile/experience");
+      if (response.ok) {
+        const profile = await response.json();
+        if (profile.personalInfo && onChange) {
+          onChange({ ...data, personalInfo: { ...personalInfo, ...profile.personalInfo } });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to import personal info:", error);
+    } finally {
+      setIsImportingPersonalInfo(false);
+    }
+  };
+
   return (
     <div className="font-sans space-y-6 p-8 bg-white h-full min-h-[1056px]">
       {/* Header */}
-      <div className="text-center border-b border-slate-900 pb-6 mb-6">
+      <div className="relative text-center border-b border-slate-900 pb-6 mb-6">
+        {isEditing && (
+          <button
+            onClick={importPersonalInfo}
+            disabled={isImportingPersonalInfo}
+            className="absolute top-0 right-0 text-[10px] text-slate-500 hover:text-slate-800 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-slate-100"
+            title="Import from Profile"
+          >
+            {isImportingPersonalInfo ? (
+              <div className="w-3 h-3 border border-t-slate-500 border-slate-200 rounded-full animate-spin" />
+            ) : (
+              <Import size={12} />
+            )}
+            Import
+          </button>
+        )}
         {personalInfo.avatarUrl && (
           <div className="flex justify-center items-center gap-6 mb-4">
             <img

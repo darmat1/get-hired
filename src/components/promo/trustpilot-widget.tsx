@@ -32,6 +32,7 @@ export function TrustpilotWidget() {
         data-style-height="40px"
         data-style-width="100%"
         data-token="739721ae-c1db-408f-be15-49d017af8ad4"
+        style={{ maxWidth: "220px" }}
       >
         <a
           href="https://www.trustpilot.com/review/gethired.work"
