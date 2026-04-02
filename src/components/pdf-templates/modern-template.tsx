@@ -154,30 +154,30 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
       flexDirection: "row",
       marginBottom: 15,
     },
-    timelineColumn: {
-      width: 15,
-      // alignItems: "center", // Removed to left-align dots (matches line at 3.5px)
-    },
-    timelineDot: {
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-      backgroundColor: "#ffffff",
-      border: `2pt solid ${sidebarColor}`, // Dynamic Color
-      marginBottom: 0,
-      zIndex: 10,
-    },
-    timelineLine: {
-      position: "absolute",
-      top: 8,
-      bottom: -20,
-      width: 1,
-      backgroundColor: "#e2e8f0",
-      left: 3.5,
-    },
+    // timelineColumn: {
+    //   width: 15,
+    //   // alignItems: "center", // Removed to left-align dots (matches line at 3.5px)
+    // },
+    // timelineDot: {
+    //   width: 8,
+    //   height: 8,
+    //   borderRadius: 4,
+    //   backgroundColor: "#ffffff",
+    //   border: `2pt solid ${sidebarColor}`, // Dynamic Color
+    //   marginBottom: 0,
+    //   zIndex: 10,
+    // },
+    // timelineLine: {
+    //   position: "absolute",
+    //   top: 8,
+    //   bottom: -20,
+    //   width: 1,
+    //   backgroundColor: "#e2e8f0",
+    //   left: 3.5,
+    // },
     contentColumn: {
       flex: 1,
-      paddingLeft: 10,
+      paddingLeft: 0,
       paddingBottom: 5,
     },
     dateRange: {
@@ -295,54 +295,6 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
               </View>
             )}
           </View>
-
-          {education.length > 0 && (
-            <View style={styles.sidebarSection}>
-              <Text style={styles.sidebarTitle}>
-                {getTranslation("form.education", resume.language || "en")}
-              </Text>
-              <View style={styles.sidebarSeparator} />
-              {education.map((edu, idx) => (
-                <View key={idx} style={{ marginBottom: 10 }}>
-                  <Text style={{ fontSize: 9, fontWeight: "bold" }}>
-                    {formatResumeDate(edu.startDate)}
-                    {edu.endDate || edu.current
-                      ? ` - ${edu.current ? "Present" : formatResumeDate(edu.endDate)}`
-                      : ""}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 10,
-                      fontWeight: "bold",
-                      color: "white",
-                    }}
-                  >
-                    {edu.degree}
-                  </Text>
-                  {edu.field && (
-                    <Text
-                      style={{
-                        fontSize: 9,
-                        color: "rgba(255,255,255,0.9)",
-                        marginBottom: 1,
-                      }}
-                    >
-                      {edu.field}
-                    </Text>
-                  )}
-                  <Text
-                    style={{
-                      fontSize: 9,
-                      color: "rgba(255,255,255,0.7)",
-                      fontStyle: "italic",
-                    }}
-                  >
-                    {edu.institution}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          )}
 
           {skills.length > 0 && (
             <View style={{ marginBottom: 25 }}>
@@ -553,15 +505,14 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                       ? { marginBottom: 0 }
                       : {},
                   ]}
-                  wrap={false}
                 >
                   {/* Timeline Column */}
-                  <View style={styles.timelineColumn}>
+                  {/* <View style={styles.timelineColumn}>
                     <View style={styles.timelineDot} />
                     {index !== workExperience.length - 1 && (
                       <View style={styles.timelineLine} />
                     )}
-                  </View>
+                  </View> */}
 
                   {/* Content Column */}
                   <View style={styles.contentColumn}>
@@ -612,6 +563,35 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                       );
                     })}
                   </View>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {education.length > 0 && (
+            <View style={{ marginTop: 20 }}>
+              <Text style={styles.mainSectionTitle}>
+                {getTranslation("form.education", resume.language || "en")}
+              </Text>
+
+              {education.map((edu, idx) => (
+                <View
+                  key={idx}
+                  style={{ marginBottom: idx === education.length - 1 ? 0 : 12 }}
+                >
+                  <Text style={styles.dateRange}>
+                    {formatResumeDate(edu.startDate)}
+                    {edu.endDate || edu.current
+                      ? ` - ${edu.current ? "Present" : formatResumeDate(edu.endDate)}`
+                      : ""}
+                  </Text>
+                  <Text style={styles.expTitle}>{edu.degree}</Text>
+                  {edu.field && (
+                    <Text style={styles.expCompany}>{edu.field}</Text>
+                  )}
+                  <Text style={[styles.expDesc, { fontStyle: "italic" }]}>
+                    {edu.institution}
+                  </Text>
                 </View>
               ))}
             </View>
