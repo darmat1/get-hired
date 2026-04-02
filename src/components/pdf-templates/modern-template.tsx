@@ -49,6 +49,8 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
   const showEmail = customization?.showEmail !== false;
   const showAddress = customization?.showAddress !== false;
   const showLinkedin = customization?.showLinkedin !== false;
+  const showGithub = customization?.showGithub !== false;
+  const showWebsite = customization?.showWebsite !== false;
   const showTelegram = customization?.showTelegram !== false;
 
   const styles = StyleSheet.create({
@@ -269,7 +271,16 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
               </View>
             )}
 
-            {personalInfo.website && (
+            {showGithub && personalInfo.github && (
+              <View style={{ marginBottom: 8 }}>
+                <Text style={styles.contactLabel}>GitHub</Text>
+                <Text style={styles.contactItem}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Text>
+              </View>
+            )}
+
+            {showWebsite && personalInfo.website && (
               <View style={{ marginBottom: 8 }}>
                 <Text style={styles.contactLabel}>Website</Text>
                 <Text style={styles.contactItem}>{personalInfo.website}</Text>

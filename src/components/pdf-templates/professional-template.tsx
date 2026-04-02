@@ -250,6 +250,11 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                   {personalInfo.linkedin}
                 </Text>
               )}
+              {personalInfo.github && (
+                <Text style={[styles.contactInfo, { color: "#2563eb" }]}>
+                  {personalInfo.github}
+                </Text>
+              )}
               {personalInfo.website && (
                 <Text style={[styles.contactInfo, { color: "#2563eb" }]}>
                   {personalInfo.website}
