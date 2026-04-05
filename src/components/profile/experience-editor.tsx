@@ -558,14 +558,14 @@ export function ExperienceEditor({ data, onChange, onSave }: ExperienceEditorPro
                     <label className="block text-[11px] uppercase tracking-wider font-bold text-muted-foreground mb-1">
                       {t("work.period")}
                     </label>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                       <input
                         type="month"
                         value={exp.startDate}
                         onChange={(e) =>
                           updateExperience(index, "startDate", e.target.value)
                         }
-                        className={`flex-1 px-3 py-2 text-sm border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
+                        className={`w-full flex-1 px-3 py-2 text-sm border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
                           getFieldHighlight(exp.id, "Dates") ||
                           getFieldHighlight(exp.id, "Start Date") ||
                           getFieldHighlight(exp.id, "End Date")
@@ -573,7 +573,7 @@ export function ExperienceEditor({ data, onChange, onSave }: ExperienceEditorPro
                             : ""
                         }`}
                       />
-                      <span className="text-muted-foreground">—</span>
+                      <span className="hidden text-muted-foreground sm:block">—</span>
                       <input
                         type="month"
                         value={exp.endDate}
@@ -581,7 +581,7 @@ export function ExperienceEditor({ data, onChange, onSave }: ExperienceEditorPro
                         onChange={(e) =>
                           updateExperience(index, "endDate", e.target.value)
                         }
-                        className={`flex-1 px-3 py-2 text-sm border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors disabled:opacity-50 ${
+                        className={`w-full flex-1 px-3 py-2 text-sm border border-input-border bg-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors disabled:opacity-50 ${
                           getFieldHighlight(exp.id, "Dates") ||
                           getFieldHighlight(exp.id, "Start Date") ||
                           getFieldHighlight(exp.id, "End Date")

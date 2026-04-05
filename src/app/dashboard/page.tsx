@@ -5,7 +5,7 @@ import { useSession } from "@/lib/auth-client";
 import { useTranslation } from "@/lib/translations";
 import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/stores/profile-store";
-import { Header } from "@/components/layout/header";
+import { AppShell } from "@/components/layout/app-shell";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -241,21 +241,17 @@ export default function MyExperiencePage() {
   if (!session) return <LoadingScreen message={t("common.auth_required")} />;
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-full mx-auto space-y-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-3xl font-bold">{t("nav.my_experience")}</h1>
-                <p className="text-muted-foreground">
-                  {t("profile.unified_desc")}
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <div className="flex items-center gap-3">
+    <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
+      <div className="max-w-full mx-auto space-y-6">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold sm:text-3xl">{t("nav.my_experience")}</h1>
+            <p className="text-sm text-muted-foreground sm:text-base">
+              {t("profile.unified_desc")}
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:justify-end">
+            <div className="flex flex-wrap items-center gap-3">
                   {isSaving && (
                     <span className="text-xs text-muted-foreground animate-pulse">
                       {t("common.saving")}...
@@ -274,7 +270,7 @@ export default function MyExperiencePage() {
                     variant="outline"
                     onClick={() => handleSave(false)}
                     disabled={isSaving}
-                    className={`transition-all duration-500 ${
+                    className={`w-full transition-all duration-500 sm:w-auto ${
                       isSaving
                         ? "bg-slate-50 dark:bg-slate-900/50 border-slate-300 dark:border-slate-700 opacity-80"
                         : ""
@@ -287,47 +283,43 @@ export default function MyExperiencePage() {
                     )}
                     {isSaving ? `${t("common.save")}...` : t("common.save")}
                   </Button>
-                </div>
-                <Button
-                  onClick={() => setShowSuggestions(true)}
-                  className="bg-amber-600 text-white hover:bg-amber-700 border-amber-700 shadow-sm"
-                >
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  {t("profile.suggest_btn")}
-                </Button>
-              </div>
             </div>
+            <Button
+              onClick={() => setShowSuggestions(true)}
+              className="bg-amber-600 text-white hover:bg-amber-700 border-amber-700 shadow-sm"
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              {t("profile.suggest_btn")}
+            </Button>
+          </div>
+        </div>
 
-            {/* Import Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+        {/* Import Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm space-y-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-3">
                   <Upload className="h-5 w-5 text-slate-600 dark:text-slate-400" />
-                  <h3 className="text-lg font-semibold">
-                    {t("profile.import_data")}
-                  </h3>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant={importMode === "pdf" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() =>
-                      setImportMode(importMode === "pdf" ? null : "pdf")
-                    }
-                  >
-                    {t("resume.upload_pdf")}
-                  </Button>
-                  <Button
-                    variant={importMode === "paste" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() =>
-                      setImportMode(importMode === "paste" ? null : "paste")
-                    }
-                  >
-                    {t("resume.paste_profile_title")}
-                  </Button>
-                </div>
-              </div>
+              <h3 className="text-lg font-semibold">{t("profile.import_data")}</h3>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button
+                variant={importMode === "pdf" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setImportMode(importMode === "pdf" ? null : "pdf")}
+              >
+                {t("resume.upload_pdf")}
+              </Button>
+              <Button
+                variant={importMode === "paste" ? "default" : "outline"}
+                size="sm"
+                onClick={() =>
+                  setImportMode(importMode === "paste" ? null : "paste")
+                }
+              >
+                {t("resume.paste_profile_title")}
+              </Button>
+            </div>
+          </div>
 
               {importMode === "pdf" && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -337,7 +329,7 @@ export default function MyExperiencePage() {
                     onDragEnter={handleDragEnter}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+                    className={`border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer transition-colors ${
                       isDragging
                         ? "border-slate-500 bg-slate-50 dark:bg-slate-900/20"
                         : "border-gray-300 dark:border-gray-600 hover:border-slate-500 dark:hover:border-slate-400"
@@ -450,7 +442,7 @@ export default function MyExperiencePage() {
               )}
 
               {isAiProcessing && (
-                <div className="flex items-center gap-4 p-5 rounded-xl border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50 p-5 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-slate-800 dark:bg-slate-900/50 sm:flex-row sm:items-center">
                   <div className="relative">
                     <Loader2 className="h-8 w-8 text-slate-600 dark:text-slate-400 animate-spin" />
                     <Sparkles className="h-4 w-4 text-slate-400 absolute -top-1 -right-1 animate-pulse" />
@@ -479,16 +471,17 @@ export default function MyExperiencePage() {
               )}
             </div>
 
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                <Loader2 className="h-10 w-10 text-primary animate-spin" />
-                <p className="text-muted-foreground animate-pulse">
-                  {t("profile.loading_profile")}
-                </p>
-              </div>
-            ) : (
-              <Tabs defaultValue="experience" className="w-full">
-                <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <Loader2 className="h-10 w-10 text-primary animate-spin" />
+            <p className="text-muted-foreground animate-pulse">
+              {t("profile.loading_profile")}
+            </p>
+          </div>
+        ) : (
+          <Tabs defaultValue="experience" className="w-full">
+            <div className="overflow-x-auto pb-2">
+              <TabsList className="grid min-w-[32rem] grid-cols-4 lg:w-[600px]">
                   <TabsTrigger value="info">
                     {t("profile.tab_personal")}
                   </TabsTrigger>
@@ -501,46 +494,45 @@ export default function MyExperiencePage() {
                   <TabsTrigger value="skills">
                     {t("profile.tab_skills")}
                   </TabsTrigger>
-                </TabsList>
+              </TabsList>
+            </div>
 
-                <TabsContent value="info" className="mt-6">
-                  <PersonalInfoForm
-                    data={(profile.personalInfo || {}) as any}
-                    onChange={(val) => updateProfile("personalInfo", val)}
-                  />
-                </TabsContent>
+            <TabsContent value="info" className="mt-6">
+              <PersonalInfoForm
+                data={(profile.personalInfo || {}) as any}
+                onChange={(val) => updateProfile("personalInfo", val)}
+              />
+            </TabsContent>
 
-                <TabsContent value="experience" className="mt-6">
-                  <ExperienceEditor
-                    data={(profile.workExperience || []) as any}
-                    onChange={(val) => updateProfile("workExperience", val)}
-                    onSave={() => handleSave(false)}
-                  />
-                </TabsContent>
+            <TabsContent value="experience" className="mt-6">
+              <ExperienceEditor
+                data={(profile.workExperience || []) as any}
+                onChange={(val) => updateProfile("workExperience", val)}
+                onSave={() => handleSave(false)}
+              />
+            </TabsContent>
 
-                <TabsContent value="education" className="mt-6">
-                  <EducationEditor
-                    data={(profile.education || []) as any}
-                    onChange={(val) => updateProfile("education", val)}
-                  />
-                </TabsContent>
+            <TabsContent value="education" className="mt-6">
+              <EducationEditor
+                data={(profile.education || []) as any}
+                onChange={(val) => updateProfile("education", val)}
+              />
+            </TabsContent>
 
-                <TabsContent value="skills" className="mt-6">
-                  <SkillsForm
-                    data={(profile.skills || []) as any}
-                    onChange={(val) => updateProfile("skills", val)}
-                    hideImport={true}
-                  />
-                </TabsContent>
-              </Tabs>
-            )}
+            <TabsContent value="skills" className="mt-6">
+              <SkillsForm
+                data={(profile.skills || []) as any}
+                onChange={(val) => updateProfile("skills", val)}
+                hideImport={true}
+              />
+            </TabsContent>
+          </Tabs>
+        )}
 
-            {showSuggestions && (
-              <ResumeSuggestions onClose={() => setShowSuggestions(false)} />
-            )}
-          </div>
-        </main>
+        {showSuggestions && (
+          <ResumeSuggestions onClose={() => setShowSuggestions(false)} />
+        )}
       </div>
-    </div>
+    </AppShell>
   );
 }

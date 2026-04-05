@@ -23,7 +23,7 @@ import { useTranslation } from "@/lib/translations";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
-import { Header } from "@/components/layout/header";
+import { AppShell } from "@/components/layout/app-shell";
 import { Sidebar } from "@/components/layout/sidebar";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 
@@ -127,62 +127,57 @@ export default function EditResumePage() {
   if (!session) return null;
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="max-w-[1400px] mx-auto space-y-6 text-foreground">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Link
-                  href="/dashboard/my-resumes"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Link>
-                <h1 className="text-2xl font-bold">
-                  {(resumeData as any)?.title || t("nav.create_resume")}
-                </h1>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={saveResume}
-                  disabled={isSaving}
-                  type="button"
-                >
-                  {isSaving ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Save className="h-4 w-4 mr-2" />
-                  )}
-                  {t("form.save")}
-                </Button>
-                <Button onClick={downloadPDF} type="button">
-                  <Download className="h-4 w-4 mr-2" />
-                  {t("form.download_pdf")}
-                </Button>
-              </div>
-            </div>
-
-            <div className="flex flex-col xl:flex-row gap-8 items-start justify-center">
-              <div className="flex-1 w-full max-w-[950px]">
-                <ResumePreview
-                  data={resumeData as Resume}
-                  onChange={(data) => setResume(data as Partial<Resume>)}
-                  isEditing={true}
-                  onTemplateChange={updateTemplate}
-                />
-              </div>
-
-              <div className="w-full xl:w-[400px] sticky top-8 self-start">
-                <AIAnalysisPanel resume={resumeData as Resume} />
-              </div>
-            </div>
+    <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard" contentClassName="p-4 md:p-6 xl:p-8">
+      <div className="mx-auto max-w-[1400px] space-y-6 text-foreground">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+            <Link
+              href="/dashboard/my-resumes"
+              className="flex-shrink-0 text-muted-foreground hover:text-foreground"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </Link>
+            <h1 className="truncate text-xl font-bold sm:text-2xl">
+              {(resumeData as any)?.title || t("nav.create_resume")}
+            </h1>
           </div>
-        </main>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button
+              variant="outline"
+              onClick={saveResume}
+              disabled={isSaving}
+              type="button"
+              className="w-full sm:w-auto"
+            >
+              {isSaving ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4 mr-2" />
+              )}
+              {t("form.save")}
+            </Button>
+            <Button onClick={downloadPDF} type="button" className="w-full sm:w-auto">
+              <Download className="h-4 w-4 mr-2" />
+              {t("form.download_pdf")}
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-start 2xl:justify-center 2xl:gap-8">
+          <div className="w-full min-w-0 flex-1 2xl:max-w-[950px]">
+            <ResumePreview
+              data={resumeData as Resume}
+              onChange={(data) => setResume(data as Partial<Resume>)}
+              isEditing={true}
+              onTemplateChange={updateTemplate}
+            />
+          </div>
+
+          <div className="w-full 2xl:w-[400px] 2xl:sticky 2xl:top-8 2xl:self-start">
+            <AIAnalysisPanel resume={resumeData as Resume} />
+          </div>
+        </div>
       </div>
-    </div>
+    </AppShell>
   );
 }

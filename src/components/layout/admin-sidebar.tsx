@@ -11,8 +11,13 @@ import { useSession } from "@/lib/auth-client";
 import { MD5 } from "crypto-js";
 
 import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  className?: string;
+}
+
+export function AdminSidebar({ className }: AdminSidebarProps) {
   const { t } = useTranslation();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -31,7 +36,12 @@ export function AdminSidebar() {
   const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?d=mp`;
 
   return (
-    <aside className="w-64 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 h-full flex flex-col">
+    <aside
+      className={cn(
+        "flex h-full min-h-full flex-col bg-white dark:bg-slate-900",
+        className,
+      )}
+    >
       <div className="px-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex-shrink-0">
         <LocalizedLink
           href="/"

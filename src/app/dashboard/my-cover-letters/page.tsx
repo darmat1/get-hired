@@ -18,7 +18,7 @@ import { useTranslation } from "@/lib/translations";
 import { Modal } from "@/components/ui/modal";
 import Link from "next/link";
 
-import { Header } from "@/components/layout/header";
+import { AppShell } from "@/components/layout/app-shell";
 import { Sidebar } from "@/components/layout/sidebar";
 
 interface CoverLetterItem {
@@ -99,20 +99,14 @@ export default function MyCoverLettersPage() {
 
   if (!mounted || isPending) {
     return (
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="flex flex-col items-center justify-center py-20 space-y-4">
-              <Loader2 className="h-10 w-10 text-primary animate-spin" />
-              <p className="text-muted-foreground animate-pulse">
-                {t("dashboard.loading")}
-              </p>
-            </div>
-          </main>
+      <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
+        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+          <Loader2 className="h-10 w-10 text-primary animate-spin" />
+          <p className="text-muted-foreground animate-pulse">
+            {t("dashboard.loading")}
+          </p>
         </div>
-      </div>
+      </AppShell>
     );
   }
 
@@ -120,67 +114,59 @@ export default function MyCoverLettersPage() {
 
   return (
     <>
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="space-y-6 text-foreground">
-              <div className="mb-8 flex justify-between items-center">
-                <div>
-                  <h1 className="text-3xl font-bold">
-                    {t("my_cover_letters.title")}
-                  </h1>
-                  <p className="mt-2 text-muted-foreground">
-                    {t("my_cover_letters.subtitle")}
-                  </p>
-                </div>
-                <Button
-                  onClick={() => router.push("/dashboard/cover-letter")}
-                >
-                  <FileCheck className="h-4 w-4 mr-2" />
-                  {t("my_cover_letters.go_generate")}
-                </Button>
-              </div>
+      <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
+        <div className="space-y-6 text-foreground">
+          <div className="mb-6 flex flex-col gap-4 sm:mb-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold sm:text-3xl">
+                {t("my_cover_letters.title")}
+              </h1>
+              <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+                {t("my_cover_letters.subtitle")}
+              </p>
+            </div>
+            <Button onClick={() => router.push("/dashboard/cover-letter")}>
+              <FileCheck className="h-4 w-4 mr-2" />
+              {t("my_cover_letters.go_generate")}
+            </Button>
+          </div>
 
-              {isLoading ? (
-                <div className="text-center py-12">
-                  <div className="animate-pulse">
-                    <div className="h-8 w-64 bg-muted rounded mx-auto mb-4"></div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      {[1, 2].map((i) => (
-                        <div key={i} className="h-48 bg-muted rounded"></div>
-                      ))}
-                    </div>
-                  </div>
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-pulse">
+                <div className="h-8 w-64 bg-muted rounded mx-auto mb-4"></div>
+                <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="h-48 bg-muted rounded"></div>
+                  ))}
                 </div>
-              ) : coverLetters.length === 0 ? (
-                <div className="text-center py-12">
-                  <FileCheck className="h-16 w-16 text-muted/30 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">
-                    {t("my_cover_letters.no_letters")}
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    {t("my_cover_letters.no_letters_desc")}
-                  </p>
-                  <Button
-                    onClick={() => router.push("/dashboard/cover-letter")}
-                  >
-                    {t("my_cover_letters.go_generate")}
-                  </Button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {coverLetters.map((cl) => (
-                    <div
-                      key={cl.id}
-                      className="bg-card text-card-foreground rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow p-6"
-                    >
+              </div>
+            </div>
+          ) : coverLetters.length === 0 ? (
+            <div className="text-center py-12">
+              <FileCheck className="h-16 w-16 text-muted/30 mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">
+                {t("my_cover_letters.no_letters")}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {t("my_cover_letters.no_letters_desc")}
+              </p>
+              <Button onClick={() => router.push("/dashboard/cover-letter")}>
+                {t("my_cover_letters.go_generate")}
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              {coverLetters.map((cl) => (
+                <div
+                  key={cl.id}
+                  className="bg-card text-card-foreground rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow p-5 sm:p-6"
+                >
                       {/* Header */}
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex items-center gap-2">
+                      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="flex min-w-0 items-center gap-2">
                           <FileCheck className="h-5 w-5 text-primary" />
-                          <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 capitalize flex items-center gap-1">
+                          <span className="flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium capitalize text-slate-600 dark:bg-slate-700 dark:text-slate-300">
                             <List className="h-3 w-3" />
                             {cl.format}
                           </span>
@@ -228,7 +214,7 @@ export default function MyCoverLettersPage() {
                       )}
 
                       {/* Actions */}
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
                         <Button
                           variant="outline"
                           size="sm"
@@ -252,14 +238,12 @@ export default function MyCoverLettersPage() {
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
-                    </div>
-                  ))}
                 </div>
-              )}
+              ))}
             </div>
-          </main>
+          )}
         </div>
-      </div>
+      </AppShell>
 
       {/* Delete Confirmation Modal */}
       <Modal

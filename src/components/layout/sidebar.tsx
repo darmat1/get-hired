@@ -11,8 +11,13 @@ import { UserMenu } from "@/components/ui/user-menu";
 import { useSession } from "@/lib/auth-client";
 import { MD5 } from "crypto-js";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
-export function Sidebar() {
+interface SidebarProps {
+  className?: string;
+}
+
+export function Sidebar({ className }: SidebarProps) {
   const { t } = useTranslation();
   const pathname = usePathname();
   const { data: session } = useSession();
@@ -30,8 +35,13 @@ export function Sidebar() {
   const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?d=mp`;
 
   return (
-    <aside className="w-64 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 h-full flex flex-col">
-      <div className="px-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex-shrink-0">
+    <aside
+      className={cn(
+        "flex h-full min-h-full flex-col bg-white dark:bg-slate-900",
+        className,
+      )}
+    >
+      <div className="bg-white px-4 border-b border-slate-200 dark:border-slate-700 dark:bg-slate-900 flex-shrink-0">
         <LocalizedLink
           href="/"
           className="h-16 flex items-center justify-center"
@@ -108,7 +118,7 @@ export function Sidebar() {
           </li>
         </ul>
       </nav>
-      <div className="py-4 space-y-4">
+      <div className="py-4 space-y-4 mt-auto">
 
           <p className="px-4 text-[10px] text-center text-muted-foreground mb-2 uppercase tracking-wider font-bold">
             {t("dashboard.sidebar.review_prompt") || "Enjoying our service? Share your review!"}
