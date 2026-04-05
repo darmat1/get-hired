@@ -33,6 +33,7 @@ export function Footer() {
             <LocalizedLink
               href="/"
               className="text-xl font-bold text-slate-900 dark:text-white"
+              aria-label="GetHired Home"
             >
               <Logo />
             </LocalizedLink>
