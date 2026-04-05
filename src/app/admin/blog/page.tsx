@@ -29,8 +29,10 @@ export default async function BlogAdminPage() {
   const hasGroqKey = aiKeys.some((k) => k.provider === "groq");
 
   return (
-    <div className="w-full h-full py-8 px-8">
-      <h1 className="text-3xl font-bold mb-8">Blog Administration</h1>
+    <div className="w-full py-2 sm:py-4">
+      <h1 className="mb-6 text-2xl font-bold sm:mb-8 sm:text-3xl">
+        Blog Administration
+      </h1>
       <BlogAdminClient
         initialPosts={posts}
         hasGeminiKey={hasGeminiKey}

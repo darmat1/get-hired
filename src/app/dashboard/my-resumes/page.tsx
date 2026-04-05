@@ -19,7 +19,7 @@ import { Modal } from "@/components/ui/modal";
 import { ResumeSuggestions } from "@/components/profile/resume-suggestions";
 import { useResumeListStore } from "@/stores/resume-list-store";
 
-import { Header } from "@/components/layout/header";
+import { AppShell } from "@/components/layout/app-shell";
 import { Sidebar } from "@/components/layout/sidebar";
 
 export default function Dashboard() {
@@ -83,20 +83,14 @@ export default function Dashboard() {
 
   if (!mounted || isPending) {
     return (
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="flex flex-col items-center justify-center py-20 space-y-4">
-              <Loader2 className="h-10 w-10 text-primary animate-spin" />
-              <p className="text-muted-foreground animate-pulse">
-                {t("dashboard.loading")}
-              </p>
-            </div>
-          </main>
+      <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
+        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+          <Loader2 className="h-10 w-10 text-primary animate-spin" />
+          <p className="text-muted-foreground animate-pulse">
+            {t("dashboard.loading")}
+          </p>
         </div>
-      </div>
+      </AppShell>
     );
   }
 
@@ -104,144 +98,127 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="text-center py-12">
-              <div className="animate-pulse">
-                <div className="h-8 w-64 bg-muted rounded mx-auto mb-4"></div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-32 bg-muted rounded"></div>
-                  ))}
-                </div>
-              </div>
+      <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
+        <div className="text-center py-12">
+          <div className="animate-pulse">
+            <div className="h-8 w-64 bg-muted rounded mx-auto mb-4"></div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-32 bg-muted rounded"></div>
+              ))}
             </div>
-          </main>
+          </div>
         </div>
-      </div>
+      </AppShell>
     );
   }
 
   return (
     <>
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="space-y-6 text-foreground">
-              <div className="mb-8 flex justify-between items-center">
-                <div>
-                  <h1 className="text-3xl font-bold">{t("dashboard.title")}</h1>
-                  <p className="mt-2 text-muted-foreground">
-                    {t("dashboard.subtitle")}
-                  </p>
-                </div>
-
-                <div className="flex gap-3">
-                  <Button
-                    onClick={() => setShowSuggestions(true)}
-                    className="bg-amber-600 text-white hover:bg-amber-700 border-amber-700 shadow-sm"
-                  >
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    {t("profile.suggest_btn")}
-                  </Button>
-                  <Button onClick={() => router.push("/resume/new")}>
-                    <FileText className="h-4 w-4 mr-2" />
-                    {t("nav.create_resume")}
-                  </Button>
-                </div>
-              </div>
-
-              {resumes.length === 0 ? (
-                <div className="text-center py-12">
-                  <FileText className="h-16 w-16 text-muted/30 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">
-                    {t("dashboard.no_resumes")}
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    {t("dashboard.no_resumes_desc")}
-                  </p>
-                  <Button onClick={() => router.push("/resume/new")}>
-                    {t("nav.create_resume")}
-                  </Button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {resumes.map((resume) => (
-                    <div
-                      key={resume.id}
-                      className="bg-card text-card-foreground rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow p-6"
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex-1 min-w-0">
-                          <Link
-                            href={`/resume/${resume.id}/edit`}
-                            className="block"
-                          >
-                            <h3 className="text-lg font-semibold hover:text-primary transition-colors">
-                              {resume.title}
-                            </h3>
-                          </Link>
-                          <p className="text-sm text-muted-foreground capitalize">
-                            {t("dashboard.template")}: {resume.template}
-                          </p>
-                        </div>
-                        <FileText className="h-6 w-6 text-primary flex-shrink-0 ml-2" />
-                      </div>
-
-                      <div className="text-sm text-muted-foreground mb-4">
-                        <p>
-                          {t("dashboard.created")}:{" "}
-                          {new Date(resume.createdAt).toLocaleDateString()}
-                        </p>
-                        <p>
-                          {t("dashboard.updated")}:{" "}
-                          {new Date(resume.updatedAt).toLocaleDateString()}
-                        </p>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() =>
-                            router.push(`/resume/${resume.id}/edit`)
-                          }
-                        >
-                          <Edit className="h-3 w-3 mr-1" />
-                          {t("dashboard.edit")}
-                        </Button>
-
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => downloadPDF(resume.id)}
-                        >
-                          <Download className="h-3 w-3 mr-1" />
-                          PDF
-                        </Button>
-
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteClick(resume.id)}
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+      <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
+        <div className="space-y-6 text-foreground">
+          <div className="mb-6 flex flex-col gap-4 sm:mb-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold sm:text-3xl">{t("dashboard.title")}</h1>
+              <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+                {t("dashboard.subtitle")}
+              </p>
             </div>
-          </main>
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button
+                onClick={() => setShowSuggestions(true)}
+                className="bg-amber-600 text-white hover:bg-amber-700 border-amber-700 shadow-sm"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                {t("profile.suggest_btn")}
+              </Button>
+              <Button onClick={() => router.push("/resume/new")}>
+                <FileText className="h-4 w-4 mr-2" />
+                {t("nav.create_resume")}
+              </Button>
+            </div>
+          </div>
+
+          {resumes.length === 0 ? (
+            <div className="text-center py-12">
+              <FileText className="h-16 w-16 text-muted/30 mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">
+                {t("dashboard.no_resumes")}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {t("dashboard.no_resumes_desc")}
+              </p>
+              <Button onClick={() => router.push("/resume/new")}>
+                {t("nav.create_resume")}
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {resumes.map((resume) => (
+                <div
+                  key={resume.id}
+                  className="bg-card text-card-foreground rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow p-5 sm:p-6"
+                >
+                  <div className="mb-4 flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <Link href={`/resume/${resume.id}/edit`} className="block">
+                        <h3 className="truncate text-lg font-semibold hover:text-primary transition-colors">
+                          {resume.title}
+                        </h3>
+                      </Link>
+                      <p className="text-sm text-muted-foreground capitalize">
+                        {t("dashboard.template")}: {resume.template}
+                      </p>
+                    </div>
+                    <FileText className="h-6 w-6 text-primary flex-shrink-0" />
+                  </div>
+
+                  <div className="mb-4 space-y-1 text-sm text-muted-foreground">
+                    <p>
+                      {t("dashboard.created")}:{" "}
+                      {new Date(resume.createdAt).toLocaleDateString()}
+                    </p>
+                    <p>
+                      {t("dashboard.updated")}:{" "}
+                      {new Date(resume.updatedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => router.push(`/resume/${resume.id}/edit`)}
+                    >
+                      <Edit className="h-3 w-3 mr-1" />
+                      {t("dashboard.edit")}
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => downloadPDF(resume.id)}
+                    >
+                      <Download className="h-3 w-3 mr-1" />
+                      PDF
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDeleteClick(resume.id)}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      </AppShell>
 
       {/* Delete Confirmation Modal */}
       <Modal

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Plus, ArrowLeft } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/layout/header";
+import { AppShell } from "@/components/layout/app-shell";
 import { Sidebar } from "@/components/layout/sidebar";
 import { LocalizedLink } from "@/components/ui/localized-link";
 import { LoadingScreen } from "@/components/ui/loading-screen";
@@ -69,99 +69,93 @@ export default function NewResumePage() {
   if (!session) return null;
 
   return (
-    <div className="flex h-screen bg-slate-50 dark:bg-slate-900">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-2xl mx-auto">
-            <div className="mb-8">
-              <LocalizedLink
-                href="/dashboard/my-resumes"
-                className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
+    <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
+      <div className="mx-auto max-w-2xl">
+        <div className="mb-6 sm:mb-8">
+          <LocalizedLink
+            href="/dashboard/my-resumes"
+            className="mb-4 inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t("common.back_to_dashboard") || "Back to Dashboard"}
+          </LocalizedLink>
+          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+            {t("nav.create_resume")}
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+            {t("resume_builder.new_subtitle") ||
+              "Give your resume a name to get started."}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-8">
+          <form onSubmit={handleCreate} className="space-y-6">
+            <div>
+              <label
+                htmlFor="resume-title"
+                className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                {t("common.back_to_dashboard") || "Back to Dashboard"}
+                {t("resume_builder.resume_title") || "Resume Title"}
+              </label>
+              <input
+                id="resume-title"
+                type="text"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder={
+                  t("resume_builder.title_placeholder") ||
+                  "e.g. Software Engineer 2024"
+                }
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white"
+                autoFocus
+              />
+              {error && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+                  {error}
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col-reverse gap-3 border-t border-gray-100 pt-4 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-end">
+              <LocalizedLink href="/dashboard/my-resumes">
+                <Button variant="ghost" type="button" className="w-full sm:w-auto">
+                  {t("common.cancel")}
+                </Button>
               </LocalizedLink>
-              <h1 className="text-3xl font-bold text-foreground">
-                {t("nav.create_resume")}
-              </h1>
-              <p className="mt-2 text-muted-foreground">
-                {t("resume_builder.new_subtitle") ||
-                  "Give your resume a name to get started."}
+              <Button
+                type="submit"
+                disabled={!title.trim() || isCreating}
+                className="w-full bg-slate-900 px-6 text-white hover:bg-slate-800 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200 sm:w-auto"
+              >
+                {isCreating ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Plus className="mr-2 h-4 w-4" />
+                )}
+                {t("common.create") || "Create Resume"}
+              </Button>
+            </div>
+          </form>
+        </div>
+
+        <div className="mt-8 rounded-xl border border-slate-100 bg-slate-50 p-5 dark:border-slate-800/50 dark:bg-slate-900/40 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="h-fit rounded-lg bg-slate-100 p-2 dark:bg-slate-800">
+              <Plus className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                {t("resume_builder.quick_start_title") || "Quick Start"}
+              </h3>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                {t("resume_builder.quick_start_desc") ||
+                  "After creating your resume, you can import data from your profile or fill in the details manually in our powerful editor."}
               </p>
             </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 shadow-sm">
-              <form onSubmit={handleCreate} className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="resume-title"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >
-                    {t("resume_builder.resume_title") || "Resume Title"}
-                  </label>
-                  <input
-                    id="resume-title"
-                    type="text"
-                    required
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder={
-                      t("resume_builder.title_placeholder") ||
-                      "e.g. Software Engineer 2024"
-                    }
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none transition-all"
-                    autoFocus
-                  />
-                  {error && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-                      {error}
-                    </p>
-                  )}
-                </div>
-
-                  <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
-                    <LocalizedLink href="/dashboard/my-resumes">
-                      <Button variant="ghost" type="button">
-                        {t("common.cancel")}
-                      </Button>
-                    </LocalizedLink>
-                  <Button
-                    type="submit"
-                    disabled={!title.trim() || isCreating}
-                    className="bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200 px-6"
-                  >
-                    {isCreating ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Plus className="h-4 w-4 mr-2" />
-                    )}
-                    {t("common.create") || "Create Resume"}
-                  </Button>
-                </div>
-              </form>
-            </div>
-
-            <div className="mt-8 p-6 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-100 dark:border-slate-800/50">
-              <div className="flex gap-4">
-                <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg h-fit">
-                  <Plus className="h-5 w-5 text-slate-600 dark:text-slate-400" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
-                    {t("resume_builder.quick_start_title") || "Quick Start"}
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                    {t("resume_builder.quick_start_desc") ||
-                      "After creating your resume, you can import data from your profile or fill in the details manually in our powerful editor."}
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
-        </main>
+        </div>
       </div>
-    </div>
+    </AppShell>
   );
 }
