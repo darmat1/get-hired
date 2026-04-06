@@ -153,6 +153,11 @@ export const translations: Translations = {
     uk: "Мій досвід",
     ru: "Мой опыт",
   },
+  "nav.jobs": {
+    en: "Job Board",
+    uk: "Пошук роботи",
+    ru: "Поиск работы",
+  },
   "nav.home": { en: "Home", uk: "Додому", ru: "Главная" },
   "dashboard.sidebar.review_prompt": {
     en: "Enjoying our service?",

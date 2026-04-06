@@ -41,6 +41,8 @@ model User {
   freeAiGenerationsCount Int       @default(0)
   lastFreeAiUsage        DateTime?
 
+  greenhouseApplications GreenhouseApplication[]
+
   @@map("user")
 }
 
@@ -181,4 +183,43 @@ model Post {
   @@index([authorId])
   @@index([published, createdAt(sort: Desc)])
   @@map("post")
+}
+
+model GreenhouseJob {
+  id          String   @id @default(cuid())
+  boardToken  String
+  externalId  String
+  title       String
+  location    String?
+  content     String?  // HTML description
+  questions   Json?    // Array of form fields/questions required to apply
+  departments String[] @default([]) // names of departments
+  url         String?  // Original URL
+  active      Boolean  @default(true) // Whether the job is still active/open
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  
+  applications GreenhouseApplication[]
+
+  @@unique([boardToken, externalId])
+  @@index([boardToken])
+  @@map("greenhouse_job")
+}
+
+model GreenhouseApplication {
+  id          String   @id @default(cuid())
+  jobId       String
+  userId      String
+  status      String   @default("pending") // pending, submitted, failed, skipped
+  appliedAt   DateTime?
+  logs        Json?    // Optional logs from the apply process
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  job         GreenhouseJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([jobId])
+  @@map("greenhouse_application")
 }

@@ -2,7 +2,7 @@
 
 import { LocalizedLink } from "@/components/ui/localized-link";
 import { useTranslation } from "@/lib/translations";
-import { FileText, PlusCircle, FileCheck, Briefcase, Settings, Cpu } from "lucide-react";
+import { FileText, PlusCircle, FileCheck, Briefcase, Settings, Cpu, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Logo from "../ui/icons/logo";
 import { stripLocale } from "@/lib/i18n-config";
@@ -114,6 +114,19 @@ export function Sidebar({ className }: SidebarProps) {
             >
               <FileText className="mr-3 h-5 w-5 flex-shrink-0" />
               {t("nav.my_cover_letters")}
+            </LocalizedLink>
+          </li>
+          <li>
+            <LocalizedLink
+              href="/dashboard/jobs"
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
+                isActive("/dashboard/jobs")
+                  ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
+                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+              }`}
+            >
+              <Search className="mr-3 h-5 w-5 flex-shrink-0" />
+              {t("nav.jobs")}
             </LocalizedLink>
           </li>
         </ul>
