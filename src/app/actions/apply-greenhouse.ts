@@ -16,6 +16,13 @@ export async function applyToGreenhouseJob(jobId: string, formDataEntries: Recor
       return { success: false, error: 'Unauthorized' };
     }
 
+    const role = (session.user as any)?.role?.toLowerCase();
+    const isAdmin = ["superadmin", "admin"].includes(role || "");
+
+    if (!isAdmin) {
+      return { success: false, error: 'Feature only available for admins during development.' };
+    }
+
     const job = await prisma.greenhouseJob.findUnique({
       where: { id: jobId }
     });

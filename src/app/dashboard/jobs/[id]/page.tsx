@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getJobDetails } from '@/lib/greenhouse';
 import Link from 'next/link';
 import { AppShell } from "@/components/layout/app-shell";
@@ -8,12 +8,24 @@ import { decodeHtmlEntities } from "@/lib/utils/html";
 import { Briefcase, MapPin, ChevronLeft } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 interface PageProps {
   params: { id: string };
 }
 
 export default async function JobDetailPage({ params }: PageProps) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const role = (session?.user as any)?.role?.toLowerCase();
+  const isAdmin = ["superadmin", "admin"].includes(role || "");
+
+  if (!isAdmin) {
+    redirect("/dashboard");
+  }
+
   // await params
   const { id } = await params;
   

@@ -6,6 +6,9 @@ import { Pagination } from "@/components/ui/pagination";
 import { Briefcase, MapPin, RefreshCw, ArrowRight } from "lucide-react";
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const metadata = {
   title: 'Job Board - Start Applying',
@@ -16,6 +19,16 @@ export default async function JobsPage({
 }: { 
   searchParams: { page?: string } 
 }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const role = (session?.user as any)?.role?.toLowerCase();
+  const isAdmin = ["superadmin", "admin"].includes(role || "");
+
+  if (!isAdmin) {
+    redirect("/dashboard");
+  }
+
   const pageSize = 12;
   const page = Number((await searchParams).page) || 1;
 

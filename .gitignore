@@ -51,5 +51,6 @@ next-env.d.ts
 /scripts
 /chrome-extension
 /ideas
+/.cursor
 
 posts.json
