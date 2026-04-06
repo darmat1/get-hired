@@ -237,17 +237,15 @@ export function MinimalTemplate({ resume }: TemplateProps) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text style={styles.jobTitle}>{exp.title}</Text>
+                  <FormattedText style={styles.jobTitle} html={exp.title} />
                   <Text style={{ fontSize: 8 }}>
                     {formatResumeDate(exp.startDate)} — {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                   </Text>
                 </View>
-                <Text style={styles.companyMeta}>
-                  {exp.company}
-                  {exp.employmentType &&
-                    ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
-                  {exp.location ? ` • ${exp.location}` : ""}
-                </Text>
+                <FormattedText
+                  style={styles.companyMeta}
+                  html={`${exp.company}${exp.employmentType ? ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}` : ""}${exp.location ? ` • ${exp.location}` : ""}`}
+                />
 
                 {exp.mainDescription && (
                   <View style={{ marginBottom: 3 }}>
@@ -297,12 +295,12 @@ export function MinimalTemplate({ resume }: TemplateProps) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text style={styles.jobTitle}>{edu.institution}</Text>
+                  <FormattedText style={styles.jobTitle} html={edu.institution} />
                   <Text style={{ fontSize: 8 }}>
                     {formatResumeDate(edu.startDate)} — {edu.current ? "Present" : formatResumeDate(edu.endDate)}
                   </Text>
                 </View>
-                <Text style={styles.companyMeta}>{edu.degree}</Text>
+                <FormattedText style={styles.companyMeta} html={edu.degree} />
               </View>
             ))}
           </View>
@@ -315,9 +313,9 @@ export function MinimalTemplate({ resume }: TemplateProps) {
             </Text>
             <View style={styles.skillsGrid}>
               {skills.map((s, i) => (
-                <Text key={i} style={styles.skill}>
-                  {s.name}
-                </Text>
+                <View key={i} style={styles.skill}>
+                  <FormattedText html={s.name} style={{ color: "#fff" }} />
+                </View>
               ))}
             </View>
           </View>
