@@ -145,7 +145,9 @@ export async function POST(req: Request) {
           systemPrompt: buildResumeScoreSystemPrompt(),
           userPrompt: prompt,
           temperature: 0.2,
-          maxTokens: 16000,
+          // Reduced from 16000 to 3000 to stay within Groq TPM limits (12k).
+          // 16k was impossible for free tier as it exceeds the absolute TPM limit.
+          maxTokens: 3000,
         },
         session.user.id,
       );
@@ -170,7 +172,8 @@ export async function POST(req: Request) {
           systemPrompt: buildResumeScoreSystemPrompt(),
           userPrompt: companyPrompt,
           temperature: 0.2,
-          maxTokens: 16000,
+          // Reduced from 16000 to 3000 to stay within Groq TPM limits (12k).
+          maxTokens: 3000,
         },
         session.user.id,
       );
