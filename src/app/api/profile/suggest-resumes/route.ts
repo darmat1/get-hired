@@ -3,7 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
-import { aiComplete } from "@/lib/ai/server-ai";
+import { buildResumeVariantsSystemPrompt } from "@/lib/ai/prompts/resume-variants";
+import { executeStructuredAI } from "@/lib/ai/structured-output";
 
 export async function POST() {
   const requestStart = Date.now();
@@ -50,35 +51,7 @@ export async function POST() {
     const existingTitles = existingResumes.map((r) => r.title);
     logWithTime("Existing resumes fetched", { count: existingTitles.length });
 
-    const systemPrompt = `You are a Career Expert AI.
-Analyze the user's work experience, education, and skills provided in TOON format.
-Suggest up to 8 different resume variants (career directions) based on their background.
-
-Existing resume titles (DO NOT suggest duplicates): ${existingTitles.length > 0 ? existingTitles.join(", ") : "None"}.
-
-RETURN YOUR RESPONSE IN JSON FORMAT:
-{
-  "variants": [
-    {
-      "title": "Role Title",
-      "targetRole": "Role Title",
-      "seniority": "junior | middle | senior | lead",
-      "matchScore": 85,
-      "reasoning": "Brief explanation why this role fits",
-      "selectedSkills": ["skill1", "skill2"],
-      "selectedExpIds": ["exp_id1", "exp_id2"],
-      "keywords": ["keyword1", "keyword2", "keyword3"]
-    }
-  ]
-}
-
-RULES:
-- Return ONLY valid JSON (no TOON, no markdown blocks).
-- Maximum 8 variants.
-- All content MUST be in English.
-- "selectedExpIds" MUST include ALL work experience IDs where the candidate used skills relevant to this role. Do NOT skip any company — if the candidate used the relevant stack there, include that experience ID.
-- "keywords" — list of 3-7 key technology/skill terms from the variant that match the candidate's experience. These will be highlighted in the UI.
-- "reasoning" should mention specific companies and technologies from the candidate's profile.`;
+    const systemPrompt = buildResumeVariantsSystemPrompt(existingTitles);
 
     const profileData = {
       personalInfo: profile.personalInfo,
@@ -90,48 +63,32 @@ RULES:
     const profileToon = encode(profileData);
 
     const aiStart = Date.now();
-    const response = await aiComplete(
+    const response = await executeStructuredAI<{ variants?: any[] }>(
       {
         systemPrompt,
         userPrompt: profileToon,
         temperature: 0.7,
-        responseFormat: { type: "json_object" },
       },
       session.user.id,
     );
 
-    const aiContent = response.content;
+    const aiContent = response.raw.content;
     logWithTime("AI response received", {
-      provider: response.provider,
-      model: response.model,
+      provider: response.raw.provider,
+      model: response.raw.model,
       contentLength: aiContent.length,
       durationMs: Date.now() - aiStart,
     });
 
-    // Parse JSON response
-    let parsed: { variants?: any[] };
-    try {
-      const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
-      const cleanJSON = jsonMatch ? jsonMatch[0] : aiContent;
-      parsed = JSON.parse(cleanJSON);
-    } catch (parseError) {
-      console.error("JSON Parse Error:", parseError);
-      logWithTime("JSON parse failed", { error: String(parseError) });
-      return NextResponse.json(
-        { error: "Failed to parse AI response", content: aiContent },
-        { status: 500 },
-      );
-    }
-
     logWithTime("JSON parsed", {
-      variantsCount: parsed?.variants?.length || 0,
+      variantsCount: response.parsed?.variants?.length || 0,
     });
 
     const saveStart = Date.now();
     const updatedProfile = await prisma.userProfile.update({
       where: { id: profile.id },
       data: {
-        resumeVariants: (parsed.variants || []).map(
+        resumeVariants: (response.parsed.variants || []).map(
           (v: any, index: number) => ({
             // Generate a stable unique id — AI doesn't return one
             id: `variant-${Date.now()}-${index}`,

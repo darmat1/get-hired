@@ -3,6 +3,11 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { aiComplete } from "@/lib/ai/server-ai";
+import {
+  buildProfileParseSystemPrompt,
+  buildProfileParseUserPrompt,
+} from "@/lib/ai/prompts/profile-parse";
+import { parseAIJsonResponse } from "@/lib/ai/parse-json-response";
 
 export async function POST(request: Request) {
   try {
@@ -40,83 +45,23 @@ export async function POST(request: Request) {
 
     const normalizedText = cleanText(text);
 
-    const systemPrompt = `You are a Resume Parsing & Merging Engine.
-INPUT: Existing profile as JSON + raw text from PDF/paste.
-
-GOAL: Extract and merge data. Return consolidated profile as strict JSON.
-
-MERGE RULES:
-- Same company+role = combine descriptions, use best dates, merge main role summaries
-- Normalize company names ("Boarding" = "b0arding.com")
-- Deduplicate skills and education
-- Prefer more detailed data
-
-RETURN STRICT JSON:
-{
-  "personalInfo": {
-    "firstName": "string",
-    "lastName": "string",
-    "email": "string",
-    "phone": "string",
-    "location": "string",
-    "summary": "string",
-    "linkedin": "string (full URL like https://linkedin.com/in/username)",
-    "telegram": "string (username like @username or t.me/username)"
-  },
-  "workExperience": [
-    {
-      "title": "string",
-      "company": "string",
-      "location": "string",
-      "startDate": "YYYY-MM",
-      "endDate": "YYYY-MM",
-      "current": false,
-      "mainDescription": "string (1-2 sentences summary of the role and key focus)",
-      "description": ["string (detailed bullet point achievement or responsibility)"]
-    }
-  ],
-  "education": [
-    {
-      "institution": "string",
-      "degree": "string",
-      "field": "string",
-      "startDate": "YYYY-MM",
-      "endDate": "YYYY-MM",
-      "current": false
-    }
-  ],
-  "skills": [
-    {
-      "name": "string",
-      "category": "technical",
-      "level": "advanced"
-    }
-  ]
-}
-
-RULES:
-- For each work experience, extract a "mainDescription" which is a concise 1-2 sentence overview of the core role.
-- Extract specific achievements, responsibilities, and metrics as an array of detailed bullet points in "description". Do NOT summarize into a single string. Preserve all specific accomplishments and metrics.
-- Return ONLY valid JSON (no markdown, no code fences, no extra text)
-- Do NOT invent data
-- Dates in YYYY-MM format`;
+    const systemPrompt = buildProfileParseSystemPrompt();
 
     const parseAIResponse = (content: string): any => {
       if (!content) throw new Error("Empty AI Content");
-
-      // Extract JSON from response (strip markdown fences if present)
-      let cleaned = content.trim();
-      cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "");
-
-      const firstBrace = cleaned.indexOf("{");
-      const lastBrace = cleaned.lastIndexOf("}");
-      if (firstBrace === -1 || lastBrace === -1) {
-        throw new Error("AI response did not contain valid JSON");
-      }
-      const jsonString = cleaned.substring(firstBrace, lastBrace + 1);
       try {
-        return JSON.parse(jsonString);
+        return parseAIJsonResponse(content);
       } catch (e) {
+        const cleaned = content
+          .trim()
+          .replace(/^```(?:json)?\s*/i, "")
+          .replace(/```\s*$/, "");
+        const firstBrace = cleaned.indexOf("{");
+        const lastBrace = cleaned.lastIndexOf("}");
+        if (firstBrace === -1 || lastBrace === -1) {
+          throw new Error("AI response did not contain valid JSON");
+        }
+        const jsonString = cleaned.substring(firstBrace, lastBrace + 1);
         const fixed = jsonString.replace(/,\s*}/g, "}").replace(/,\s*]/g, "]");
         return JSON.parse(fixed);
       }
@@ -131,11 +76,10 @@ RULES:
       ? JSON.stringify(existingProfile)
       : "{}";
 
-    const userPrompt = `EXISTING PROFILE (as JSON):
-${existingProfileJson}
-
-NEW DATA TO PARSE:
-${normalizedText}`;
+    const userPrompt = buildProfileParseUserPrompt({
+      existingProfileJson,
+      normalizedText,
+    });
 
     const response = await aiComplete(
       {

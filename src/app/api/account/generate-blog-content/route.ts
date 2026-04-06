@@ -1,11 +1,13 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { aiComplete } from "@/lib/ai/server-ai";
 import { OpenRouter } from "@openrouter/sdk";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Groq from "groq-sdk";
 import { prisma } from "@/lib/prisma";
+import { buildBlogContentPrompts } from "@/lib/ai/prompts/blog-content";
+import { parseAIJsonResponse } from "@/lib/ai/parse-json-response";
+import { executeStructuredAI } from "@/lib/ai/structured-output";
 
 const TRINITY_MODEL = "arcee-ai/trinity-large-preview:free";
 const STEPFUN_MODEL = "stepfun/step-3.5-flash:free";
@@ -144,108 +146,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const prompts = [
-      {
-        lang: "en",
-        systemPrompt: `You are an expert career coach and SEO copywriter for "gethired.work" (an advanced AI resume builder and career assistant).
-Write a highly engaging, professional, 500-1000 words and SEO-optimized blog post in English.
-
-MANDATORY LANGUAGE REQUIREMENT: ALL content in the "title", "excerpt", and "body" fields MUST be written EXCLUSIVELY in English. Using any other language is STRICTLY FORBIDDEN.
-
-Formatting Requirements:
-1. Output MUST be a valid JSON object strictly matching this format: {"title": "...", "excerpt": "...", "body": "..."}
-2. The "excerpt" should be a catchy 2-sentence of no more than 220 characters summary for SEO.
-3. The "body" must be formatted in clean, valid HTML. Use <h2>, <h3>, <p>, <ul>, <li>.
-4. DO NOT use Markdown formatting. Use ONLY HTML tags.
-5. DO NOT include an <h1> tag in the body.
-
-JSON Escaping Rules (CRITICAL):
-- Use ONLY single quotes for HTML attributes inside the body (e.g., <a href='https://gethired.work'>). DO NOT use double quotes inside the HTML.
-- Format the entire HTML string as a single continuous line without raw line breaks, or properly escape newlines as \\n.
-
-Internal Linking Strategy:
-Organically include up to 3 internal links from the list below. Do NOT use more than 3 links.
-- https://gethired.work/resume-builder
-- https://gethired.work/cover-letter
-- https://gethired.work/linkedin-import
-- https://gethired.work/ai
-- https://gethired.work/pricing
-
-Content Requirements:
-1. Organically include keywords: 'resume builder', 'CV maker', 'AI career assistant', 'job application tips'.
-2. Structure: Catchy intro, actionable main points, conclusion.
-3. End with a CTA inviting the reader to build their ATS-friendly resume at <a href='https://gethired.work'>gethired.work</a>.
-
-REMINDER: The entire response must be a valid JSON object. ALL text content must be in English only.`,
-        userPrompt: `Topic: ${topic}\nSpecific Requirements: ${requirements}\n\nGenerate the English blog post JSON. Remember: ALL text in title, excerpt, and body must be in English only.`,
-      },
-      {
-        lang: "ru",
-        systemPrompt: `КРИТИЧЕСКИ ВАЖНО: Весь текст в полях "title", "excerpt" и "body" должен быть написан ИСКЛЮЧИТЕЛЬНО на русском языке. Использование английского или любого другого языка СТРОГО ЗАПРЕЩЕНО.
-
-Вы — эксперт по карьерному консультированию и профессиональный SEO-копирайтер для сервиса "gethired.work" (AI-конструктор резюме).
-Напишите вовлекающую, полезную и SEO-оптимизированную статью на 500-1000 слов для блога на русском языке.
-
-Требования к формату:
-1. Результат ДОЛЖЕН быть валидным JSON объектом строго в таком формате: {"title": "...", "excerpt": "...", "body": "..."}
-2. "excerpt" — это краткое описание статьи (2 предложения, не более 220 символов).
-3. "body" должно содержать чистый, валидный HTML (h2, h3, p, ul/li).
-4. НЕ используйте Markdown. Только HTML-теги.
-5. НЕ используйте тег <h1> внутри "body".
-
-Правила JSON (КРИТИЧЕСКИ ВАЖНО):
-- Используйте ТОЛЬКО одинарные кавычки для HTML-атрибутов (например, <a href='https://...'>). НЕ используйте двойные кавычки внутри HTML текста.
-- Весь HTML код должен быть написан в одну строку без реальных переносов строк, либо используйте правильное экранирование \\n.
-
-Стратегия внутренних ссылок:
-Органично впишите в текст максимум 3 внутренние ссылки из списка ниже.
-- https://gethired.work/ru/resume-builder
-- https://gethired.work/ru/cover-letter
-- https://gethired.work/ru/linkedin-import
-- https://gethired.work/ru/ai
-- https://gethired.work/ru/pricing
-
-Требования к контенту:
-1. Ключевые слова: 'создать резюме', 'конструктор резюме', 'AI карьерный помощник'.
-2. В конце добавьте CTA: создайте идеальное резюме на <a href='https://gethired.work'>gethired.work</a>.
-
-НАПОМИНАНИЕ: Весь ответ — валидный JSON. ВЕСЬ текст только на русском языке, не на английском.`,
-        userPrompt: `Тема: ${topic}\nСпецифические требования: ${requirements}\n\nСгенерируйте JSON статьи на русском языке. ВАЖНО: весь текст в title, excerpt и body должен быть написан ТОЛЬКО на русском языке, без английского.`,
-      },
-      {
-        lang: "uk",
-        systemPrompt: `КРИТИЧНО ВАЖЛИВО: Весь текст у полях "title", "excerpt" та "body" має бути написаний ВИКЛЮЧНО українською мовою. Використання англійської або будь-якої іншої мови СУВОРО ЗАБОРОНЕНО.
-
-Ви — експерт з кар'єрного консультування та професійний SEO-копірайтер для сервісу "gethired.work" (AI-конструктор резюме).
-Напишіть цікаву, корисну та SEO-оптимізовану статтю на 500-1000 слів для блогу українською мовою.
-
-Вимоги до формату:
-1. Результат МАЄ БУТИ валідним JSON об'єктом у такому форматі: {"title": "...", "excerpt": "...", "body": "..."}
-2. "excerpt" — це короткий опис статті (2 речення, не більше 220 символів).
-3. "body" має містити чистий, валідний HTML (h2, h3, p, ul/li).
-4. НЕ використовуйте Markdown. Тільки HTML-теги.
-5. НЕ використовуйте тег <h1> всередині "body".
-
-Правила JSON (КРИТИЧНО ВАЖЛИВО):
-- Використовуйте ТІЛЬКИ одинарні лапки для HTML-атрибутів (наприклад, <a href='https://...'>). НЕ використовуйте подвійні лапки всередині HTML тексту.
-- Весь HTML код має бути написаний в один рядок без реальних переносів рядків, або використовуйте правильне екранування \\n.
-
-Стратегія внутрішніх посилань:
-Органічно вставте в текст максимум 3 внутрішні посилання зі списку нижче.
-- https://gethired.work/uk/resume-builder
-- https://gethired.work/uk/cover-letter
-- https://gethired.work/uk/linkedin-import
-- https://gethired.work/uk/ai
-- https://gethired.work/uk/pricing
-
-Вимоги до контенту:
-1. Ключові слова: 'створити резюме', 'конструктор резюме', 'AI кар\'єрний помічник'.
-2. Наприкінці додайте CTA: створіть ідеальне резюме на <a href='https://gethired.work'>gethired.work</a>.
-
-НАГАДУВАННЯ: Вся відповідь — валідний JSON. ВЕСЬ текст тільки українською мовою, не англійською.`,
-        userPrompt: `Тема: ${topic}\nСпецифічні вимоги: ${requirements}\n\nЗгенеруйте JSON статті українською мовою. ВАЖЛИВО: весь текст у title, excerpt та body має бути написаний ТІЛЬКИ українською мовою, без англійської.`,
-      },
-    ];
+    const prompts = buildBlogContentPrompts(topic, requirements);
 
     const userId = session.user?.id;
     if (!userId) {
@@ -349,30 +250,50 @@ REMINDER: The entire response must be a valid JSON object. ALL text content must
       results = { en: responses[0], ru: responses[1], uk: responses[2] };
     } else {
       // Default: aiComplete (built-in provider)
-      const aiCompletePrompts = prompts.map((p) => ({
-        systemPrompt: p.systemPrompt,
-        userPrompt: p.userPrompt,
-        temperature: 0.4,
-        maxTokens: 3000,
-        responseFormat: { type: "json_object" } as any,
-      }));
-
       const [enRes, ruRes, ukRes] = await Promise.all([
-        aiComplete(aiCompletePrompts[0], userId),
-        aiComplete(aiCompletePrompts[1], userId),
-        aiComplete(aiCompletePrompts[2], userId),
+        executeStructuredAI<{ title?: string; excerpt?: string; body?: string }>(
+          {
+            systemPrompt: prompts[0].systemPrompt,
+            userPrompt: prompts[0].userPrompt,
+            temperature: 0.4,
+            maxTokens: 3000,
+          },
+          userId,
+        ),
+        executeStructuredAI<{ title?: string; excerpt?: string; body?: string }>(
+          {
+            systemPrompt: prompts[1].systemPrompt,
+            userPrompt: prompts[1].userPrompt,
+            temperature: 0.4,
+            maxTokens: 3000,
+          },
+          userId,
+        ),
+        executeStructuredAI<{ title?: string; excerpt?: string; body?: string }>(
+          {
+            systemPrompt: prompts[2].systemPrompt,
+            userPrompt: prompts[2].userPrompt,
+            temperature: 0.4,
+            maxTokens: 3000,
+          },
+          userId,
+        ),
       ]);
 
       results = {
-        en: enRes.content,
-        ru: ruRes.content,
-        uk: ukRes.content,
+        en: enRes.raw.content,
+        ru: ruRes.raw.content,
+        uk: ukRes.raw.content,
       };
     }
 
     const parseAiResponse = (resContent: string, fallbackTopic: string) => {
       try {
-        const parsed = JSON.parse(resContent);
+        const parsed = parseAIJsonResponse<{
+          title?: string;
+          excerpt?: string;
+          body?: string;
+        }>(resContent);
         return {
           title: parsed.title || fallbackTopic,
           excerpt: parsed.excerpt || "",

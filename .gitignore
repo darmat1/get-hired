@@ -50,5 +50,6 @@ next-env.d.ts
 /backups
 /scripts
 /chrome-extension
+/ideas
 
 posts.json
