@@ -1,10 +1,14 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { aiComplete } from "@/lib/ai/server-ai";
-import { RESUME_SCORE_PROMPT } from "@/lib/ai/resume-score-prompt";
 import type { Resume, WorkExperience } from "@/types/resume";
 import type { ResumeScore, CompanyScore } from "@/types/resume-score";
+import {
+  buildCompanyScoreUserPrompt,
+  buildResumeScoreSystemPrompt,
+  buildResumeScoreUserPrompt,
+} from "@/lib/ai/prompts/resume-score";
+import { executeStructuredAI } from "@/lib/ai/structured-output";
 
 function formatResumeForAnalysis(
   resume: Partial<Resume>,
@@ -129,153 +133,50 @@ export async function POST(req: Request) {
       const currentDate = new Date().toISOString().split("T")[0];
       const currentYear = new Date().getFullYear();
 
-      const prompt = `${RESUME_SCORE_PROMPT}
+      const prompt = buildResumeScoreUserPrompt({
+        formattedResume,
+        language: targetLanguage,
+        currentDate,
+        currentYear,
+      });
 
-### IMPORTANT CONTEXT
-- Current date: ${currentDate}
-- Current year: ${currentYear}
-- Use this to validate employment dates. A start date in the future (${currentYear + 1} or later) or beyond current date is INVALID.
-- Respond in ${targetLanguage} language.
-
-Resume to analyze:
-${formattedResume}`;
-
-      const aiResponse = await aiComplete(
+      const aiResponse = await executeStructuredAI<ResumeScore>(
         {
-          systemPrompt: "You are an expert resume analyst. Return ONLY valid JSON, no other text, no markdown code blocks, no explanations. The output must be parseable by JSON.parse().",
+          systemPrompt: buildResumeScoreSystemPrompt(),
           userPrompt: prompt,
           temperature: 0.2,
           maxTokens: 16000,
-          responseFormat: { type: "json_object" },
         },
         session.user.id,
       );
 
-      let score: ResumeScore;
-      try {
-        console.log("[Resume Score] Raw AI response:", aiResponse.content);
-        
-        // Handle truncated responses by finding the last valid JSON closing
-        let content = aiResponse.content;
-        
-        // Remove markdown code blocks if present
-        content = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
-        
-        // Find the last closing brace and extract JSON
-        const lastBraceIndex = content.lastIndexOf('}');
-        if (lastBraceIndex !== -1) {
-          content = content.substring(0, lastBraceIndex + 1);
-        }
-        
-        score = JSON.parse(content) as ResumeScore;
-      } catch (err) {
-        console.error("[Resume Score] Failed to parse JSON:", err);
-        console.error("[Resume Score] Response content length:", aiResponse.content.length);
-        console.error("[Resume Score] Response ends with:", aiResponse.content.slice(-200));
-        return NextResponse.json(
-          { 
-            error: "Failed to parse AI response",
-            detail: String(err),
-            rawResponse: aiResponse.content.substring(0, 500)
-          },
-          { status: 500 },
-        );
-      }
-
-      return NextResponse.json(score);
+      console.log("[Resume Score] Raw AI response:", aiResponse.raw.content);
+      return NextResponse.json(aiResponse.parsed);
     } else if (type === "company") {
       const experienceData = experience as WorkExperience;
       const formattedExperience = formatCompanyForAnalysis(experienceData, targetRole);
       const currentDate = new Date().toISOString().split("T")[0];
       const currentYear = new Date().getFullYear();
 
-      const companyPrompt = `You are an expert recruiter analyzing a single work experience entry. Analyze this experience and return ONLY valid JSON.
+      const companyPrompt = buildCompanyScoreUserPrompt({
+        formattedExperience,
+        language: targetLanguage,
+        currentDate,
+        currentYear,
+      });
 
-### IMPORTANT CONTEXT
-- Current date: ${currentDate}
-- Current year: ${currentYear}
-- Use this to validate employment dates. A start date in the future (${currentYear + 1} or later) or beyond current date is INVALID.
-- Respond in ${targetLanguage} language.
-
-### SEVERITY LEVELS
-
-RED — major issues:
-- Job title has zero relevance to target role
-- Dates are impossible (e.g., start date in the future)
-- No description provided
-- Spelling errors in job title or company name
-
-YELLOW — concerns:
-- Description is too brief or generic
-- No measurable achievements (no numbers, percentages)
-- Duties listed instead of achievements
-- Short tenure (< 6 months) without explanation
-- Description mentions technologies not in target role
-
-GREEN — strengths:
-- Has specific measurable achievements with numbers/percentages
-- Clear career progression or increased responsibility
-- Relevant technologies and methodologies mentioned
-- Demonstrates impact with concrete results
-
-### OUTPUT FORMAT
-{
-  "score": 0-100,
-  "scoreLabel": "Weak | Fair | Good | Strong | Excellent",
-  "summary": "2 sentence assessment",
-  "red": [{"field": "...", "issue": "...", "recommendation": "..."}],
-  "yellow": [{"field": "...", "issue": "...", "recommendation": "..."}],
-  "green": [{"field": "...", "strength": "..."}]
-}
-
-Scoring: Start at 100, -15 per RED, -5 per YELLOW, +2 per GREEN (max +10).
-
-Experience to analyze:
-${formattedExperience}`;
-
-      const aiResponse = await aiComplete(
+      const aiResponse = await executeStructuredAI<CompanyScore>(
         {
-          systemPrompt: "You are an expert resume analyst. Return ONLY valid JSON, no other text, no markdown code blocks, no explanations. The output must be parseable by JSON.parse().",
+          systemPrompt: buildResumeScoreSystemPrompt(),
           userPrompt: companyPrompt,
           temperature: 0.2,
           maxTokens: 16000,
-          responseFormat: { type: "json_object" },
         },
         session.user.id,
       );
 
-      let score: CompanyScore;
-      try {
-        console.log("[Resume Score] Raw AI response:", aiResponse.content);
-        
-        // Handle truncated responses by finding the last valid JSON closing
-        let content = aiResponse.content;
-        
-        // Remove markdown code blocks if present
-        content = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
-        
-        // Find the last closing brace and extract JSON
-        const lastBraceIndex = content.lastIndexOf('}');
-        if (lastBraceIndex !== -1) {
-          content = content.substring(0, lastBraceIndex + 1);
-        }
-        
-        score = JSON.parse(content) as CompanyScore;
-      } catch (err) {
-        console.error("[Resume Score] Failed to parse JSON:", err);
-        console.error("[Resume Score] Response content length:", aiResponse.content.length);
-        console.error("[Resume Score] Response ends with:", aiResponse.content.slice(-200));
-        return NextResponse.json(
-          { 
-            error: "Failed to parse AI response",
-            detail: String(err),
-            rawResponse: aiResponse.content.substring(0, 500)
-          },
-          { status: 500 },
-        );
-      }
-
-      return NextResponse.json(score);
+      console.log("[Resume Score] Raw AI response:", aiResponse.raw.content);
+      return NextResponse.json(aiResponse.parsed);
     }
 
     return NextResponse.json({ error: "Invalid type" }, { status: 400 });

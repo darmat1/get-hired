@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
-import { aiComplete } from "@/lib/ai/server-ai";
 import { buildResumeVariantsSystemPrompt } from "@/lib/ai/prompts/resume-variants";
+import { executeStructuredAI } from "@/lib/ai/structured-output";
 
 export async function POST() {
   const requestStart = Date.now();
@@ -63,48 +63,32 @@ export async function POST() {
     const profileToon = encode(profileData);
 
     const aiStart = Date.now();
-    const response = await aiComplete(
+    const response = await executeStructuredAI<{ variants?: any[] }>(
       {
         systemPrompt,
         userPrompt: profileToon,
         temperature: 0.7,
-        responseFormat: { type: "json_object" },
       },
       session.user.id,
     );
 
-    const aiContent = response.content;
+    const aiContent = response.raw.content;
     logWithTime("AI response received", {
-      provider: response.provider,
-      model: response.model,
+      provider: response.raw.provider,
+      model: response.raw.model,
       contentLength: aiContent.length,
       durationMs: Date.now() - aiStart,
     });
 
-    // Parse JSON response
-    let parsed: { variants?: any[] };
-    try {
-      const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
-      const cleanJSON = jsonMatch ? jsonMatch[0] : aiContent;
-      parsed = JSON.parse(cleanJSON);
-    } catch (parseError) {
-      console.error("JSON Parse Error:", parseError);
-      logWithTime("JSON parse failed", { error: String(parseError) });
-      return NextResponse.json(
-        { error: "Failed to parse AI response", content: aiContent },
-        { status: 500 },
-      );
-    }
-
     logWithTime("JSON parsed", {
-      variantsCount: parsed?.variants?.length || 0,
+      variantsCount: response.parsed?.variants?.length || 0,
     });
 
     const saveStart = Date.now();
     const updatedProfile = await prisma.userProfile.update({
       where: { id: profile.id },
       data: {
-        resumeVariants: (parsed.variants || []).map(
+        resumeVariants: (response.parsed.variants || []).map(
           (v: any, index: number) => ({
             // Generate a stable unique id — AI doesn't return one
             id: `variant-${Date.now()}-${index}`,

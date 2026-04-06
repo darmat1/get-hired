@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { submolts } from "@/lib/moltbook-data";
-import { aiComplete } from "@/lib/ai/server-ai";
+import {
+  buildAutoPostGenerationPrompt,
+  buildAutoPostVerificationPrompt,
+} from "@/lib/ai/prompts/auto-post";
+import { executeStructuredAI } from "@/lib/ai/structured-output";
 
 const POST_API_BASE =
   process.env.NEXT_PUBLIC_POST_API || "https://www.moltbook.com";
@@ -60,18 +64,22 @@ export async function GET(req: NextRequest) {
       } catch {
         userId = undefined;
       }
-      const genResponse = await aiComplete(
+      const generationPrompt = buildAutoPostGenerationPrompt(subj.display_name);
+      const genResponse = await executeStructuredAI<{
+        title: string;
+        hook: string;
+        body: string;
+        conclusion: string;
+      }>(
         {
-          systemPrompt:
-            'Return JSON: { "title": "string", "hook": "string", "body": "string", conclusion: "string" }. Hook must be under 50 characters. Body must be under 300 characters but minimum 200 characters. Conclusion must be under 50 characters.',
-          userPrompt: `Generate a technical status about ${subj.display_name}`,
+          systemPrompt: generationPrompt.systemPrompt,
+          userPrompt: generationPrompt.userPrompt,
           temperature: 0.7,
-          responseFormat: { type: "json_object" },
         },
         userId,
       );
 
-      const genPost = JSON.parse(genResponse.content);
+      const genPost = genResponse.parsed;
 
       // Сборка финального текста с МИНТ-ПРЕФИКСОМ
       const mintPrefix = `${inscriptions}mbc20.xyz\n\n`;
@@ -108,27 +116,22 @@ export async function GET(req: NextRequest) {
       const v = postData.verification;
       if (!v) throw new Error("Verification data missing from server response");
 
-      const solverSystemPrompt = `
-        You are a Precise Mathematical Solver. 
-        Your task is to extract a math problem from a noisy text and solve it.
+      const verificationPrompt = buildAutoPostVerificationPrompt(
+        JSON.stringify(v),
+      );
 
-        CRITICAL RULES:
-        1. IGNORE "lO", "l0", "O", or "o" if they are part of words like "lO bStErS" or "lO.oBsT". These are NOT numbers.
-        2. ONLY look for numbers written as words (e.g., "twenty three", "seven") or clear digits.
-        3. Identify the specific values associated with the question (e.g., "claw exerts X", "tail adds Y").
-        4. IGNORE all flavor text and focus ONLY on the values that contribute to the final "total".
-        5. Return ONLY JSON: { "reasoning": "...", "solution": "string" }
-        6. The 'solution' MUST be a numeric string with exactly 2 decimal places (e.g., "30.00").
-      `;
-
-      const solverResponse = await aiComplete({
-        systemPrompt: solverSystemPrompt,
-        userPrompt: `Solve this challenge: ${JSON.stringify(v)}`,
+      const solverResponse = await executeStructuredAI<{
+        reasoning?: string;
+        solution?: string;
+        answer?: string;
+        result?: string;
+      }>({
+        systemPrompt: verificationPrompt.systemPrompt,
+        userPrompt: verificationPrompt.userPrompt,
         temperature: 0,
-        responseFormat: { type: "json_object" },
       });
 
-      const solverResult = JSON.parse(solverResponse.content);
+      const solverResult = solverResponse.parsed;
 
       // Извлекаем ответ, проверяя разные ключи
       const rawAnswer =

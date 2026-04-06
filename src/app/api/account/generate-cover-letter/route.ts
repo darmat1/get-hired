@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { encode } from "@toon-format/toon";
 import { aiComplete } from "@/lib/ai/server-ai";
+import { executeStructuredAI } from "@/lib/ai/structured-output";
 import {
   buildCoverLetterUserPrompt,
   buildTailoredResumeUserPrompt,
@@ -115,56 +116,23 @@ export async function POST(request: Request) {
         resumeLanguage,
       });
 
-      const resumeResponse = await aiComplete(
+      const resumeResponse = await executeStructuredAI<any>(
         {
           systemPrompt: getTailoredResumeSystemPrompt(),
           userPrompt: resumeUserPrompt,
           temperature: 0.3,
           maxTokens: 12000,
-          responseFormat: { type: "json_object" },
         },
         session.user.id,
       );
 
-      // Parse the AI response as JSON
       let resumeJson;
       try {
-        let content = resumeResponse.content.trim();
-        if (content.startsWith("```json")) {
-          content = content.slice(7);
-        } else if (content.startsWith("```")) {
-          content = content.slice(3);
-        }
-        if (content.endsWith("```")) {
-          content = content.slice(0, -3);
-        }
-        content = content.trim();
-
-        try {
-          resumeJson = JSON.parse(content);
-        } catch {
-          const lastBrace = content.lastIndexOf("}");
-          if (lastBrace !== -1) {
-            const truncated = content.slice(0, lastBrace + 1);
-            let fixed = truncated;
-            const openArrays =
-              (fixed.match(/\[/g) || []).length -
-              (fixed.match(/\]/g) || []).length;
-            const openObjects =
-              (fixed.match(/{/g) || []).length -
-              (fixed.match(/}/g) || []).length;
-            for (let i = 0; i < openArrays; i++) fixed += "]";
-            for (let i = 0; i < openObjects; i++) fixed += "}";
-            resumeJson = JSON.parse(fixed);
-            console.warn("[AI] Resume JSON was truncated and auto-recovered");
-          } else {
-            throw new Error("No valid JSON structure found");
-          }
-        }
+        resumeJson = resumeResponse.parsed;
       } catch (err) {
         console.error(
           "Failed to parse AI resume JSON:",
-          resumeResponse.content,
+          resumeResponse.raw.content,
         );
         return NextResponse.json(
           { error: "Failed to generate structured resume. Please try again." },
