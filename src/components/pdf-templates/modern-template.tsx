@@ -328,9 +328,10 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                             marginRight: 4,
                           }}
                         >
-                          <Text style={{ fontSize: 9, color: "white" }}>
-                            {skill.name}
-                          </Text>
+                          <FormattedText
+                            html={skill.name}
+                            style={{ fontSize: 9, color: "white" }}
+                          />
                         </View>
                       ))}
                   </View>
@@ -362,9 +363,10 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                             marginRight: 4,
                           }}
                         >
-                          <Text style={{ fontSize: 9, color: "white" }}>
-                            {skill.name}
-                          </Text>
+                          <FormattedText
+                            html={skill.name}
+                            style={{ fontSize: 9, color: "white" }}
+                          />
                         </View>
                       ))}
                   </View>
@@ -421,15 +423,14 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                                 marginBottom: 2,
                               }}
                             >
-                              <Text
+                              <FormattedText
+                                html={skill.name}
                                 style={{
                                   fontSize: 9,
                                   fontWeight: "bold",
                                   color: "rgba(255,255,255,0.9)",
                                 }}
-                              >
-                                {skill.name}
-                              </Text>
+                              />
                               <Text
                                 style={{
                                   fontSize: 8,
@@ -520,13 +521,11 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                       {formatResumeDate(exp.startDate)} -{" "}
                       {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                     </Text>
-                    <Text style={styles.expCompany}>
-                      {exp.company}
-                      {exp.employmentType &&
-                        ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
-                      {exp.location ? ` | ${exp.location}` : ""}
-                    </Text>
-                    <Text style={styles.expTitle}>{exp.title}</Text>
+                    <FormattedText
+                      style={styles.expCompany}
+                      html={`${exp.company}${exp.employmentType ? ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}` : ""}${exp.location ? ` | ${exp.location}` : ""}`}
+                    />
+                    <FormattedText style={styles.expTitle} html={exp.title} />
 
                     {exp.mainDescription && (
                       <View style={{ marginBottom: 4 }}>
@@ -585,13 +584,14 @@ export function ModernTemplate({ resume }: ModernTemplateProps) {
                       ? ` - ${edu.current ? "Present" : formatResumeDate(edu.endDate)}`
                       : ""}
                   </Text>
-                  <Text style={styles.expTitle}>{edu.degree}</Text>
+                  <FormattedText style={styles.expTitle} html={edu.degree} />
                   {edu.field && (
-                    <Text style={styles.expCompany}>{edu.field}</Text>
+                    <FormattedText style={styles.expCompany} html={edu.field} />
                   )}
-                  <Text style={[styles.expDesc, { fontStyle: "italic" }]}>
-                    {edu.institution}
-                  </Text>
+                  <FormattedText
+                    style={[styles.expDesc, { fontStyle: "italic" }]}
+                    html={edu.institution}
+                  />
                 </View>
               ))}
             </View>

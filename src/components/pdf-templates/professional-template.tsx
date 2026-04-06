@@ -285,14 +285,13 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
               <View key={index} style={{ marginBottom: 10 }} wrap={false}>
                 <View style={styles.jobHeader}>
                   <View>
-                    <Text style={styles.jobTitle}>{exp.title}</Text>
-                    <Text style={styles.company}>
-                      {exp.company}
-                      {exp.employmentType &&
-                        ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
-                    </Text>
+                    <FormattedText style={styles.jobTitle} html={exp.title} />
+                    <FormattedText
+                      style={styles.company}
+                      html={`${exp.company}${exp.employmentType ? ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}` : ""}`}
+                    />
                   </View>
-                  <View>
+                  <View style={{ alignItems: "flex-end" }}>
                     <Text style={styles.dateLocation}>
                       {formatResumeDate(exp.startDate)} — {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                     </Text>
@@ -346,12 +345,12 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
               <View key={index} style={{ marginBottom: 8 }} wrap={false}>
                 <View style={styles.jobHeader}>
                   <View>
-                    <Text style={styles.jobTitle}>{edu.institution}</Text>
-                    <Text style={styles.company}>
-                      {edu.degree} {edu.field && `— ${edu.field}`}
-                    </Text>
+                    <FormattedText style={styles.jobTitle} html={edu.institution} />
+                    <FormattedText style={styles.company} html={`
+                      ${edu.degree} ${edu.field ? `— ${edu.field}` : ""}
+                    `} />
                   </View>
-                  <View>
+                  <View style={{ alignItems: "flex-end" }}>
                     <Text style={styles.dateLocation}>
                       {formatResumeDate(edu.startDate)} — {edu.current ? "Present" : formatResumeDate(edu.endDate)}
                     </Text>
@@ -377,9 +376,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                       (s) => s.category === "technical" || s.category === "soft",
                     )
                     .map((skill, index) => (
-                      <Text key={index} style={styles.skillText}>
-                        • {skill.name}
-                      </Text>
+                      <FormattedText key={index} style={styles.skillText} html={`• ${skill.name}`} />
                     ))}
                 </View>
               </View>
@@ -395,10 +392,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                   {skills
                     .filter((s) => s.category === "language")
                     .map((skill, index) => (
-                      <Text key={index} style={styles.skillText}>
-                        • {skill.name}
-                        {skill.level && ` (${getLevelLabel(skill.level)})`}
-                      </Text>
+                      <FormattedText key={index} style={styles.skillText} html={`• ${skill.name}${skill.level ? ` (${getLevelLabel(skill.level)})` : ""}`} />
                     ))}
                 </View>
               </View>

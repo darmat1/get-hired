@@ -21,8 +21,8 @@ export function FormattedText({ html, style }: { html: string; style?: any }) {
     .replace(/<br\s*\/?>/g, "\n");
 
   // Regex to split by tags while keeping them in the resulting array
-  // This matches <b>...</b> or <i>...</i>
-  const parts = normalized.split(/(<b>.*?<\/b>|<i>.*?<\/i>)/g);
+  // Use [\s\S] instead of . to match newlines within tags if they exist
+  const parts = normalized.split(/(<b>[\s\S]*?<\/b>|<i>[\s\S]*?<\/i>|<u>[\s\S]*?<\/u>)/g);
 
   return (
     <Text style={style}>
@@ -39,6 +39,14 @@ export function FormattedText({ html, style }: { html: string; style?: any }) {
           const content = part.replace(/<\/?i>/g, "");
           return (
             <Text key={index} style={{ fontStyle: "italic" }}>
+              {content}
+            </Text>
+          );
+        }
+        if (part.startsWith("<u>")) {
+          const content = part.replace(/<\/?u>/g, "");
+          return (
+            <Text key={index} style={{ textDecoration: "underline" }}>
               {content}
             </Text>
           );

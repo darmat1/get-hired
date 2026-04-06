@@ -203,7 +203,7 @@ export function CreativeTemplate({ resume }: TemplateProps) {
               <View style={styles.skillsWrap}>
                 {skills.map((skill, index) => (
                   <View key={index} style={styles.skillBadge}>
-                    <Text>{skill.name}</Text>
+                    <FormattedText html={skill.name} />
                   </View>
                 ))}
               </View>
@@ -255,13 +255,12 @@ export function CreativeTemplate({ resume }: TemplateProps) {
               </Text>
               {workExperience.map((exp, index) => (
                 <View key={index} style={styles.jobBlock} wrap={false}>
-                  <Text style={styles.jobTitle}>{exp.title}</Text>
+                  <FormattedText style={styles.jobTitle} html={exp.title} />
                   <View style={styles.jobMeta}>
-                    <Text style={{ fontStyle: "italic" }}>
-                      {exp.company}
-                      {exp.employmentType &&
-                        ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}`}
-                    </Text>
+                    <FormattedText
+                      style={{ fontStyle: "italic" }}
+                      html={`${exp.company}${exp.employmentType ? ` • ${getTranslation(`work.employment_types.${exp.employmentType}`, resume.language || "en")}` : ""}`}
+                    />
                     <Text>
                       {formatResumeDate(exp.startDate)} - {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                     </Text>
@@ -296,9 +295,9 @@ export function CreativeTemplate({ resume }: TemplateProps) {
               </Text>
               {education.map((edu, index) => (
                 <View key={index} style={styles.jobBlock} wrap={false}>
-                  <Text style={styles.jobTitle}>{edu.institution}</Text>
+                  <FormattedText style={styles.jobTitle} html={edu.institution} />
                   <View style={styles.jobMeta}>
-                    <Text>{edu.degree}</Text>
+                    <FormattedText html={edu.degree || " "} />
                     <Text>
                       {formatResumeDate(edu.startDate)} - {edu.current ? "Present" : formatResumeDate(edu.endDate)}
                     </Text>
