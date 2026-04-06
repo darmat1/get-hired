@@ -81,6 +81,7 @@ export async function POST(request: Request) {
 
     const avatarUrl = publicUrlData.publicUrl;
 
+    // Update User Profile
     const existingProfile = await prisma.userProfile.findUnique({
       where: { userId },
     });
@@ -104,10 +105,29 @@ export async function POST(request: Request) {
       },
     });
 
+    // Update User Image (for auth session)
     await prisma.user.update({
       where: { id: userId },
       data: { image: avatarUrl },
     });
+
+    // Sync avatar to all existing resumes
+    const resumes = await prisma.resume.findMany({
+      where: { userId },
+    });
+
+    for (const resume of resumes) {
+      const resumeInfo = (resume.personalInfo as any) || {};
+      await prisma.resume.update({
+        where: { id: resume.id },
+        data: {
+          personalInfo: {
+            ...resumeInfo,
+            avatarUrl,
+          },
+        },
+      });
+    }
 
     return NextResponse.json({ avatarUrl });
   } catch (error) {

@@ -90,10 +90,10 @@ export async function GET(
       }
     }
 
-    if (!avatarUrl) {
+    // prioritize profile avatar if it exists and is different (e.g. newly uploaded)
+    if (profileAvatar && avatarUrl !== profileAvatar) {
       avatarUrl = profileAvatar;
-    } else if (isAvatarUrlExpired(avatarUrl) && profileAvatar) {
-      avatarUrl = profileAvatar;
+      // Note: we don't necessarily need to update the DB here as the GET will always fix it
     }
 
     if (!avatarUrl && profileAvatar) {
