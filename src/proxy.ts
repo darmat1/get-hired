@@ -7,7 +7,7 @@ const SUPPORTED_LOCALES = ["uk", "ru"];
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;
   return (
-    origin.startsWith("chrome-extension://") ||
+    origin === "chrome-extension://khdamklpipfmaeimaeeckfbfbihicimg" ||
     origin === "http://localhost:3000"
   );
 }
