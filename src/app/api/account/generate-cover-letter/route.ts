@@ -38,6 +38,12 @@ export async function POST(request: Request) {
       );
     }
 
+    // Safety truncation for extremely long inputs (30k chars is approx 7.5k tokens)
+    // This allows for long JDs while still staying within a 12k TPM bucket when maxTokens is added.
+    const safeJobDescription = jobDescription.length > 30000 
+      ? jobDescription.substring(0, 30000) + "... [Truncated for brevity]"
+      : jobDescription;
+
     // Check resume limit if tailoring is requested
     if (generateResume) {
       const resumeCount = await prisma.resume.count({
@@ -84,7 +90,7 @@ export async function POST(request: Request) {
       format === "bullet" ? "bullet" : "prose",
     );
     const userPrompt = buildCoverLetterUserPrompt({
-      jobDescription,
+      jobDescription: safeJobDescription,
       profileToon,
     });
 
@@ -93,7 +99,9 @@ export async function POST(request: Request) {
         systemPrompt,
         userPrompt,
         temperature: 0.3,
-        maxTokens: 8000,
+        // Reduced from 8000 to 2000 to avoid Groq 413 Rate Limit errors.
+        // A typical cover letter never exceeds 1000 tokens.
+        maxTokens: 2000, 
       },
       session.user.id,
     );
@@ -111,7 +119,7 @@ export async function POST(request: Request) {
     // Generate tailored resume if requested
     if (generateResume) {
       const resumeUserPrompt = buildTailoredResumeUserPrompt({
-        jobDescription,
+        jobDescription: safeJobDescription,
         profileToon,
         resumeLanguage,
       });
@@ -121,7 +129,9 @@ export async function POST(request: Request) {
           systemPrompt: getTailoredResumeSystemPrompt(),
           userPrompt: resumeUserPrompt,
           temperature: 0.3,
-          maxTokens: 12000,
+          // Reduced from 12000 to 4000 to avoid Groq 413 Rate Limit errors.
+          // Structured resumes rarely exceed 2000 tokens.
+          maxTokens: 4000,
         },
         session.user.id,
       );

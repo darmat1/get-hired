@@ -22,7 +22,7 @@ import { useTranslation } from "@/lib/translations";
 import { Modal } from "@/components/ui/modal";
 
 export function ProfileForm() {
-  const { data: session } = useSession();
+  const { data: session, refetch } = useSession();
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -258,6 +258,7 @@ export function ProfileForm() {
         type: "success",
         text: "Avatar uploaded successfully.",
       });
+      await refetch();
       router.refresh();
     } catch (error) {
       setMessage({
