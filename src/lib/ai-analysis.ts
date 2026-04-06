@@ -165,23 +165,28 @@ async function analyzeWithAI(
 ): Promise<AIAnalysis> {
   const resumeToon = encode(resume);
 
-  const prompt = `Analyze this resume and provide evaluation.
+  const prompt = `Analyze this resume and provide an evaluation.
 Language: ${language}
 
 Resume (TOON format):
 ${resumeToon}
 
-RETURN IN TOON FORMAT:
-analysis:
-  score: 0-100
-  strengths[N]: strength1,strength2,...
-  weaknesses[N]: weakness1,weakness2,...
-  suggestions[N]: suggestion1,suggestion2,...
-  recommendations[N]{section,suggestion,priority}:
-    Section Name,Specific recommendation,high/medium/low
-    ...
-
-Return ONLY valid TOON format (no JSON, no markdown).`;
+Return ONLY valid JSON:
+{
+  "analysis": {
+    "score": 0,
+    "strengths": ["strength1"],
+    "weaknesses": ["weakness1"],
+    "suggestions": ["suggestion1"],
+    "recommendations": [
+      {
+        "section": "Section Name",
+        "suggestion": "Specific recommendation",
+        "priority": "high"
+      }
+    ]
+  }
+}`;
 
   // Use centralized API route to ensure per-user provider flow when possible
   const apiResp = await fetch("/api/ai/complete", {
@@ -198,33 +203,52 @@ Return ONLY valid TOON format (no JSON, no markdown).`;
   const apiResult = await apiResp.json();
   const content = apiResult?.content ?? "";
 
-  // Try TOON first, fallback to JSON
   try {
+    const parsed = JSON.parse(content) as Record<string, unknown>;
+    const analysis = (parsed.analysis ?? parsed) as Record<string, unknown>;
+
+    return {
+      score: Number(analysis.score) || 0,
+      strengths: Array.isArray(analysis.strengths) ? analysis.strengths : [],
+      weaknesses: Array.isArray(analysis.weaknesses)
+        ? analysis.weaknesses
+        : [],
+      suggestions: Array.isArray(analysis.suggestions)
+        ? analysis.suggestions
+        : [],
+      recommendations: Array.isArray(analysis.recommendations)
+        ? analysis.recommendations.map((r: any) => ({
+            section: r.section || "",
+            suggestion: r.suggestion || "",
+            priority: r.priority || "medium",
+          }))
+        : [],
+    };
+  } catch {
     const decoded = decode(content, { strict: false }) as Record<
       string,
       unknown
     >;
-    if (decoded.analysis) {
-      const a = decoded.analysis as Record<string, unknown>;
-      return {
-        score: Number(a.score) || 0,
-        strengths: Array.isArray(a.strengths) ? a.strengths : [],
-        weaknesses: Array.isArray(a.weaknesses) ? a.weaknesses : [],
-        suggestions: Array.isArray(a.suggestions) ? a.suggestions : [],
-        recommendations: Array.isArray(a.recommendations)
-          ? a.recommendations.map((r: any) => ({
-              section: r.section || "",
-              suggestion: r.suggestion || "",
-              priority: r.priority || "medium",
-            }))
-          : [],
-      };
-    }
-  } catch {
-    // Fallback to JSON
-  }
+    const analysis = decoded.analysis as Record<string, unknown>;
 
-  return JSON.parse(content);
+    return {
+      score: Number(analysis?.score) || 0,
+      strengths: Array.isArray(analysis?.strengths) ? analysis.strengths : [],
+      weaknesses: Array.isArray(analysis?.weaknesses)
+        ? analysis.weaknesses
+        : [],
+      suggestions: Array.isArray(analysis?.suggestions)
+        ? analysis.suggestions
+        : [],
+      recommendations: Array.isArray(analysis?.recommendations)
+        ? analysis.recommendations.map((r: any) => ({
+            section: r.section || "",
+            suggestion: r.suggestion || "",
+            priority: r.priority || "medium",
+          }))
+        : [],
+    };
+  }
 }
 
 export function getResumeImprovementTips(
