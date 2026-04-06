@@ -271,7 +271,7 @@ export function useVoiceInput({
       });
       streamRef.current = stream;
 
-      const audioContext = new AudioContext({ sampleRate: 16000 });
+      const audioContext = new AudioContext({ sampleRate: 12000 });
       audioContextRef.current = audioContext;
 
       const workletCode = `
@@ -314,7 +314,7 @@ export function useVoiceInput({
             realtimeInput: {
               media_chunks: [
                 {
-                  mime_type: "audio/pcm;rate=16000",
+                  mime_type: "audio/pcm;rate=12000",
                   data: base64,
                 },
               ],
