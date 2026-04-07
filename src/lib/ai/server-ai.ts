@@ -3,6 +3,37 @@ import { ALL_PROVIDERS } from "./registry";
 import { AICompletionRequest, AICompletionResponse } from "./types";
 import { getAvailableProviders } from "./registry";
 
+function isModelCompatibleWithProvider(
+  model: string | undefined,
+  providerId: string,
+): boolean {
+  if (!model) return true;
+
+  const normalized = model.toLowerCase();
+
+  switch (providerId) {
+    case "gemini":
+      return normalized.startsWith("gemini-") || normalized.startsWith("gemma-");
+    case "groq":
+      return (
+        normalized.includes("llama") ||
+        normalized.includes("mixtral") ||
+        normalized.includes("gemma") ||
+        normalized.includes("gpt-oss")
+      );
+    case "openai":
+      return normalized.startsWith("gpt-") || normalized.startsWith("o");
+    case "claude":
+      return normalized.startsWith("claude-");
+    case "openrouter":
+      return true;
+    case "grok":
+      return normalized.startsWith("grok-") || normalized === "grok-beta";
+    default:
+      return true;
+  }
+}
+
 /**
  * Вспомогательная функция для маппинга универсальных имен моделей
  * под специфичные требования каждого API провайдера.
@@ -14,49 +45,44 @@ function mapModelForProvider(
   if (!requestedModel) return undefined;
 
   const modelLower = requestedModel.toLowerCase();
+  const isSmallFastModel = modelLower === "small-fast";
+  const isLargeSmartModel = modelLower === "large-smart";
 
   // Логика для МАЛЕНЬКИХ и БЫСТРЫХ моделей (Llama 8B, Gemini Flash, etc.)
-  if (
-    modelLower.includes("8b") ||
-    modelLower.includes("instant") ||
-    modelLower.includes("flash") ||
-    modelLower.includes("small")
-  ) {
+  if (isSmallFastModel) {
     switch (providerId) {
       case "groq":
         return "llama-3.1-8b-instant";
       case "gemini":
-        return "gemini-embedding-001";
+        return "gemini-3.1-flash-lite-preview";
       case "openrouter":
         return "meta-llama/llama-3.1-8b-instruct";
       case "claude":
         return "claude-3-haiku-20240307";
       case "openai":
         return "gpt-4o-mini";
+      case "grok":
+        return "grok-beta";
       default:
         return requestedModel;
     }
   }
 
   // Логика для БОЛЬШИХ и УМНЫХ моделей (Llama 70B, Gemini Pro, Sonnet)
-  if (
-    modelLower.includes("70b") ||
-    modelLower.includes("versatile") ||
-    modelLower.includes("pro") ||
-    modelLower.includes("large") ||
-    modelLower.includes("3.3")
-  ) {
+  if (isLargeSmartModel) {
     switch (providerId) {
       case "groq":
         return "llama-3.3-70b-versatile";
       case "gemini":
-        return "gemini-1.5-pro";
+        return "gemini-2.5-flash";
       case "openrouter":
         return "meta-llama/llama-3.3-70b-instruct";
       case "claude":
         return "claude-3-5-sonnet-latest";
       case "openai":
         return "gpt-4o";
+      case "grok":
+        return "grok-beta";
       default:
         return requestedModel;
     }
@@ -105,10 +131,16 @@ export async function aiComplete(
               // Apply model mapping for the user provider
               let modelToUse = request.model;
               if (
+                !modelToUse &&
                 userKey.provider === user.preferredAIProvider &&
                 user.preferredAIModel
               ) {
-                modelToUse = user.preferredAIModel;
+                modelToUse = isModelCompatibleWithProvider(
+                  user.preferredAIModel,
+                  userKey.provider,
+                )
+                  ? user.preferredAIModel
+                  : undefined;
               }
 
               const finalModel = mapModelForProvider(modelToUse, provider.id);
@@ -128,6 +160,25 @@ export async function aiComplete(
               console.warn(
                 `[AI] User provider ${userKey.provider} failed: ${msg}`,
               );
+
+              if (
+                userKey.provider === user.preferredAIProvider &&
+                msg.includes("Error 503")
+              ) {
+                throw new Error(
+                  "Google Gemini is temporarily unavailable due to high demand. Please try again in 30-60 seconds.",
+                );
+              }
+
+              if (
+                userKey.provider === user.preferredAIProvider &&
+                msg.includes("429")
+              ) {
+                throw new Error(
+                  `${provider.name} is temporarily rate-limited for your account. Please wait a bit and try again, or switch to another provider/model.`,
+                );
+              }
+
               errors.push(`User ${userKey.provider}: ${msg}`);
             }
           }

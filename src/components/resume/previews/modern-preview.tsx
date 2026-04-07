@@ -465,90 +465,6 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
           </div>
         </div>
 
-        {/* Education */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center border-b border-white/20 pb-2 mb-4">
-            <h3 className="text-sm font-bold uppercase text-white/90">
-              {getTranslation("form.education", data.language || "en")}
-            </h3>
-            {isEditing && (
-              <button
-                onClick={addEducation}
-                className="text-[9px] text-white/50 hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors hover:bg-white/10"
-              >
-                <Plus size={10} /> Add
-              </button>
-            )}
-          </div>
-          <div className="space-y-4">
-            {(education || []).map((edu, idx) => (
-              <div key={edu.id} className="relative group/edu">
-                {isEditing && (
-                  <button
-                    onClick={() => removeEducation(edu.id)}
-                    className="absolute -right-2 top-0 opacity-0 group-hover/edu:opacity-100 text-white/40 hover:text-red-300 transition-opacity p-1"
-                    title="Delete education"
-                  >
-                    <Trash2 size={12} />
-                  </button>
-                )}
-                <div className="text-[10px] font-bold text-white/95 mb-0.5 flex gap-1">
-                  <EditableText
-                    value={edu.startDate || ""}
-                    onChange={(v) => {
-                      const newEdu = [...(education || [])];
-                      newEdu[idx] = { ...newEdu[idx], startDate: v };
-                      updateSection("education", newEdu);
-                    }}
-                    placeholder="Start"
-                  />
-                  <span>-</span>
-                  <EditableText
-                    value={edu.current ? "Present" : edu.endDate || ""}
-                    onChange={(v) => {
-                      const newEdu = [...(education || [])];
-                      if (v.toLowerCase() === "present")
-                        newEdu[idx] = {
-                          ...newEdu[idx],
-                          current: true,
-                          endDate: "",
-                        };
-                      else
-                        newEdu[idx] = {
-                          ...newEdu[idx],
-                          current: false,
-                          endDate: v,
-                        };
-                      updateSection("education", newEdu);
-                    }}
-                    placeholder="End"
-                  />
-                </div>
-                <EditableText
-                  value={edu.degree || ""}
-                  onChange={(v) => {
-                    const newEdu = [...(education || [])];
-                    newEdu[idx] = { ...newEdu[idx], degree: v };
-                    updateSection("education", newEdu);
-                  }}
-                  className="text-[11px] font-bold text-white/90 block"
-                  placeholder="Degree"
-                />
-                <EditableText
-                  value={edu.institution || ""}
-                  onChange={(v) => {
-                    const newEdu = [...(education || [])];
-                    newEdu[idx] = { ...newEdu[idx], institution: v };
-                    updateSection("education", newEdu);
-                  }}
-                  className="text-[10px] text-white/70 italic block"
-                  placeholder="Institution"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Skills & Languages */}
         <div className="space-y-6">
           {(["technical", "soft", "language"] as const).map((cat) => (
@@ -999,6 +915,113 @@ export function ModernPreview({ data, onChange, isEditing }: Props) {
             </DragDropContext>
           </div>
         )}
+
+        {(education || []).length > 0 || isEditing ? (
+          <div className="mt-2">
+            <div className="flex justify-between items-center mb-6">
+              <h2
+                className="text-xl font-bold capitalize"
+                style={{ color: sidebarColor }}
+              >
+                {getTranslation("form.education", data.language || "en")}
+              </h2>
+              {isEditing && (
+                <button
+                  onClick={addEducation}
+                  className="text-[10px] text-blue-600/70 hover:text-blue-600 flex items-center gap-1.5 px-2 py-1 rounded-md transition-all hover:bg-blue-50 border border-transparent hover:border-blue-100"
+                >
+                  <Plus size={14} /> Add Education
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-5">
+              {(education || []).map((edu, idx) => (
+                <div key={edu.id} className="relative group/edu pb-1">
+                  {isEditing && (
+                    <button
+                      onClick={() => removeEducation(edu.id)}
+                      className="absolute -right-2 -top-2 opacity-0 group-hover/edu:opacity-100 p-1.5 bg-white shadow-md border border-slate-200 rounded-md text-red-400 hover:text-red-600 hover:bg-red-50 transition-all"
+                      title="Delete education"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+
+                  <div
+                    className="text-[10px] font-bold mb-1 flex gap-1"
+                    style={{ color: sidebarColor }}
+                  >
+                    <EditableText
+                      value={edu.startDate || ""}
+                      onChange={(v) => {
+                        const newEdu = [...(education || [])];
+                        newEdu[idx] = { ...newEdu[idx], startDate: v };
+                        updateSection("education", newEdu);
+                      }}
+                      placeholder="Start"
+                    />
+                    <span>-</span>
+                    <EditableText
+                      value={edu.current ? "Present" : edu.endDate || ""}
+                      onChange={(v) => {
+                        const newEdu = [...(education || [])];
+                        if (v.toLowerCase() === "present") {
+                          newEdu[idx] = {
+                            ...newEdu[idx],
+                            current: true,
+                            endDate: "",
+                          };
+                        } else {
+                          newEdu[idx] = {
+                            ...newEdu[idx],
+                            current: false,
+                            endDate: v,
+                          };
+                        }
+                        updateSection("education", newEdu);
+                      }}
+                      placeholder="End"
+                    />
+                  </div>
+
+                  <EditableText
+                    value={edu.degree || ""}
+                    onChange={(v) => {
+                      const newEdu = [...(education || [])];
+                      newEdu[idx] = { ...newEdu[idx], degree: v };
+                      updateSection("education", newEdu);
+                    }}
+                    className="text-[15px] font-bold text-slate-800 block"
+                    placeholder="Degree"
+                  />
+
+                  <EditableText
+                    value={edu.field || ""}
+                    onChange={(v) => {
+                      const newEdu = [...(education || [])];
+                      newEdu[idx] = { ...newEdu[idx], field: v };
+                      updateSection("education", newEdu);
+                    }}
+                    className="text-[12px] text-slate-500 block"
+                    placeholder="Field of Study"
+                  />
+
+                  <EditableText
+                    value={edu.institution || ""}
+                    onChange={(v) => {
+                      const newEdu = [...(education || [])];
+                      newEdu[idx] = { ...newEdu[idx], institution: v };
+                      updateSection("education", newEdu);
+                    }}
+                    className="text-[12px] italic text-slate-600 block"
+                    placeholder="Institution"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <ProfileImportModal

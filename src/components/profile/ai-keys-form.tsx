@@ -184,15 +184,29 @@ export function AIKeysForm() {
     setLoading(true);
     setMessage(null);
     try {
+      const providerDefaults: Record<string, string | null> = {
+        gemini: "gemini-3.1-flash-lite-preview",
+        groq: "openai/gpt-oss-120b",
+        openai: "gpt-4o-mini",
+        claude: "claude-3-5-sonnet-latest",
+        openrouter: null,
+        grok: "grok-beta",
+      };
+
       const res = await fetch("/api/account/ai-keys", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           preferredAIProvider: serviceId,
-          preferredAIModel: userData.preferredAIModel,
+          preferredAIModel: providerDefaults[serviceId] ?? null,
         }),
       });
       if (res.ok) {
+        setUserData((prev) => ({
+          ...prev,
+          preferredAIProvider: serviceId,
+          preferredAIModel: providerDefaults[serviceId] ?? null,
+        }));
         await fetchData();
       }
     } catch {
@@ -405,7 +419,8 @@ export function AIKeysForm() {
                             <select
                               className="flex-1 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:border-slate-500 text-xs py-1 outline-none text-slate-900 dark:text-white"
                               value={
-                                userData.preferredAIModel || "gemini-2.5-flash"
+                                userData.preferredAIModel ||
+                                "gemini-3.1-flash-lite-preview"
                               }
                               onChange={(e) => {
                                 const val = e.target.value;
@@ -419,8 +434,8 @@ export function AIKeysForm() {
                                 });
                               }}
                             >
-                              <option value="gemini-3-flash-preview">
-                                Gemini 3 Flash (Latest Preview)
+                              <option value="gemini-3.1-flash-lite-preview">
+                                Gemini 3.1 Flash Lite Preview
                               </option>
                               <option value="gemini-2.5-flash">
                                 Gemini 2.5 Flash

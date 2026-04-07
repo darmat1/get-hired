@@ -12,38 +12,343 @@ import {
   getCoverLetterSystemPrompt,
   getTailoredResumeSystemPrompt,
 } from "@/lib/ai/prompts/cover-letter";
+import type { Education, Skill, WorkExperience } from "@/types/resume";
+
+const STOPWORDS = new Set([
+  "the",
+  "and",
+  "for",
+  "with",
+  "that",
+  "this",
+  "from",
+  "you",
+  "your",
+  "are",
+  "will",
+  "into",
+  "across",
+  "using",
+  "use",
+  "our",
+  "all",
+  "have",
+  "has",
+  "had",
+  "not",
+  "but",
+  "out",
+  "job",
+  "role",
+  "team",
+  "work",
+  "years",
+  "year",
+  "experience",
+  "senior",
+  "lead",
+  "frontend",
+  "engineer",
+]);
+
+function extractRelevantKeywords(text: string): string[] {
+  const tokens = text
+    .toLowerCase()
+    .replace(/[^a-z0-9+#./-]+/g, " ")
+    .split(/\s+/)
+    .filter((token) => token.length >= 3 && !STOPWORDS.has(token));
+
+  return Array.from(new Set(tokens)).slice(0, 40);
+}
+
+function countKeywordHits(haystack: string, keywords: string[]): number {
+  const normalized = haystack.toLowerCase();
+  return keywords.reduce(
+    (score, keyword) => score + (normalized.includes(keyword) ? 1 : 0),
+    0,
+  );
+}
+
+function selectRelevantDescriptionBullets(
+  bullets: string[],
+  keywords: string[],
+  limit: number,
+): string[] {
+  const ranked = bullets
+    .map((bullet) => ({
+      bullet,
+      score: countKeywordHits(bullet, keywords),
+    }))
+    .sort((a, b) => b.score - a.score || b.bullet.length - a.bullet.length);
+
+  const selected = ranked.slice(0, limit).map((item) => item.bullet);
+  return selected.length > 0 ? selected : bullets.slice(0, limit);
+}
+
+function compressWorkExperience(
+  items: WorkExperience[],
+  keywords: string[],
+  limit: number,
+): WorkExperience[] {
+  const ranked = items
+    .map((item) => {
+      const combined = [
+        item.title,
+        item.company,
+        item.location,
+        item.mainDescription,
+        ...(item.description || []),
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      return {
+        item,
+        score: countKeywordHits(combined, keywords),
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  const selected = ranked
+    .slice(0, limit)
+    .map(({ item }) => ({
+      ...item,
+      description: selectRelevantDescriptionBullets(
+        item.description || [],
+        keywords,
+        4,
+      ),
+    }))
+    .sort((a, b) => (a.startDate < b.startDate ? 1 : -1));
+
+  return selected.length > 0 ? selected : items.slice(0, limit);
+}
+
+function compressSkills(
+  items: Skill[],
+  keywords: string[],
+  limit: number,
+): Skill[] {
+  const alwaysKeep = items.filter(
+    (item) => item.category === "soft" || item.category === "language",
+  );
+
+  const rankedTechnical = items
+    .filter((item) => item.category === "technical")
+    .map((item) => ({
+      item,
+      score: countKeywordHits(
+        `${item.name} ${item.category} ${item.level || ""}`,
+        keywords,
+      ),
+    }))
+    .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name));
+
+  const technicalLimit = Math.max(limit - alwaysKeep.length, 0);
+  const selectedTechnical = rankedTechnical
+    .slice(0, technicalLimit)
+    .map((entry) => entry.item);
+
+  const selected = [...alwaysKeep, ...selectedTechnical];
+  return selected.length > 0 ? selected : items.slice(0, limit);
+}
+
+function compressEducation(items: Education[], limit: number): Education[] {
+  return items.slice(0, limit);
+}
+
+function buildRelevantProfileData(
+  profileData: {
+    personalInfo: any;
+    workExperience: WorkExperience[];
+    education: Education[];
+    skills: Skill[];
+  },
+  jobDescription: string,
+  mode: "cover-letter" | "resume",
+) {
+  const keywords = extractRelevantKeywords(jobDescription);
+  const workExperienceLimit = mode === "resume" ? 5 : 4;
+  const skillLimit = mode === "resume" ? 12 : 8;
+
+  return {
+    personalInfo: {
+      ...profileData.personalInfo,
+      summary: profileData.personalInfo?.summary || "",
+      location: profileData.personalInfo?.location || "",
+      phone: profileData.personalInfo?.phone || "",
+      website: profileData.personalInfo?.website || "",
+      linkedin: profileData.personalInfo?.linkedin || "",
+      telegram: profileData.personalInfo?.telegram || "",
+    },
+    workExperience: compressWorkExperience(
+      profileData.workExperience || [],
+      keywords,
+      workExperienceLimit,
+    ),
+    education: compressEducation(profileData.education || [], 2),
+    skills: compressSkills(profileData.skills || [], keywords, skillLimit),
+  };
+}
+
+function normalizeString(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function normalizeResumePayload(
+  resumeJson: any,
+  sourceProfile: {
+    personalInfo: any;
+    workExperience: WorkExperience[];
+    education: Education[];
+    skills: Skill[];
+  },
+) {
+  const sourcePersonalInfo = sourceProfile.personalInfo ?? {};
+  const sourceSkills = sourceProfile.skills ?? [];
+  const sourceSoftAndLanguageSkills = sourceSkills.filter(
+    (skill) => skill.category === "soft" || skill.category === "language",
+  );
+  const sourceSkillNames = new Set(
+    sourceSkills.map((skill) => skill.name.trim().toLowerCase()).filter(Boolean),
+  );
+
+  const normalizedSkills = Array.isArray(resumeJson?.skills)
+    ? resumeJson.skills
+        .map((skill: any, index: number) => ({
+          id: skill?.id || crypto.randomUUID(),
+          name: normalizeString(skill?.name),
+          category:
+            skill?.category === "soft" || skill?.category === "language"
+              ? skill.category
+              : "technical",
+          level: normalizeString(skill?.level) || "advanced",
+        }))
+        .filter(
+          (skill: Skill, index: number, arr: Skill[]) =>
+            skill.name &&
+            sourceSkillNames.has(skill.name.toLowerCase()) &&
+            arr.findIndex(
+              (candidate) =>
+                candidate.name.toLowerCase() === skill.name.toLowerCase(),
+            ) === index,
+        )
+    : [];
+
+  const mergedSkillsMap = new Map<string, Skill>();
+
+  for (const skill of normalizedSkills) {
+    mergedSkillsMap.set(skill.name.toLowerCase(), skill);
+  }
+
+  for (const skill of sourceSoftAndLanguageSkills) {
+    const key = skill.name.toLowerCase();
+    if (!mergedSkillsMap.has(key)) {
+      mergedSkillsMap.set(key, {
+        ...skill,
+        id: skill.id || crypto.randomUUID(),
+      });
+    }
+  }
+
+  const fallbackSkills =
+    mergedSkillsMap.size > 0
+      ? Array.from(mergedSkillsMap.values())
+      : sourceSkills.slice(0, 16).map((skill) => ({
+          ...skill,
+          id: skill.id || crypto.randomUUID(),
+        }));
+
+  return {
+    personalInfo: {
+      firstName: normalizeString(resumeJson?.personalInfo?.firstName) || normalizeString(sourcePersonalInfo.firstName),
+      lastName: normalizeString(resumeJson?.personalInfo?.lastName) || normalizeString(sourcePersonalInfo.lastName),
+      email: normalizeString(resumeJson?.personalInfo?.email) || normalizeString(sourcePersonalInfo.email),
+      phone: sourcePersonalInfo?.phone ? normalizeString(resumeJson?.personalInfo?.phone) : "",
+      location: sourcePersonalInfo?.location
+        ? normalizeString(resumeJson?.personalInfo?.location)
+        : "",
+      website: sourcePersonalInfo?.website
+        ? normalizeString(resumeJson?.personalInfo?.website)
+        : "",
+      linkedin: sourcePersonalInfo?.linkedin
+        ? normalizeString(resumeJson?.personalInfo?.linkedin)
+        : "",
+      telegram: sourcePersonalInfo?.telegram
+        ? normalizeString(resumeJson?.personalInfo?.telegram)
+        : "",
+      summary: normalizeString(resumeJson?.personalInfo?.summary),
+    },
+    workExperience: Array.isArray(resumeJson?.workExperience)
+      ? resumeJson.workExperience.map((item: any) => ({
+          id: item?.id || crypto.randomUUID(),
+          title: normalizeString(item?.title),
+          company: normalizeString(item?.company),
+          location: normalizeString(item?.location),
+          startDate: normalizeString(item?.startDate),
+          endDate: normalizeString(item?.endDate),
+          current: Boolean(item?.current),
+          description: Array.isArray(item?.description)
+            ? item.description.map(normalizeString).filter(Boolean)
+            : [],
+          employmentType: normalizeString(item?.employmentType) || undefined,
+        }))
+      : [],
+    education: Array.isArray(resumeJson?.education)
+      ? resumeJson.education.map((item: any) => ({
+          id: item?.id || crypto.randomUUID(),
+          institution: normalizeString(item?.institution),
+          degree: normalizeString(item?.degree),
+          field: normalizeString(item?.field),
+          startDate: normalizeString(item?.startDate),
+          endDate: normalizeString(item?.endDate),
+          current: Boolean(item?.current),
+        }))
+      : [],
+    skills: fallbackSkills,
+    detectedLanguage: normalizeString(resumeJson?.detectedLanguage) || "en",
+    targetPosition: normalizeString(resumeJson?.targetPosition) || null,
+    targetCompany: normalizeString(resumeJson?.targetCompany) || null,
+    certificates: Array.isArray(resumeJson?.certificates)
+      ? resumeJson.certificates
+      : [],
+  };
+}
 
 async function extractJobEssentials(
   rawDescription: string,
   userId: string,
 ): Promise<string> {
-  const systemPrompt = `You are an expert HR assistant. Your task is to extract only the essential information from a job description. 
-Extract:
-1. Company Name (if mentioned)
-2. Job Title
-3. Key Skills and Technologies
-4. Core Requirements, Expectations and Qualifications
-5. Responsibilities
-
-Strictly remove all "fluff" such as company benefits, mission statements, equal opportunity notices, or application instructions. 
-Provide the output in a concise, structured text format.`;
+  const startedAt = Date.now();
+  const systemPrompt = `Extract only essential JD data in compact plain text.
+Keep only:
+- company
+- title
+- top skills/technologies
+- top requirements
+- top responsibilities
+Remove benefits, mission, culture, EEO, and application fluff.
+Use short bullet points.`;
 
   const userPrompt = `Job Description to process:\n\n${rawDescription}`;
 
   try {
     const response = await aiComplete(
       {
-        // Указываем модель 8b. Если aiComplete не принимает модель,
-        // проверьте её код, возможно нужно добавить этот параметр.
-        model: "llama-3.1-8b-instant",
+        // Neutral alias. server-ai maps this to a provider-safe small/fast chat model.
+        model: "small-fast",
         systemPrompt,
         userPrompt,
         temperature: 0.1, // Низкая температура для точности
         maxTokens: 1000,
+        timeoutMs: 45000,
       },
       userId,
     );
 
+    console.log(
+      `[cover-letter] Stage extract-job-essentials done in ${Date.now() - startedAt}ms`,
+    );
     console.log("Extracted job essentials:", response.content.trim());
     return response.content.trim();
   } catch (error) {
@@ -57,6 +362,7 @@ Provide the output in a concise, structured text format.`;
 
 export async function POST(request: Request) {
   try {
+    const requestStartedAt = Date.now();
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -87,6 +393,9 @@ export async function POST(request: Request) {
     );
 
     const safeJobDescription = essentialJobInfo;
+    console.log(
+      `[cover-letter] Stage extract-job-essentials complete, request +${Date.now() - requestStartedAt}ms`,
+    );
 
     // Safety truncation for extremely long inputs (10k chars is approx 2.5k tokens)
     // This allows for long JDs while still staying within a 12k TPM bucket when maxTokens and profile are added.
@@ -135,7 +444,12 @@ export async function POST(request: Request) {
       education: profile.education ?? [],
       skills: profile.skills ?? [],
     };
-    const profileToon = encode(profileData);
+    const coverLetterProfile = buildRelevantProfileData(
+      profileData,
+      safeJobDescription,
+      "cover-letter",
+    );
+    const profileToon = encode(coverLetterProfile);
 
     const systemPrompt = getCoverLetterSystemPrompt(
       format === "bullet" ? "bullet" : "prose",
@@ -150,11 +464,14 @@ export async function POST(request: Request) {
         systemPrompt,
         userPrompt,
         temperature: 0.3,
-        // Reduced from 8000 to 2000 to avoid Groq 413 Rate Limit errors.
-        // A typical cover letter never exceeds 1000 tokens.
-        maxTokens: 1000,
+        // A concise cover letter should comfortably fit below this ceiling.
+        maxTokens: 700,
+        timeoutMs: 60000,
       },
       session.user.id,
+    );
+    console.log(
+      `[cover-letter] Stage generate-cover-letter complete, request +${Date.now() - requestStartedAt}ms`,
     );
 
     const result: {
@@ -171,7 +488,9 @@ export async function POST(request: Request) {
     if (generateResume) {
       const resumeUserPrompt = buildTailoredResumeUserPrompt({
         jobDescription: safeJobDescription,
-        profileToon,
+        profileToon: encode(
+          buildRelevantProfileData(profileData, safeJobDescription, "resume"),
+        ),
         resumeLanguage,
       });
 
@@ -180,26 +499,18 @@ export async function POST(request: Request) {
           systemPrompt: getTailoredResumeSystemPrompt(),
           userPrompt: resumeUserPrompt,
           temperature: 0.3,
-          // Reduced from 12000 to 4000 to avoid Groq 413 Rate Limit errors.
-          // Structured resumes rarely exceed 2000 tokens.
-          maxTokens: 2500,
+          // Input is pre-compressed and IDs are server-generated, so the JSON
+          // output can stay significantly smaller than before.
+          maxTokens: 3000,
+          timeoutMs: 90000,
         },
         session.user.id,
       );
+      console.log(
+        `[cover-letter] Stage generate-tailored-resume complete, request +${Date.now() - requestStartedAt}ms`,
+      );
 
-      let resumeJson;
-      try {
-        resumeJson = resumeResponse.parsed;
-      } catch (err) {
-        console.error(
-          "Failed to parse AI resume JSON:",
-          resumeResponse.raw.content,
-        );
-        return NextResponse.json(
-          { error: "Failed to generate structured resume. Please try again." },
-          { status: 500 },
-        );
-      }
+      const resumeJson = normalizeResumePayload(resumeResponse.parsed, profileData);
 
       const firstLine = jobDescription.trim().split("\n")[0].slice(0, 80);
       const resumeTitle = `Tailored: ${firstLine}`;
@@ -250,12 +561,26 @@ export async function POST(request: Request) {
     });
 
     result.coverLetterId = savedCoverLetter.id;
+    console.log(
+      `[cover-letter] Request complete in ${Date.now() - requestStartedAt}ms`,
+    );
 
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error generating cover letter:", error);
+    const message =
+      error instanceof Error ? error.message : "Error generating cover letter";
+
+    if (
+      message.includes("temporarily unavailable") ||
+      message.includes("high demand") ||
+      message.includes("rate-limited")
+    ) {
+      return NextResponse.json({ error: message }, { status: 503 });
+    }
+
     return NextResponse.json(
-      { error: "Error generating cover letter" },
+      { error: message },
       { status: 500 },
     );
   }
