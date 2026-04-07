@@ -9,6 +9,7 @@ export interface AICompletionRequest {
   userPrompt: string;
   temperature?: number;
   maxTokens?: number;
+  timeoutMs?: number;
   responseFormat?: { type: "json_object" } | { type: "text" };
   apiKey?: string; // Optional user-provided API key
   model?: string; // Optional specific model override

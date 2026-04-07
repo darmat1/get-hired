@@ -112,7 +112,7 @@ export async function testAIService(
         service.apiKey?.slice(0, 10) + "...",
       );
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${service.apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${service.apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

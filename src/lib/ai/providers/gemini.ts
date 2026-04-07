@@ -13,12 +13,18 @@ export class GeminiProvider implements AIProvider {
   }
 
   async complete(request: AICompletionRequest): Promise<AICompletionResponse> {
-    return this._complete(request, true);
+    return this._complete(request, true, true);
+  }
+
+  private async sleep(ms: number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private async _complete(
     request: AICompletionRequest,
     withThinking: boolean,
+    allowModelFallback: boolean,
+    retryCount = 0,
   ): Promise<AICompletionResponse> {
     const apiKey = request.apiKey || process.env.GOOGLE_API_KEY;
     if (!apiKey) throw new Error("[AI] Google API key is missing");
@@ -27,7 +33,8 @@ export class GeminiProvider implements AIProvider {
       request.model || process.env.GOOGLE_MODEL || "gemini-2.5-flash";
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 120000);
+    const timeoutMs = request.timeoutMs || 120000;
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
       const response = await fetch(
@@ -70,7 +77,44 @@ export class GeminiProvider implements AIProvider {
           console.warn(
             `[AI] Gemini: thinking_level not supported for model "${model}", retrying without it`,
           );
-          return this._complete(request, false);
+          return this._complete(request, false, allowModelFallback, retryCount);
+        }
+
+        // Preview / unavailable model for this account or endpoint.
+        // Retry on the same provider with a stable fallback instead of failing over to another provider.
+        if (allowModelFallback && response.status === 404 && request.model) {
+          const fallbackModel =
+            request.responseFormat?.type === "json_object"
+              ? "gemini-2.5-flash"
+              : "gemini-2.5-flash";
+          if (model !== fallbackModel) {
+            console.warn(
+              `[AI] Gemini: model "${model}" returned 404, retrying with fallback "${fallbackModel}"`,
+            );
+            return this._complete(
+              {
+                ...request,
+                model: fallbackModel,
+              },
+              withThinking,
+              false,
+              retryCount,
+            );
+          }
+        }
+
+        if (response.status === 503 && retryCount < 3) {
+          const backoffMs = 1500 * Math.pow(2, retryCount);
+          console.warn(
+            `[AI] Gemini: model "${model}" unavailable (503), retrying in ${backoffMs}ms (attempt ${retryCount + 1}/3)`,
+          );
+          await this.sleep(backoffMs);
+          return this._complete(
+            request,
+            withThinking,
+            allowModelFallback,
+            retryCount + 1,
+          );
         }
 
         throw new Error(`Google Gemini Error ${response.status}: ${errorText}`);
@@ -104,7 +148,9 @@ export class GeminiProvider implements AIProvider {
       return { content, provider: this.id, model };
     } catch (err: any) {
       if (err.name === "AbortError") {
-        throw new Error("[AI] Google Gemini request timed out (over 2 min)");
+        throw new Error(
+          `[AI] Google Gemini request timed out after ${Math.round(timeoutMs / 1000)}s`,
+        );
       }
       throw err;
     } finally {
