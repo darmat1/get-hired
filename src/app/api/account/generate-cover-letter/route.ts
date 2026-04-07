@@ -44,6 +44,7 @@ Provide the output in a concise, structured text format.`;
       userId,
     );
 
+    console.log("Extracted job essentials:", response.content.trim());
     return response.content.trim();
   } catch (error) {
     console.error(

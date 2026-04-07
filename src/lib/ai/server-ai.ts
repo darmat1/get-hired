@@ -4,9 +4,71 @@ import { AICompletionRequest, AICompletionResponse } from "./types";
 import { getAvailableProviders } from "./registry";
 
 /**
+ * Вспомогательная функция для маппинга универсальных имен моделей
+ * под специфичные требования каждого API провайдера.
+ */
+function mapModelForProvider(
+  requestedModel: string | undefined,
+  providerId: string,
+): string | undefined {
+  if (!requestedModel) return undefined;
+
+  const modelLower = requestedModel.toLowerCase();
+
+  // Логика для МАЛЕНЬКИХ и БЫСТРЫХ моделей (Llama 8B, Gemini Flash, etc.)
+  if (
+    modelLower.includes("8b") ||
+    modelLower.includes("instant") ||
+    modelLower.includes("flash") ||
+    modelLower.includes("small")
+  ) {
+    switch (providerId) {
+      case "groq":
+        return "llama-3.1-8b-instant";
+      case "gemini":
+        return "gemini-embedding-001";
+      case "openrouter":
+        return "meta-llama/llama-3.1-8b-instruct";
+      case "claude":
+        return "claude-3-haiku-20240307";
+      case "openai":
+        return "gpt-4o-mini";
+      default:
+        return requestedModel;
+    }
+  }
+
+  // Логика для БОЛЬШИХ и УМНЫХ моделей (Llama 70B, Gemini Pro, Sonnet)
+  if (
+    modelLower.includes("70b") ||
+    modelLower.includes("versatile") ||
+    modelLower.includes("pro") ||
+    modelLower.includes("large") ||
+    modelLower.includes("3.3")
+  ) {
+    switch (providerId) {
+      case "groq":
+        return "llama-3.3-70b-versatile";
+      case "gemini":
+        return "gemini-1.5-pro";
+      case "openrouter":
+        return "meta-llama/llama-3.3-70b-instruct";
+      case "claude":
+        return "claude-3-5-sonnet-latest";
+      case "openai":
+        return "gpt-4o";
+      default:
+        return requestedModel;
+    }
+  }
+
+  return requestedModel;
+}
+
+/**
  * Unified AI completion function with user key/preference support.
  *
- * SERVER-ONLY: Imports Prisma and handles database lookups for user keys.
+ * SERVER-ONLY: Handles database lookups, quota management and provider failover.
  */
 export async function aiComplete(
   request: AICompletionRequest,
@@ -23,7 +85,6 @@ export async function aiComplete(
       });
 
       if (user && user.aiKeys.length > 0) {
-        // Sort keys so preferred one comes first
         const sortedKeys = [...user.aiKeys].sort((a, b) => {
           const preferredProvider = user.preferredAIProvider || undefined;
           if (a.provider === preferredProvider) return -1;
@@ -38,43 +99,26 @@ export async function aiComplete(
               console.log(
                 `[AI] Trying user provider: ${provider.name} (${provider.id})`,
               );
+
               const decryptedKey = userKey.key ?? undefined;
 
-              // ONLY use preferred model if it belongs to the CURRENT provider being tried
-              let modelOverride = request.model;
+              // Apply model mapping for the user provider
+              let modelToUse = request.model;
               if (
                 userKey.provider === user.preferredAIProvider &&
                 user.preferredAIModel
               ) {
-                // Additional safety check: only use the model if it's likely meant for this provider
-                const isGeminiModel =
-                  user.preferredAIModel.startsWith("gemini-");
-                const isGroqModel =
-                  user.preferredAIModel.includes("llama") ||
-                  user.preferredAIModel.includes("mixtral") ||
-                  user.preferredAIModel.includes("gemma") ||
-                  user.preferredAIModel === "llama-3.1-8b-instant";
-
-                if (userKey.provider === "gemini" && isGeminiModel) {
-                  modelOverride = user.preferredAIModel;
-                } else if (userKey.provider === "groq" && isGroqModel) {
-                  modelOverride = user.preferredAIModel;
-                } else if (
-                  userKey.provider === "openrouter" ||
-                  userKey.provider === "openai" ||
-                  userKey.provider === "claude"
-                ) {
-                  // These are usually fine with their own models
-                  modelOverride = user.preferredAIModel;
-                }
-                // If it's Groq but model is Gemini, modelOverride remains request.model (default)
+                modelToUse = user.preferredAIModel;
               }
+
+              const finalModel = mapModelForProvider(modelToUse, provider.id);
 
               const response = await provider.complete({
                 ...request,
                 apiKey: decryptedKey,
-                model: modelOverride,
+                model: finalModel,
               });
+
               console.log(
                 `[AI] Success (User Key): ${provider.name}, model: ${response.model}`,
               );
@@ -99,7 +143,7 @@ export async function aiComplete(
 
   if (systemProviders.length === 0 && errors.length === 0) {
     throw new Error(
-      "[AI] No AI providers available. Please configure an API key in your profile",
+      "[AI] No AI providers available. Please configure API keys.",
     );
   }
 
@@ -108,6 +152,7 @@ export async function aiComplete(
     freeAiGenerationsCount: number;
     lastFreeAiUsage: Date | null;
   } | null = null;
+
   if (userId) {
     userForQuota = await prisma.user.findUnique({
       where: { id: userId },
@@ -116,10 +161,10 @@ export async function aiComplete(
 
     if (userForQuota) {
       let count = userForQuota.freeAiGenerationsCount;
+      const today = new Date();
 
       if (userForQuota.lastFreeAiUsage) {
         const lastUsageDate = new Date(userForQuota.lastFreeAiUsage);
-        const today = new Date();
         if (
           lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
           lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
@@ -131,25 +176,34 @@ export async function aiComplete(
 
       if (count >= 10) {
         throw new Error(
-          "You have exhausted your 10 free AI generations for today. Please connect your own API key in your profile settings to continue.",
+          "You have exhausted your 10 free AI generations for today. Please connect your own API key in settings.",
         );
       }
     }
   }
 
+  // 2.2 Try System Providers one by one
   for (const provider of systemProviders) {
     try {
       console.log(
         `[AI] Trying system provider: ${provider.name} (${provider.id})`,
       );
-      const response = await provider.complete(request);
 
-      // 2.2 Increment Quota on Success
+      // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: Маппинг модели под системного провайдера
+      const finalModel = mapModelForProvider(request.model, provider.id);
+
+      const response = await provider.complete({
+        ...request,
+        model: finalModel,
+      });
+
+      // 2.3 Increment Quota on Success
       if (userId && userForQuota) {
         let count = userForQuota.freeAiGenerationsCount;
+        const today = new Date();
+
         if (userForQuota.lastFreeAiUsage) {
           const lastUsageDate = new Date(userForQuota.lastFreeAiUsage);
-          const today = new Date();
           if (
             lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
             lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
@@ -158,6 +212,7 @@ export async function aiComplete(
             count = 0;
           }
         }
+
         await prisma.user.update({
           where: { id: userId },
           data: {
@@ -175,6 +230,8 @@ export async function aiComplete(
       const message = err instanceof Error ? err.message : String(err);
       console.warn(`[AI] System ${provider.name} failed: ${message}`);
       errors.push(`System ${provider.name}: ${message}`);
+
+      // Если это ошибка Rate Limit (429), цикл автоматически перейдет к следующему провайдеру
     }
   }
 
