@@ -1,22 +1,53 @@
-import { Resume } from "@/types/resume";
-import { useTranslation } from "@/lib/translations";
-import { getTranslation } from "@/lib/translations-data";
-import { useState } from "react";
-import { GripVertical, Plus, Trash2, Import } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import {
+  GripVertical,
+  Plus,
+  Trash2,
+  Import,
+  Settings2,
+  Palette,
+  X,
+} from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { cn } from "@/lib/utils";
 import { ProfileImportModal } from "../profile-import-modal";
 import {
   EditableText,
+  SidebarToggle,
   PreviewProps as Props,
   createExperience,
   createEducation,
   createSkill,
 } from "./shared-preview-utils";
+import { Resume } from "@/types/resume";
+import { useTranslation } from "@/lib/translations";
+import { getTranslation } from "@/lib/translations-data";
 
 export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
   const { t } = useTranslation();
-  const { personalInfo, workExperience, education, skills } = data;
+  const { personalInfo, workExperience, education, skills, customization } =
+    data;
+  const [isSidebarHovered, setIsSidebarHovered] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const settingsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        settingsRef.current &&
+        !settingsRef.current.contains(event.target as Node)
+      ) {
+        setIsSettingsOpen(false);
+      }
+    }
+    if (isSettingsOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSettingsOpen]);
+
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [importType, setImportType] = useState<"experience" | "skills">(
     "experience",
@@ -25,6 +56,10 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
     "technical" | "soft" | "language" | null
   >(null);
   const [isImportingPersonalInfo, setIsImportingPersonalInfo] = useState(false);
+
+  // Default values
+  const headingColor = customization?.sidebarColor || "#0f172a";
+  const showAvatar = customization?.showAvatar !== false;
 
   const getLevelLabel = (level?: string) => {
     if (!level) return "";
@@ -62,6 +97,17 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
   ) => {
     if (!onChange) return;
     onChange({ ...data, personalInfo: { ...personalInfo, [field]: value } });
+  };
+
+  const updateCustomization = (key: string, value: any) => {
+    if (!onChange) return;
+    onChange({
+      ...data,
+      customization: {
+        ...customization,
+        [key]: value,
+      },
+    });
   };
 
   const onDragEnd = (result: any) => {
@@ -113,9 +159,90 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
   };
 
   return (
-    <div className="font-sans space-y-6 p-8 bg-white h-full min-h-[1056px]">
+    <div 
+      className="font-sans space-y-6 p-8 bg-white h-full min-h-[1056px] relative group/preview"
+      onMouseEnter={() => setIsSidebarHovered(true)}
+      onMouseLeave={() => setIsSidebarHovered(false)}
+    >
+      {/* Settings Dropdown */}
+      {isEditing && isSettingsOpen && (
+        <div
+          ref={settingsRef}
+          className="absolute top-4 right-4 bg-slate-900 shadow-2xl rounded-xl border border-white/10 p-4 z-50 animate-in fade-in zoom-in duration-300 w-64"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-sm font-bold text-white flex items-center gap-2">
+              <Settings2 size={14} className="text-blue-400" /> Template Options
+            </div>
+            <button
+              onClick={() => setIsSettingsOpen(false)}
+              className="p-1 hover:bg-white/10 rounded-full text-white/40 hover:text-white transition-colors"
+            >
+              <X size={14} />
+            </button>
+          </div>
+
+          <div className="mb-3">
+            <div className="text-[10px] text-white/60 mb-1 flex items-center gap-1">
+              <Palette size={10} /> Heading Color
+            </div>
+            <div className="flex gap-1 flex-wrap">
+              {[
+                "#0f172a", // Default Slate 900
+                "#1e293b", // Slate 800
+                "#2563eb", // Blue 600
+                "#1e40af", // Blue 800
+                "#059669", // Emerald 600
+                "#065f46", // Emerald 800
+                "#dc2626", // Red 600
+                "#991b1b", // Red 800
+                "#7c3aed", // Purple 600
+                "#5b21b6", // Purple 800
+                "#d97706", // Amber 600
+                "#111827", // Blackish
+              ].map((color) => (
+                <button
+                  key={color}
+                  className={cn(
+                    "w-4 h-4 rounded-full border border-white/30 transition-transform hover:scale-110",
+                    headingColor === color && "ring-2 ring-white",
+                  )}
+                  style={{ backgroundColor: color }}
+                  onClick={() => updateCustomization("sidebarColor", color)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-0.5">
+            <SidebarToggle
+              label="Show Avatar"
+              checked={showAvatar}
+              onChange={(v) => updateCustomization("showAvatar", v)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Settings Trigger */}
+      {isEditing && isSidebarHovered && !isSettingsOpen && (
+        <button
+          onClick={() => setIsSettingsOpen(true)}
+          className="absolute top-4 right-4 p-2 bg-slate-900/10 hover:bg-slate-900/20 text-slate-900 rounded-full shadow-sm backdrop-blur-sm transition-all duration-200 animate-in zoom-in group/settings-btn z-40"
+          title="Template Options"
+        >
+          <Settings2
+            size={14}
+            className="group-hover/settings-btn:rotate-90 transition-transform duration-500"
+          />
+        </button>
+      )}
+
       {/* Header */}
-      <div className="relative text-center border-b border-slate-900 pb-6 mb-6">
+      <div 
+        className="relative text-center border-b pb-6 mb-6"
+        style={{ borderColor: headingColor }}
+      >
         {isEditing && (
           <button
             onClick={importPersonalInfo}
@@ -131,7 +258,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
             Import
           </button>
         )}
-        {personalInfo.avatarUrl && (
+        {showAvatar && personalInfo.avatarUrl && (
           <div className="flex justify-center items-center gap-6 mb-4">
             <img
               src={personalInfo.avatarUrl}
@@ -141,7 +268,10 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
           </div>
         )}
 
-        <div className="text-2xl font-bold text-slate-900 mb-2 uppercase tracking-wide flex justify-center items-center gap-2">
+        <div 
+          className="text-2xl font-bold mb-2 uppercase tracking-wide flex justify-center items-center gap-2"
+          style={{ color: headingColor }}
+        >
           <div className="flex-1 text-right">
             <EditableText
               value={personalInfo.firstName || ""}
@@ -219,7 +349,10 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
 
       {/* Summary */}
       <div>
-        <h2 className="text-sm font-bold text-slate-900 mb-2 uppercase border-b border-slate-300 pb-1">
+        <h2 
+          className="text-sm font-bold mb-2 uppercase border-b pb-1"
+          style={{ color: headingColor, borderColor: `${headingColor}40` }}
+        >
           {getTranslation("form.summary", data.language || "en")}
         </h2>
         <EditableText
@@ -235,8 +368,14 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
       {/* Work Experience */}
       {workExperience && (
         <div>
-          <div className="flex justify-between items-end mb-3 border-b border-slate-300 pb-1">
-            <h2 className="text-sm font-bold text-slate-900 uppercase">
+          <div 
+            className="flex justify-between items-end mb-3 border-b pb-1"
+            style={{ borderColor: `${headingColor}40` }}
+          >
+            <h2 
+              className="text-sm font-bold uppercase"
+              style={{ color: headingColor }}
+            >
               {getTranslation("form.work_experience", data.language || "en")}
             </h2>
             {isEditing && (
@@ -551,8 +690,14 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
 
       {/* Education */}
       <div>
-        <div className="flex justify-between items-end mb-3 border-b border-slate-300 pb-1">
-          <h2 className="text-sm font-bold text-slate-900 uppercase">
+        <div 
+          className="flex justify-between items-end mb-3 border-b pb-1"
+          style={{ borderColor: `${headingColor}40` }}
+        >
+          <h2 
+            className="text-sm font-bold uppercase"
+            style={{ color: headingColor }}
+          >
             {getTranslation("form.education", data.language || "en")}
           </h2>
           {isEditing && (
@@ -678,8 +823,14 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
           if (!showSection) return null;
           return (
             <div key={cat}>
-              <div className="flex justify-between items-end mb-3 border-b border-slate-300 pb-1">
-                <h2 className="text-sm font-bold text-slate-900 uppercase">
+              <div 
+                className="flex justify-between items-end mb-3 border-b pb-1"
+                style={{ borderColor: `${headingColor}40` }}
+              >
+                <h2 
+                  className="text-sm font-bold uppercase"
+                  style={{ color: headingColor }}
+                >
                   {cat === "technical"
                     ? getTranslation("profile.tab_skills", data.language || "en")
                     : cat === "soft"

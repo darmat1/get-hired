@@ -1,3 +1,4 @@
+// src/app/api/account/generate-cover-letter/route.ts
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
@@ -11,6 +12,47 @@ import {
   getCoverLetterSystemPrompt,
   getTailoredResumeSystemPrompt,
 } from "@/lib/ai/prompts/cover-letter";
+
+async function extractJobEssentials(
+  rawDescription: string,
+  userId: string,
+): Promise<string> {
+  const systemPrompt = `You are an expert HR assistant. Your task is to extract only the essential information from a job description. 
+Extract:
+1. Company Name (if mentioned)
+2. Job Title
+3. Key Skills and Technologies
+4. Core Requirements, Expectations and Qualifications
+5. Responsibilities
+
+Strictly remove all "fluff" such as company benefits, mission statements, equal opportunity notices, or application instructions. 
+Provide the output in a concise, structured text format.`;
+
+  const userPrompt = `Job Description to process:\n\n${rawDescription}`;
+
+  try {
+    const response = await aiComplete(
+      {
+        // Указываем модель 8b. Если aiComplete не принимает модель,
+        // проверьте её код, возможно нужно добавить этот параметр.
+        model: "llama-3.1-8b-instant",
+        systemPrompt,
+        userPrompt,
+        temperature: 0.1, // Низкая температура для точности
+        maxTokens: 1000,
+      },
+      userId,
+    );
+
+    return response.content.trim();
+  } catch (error) {
+    console.error(
+      "Failed to extract job essentials, using raw description",
+      error,
+    );
+    return rawDescription.substring(0, 4000); // Fallback на обрезку текста
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -38,11 +80,19 @@ export async function POST(request: Request) {
       );
     }
 
-    // Safety truncation for extremely long inputs (30k chars is approx 7.5k tokens)
-    // This allows for long JDs while still staying within a 12k TPM bucket when maxTokens is added.
-    const safeJobDescription = jobDescription.length > 30000 
-      ? jobDescription.substring(0, 30000) + "... [Truncated for brevity]"
-      : jobDescription;
+    const essentialJobInfo = await extractJobEssentials(
+      jobDescription,
+      session.user.id,
+    );
+
+    const safeJobDescription = essentialJobInfo;
+
+    // Safety truncation for extremely long inputs (10k chars is approx 2.5k tokens)
+    // This allows for long JDs while still staying within a 12k TPM bucket when maxTokens and profile are added.
+    // const safeJobDescription =
+    //   jobDescription.length > 10000
+    //     ? jobDescription.substring(0, 10000) + "... [Truncated for brevity]"
+    //     : jobDescription;
 
     // Check resume limit if tailoring is requested
     if (generateResume) {
@@ -101,7 +151,7 @@ export async function POST(request: Request) {
         temperature: 0.3,
         // Reduced from 8000 to 2000 to avoid Groq 413 Rate Limit errors.
         // A typical cover letter never exceeds 1000 tokens.
-        maxTokens: 2000, 
+        maxTokens: 1000,
       },
       session.user.id,
     );
@@ -131,7 +181,7 @@ export async function POST(request: Request) {
           temperature: 0.3,
           // Reduced from 12000 to 4000 to avoid Groq 413 Rate Limit errors.
           // Structured resumes rarely exceed 2000 tokens.
-          maxTokens: 4000,
+          maxTokens: 2500,
         },
         session.user.id,
       );

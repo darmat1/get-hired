@@ -26,7 +26,7 @@ export class GroqProvider implements AIProvider {
     if (!apiKey) throw new Error("[AI] Groq API key is missing");
 
     const model =
-      request.model || process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+      request.model || process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
     const body: Record<string, unknown> = {
       model,
@@ -54,20 +54,8 @@ export class GroqProvider implements AIProvider {
     if (!response.ok) {
       const errorText = await response.text();
 
-      // If OpenAI model fails and we haven't retried yet, try fallback to Llama
       if (!isRetry) {
-        if (model === "openai/gpt-oss-120b") {
-          console.warn(
-            `[AI] Groq: Model ${model} failed (${response.status}), retrying with llama-3.3-70b-versatile`,
-          );
-          return this._complete(
-            {
-              ...request,
-              model: "llama-3.3-70b-versatile",
-            },
-            true,
-          );
-        } else if (
+        if (
           response.status === 400 &&
           request.responseFormat?.type === "json_object"
         ) {
@@ -94,18 +82,7 @@ export class GroqProvider implements AIProvider {
     if (!content) {
       // If we got empty content and haven't retried yet, try fallback
       if (!isRetry) {
-        if (model === "openai/gpt-oss-120b") {
-          console.warn(
-            `[AI] Groq: Model ${model} returned empty content, retrying with llama-3.3-70b-versatile`,
-          );
-          return this._complete(
-            {
-              ...request,
-              model: "llama-3.3-70b-versatile",
-            },
-            true,
-          );
-        } else if (request.responseFormat?.type === "json_object") {
+        if (request.responseFormat?.type === "json_object") {
           // If even Llama fails with JSON mode, try one last time without strict JSON mode
           console.warn(
             `[AI] Groq: Model ${model} returned empty content in JSON mode, retrying WITHOUT JSON mode`,

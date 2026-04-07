@@ -13,95 +13,100 @@ import { FormattedText } from "@/lib/pdf-utils";
 import { getTranslation } from "@/lib/translations-data";
 import { formatResumeDate } from "@/lib/format-resume-date";
 
-const styles = StyleSheet.create({
-  page: {
-    fontFamily: "Helvetica",
-    fontSize: 10,
-    padding: 40,
-    lineHeight: 1.5,
-  },
-  header: {
-    marginBottom: 10,
-    borderBottom: "1pt solid #aaa",
-    paddingBottom: 6,
-    alignItems: "center",
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 15,
-  },
-  name: {
-    fontSize: 24,
-    fontFamily: "Helvetica-Bold",
-    paddingBottom: 25,
-    marginBottom: 2,
-    textTransform: "uppercase",
-    textAlign: "center",
-  },
-  contactInfo: {
-    fontSize: 9,
-    color: "#333",
-    marginBottom: 3,
-    textAlign: "center",
-  },
-  sectionTitle: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 12,
-    marginBottom: 6,
-    marginTop: 6,
-    textTransform: "uppercase",
-    borderBottom: "1pt solid #ccc",
-    paddingBottom: 2,
-  },
-  jobHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 2,
-  },
-  jobTitle: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 11,
-  },
-  company: {
-    fontSize: 10,
-    fontFamily: "Helvetica-Oblique",
-  },
-  dateLocation: {
-    fontSize: 9,
-    color: "#444",
-    textAlign: "right",
-  },
-  bulletPoint: {
-    marginLeft: 5,
-    fontSize: 10,
-    marginBottom: 2,
-  },
-  skillsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 5,
-  },
-  skillText: {
-    fontSize: 9,
-    marginRight: 10,
-    marginBottom: 5,
-  },
-});
-
 interface TemplateProps {
   resume: Resume;
 }
 
 export function ProfessionalTemplate({ resume }: TemplateProps) {
-  const { personalInfo, workExperience, education, skills } = resume;
+  const { personalInfo, workExperience, education, skills, customization } = resume;
+
+  const headingColor = customization?.sidebarColor || "#000000";
+  const showAvatar = customization?.showAvatar !== false;
+
+  const styles = StyleSheet.create({
+    page: {
+      fontFamily: "Helvetica",
+      fontSize: 10,
+      padding: 40,
+      lineHeight: 1.5,
+    },
+    header: {
+      marginBottom: 10,
+      borderBottom: `1pt solid ${headingColor}`,
+      paddingBottom: 6,
+      alignItems: "center",
+    },
+    headerRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 10,
+    },
+    avatar: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      marginRight: 15,
+    },
+    name: {
+      fontSize: 24,
+      fontFamily: "Helvetica-Bold",
+      paddingBottom: 5,
+      marginBottom: 2,
+      textTransform: "uppercase",
+      textAlign: "center",
+      color: headingColor,
+    },
+    contactInfo: {
+      fontSize: 9,
+      color: "#333",
+      marginBottom: 3,
+      textAlign: "center",
+    },
+    sectionTitle: {
+      fontFamily: "Helvetica-Bold",
+      fontSize: 12,
+      marginBottom: 6,
+      marginTop: 6,
+      textTransform: "uppercase",
+      borderBottom: `1pt solid ${headingColor}`,
+      paddingBottom: 2,
+      color: headingColor,
+    },
+    jobHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 2,
+    },
+    jobTitle: {
+      fontFamily: "Helvetica-Bold",
+      fontSize: 11,
+    },
+    company: {
+      fontSize: 10,
+      fontFamily: "Helvetica-Oblique",
+    },
+    dateLocation: {
+      fontSize: 9,
+      color: "#444",
+      textAlign: "right",
+    },
+    bulletPoint: {
+      marginLeft: 5,
+      fontSize: 10,
+      marginBottom: 2,
+    },
+    skillsContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      marginTop: 5,
+    },
+    skillText: {
+      fontSize: 9,
+      marginRight: 10,
+      marginBottom: 5,
+    },
+  });
 
   const getLevelLabel = (level?: string) => {
     if (!level) return "";
@@ -131,7 +136,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <View style={styles.headerRow}>
-            {personalInfo.avatarUrl && (
+            {showAvatar && personalInfo.avatarUrl && (
               <Image src={personalInfo.avatarUrl} style={styles.avatar} />
             )}
             <View style={{ alignItems: "center" }}>

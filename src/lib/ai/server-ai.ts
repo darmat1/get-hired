@@ -42,20 +42,28 @@ export async function aiComplete(
 
               // ONLY use preferred model if it belongs to the CURRENT provider being tried
               let modelOverride = request.model;
-              if (userKey.provider === user.preferredAIProvider && user.preferredAIModel) {
+              if (
+                userKey.provider === user.preferredAIProvider &&
+                user.preferredAIModel
+              ) {
                 // Additional safety check: only use the model if it's likely meant for this provider
-                const isGeminiModel = user.preferredAIModel.startsWith('gemini-');
-                const isGroqModel = 
-                  user.preferredAIModel.includes('llama') || 
-                  user.preferredAIModel.includes('mixtral') || 
-                  user.preferredAIModel.includes('gemma') ||
-                  user.preferredAIModel === 'openai/gpt-oss-120b';
-                
-                if (userKey.provider === 'gemini' && isGeminiModel) {
+                const isGeminiModel =
+                  user.preferredAIModel.startsWith("gemini-");
+                const isGroqModel =
+                  user.preferredAIModel.includes("llama") ||
+                  user.preferredAIModel.includes("mixtral") ||
+                  user.preferredAIModel.includes("gemma") ||
+                  user.preferredAIModel === "llama-3.1-8b-instant";
+
+                if (userKey.provider === "gemini" && isGeminiModel) {
                   modelOverride = user.preferredAIModel;
-                } else if (userKey.provider === 'groq' && isGroqModel) {
+                } else if (userKey.provider === "groq" && isGroqModel) {
                   modelOverride = user.preferredAIModel;
-                } else if (userKey.provider === 'openrouter' || userKey.provider === 'openai' || userKey.provider === 'claude') {
+                } else if (
+                  userKey.provider === "openrouter" ||
+                  userKey.provider === "openai" ||
+                  userKey.provider === "claude"
+                ) {
                   // These are usually fine with their own models
                   modelOverride = user.preferredAIModel;
                 }
@@ -96,11 +104,14 @@ export async function aiComplete(
   }
 
   // 2.1 Enforce Free Quota
-  let userForQuota: { freeAiGenerationsCount: number; lastFreeAiUsage: Date | null; } | null = null;
+  let userForQuota: {
+    freeAiGenerationsCount: number;
+    lastFreeAiUsage: Date | null;
+  } | null = null;
   if (userId) {
     userForQuota = await prisma.user.findUnique({
       where: { id: userId },
-      select: { freeAiGenerationsCount: true, lastFreeAiUsage: true }
+      select: { freeAiGenerationsCount: true, lastFreeAiUsage: true },
     });
 
     if (userForQuota) {
@@ -119,7 +130,9 @@ export async function aiComplete(
       }
 
       if (count >= 10) {
-        throw new Error("You have exhausted your 10 free AI generations for today. Please connect your own API key in your profile settings to continue.");
+        throw new Error(
+          "You have exhausted your 10 free AI generations for today. Please connect your own API key in your profile settings to continue.",
+        );
       }
     }
   }
@@ -130,27 +143,27 @@ export async function aiComplete(
         `[AI] Trying system provider: ${provider.name} (${provider.id})`,
       );
       const response = await provider.complete(request);
-      
+
       // 2.2 Increment Quota on Success
       if (userId && userForQuota) {
-         let count = userForQuota.freeAiGenerationsCount;
-         if (userForQuota.lastFreeAiUsage) {
-            const lastUsageDate = new Date(userForQuota.lastFreeAiUsage);
-            const today = new Date();
-             if (
-              lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
-              lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
-              lastUsageDate.getUTCDate() !== today.getUTCDate()
-            ) {
-              count = 0;
-            }
-         }
+        let count = userForQuota.freeAiGenerationsCount;
+        if (userForQuota.lastFreeAiUsage) {
+          const lastUsageDate = new Date(userForQuota.lastFreeAiUsage);
+          const today = new Date();
+          if (
+            lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
+            lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
+            lastUsageDate.getUTCDate() !== today.getUTCDate()
+          ) {
+            count = 0;
+          }
+        }
         await prisma.user.update({
           where: { id: userId },
           data: {
             freeAiGenerationsCount: count + 1,
-            lastFreeAiUsage: new Date()
-          }
+            lastFreeAiUsage: new Date(),
+          },
         });
       }
 
