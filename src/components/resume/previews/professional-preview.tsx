@@ -345,6 +345,16 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
             />
           </div>
         )}
+        {(isEditing || personalInfo.github) && (
+          <div className="flex justify-center mt-1">
+            <EditableText
+              value={personalInfo.github || ""}
+              onChange={(v) => updatePersonalInfo("github", v)}
+              placeholder="GitHub"
+              className="text-center text-blue-600 text-xs w-full max-w-[400px]"
+            />
+          </div>
+        )}
       </div>
 
       {/* Summary */}

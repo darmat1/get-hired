@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
           (personalInfo?.firstName && personalInfo?.lastName
             ? `Resume ${personalInfo.firstName} ${personalInfo.lastName}`
             : "New Resume"),
-        template: body.template || "modern",
+        template: body.template || "professional",
         language: body.language || "en",
         personalInfo: personalInfo || {},
         workExperience: workExperience || [],

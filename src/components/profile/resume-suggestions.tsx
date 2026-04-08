@@ -178,7 +178,7 @@ export function ResumeSuggestions({ onClose }: ResumeSuggestionsProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: variant.title,
-          template: "modern",
+          template: "professional",
           personalInfo: profile.personalInfo,
           workExperience: filteredExp,
           education: profile.education,

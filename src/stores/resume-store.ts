@@ -13,7 +13,7 @@ const DEFAULT_RESUME: Partial<Resume> = {
   workExperience: [],
   education: [],
   skills: [],
-  template: "modern",
+  template: "professional",
 };
 
 interface ResumeStore {
