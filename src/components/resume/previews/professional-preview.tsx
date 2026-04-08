@@ -86,6 +86,35 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
 
   if (!personalInfo) return null;
 
+  const headerContacts = [
+    { key: "email", value: personalInfo.email || "", placeholder: "Email" },
+    { key: "phone", value: personalInfo.phone || "", placeholder: "Phone" },
+    {
+      key: "location",
+      value: personalInfo.location || "",
+      placeholder: "Location",
+    },
+    {
+      key: "telegram",
+      value: personalInfo.telegram || "",
+      placeholder: "Telegram",
+    },
+  ].filter((item) => item.value);
+
+  const profileLinks = [
+    {
+      key: "linkedin",
+      value: personalInfo.linkedin || "",
+      placeholder: "LinkedIn",
+    },
+    { key: "github", value: personalInfo.github || "", placeholder: "GitHub" },
+    {
+      key: "website",
+      value: personalInfo.website || "",
+      placeholder: "Website",
+    },
+  ].filter((item) => item.value);
+
   const updateSection = (section: keyof Resume, value: any) => {
     if (!onChange) return;
     onChange({ ...data, [section]: value });
@@ -160,7 +189,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
 
   return (
     <div 
-      className="font-sans space-y-6 p-8 bg-white h-full min-h-[1056px] relative group/preview"
+      className="font-sans space-y-4 p-5 bg-white h-full min-h-[1056px] relative group/preview"
       onMouseEnter={() => setIsSidebarHovered(true)}
       onMouseLeave={() => setIsSidebarHovered(false)}
     >
@@ -239,10 +268,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
       )}
 
       {/* Header */}
-      <div 
-        className="relative text-center border-b pb-6 mb-6"
-        style={{ borderColor: headingColor }}
-      >
+      <div className="relative pb-3 min-h-[120px]">
         {isEditing && (
           <button
             onClick={importPersonalInfo}
@@ -259,116 +285,91 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
           </button>
         )}
         {showAvatar && personalInfo.avatarUrl && (
-          <div className="flex justify-center items-center gap-6 mb-4">
-            <img
-              src={personalInfo.avatarUrl}
-              alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
-              className="w-20 h-20 rounded-full object-cover border-4 border-slate-50 shadow-sm"
-            />
+          <div className="absolute left-0 top-2 w-[118px] h-[118px] flex items-center justify-center">
+            <div className="shrink-0">
+              <img
+                src={personalInfo.avatarUrl}
+                alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
+                className="w-[118px] h-[118px] rounded-full object-cover"
+              />
+            </div>
           </div>
         )}
 
-        <div 
-          className="text-2xl font-bold mb-2 uppercase tracking-wide flex justify-center items-center gap-2"
-          style={{ color: headingColor }}
-        >
-          <div className="flex-1 text-right">
-            <EditableText
-              value={personalInfo.firstName || ""}
-              onChange={(v) => updatePersonalInfo("firstName", v)}
-              placeholder="First Name"
-              className="text-right w-full"
-            />
-          </div>
-          <div className="flex-1 text-left">
-            <EditableText
-              value={personalInfo.lastName || ""}
-              onChange={(v) => updatePersonalInfo("lastName", v)}
-              placeholder="Last Name"
-              className="text-left w-full"
-            />
-          </div>
-        </div>
-        {(data as any).targetPosition && (
-          <div className="text-sm font-medium text-slate-700 mt-1">
-            {(data as any).targetPosition}
-          </div>
-        )}
-        <div className="flex flex-wrap justify-center items-center mt-2 text-slate-700 text-xs px-4">
-          <div className="flex-1 text-right min-w-[120px]">
-            <EditableText
-              value={personalInfo.email || ""}
-              onChange={(v) => updatePersonalInfo("email", v)}
-              placeholder="Email"
-              className="text-right w-full"
-            />
-          </div>
-          <span className="mx-2 text-slate-300">|</span>
-          <div className="flex-[0.5] text-center min-w-[100px]">
-            <EditableText
-              value={personalInfo.phone || ""}
-              onChange={(v) => updatePersonalInfo("phone", v)}
-              placeholder="Phone"
-              className="text-center w-full"
-            />
-          </div>
-          <span className="mx-2 text-slate-300">|</span>
-          <div className="flex-1 text-left min-w-[120px]">
-            <EditableText
-              value={personalInfo.location || ""}
-              onChange={(v) => updatePersonalInfo("location", v)}
-              placeholder="Location"
-              className="text-left w-full"
-            />
-          </div>
-          {(isEditing || personalInfo.telegram) && (
-            <>
-              <span className="mx-2 text-slate-300">|</span>
-              <div className="flex-1 text-left min-w-[120px]">
+        <div className="w-full flex justify-center">
+          <div className="text-center">
+            <div
+              className="mb-3 text-[18px] font-bold uppercase leading-none tracking-wide"
+              style={{ color: headingColor }}
+            >
+              <div className="inline-flex flex-nowrap justify-center items-center gap-2 whitespace-nowrap">
                 <EditableText
-                  value={personalInfo.telegram || ""}
-                  onChange={(v) => updatePersonalInfo("telegram", v)}
-                  placeholder="Telegram"
-                  className="text-left w-full text-blue-600"
+                  value={personalInfo.firstName || ""}
+                  onChange={(v) => updatePersonalInfo("firstName", v)}
+                  placeholder="First Name"
+                  className="text-center"
+                />
+                <EditableText
+                  value={personalInfo.lastName || ""}
+                  onChange={(v) => updatePersonalInfo("lastName", v)}
+                  placeholder="Last Name"
+                  className="text-center"
                 />
               </div>
-            </>
-          )}
+            </div>
+            {(data as any).targetPosition && (
+              <div className="mb-2 text-[12px] italic text-slate-600">
+                {(data as any).targetPosition}
+              </div>
+            )}
+            {headerContacts.length > 0 && (
+              <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-slate-700 text-[12px]">
+                {headerContacts.map((item, index) => (
+                  <div key={item.key} className="flex items-center">
+                    {index > 0 && <span className="mr-3 text-slate-300">|</span>}
+                    <EditableText
+                      value={item.value}
+                      onChange={(v) =>
+                        updatePersonalInfo(
+                          item.key as keyof typeof personalInfo,
+                          v,
+                        )
+                      }
+                      placeholder={item.placeholder}
+                      className="text-center min-w-[72px]"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+            {profileLinks.map((item) => (
+              <div key={item.key} className="flex justify-center mt-1">
+                <EditableText
+                  value={item.value}
+                  onChange={(v) =>
+                    updatePersonalInfo(item.key as keyof typeof personalInfo, v)
+                  }
+                  placeholder={item.placeholder}
+                  className="text-center text-blue-600 text-[12px] w-full max-w-[520px]"
+                />
+              </div>
+            ))}
+          </div>
         </div>
-        {(isEditing || personalInfo.linkedin) && (
-          <div className="flex justify-center mt-1">
-            <EditableText
-              value={personalInfo.linkedin || ""}
-              onChange={(v) => updatePersonalInfo("linkedin", v)}
-              placeholder="LinkedIn"
-              className="text-center text-blue-600 text-xs w-full max-w-[400px]"
-            />
-          </div>
-        )}
-        {(isEditing || personalInfo.github) && (
-          <div className="flex justify-center mt-1">
-            <EditableText
-              value={personalInfo.github || ""}
-              onChange={(v) => updatePersonalInfo("github", v)}
-              placeholder="GitHub"
-              className="text-center text-blue-600 text-xs w-full max-w-[400px]"
-            />
-          </div>
-        )}
       </div>
 
       {/* Summary */}
       <div>
         <h2 
-          className="text-sm font-bold mb-2 uppercase border-b pb-1"
-          style={{ color: headingColor, borderColor: `${headingColor}40` }}
+          className="text-[12px] font-bold mb-1.5 uppercase border-b pb-0.5"
+          style={{ color: headingColor, borderColor: headingColor }}
         >
           {getTranslation("form.summary", data.language || "en")}
         </h2>
         <EditableText
           value={personalInfo.summary || ""}
           onChange={(v) => updatePersonalInfo("summary", v)}
-          className="text-slate-800 text-xs leading-relaxed text-justify block"
+          className="text-slate-800 text-[10px] leading-relaxed text-justify block"
           multiline
           placeholder="Professional Summary..."
           allowFormatting={true}
@@ -379,11 +380,11 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
       {workExperience && (
         <div>
           <div 
-            className="flex justify-between items-end mb-3 border-b pb-1"
-            style={{ borderColor: `${headingColor}40` }}
+            className="flex justify-between items-end mb-2 border-b pb-0.5"
+            style={{ borderColor: headingColor }}
           >
             <h2 
-              className="text-sm font-bold uppercase"
+              className="text-[12px] font-bold uppercase"
               style={{ color: headingColor }}
             >
               {getTranslation("form.work_experience", data.language || "en")}
@@ -421,7 +422,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
-                  className="space-y-4"
+                  className="space-y-2.5"
                 >
                   {workExperience.map((exp, idx) => (
                     <Draggable
@@ -465,7 +466,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                               </button>
                             </div>
                           )}
-                          <div className="flex justify-between items-baseline mb-1">
+                          <div className="flex justify-between items-start mb-0.5">
                             <div className="flex-1 pr-4">
                               <EditableText
                                 value={exp.title || ""}
@@ -474,10 +475,10 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                                   newExp[idx] = { ...newExp[idx], title: v };
                                   updateSection("workExperience", newExp);
                                 }}
-                                className="font-bold text-slate-900 text-xs"
+                                className="font-bold text-slate-900 text-[11px]"
                                 placeholder="Title"
                               />
-                              <div className="text-slate-700 text-xs italic flex gap-1">
+                              <div className="text-slate-700 text-[10px] italic flex gap-1">
                                 <EditableText
                                   value={exp.company || ""}
                                   onChange={(v) => {
@@ -490,76 +491,63 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                                   }}
                                   placeholder="Company"
                                 />
-                                {isEditing ? (
-                                  <div className="flex items-center gap-1">
+                                {(isEditing || exp.employmentType) && (
+                                  <>
                                     <span>•</span>
-                                    <select
-                                      value={exp.employmentType || ""}
-                                      onChange={(e) => {
-                                        const newExp = [
-                                          ...(workExperience || []),
-                                        ];
-                                        newExp[idx] = {
-                                          ...newExp[idx],
-                                          employmentType: e.target.value,
-                                        };
-                                        updateSection("workExperience", newExp);
-                                      }}
-                                      className="bg-transparent border-none p-0 m-0 outline-none text-xs text-slate-500 italic hover:text-slate-800 transition-colors cursor-pointer appearance-none"
-                                    >
-                                      <option value="">
-                                        {getTranslation(
-                                          "work.employment_type",
-                                          data.language || "en",
-                                        )}
-                                      </option>
-                                      {[
-                                        "full_time",
-                                        "part_time",
-                                        "self_employed",
-                                        "freelance",
-                                        "contract",
-                                        "internship",
-                                        "apprenticeship",
-                                        "seasonal",
-                                        "pet_project",
-                                      ].map((type) => (
-                                        <option key={type} value={type}>
+                                    {isEditing ? (
+                                      <select
+                                        value={exp.employmentType || ""}
+                                        onChange={(e) => {
+                                          const newExp = [
+                                            ...(workExperience || []),
+                                          ];
+                                          newExp[idx] = {
+                                            ...newExp[idx],
+                                            employmentType: e.target.value,
+                                          };
+                                          updateSection("workExperience", newExp);
+                                        }}
+                                        className="bg-transparent border-none p-0 m-0 outline-none text-[10px] text-slate-700 italic hover:text-slate-800 transition-colors cursor-pointer appearance-none"
+                                      >
+                                        <option value="">
                                           {getTranslation(
-                                            `work.employment_types.${type}`,
+                                            "work.employment_type",
                                             data.language || "en",
                                           )}
                                         </option>
-                                      ))}
-                                    </select>
-                                  </div>
-                                ) : (
-                                  exp.employmentType && (
-                                    <>
-                                      <span>•</span>
+                                        {[
+                                          "full_time",
+                                          "part_time",
+                                          "self_employed",
+                                          "freelance",
+                                          "contract",
+                                          "internship",
+                                          "apprenticeship",
+                                          "seasonal",
+                                          "pet_project",
+                                        ].map((type) => (
+                                          <option key={type} value={type}>
+                                            {getTranslation(
+                                              `work.employment_types.${type}`,
+                                              data.language || "en",
+                                            )}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    ) : (
                                       <span>
                                         {getTranslation(
                                           `work.employment_types.${exp.employmentType}`,
                                           data.language || "en",
                                         )}
                                       </span>
-                                    </>
-                                  )
+                                    )}
+                                  </>
                                 )}
                               </div>
                             </div>
                             <div className="shrink-0 text-right text-[10px] text-slate-600 w-[140px]">
-                              <EditableText
-                                value={exp.location || ""}
-                                onChange={(v) => {
-                                  const newExp = [...(workExperience || [])];
-                                  newExp[idx] = { ...newExp[idx], location: v };
-                                  updateSection("workExperience", newExp);
-                                }}
-                                placeholder="Location"
-                                className="text-right w-full"
-                              />
-                              <div className="flex gap-1 justify-end items-center mt-0.5">
+                              <div className="flex gap-1 justify-end items-center">
                                 <div className="flex-1 max-w-[50px]">
                                   <EditableText
                                     value={exp.startDate || ""}
@@ -608,10 +596,20 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                                   />
                                 </div>
                               </div>
+                              <EditableText
+                                value={exp.location || ""}
+                                onChange={(v) => {
+                                  const newExp = [...(workExperience || [])];
+                                  newExp[idx] = { ...newExp[idx], location: v };
+                                  updateSection("workExperience", newExp);
+                                }}
+                                placeholder="Location"
+                                className="text-right w-full mt-0.5"
+                              />
                             </div>
                           </div>
                           {/* Description bullets */}
-                          <div className="mt-1 space-y-1 ml-4">
+                          <div className="mt-0.5 space-y-0.5 ml-2">
                             {(
                               (Array.isArray(exp.description)
                                 ? exp.description
@@ -622,7 +620,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                             ).map((d, dIdx) => (
                               <div
                                 key={dIdx}
-                                className="flex gap-1 group/desc text-slate-800 text-xs"
+                                className="flex gap-1 group/desc text-slate-800 text-[10px]"
                               >
                                 <span className="shrink-0">•</span>
                                 <EditableText
@@ -701,11 +699,11 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
       {/* Education */}
       <div>
         <div 
-          className="flex justify-between items-end mb-3 border-b pb-1"
-          style={{ borderColor: `${headingColor}40` }}
+          className="flex justify-between items-end mb-2 border-b pb-0.5"
+          style={{ borderColor: headingColor }}
         >
           <h2 
-            className="text-sm font-bold uppercase"
+            className="text-[12px] font-bold uppercase"
             style={{ color: headingColor }}
           >
             {getTranslation("form.education", data.language || "en")}
@@ -724,7 +722,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
             </button>
           )}
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2">
           {(education || []).map((edu, idx) => (
             <div key={edu.id} className="relative group/edu">
               {isEditing && (
@@ -750,10 +748,10 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                       newEdu[idx] = { ...newEdu[idx], institution: v };
                       updateSection("education", newEdu);
                     }}
-                    className="font-bold text-slate-900 text-xs"
+                  className="font-bold text-slate-900 text-[11px]"
                     placeholder="Institution"
                   />
-                  <div className="text-slate-700 text-xs italic flex gap-1">
+                  <div className="text-slate-700 text-[10px] italic flex gap-1 flex-wrap">
                     <EditableText
                       value={edu.degree || ""}
                       onChange={(v) => {
@@ -765,7 +763,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                     />
                     {edu.field && (
                       <>
-                        <span>-</span>
+                        <span>—</span>
                         <EditableText
                           value={edu.field || ""}
                           onChange={(v) => {
@@ -834,11 +832,11 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
           return (
             <div key={cat}>
               <div 
-                className="flex justify-between items-end mb-3 border-b pb-1"
-                style={{ borderColor: `${headingColor}40` }}
+                className="flex justify-between items-end mb-2 border-b pb-0.5"
+                style={{ borderColor: headingColor }}
               >
                 <h2 
-                  className="text-sm font-bold uppercase"
+                  className="text-[12px] font-bold uppercase"
                   style={{ color: headingColor }}
                 >
                   {cat === "technical"
@@ -873,7 +871,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
                   </div>
                 )}
               </div>
-              <div className="flex flex-wrap gap-x-4 gap-y-1">
+              <div className="flex flex-wrap gap-x-3 gap-y-1">
                 {categorySkills.map((skill) => (
                   <div key={skill.id} className="relative group/skill">
                     <EditableText
@@ -902,7 +900,7 @@ export function ProfessionalPreview({ data, onChange, isEditing }: Props) {
 
                         updateSection("skills", newSkills);
                       }}
-                      className="text-xs text-slate-800"
+                      className="text-[10px] text-slate-800"
                     />
                     {isEditing && (
                       <button

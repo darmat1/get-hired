@@ -18,7 +18,8 @@ interface TemplateProps {
 }
 
 export function ProfessionalTemplate({ resume }: TemplateProps) {
-  const { personalInfo, workExperience, education, skills, customization } = resume;
+  const { personalInfo, workExperience, education, skills, customization } =
+    resume;
 
   const headingColor = customization?.sidebarColor || "#000000";
   const showAvatar = customization?.showAvatar !== false;
@@ -27,35 +28,57 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
     page: {
       fontFamily: "Helvetica",
       fontSize: 10,
-      padding: 40,
+      padding: 20,
       lineHeight: 1.5,
     },
     header: {
-      marginBottom: 10,
-      borderBottom: `1pt solid ${headingColor}`,
+      marginBottom: 0,
       paddingBottom: 6,
       alignItems: "center",
+      width: "100%",
+      position: "relative",
+      minHeight: 120,
     },
     headerRow: {
-      flexDirection: "row",
+      width: "100%",
       alignItems: "center",
       justifyContent: "center",
-      marginBottom: 10,
+    },
+    avatarWrap: {
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: 100,
+      height: 100,
+      alignItems: "center",
+      justifyContent: "center",
     },
     avatar: {
-      width: 60,
-      height: 60,
-      borderRadius: 30,
-      marginRight: 15,
+      width: 100,
+      height: 100,
+      borderRadius: 12,
+    },
+    nameWrap: {
+      alignItems: "center",
+      marginBottom: 12,
     },
     name: {
-      fontSize: 24,
+      fontSize: 18,
       fontFamily: "Helvetica-Bold",
-      paddingBottom: 5,
-      marginBottom: 2,
       textTransform: "uppercase",
       textAlign: "center",
       color: headingColor,
+    },
+    targetPositionWrap: {
+      marginTop: 2,
+      marginBottom: 10,
+      alignItems: "center",
+    },
+    targetPosition: {
+      fontSize: 9,
+      color: "#4b5563",
+      fontStyle: "italic",
+      textAlign: "center",
     },
     contactInfo: {
       fontSize: 9,
@@ -69,7 +92,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       marginBottom: 6,
       marginTop: 6,
       textTransform: "uppercase",
-      borderBottom: `1pt solid ${headingColor}`,
+      borderBottom: `1px solid ${headingColor}`,
       paddingBottom: 2,
       color: headingColor,
     },
@@ -137,21 +160,22 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
         <View style={styles.header}>
           <View style={styles.headerRow}>
             {showAvatar && personalInfo.avatarUrl && (
-              <Image src={personalInfo.avatarUrl} style={styles.avatar} />
+              <View style={styles.avatarWrap}>
+                <Image src={personalInfo.avatarUrl} style={styles.avatar} />
+              </View>
             )}
             <View style={{ alignItems: "center" }}>
-              <Text style={styles.name}>
-                {personalInfo.firstName} {personalInfo.lastName}
-              </Text>
-              {resume.targetPosition && (
-                <Text
-                  style={[
-                    styles.contactInfo,
-                    { color: "#4b5563", fontStyle: "italic" },
-                  ]}
-                >
-                  {resume.targetPosition}
+              <View style={styles.nameWrap}>
+                <Text style={styles.name}>
+                  {personalInfo.firstName} {personalInfo.lastName}
                 </Text>
+              </View>
+              {resume.targetPosition && (
+                <View style={styles.targetPositionWrap}>
+                  <Text style={styles.targetPosition}>
+                    {resume.targetPosition}
+                  </Text>
+                </View>
               )}
               <View
                 style={{
@@ -298,7 +322,8 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                   </View>
                   <View style={{ alignItems: "flex-end" }}>
                     <Text style={styles.dateLocation}>
-                      {formatResumeDate(exp.startDate)} — {exp.current ? "Present" : formatResumeDate(exp.endDate)}
+                      {formatResumeDate(exp.startDate)} —{" "}
+                      {exp.current ? "Present" : formatResumeDate(exp.endDate)}
                     </Text>
                     <Text style={styles.dateLocation}>{exp.location}</Text>
                   </View>
@@ -350,14 +375,21 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
               <View key={index} style={{ marginBottom: 8 }} wrap={false}>
                 <View style={styles.jobHeader}>
                   <View>
-                    <FormattedText style={styles.jobTitle} html={edu.institution} />
-                    <FormattedText style={styles.company} html={`
+                    <FormattedText
+                      style={styles.jobTitle}
+                      html={edu.institution}
+                    />
+                    <FormattedText
+                      style={styles.company}
+                      html={`
                       ${edu.degree} ${edu.field ? `— ${edu.field}` : ""}
-                    `} />
+                    `}
+                    />
                   </View>
                   <View style={{ alignItems: "flex-end" }}>
                     <Text style={styles.dateLocation}>
-                      {formatResumeDate(edu.startDate)} — {edu.current ? "Present" : formatResumeDate(edu.endDate)}
+                      {formatResumeDate(edu.startDate)} —{" "}
+                      {edu.current ? "Present" : formatResumeDate(edu.endDate)}
                     </Text>
                   </View>
                 </View>
@@ -378,10 +410,15 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                 <View style={styles.skillsContainer}>
                   {skills
                     .filter(
-                      (s) => s.category === "technical" || s.category === "soft",
+                      (s) =>
+                        s.category === "technical" || s.category === "soft",
                     )
                     .map((skill, index) => (
-                      <FormattedText key={index} style={styles.skillText} html={`• ${skill.name}`} />
+                      <FormattedText
+                        key={index}
+                        style={styles.skillText}
+                        html={`• ${skill.name}`}
+                      />
                     ))}
                 </View>
               </View>
@@ -397,7 +434,11 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
                   {skills
                     .filter((s) => s.category === "language")
                     .map((skill, index) => (
-                      <FormattedText key={index} style={styles.skillText} html={`• ${skill.name}${skill.level ? ` (${getLevelLabel(skill.level)})` : ""}`} />
+                      <FormattedText
+                        key={index}
+                        style={styles.skillText}
+                        html={`• ${skill.name}${skill.level ? ` (${getLevelLabel(skill.level)})` : ""}`}
+                      />
                     ))}
                 </View>
               </View>
