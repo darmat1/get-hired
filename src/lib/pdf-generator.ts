@@ -24,7 +24,7 @@ Font.register({
 
 export async function generatePDF(resume: Resume): Promise<Buffer> {
   try {
-    const Template = getTemplateComponent(resume.template || "modern");
+    const Template = getTemplateComponent(resume.template || "professional");
     const doc = React.createElement(Template, { resume });
     const result = await pdf(doc as any).toBuffer();
 
@@ -60,5 +60,5 @@ export function getTemplateComponent(templateName: string) {
     minimal: MinimalTemplate,
   };
 
-  return templates[templateName as keyof typeof templates] || ModernTemplate;
+  return templates[templateName as keyof typeof templates] || ProfessionalTemplate;
 }

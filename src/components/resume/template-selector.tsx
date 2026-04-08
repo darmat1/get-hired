@@ -15,16 +15,17 @@ export function TemplateSelector({
 
   const templates = [
     {
-      id: "modern",
-      name: t("template.modern"),
-      description: t("template.modern_desc"),
-      preview: "/templates/modern.png",
-    },
-    {
       id: "professional",
       name: t("template.professional"),
       description: t("template.professional_desc"),
       preview: "/templates/professional.png",
+      badge: "ATS ready",
+    },
+    {
+      id: "modern",
+      name: t("template.modern"),
+      description: t("template.modern_desc"),
+      preview: "/templates/modern.png",
     },
 
     // {
@@ -56,7 +57,14 @@ export function TemplateSelector({
               </span>
             </div>
 
-            <h3 className="font-medium text-lg mb-1">{template.name}</h3>
+            <div className="mb-1 flex items-center gap-2">
+              <h3 className="font-medium text-lg">{template.name}</h3>
+              {"badge" in template && template.badge ? (
+                <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+                  {template.badge}
+                </span>
+              ) : null}
+            </div>
             <p className="text-muted-foreground text-sm">
               {template.description}
             </p>

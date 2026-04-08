@@ -21,11 +21,11 @@ export function ResumePreview({
   onTemplateChange,
 }: ResumePreviewProps) {
   const { t } = useTranslation();
-  const template = data.template || "modern";
+  const template = data.template || "professional";
 
   const TEMPLATES = [
+    { id: "professional", label: t("template.professional"), badge: "ATS ready" },
     { id: "modern", label: t("template.modern") },
-    { id: "professional", label: t("template.professional") },
     // { id: "minimal", label: "Minimal" },
   ];
 
@@ -86,7 +86,18 @@ export function ResumePreview({
                     : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-200"
                 }`}
               >
-                {tmpl.label}
+                <span>{tmpl.label}</span>
+                {tmpl.badge ? (
+                  <span
+                    className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
+                      template === tmpl.id
+                        ? "bg-white/15 text-white"
+                        : "bg-emerald-50 text-emerald-700"
+                    }`}
+                  >
+                    {tmpl.badge}
+                  </span>
+                ) : null}
               </button>
             ))}
           </div>

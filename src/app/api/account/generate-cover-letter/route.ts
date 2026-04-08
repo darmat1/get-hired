@@ -179,6 +179,7 @@ function buildRelevantProfileData(
       phone: profileData.personalInfo?.phone || "",
       website: profileData.personalInfo?.website || "",
       linkedin: profileData.personalInfo?.linkedin || "",
+      github: profileData.personalInfo?.github || "",
       telegram: profileData.personalInfo?.telegram || "",
     },
     workExperience: compressWorkExperience(
@@ -273,6 +274,9 @@ function normalizeResumePayload(
         : "",
       linkedin: sourcePersonalInfo?.linkedin
         ? normalizeString(resumeJson?.personalInfo?.linkedin)
+        : "",
+      github: sourcePersonalInfo?.github
+        ? normalizeString(resumeJson?.personalInfo?.github)
         : "",
       telegram: sourcePersonalInfo?.telegram
         ? normalizeString(resumeJson?.personalInfo?.telegram)
@@ -518,7 +522,7 @@ export async function POST(request: Request) {
       const savedResume = await (prisma.resume.create as any)({
         data: {
           title: resumeTitle,
-          template: "modern",
+          template: "professional",
           language: resumeJson.detectedLanguage || "en",
           personalInfo: resumeJson.personalInfo || {},
           workExperience: resumeJson.workExperience || [],

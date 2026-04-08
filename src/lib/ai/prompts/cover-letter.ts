@@ -44,7 +44,7 @@ const TAILORED_RESUME_SYSTEM_PROMPT = `Create a tailored resume in valid JSON.
 
 Use only candidate profile facts. Never invent location, skills, tools, dates, or achievements.
 If location is missing in profile, output "".
-If phone, website, linkedin, or telegram are missing, output "".
+If phone, website, linkedin, github, or telegram are missing, output "".
 Build skills only from candidate profile and include relevant matching skills when present.
 
 Write in the requested language.
@@ -63,7 +63,7 @@ Formatting:
 
 Return only JSON:
 {
-  "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "telegram": "", "summary": "" },
+  "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "location": "", "website": "", "linkedin": "", "github": "", "telegram": "", "summary": "" },
   "workExperience": [{ "title": "", "company": "", "location": "", "startDate": "YYYY-MM", "endDate": "", "current": false, "description": [""], "employmentType": "full_time or part_time or contract or pet_project" }],
   "education": [{ "institution": "", "degree": "", "field": "", "startDate": "YYYY-MM", "endDate": "YYYY-MM", "current": false }],
   "skills": [{ "name": "", "category": "technical", "level": "advanced" }],
