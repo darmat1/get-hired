@@ -43,6 +43,16 @@ OUTPUT FORMAT (strict JSON):
       "name": "string",
       "category": "technical",
       "level": "advanced"
+    },
+    {
+      "name": "string",
+      "category": "soft",
+      "level": "advanced"
+    },
+    {
+      "name": "string",
+      "category": "language",
+      "level": "beginner" | "elementary" | "pre-intermediate" | "intermediate" | "upper-intermediate" | "advanced" | "fluent" | "proficient" | "expert" | "native"
     }
   ]
 }
