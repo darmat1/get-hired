@@ -71,6 +71,7 @@ export class GroqProvider implements AIProvider {
             true,
           );
         }
+
       }
 
       throw new Error(`Groq API error (${response.status}): ${errorText}`);
