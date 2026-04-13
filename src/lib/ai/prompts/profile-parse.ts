@@ -51,6 +51,7 @@ RULES:
 - Return only valid JSON.
 - Do not invent data. Only extract what is present.
 - Use YYYY-MM for dates.
+- IMPORTANT (LinkedIn Multi-role logic): If the text shows multiple positions under one company header (grouped experience), you MUST repeat the company name for every position object in the "workExperience" array. Never leave the "company" field empty if it can be inferred from the context above.
 - mainDescription: concise 1-2 sentence role overview.
 - employmentType: Map the employment type to exactly one of these values: full_time, part_time, self_employed, freelance, contract, internship, apprenticeship, seasonal, pet_project. If not explicitly mentioned or unclear, return null.
 - description: separate items for achievements, responsibilities, metrics.`;
