@@ -1,8 +1,34 @@
-'use client'
-
 import { Header } from '@/components/layout/header'
+import type { Metadata } from "next";
+import { headers } from "next/headers";
 
-export default function CookiePolicy() {
+export const revalidate = 86400;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headerList = await headers();
+  const locale = headerList.get("x-locale") || "en";
+  const path = "/cookie-policy";
+  const canonical = locale === "en" ? path : `/${locale}${path}`;
+
+  return {
+    title: "Cookie Policy | GetHired",
+    description: "Learn about how we use cookies to improve your experience on GetHired.",
+    alternates: {
+      canonical,
+      languages: {
+        en: "/cookie-policy",
+        uk: "/uk/cookie-policy",
+        ru: "/ru/cookie-policy",
+        "x-default": "/cookie-policy",
+      },
+    },
+    openGraph: {
+      url: canonical,
+    },
+  };
+}
+
+export default function CookiePolicy()   {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />

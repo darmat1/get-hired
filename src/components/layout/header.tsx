@@ -13,6 +13,7 @@ import { MD5 } from "crypto-js";
 import { LogIn } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AiQuotaDisplay } from "@/components/ui/ai-quota-display";
+import { ChromeExtensionLink } from "@/components/ui/chrome-extension-link";
 
 export function Header() {
   const { data: session, isPending } = useSession();
@@ -96,7 +97,12 @@ export function Header() {
             <div className="flex items-center space-x-2">
               <ThemeToggle />
               <LanguageSelector />
-              {isApplicationPage && session && <AiQuotaDisplay />}
+              {isApplicationPage && session && (
+                <>
+                  <ChromeExtensionLink />
+                  <AiQuotaDisplay />
+                </>
+              )}
             </div>
 
             {!isApplicationPage && (

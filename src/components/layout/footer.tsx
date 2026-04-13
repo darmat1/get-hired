@@ -77,6 +77,14 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <LocalizedLink
+                  href="/extension"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.chrome_extension")}
+                </LocalizedLink>
+              </li>
+              <li>
+                <LocalizedLink
                   href="/resume-builder"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
