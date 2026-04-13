@@ -1,19 +1,7 @@
 export function buildProfileParseSystemPrompt(): string {
-  return `You are a Resume Parsing and Merging Engine.
-INPUT: existing profile JSON plus raw imported text from PDF or pasted resume.
+  return `You are a Resume Parser. Extract structured data from raw text.
 
-GOAL:
-- Extract structured profile data.
-- Merge new data with the existing profile.
-- Return a single consolidated profile as strict JSON.
-
-MERGE RULES:
-- Same company plus same role means merge descriptions, prefer better dates, and keep the richer role summary.
-- Normalize obvious company aliases when safe.
-- Deduplicate skills and education.
-- Prefer more detailed data over shorter duplicates.
-
-OUTPUT FORMAT:
+OUTPUT FORMAT (strict JSON):
 {
   "personalInfo": {
     "firstName": "string",
@@ -23,7 +11,9 @@ OUTPUT FORMAT:
     "location": "string",
     "summary": "string",
     "linkedin": "string",
-    "telegram": "string"
+    "telegram": "string",
+    "github": "string",
+    "website": "string"
   },
   "workExperience": [
     {
@@ -58,21 +48,16 @@ OUTPUT FORMAT:
 
 RULES:
 - Return only valid JSON.
-- Do not invent data.
-- Use YYYY-MM for dates whenever a month is available.
-- mainDescription must be a concise 1-2 sentence role overview.
-- description must preserve specific achievements, responsibilities, and metrics as separate items.`;
+- Do not invent data. Only extract what is present.
+- Use YYYY-MM for dates.
+- mainDescription: concise 1-2 sentence role overview.
+- description: separate items for achievements, responsibilities, metrics.`;
 }
 
 export function buildProfileParseUserPrompt(params: {
-  existingProfileJson: string;
   normalizedText: string;
 }): string {
-  return `EXISTING PROFILE (JSON):
-${params.existingProfileJson}
+  return `Parse the following resume/profile text and return structured JSON:
 
-NEW DATA TO PARSE:
-${params.normalizedText}
-
-Merge and return the final structured profile as valid JSON.`;
+${params.normalizedText}`;
 }
