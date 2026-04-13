@@ -19,6 +19,7 @@ OUTPUT FORMAT (strict JSON):
     {
       "title": "string",
       "company": "string",
+      "employmentType": "full_time | part_time | self_employed | freelance | contract | internship | apprenticeship | seasonal | pet_project | null",
       "location": "string",
       "startDate": "YYYY-MM",
       "endDate": "YYYY-MM",
@@ -51,6 +52,7 @@ RULES:
 - Do not invent data. Only extract what is present.
 - Use YYYY-MM for dates.
 - mainDescription: concise 1-2 sentence role overview.
+- employmentType: Map the employment type to exactly one of these values: full_time, part_time, self_employed, freelance, contract, internship, apprenticeship, seasonal, pet_project. If not explicitly mentioned or unclear, return null.
 - description: separate items for achievements, responsibilities, metrics.`;
 }
 
