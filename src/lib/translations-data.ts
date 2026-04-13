@@ -2169,6 +2169,11 @@ export const translations: Translations = {
     uk: "AI аналіз",
     ru: "AI анализ",
   },
+  "footer.chrome_extension": {
+    en: "Chrome Extension",
+    uk: "Розширення Chrome",
+    ru: "Расширение Chrome",
+  },
   "footer.resume_templates": {
     en: "Resume Templates",
     uk: "Шаблони резюме",
@@ -2865,6 +2870,16 @@ export const translations: Translations = {
     uk: "Квота оновлюється щодня о 00:00 UTC",
     ru: "Квота обнуляется ежедневно в 00:00 UTC",
   },
+  "chrome_extension.install": {
+    en: "Get Chrome Extension",
+    uk: "Встановити розширення",
+    ru: "Установить расширение",
+  },
+  "chrome_extension.tooltip": {
+    en: "Install Chrome Extension for job sites",
+    uk: "Встановіть розширення Chrome для сайтів з вакансіями",
+    ru: "Установите расширение Chrome для сайтов с вакансиями",
+  },
   "ai.analyze_job": {
     en: "Analyze Job Description",
     uk: "Аналізувати опис вакансії",
@@ -3089,6 +3104,211 @@ export const translations: Translations = {
     en: "Cookie Settings",
     uk: "Налаштування cookie",
     ru: "Настройки cookie",
+  },
+  "cookie_settings.title": {
+    en: "Cookie Settings",
+    uk: "Налаштування cookie",
+    ru: "Настройки cookie",
+  },
+  "extension_landing.badge": {
+    en: "Chrome Extension",
+    uk: "Розширення для Chrome",
+    ru: "Расширение для Chrome",
+  },
+  "extension_landing.hero_title": {
+    en: "Generate Cover Letters in Seconds",
+    uk: "Генеруйте супровідні листи за секунди",
+    ru: "Генерируйте сопроводительные письма за секунды",
+  },
+  "extension_landing.hero_subtitle": {
+    en: "The fastest way to create tailored cover letters and resumes for any job posting. Install our Chrome extension and apply smarter, not harder.",
+    uk: "Найшвидший спосіб створити персоналізовані супровідні листи та резюме для будь-якої вакансії. Встановіть наше розширення для Chrome та подавайте заявки розумніше, а не важче.",
+    ru: "Самый быстрый способ создать персонализированные сопроводительные письма и резюме для любой вакансии. Установите наше расширение для Chrome и подавайте заявки умнее, а не сложнее.",
+  },
+  "extension_landing.cta_button": {
+    en: "Install Extension",
+    uk: "Встановити розширення",
+    ru: "Установить расширение",
+  },
+  "extension_landing.cta_subtext": {
+    en: "Free from Chrome Web Store",
+    uk: "Безкоштовно з Chrome Web Store",
+    ru: "Бесплатно из Chrome Web Store",
+  },
+  "extension_landing.video_title": {
+    en: "See It in Action",
+    uk: "Подивіться, як це працює",
+    ru: "Посмотрите, как это работает",
+  },
+  "extension_landing.video_subtitle": {
+    en: "Watch how easy it is to generate a cover letter from any job posting",
+    uk: "Подивіться, як легко згенерувати супровідний лист з будь-якої вакансії",
+    ru: "Посмотрите, как легко сгенерировать сопроводительное письмо из любой вакансии",
+  },
+  "extension_landing.video_placeholder": {
+    en: "Video demo coming soon",
+    uk: "Відео демо скоро буде доступно",
+    ru: "Видео демо скоро будет доступно",
+  },
+  "extension_landing.steps_title": {
+    en: "How to Use",
+    uk: "Як користуватися",
+    ru: "Как пользоваться",
+  },
+  "extension_landing.steps_subtitle": {
+    en: "Follow these simple steps to create your perfect cover letter",
+    uk: "Дотримуйтесь цих простих кроків, щоб створити ідеальний супровідний лист",
+    ru: "Следуйте этим простым шагам, чтобы создать идеальное сопроводительное письмо",
+  },
+  "extension_landing.step1_title": {
+    en: "Install Extension",
+    uk: "Встановіть розширення",
+    ru: "Установите расширение",
+  },
+  "extension_landing.step1_desc": {
+    en: "Install the extension from the Chrome Web Store with one click",
+    uk: "Встановіть розширення з Chrome Web Store одним кліком",
+    ru: "Установите расширение из Chrome Web Store одним кликом",
+  },
+  "extension_landing.step2_title": {
+    en: "Sign In",
+    uk: "Увійдіть",
+    ru: "Войдите",
+  },
+  "extension_landing.step2_desc": {
+    en: "Make sure you're signed in to gethired.work website",
+    uk: "Переконайтеся, що ви увійшли на сайт gethired.work",
+    ru: "Убедитесь, что вы вошли на сайт gethired.work",
+  },
+  "extension_landing.step3_title": {
+    en: "Copy Job Description",
+    uk: "Скопіюйте опис вакансії",
+    ru: "Скопируйте описание вакансии",
+  },
+  "extension_landing.step3_desc": {
+    en: "Open any job posting, select the job description text, copy and paste it into the Job Description field in the extension (you can also drag and drop the selected text)",
+    uk: "Відкрийте будь-яку вакансію, виділіть текст опису, скопіюйте та вставте його в поле Job Description в розширенні (також можна перетягнути виділений текст)",
+    ru: "Откройте любую вакансию, выделите текст описания, скопируйте и вставьте его в поле Job Description в расширении (также можно перетащить выделенный текст)",
+  },
+  "extension_landing.step4_title": {
+    en: "Choose Format",
+    uk: "Оберіть формат",
+    ru: "Выберите формат",
+  },
+  "extension_landing.step4_desc": {
+    en: "Select the letter format: Bullet list or Prose (paragraph style)",
+    uk: "Оберіть формат листа: Bullet list (списком) або Prose (прозовий стиль)",
+    ru: "Выберите формат письма: Bullet list (списком) или Prose (прозовый стиль)",
+  },
+  "extension_landing.step5_title": {
+    en: "Optional: Tailored Resume",
+    uk: "Опціонально: Адаптоване резюме",
+    ru: "Опционально: Адаптированное резюме",
+  },
+  "extension_landing.step5_desc": {
+    en: "If you want to send a tailored resume to the recruiter, check \"Also generate tailored resume\" and select the resume language (English or the language of the job posting)",
+    uk: "Якщо хочете надіслати адаптоване резюме рекрутеру, позначте \"Also generate tailored resume\" та оберіть мову резюме (англійську або мову вакансії)",
+    ru: "Если хотите отправить адаптированное резюме рекрутеру, отметьте \"Also generate tailored resume\" и выберите язык резюме (английский или язык вакансии)",
+  },
+  "extension_landing.step6_title": {
+    en: "Generate & Copy",
+    uk: "Згенеруйте та скопіюйте",
+    ru: "Сгенерируйте и скопируйте",
+  },
+  "extension_landing.step6_desc": {
+    en: "Click the Generate Cover Letter button and get your ready-to-use result in seconds",
+    uk: "Натисніть кнопку Generate Cover Letter та отримайте готовий результат за секунди",
+    ru: "Нажмите кнопку Generate Cover Letter и получите готовый результат за секунды",
+  },
+  "extension_landing.gallery_title": {
+    en: "Screenshots",
+    uk: "Скріншоти",
+    ru: "Скриншоты",
+  },
+  "extension_landing.gallery_subtitle": {
+    en: "See how the extension looks and works",
+    uk: "Подивіться, як виглядає та працює розширення",
+    ru: "Посмотрите, как выглядит и работает расширение",
+  },
+  "extension_landing.screenshot_1_label": {
+    en: "Extension popup interface",
+    uk: "Інтерфейс спливаючого вікна",
+    ru: "Интерфейс всплывающего окна",
+  },
+  "extension_landing.screenshot_2_label": {
+    en: "Job description input",
+    uk: "Введення опису вакансії",
+    ru: "Ввод описания вакансии",
+  },
+  "extension_landing.screenshot_3_label": {
+    en: "Format selection options",
+    uk: "Опції вибору формату",
+    ru: "Опции выбора формата",
+  },
+  "extension_landing.screenshot_4_label": {
+    en: "Generated cover letter result",
+    uk: "Згенерований супровідний лист",
+    ru: "Сгенерированное сопроводительное письмо",
+  },
+  "extension_landing.features_title": {
+    en: "Powerful Features",
+    uk: "Потужні функції",
+    ru: "Мощные функции",
+  },
+  "extension_landing.feature_1_title": {
+    en: "Multiple Format Options",
+    uk: "Кілька варіантів формату",
+    ru: "Несколько вариантов формата",
+  },
+  "extension_landing.feature_1_desc": {
+    en: "Choose between bullet list for quick scanning or prose for a traditional cover letter style",
+    uk: "Оберіть між списком для швидкого перегляду або прозовим стилем для традиційного супровідного листа",
+    ru: "Выберите между списком для быстрого просмотра или прозовым стилем для традиционного сопроводительного письма",
+  },
+  "extension_landing.feature_2_title": {
+    en: "Tailored Resume Generation",
+    uk: "Генерація адаптованого резюме",
+    ru: "Генерация адаптированного резюме",
+  },
+  "extension_landing.feature_2_desc": {
+    en: "Optionally generate a customized resume that matches the job requirements and language",
+    uk: "Опціонально згенеруйте адаптоване резюме, яке відповідає вимогам вакансії та мові",
+    ru: "Опционально сгенерируйте адаптированное резюме, которое соответствует требованиям вакансии и языку",
+  },
+  "extension_landing.feature_3_title": {
+    en: "Drag & Drop Support",
+    uk: "Підтримка drag & drop",
+    ru: "Поддержка drag & drop",
+  },
+  "extension_landing.feature_3_desc": {
+    en: "Simply drag selected text from the job posting directly into the extension",
+    uk: "Просто перетягніть виділений текст з вакансії прямо в розширення",
+    ru: "Просто перетащите выделенный текст из вакансии прямо в расширение",
+  },
+  "extension_landing.screenshot_feature_label": {
+    en: "Extension feature preview",
+    uk: "Попередній перегляд функцій",
+    ru: "Предварительный просмотр функций",
+  },
+  "extension_landing.disclaimer_title": {
+    en: "Important Notice",
+    uk: "Важливе повідомлення",
+    ru: "Важное уведомление",
+  },
+  "extension_landing.disclaimer_text": {
+    en: "Artificial intelligence can make mistakes. We recommend reviewing the generated cover letter and resume before sending them to the recruiter, and making manual corrections if necessary. The quality of results depends on the completeness of your profile information on gethired.work.",
+    uk: "Штучний інтелект може помилятися. Рекомендуємо перевірити згенерований супровідний лист та резюме перед відправкою рекрутеру, та при необхідності внести ручні коригування. Якість результатів залежить від повноти інформації вашого профілю на gethired.work.",
+    ru: "Искусственный интеллект может совершать ошибки. Рекомендуем проверить сгенерированное сопроводительное письмо и резюме перед отправкой рекрутеру, и при необходимости внести ручные корректировки. Качество результатов зависит от полноты информации вашего профиля на gethired.work.",
+  },
+  "extension_landing.final_cta_title": {
+    en: "Ready to Apply Smarter?",
+    uk: "Готові подавати заявки розумніше?",
+    ru: "Готовы подавать заявки умнее?",
+  },
+  "extension_landing.final_cta_subtitle": {
+    en: "Join thousands of job seekers who are already using our Chrome extension to land their dream jobs faster.",
+    uk: "Приєднуйтесь до тисяч шукачів роботи, які вже використовують наше розширення для Chrome, щоб швидше отримати роботу мрії.",
+    ru: "Присоединяйтесь к тысячам соискателей, которые уже используют наше расширение для Chrome, чтобы быстрее получить работу мечты.",
   },
 };
 
