@@ -295,6 +295,26 @@ export const translations: Translations = {
     uk: "Профіль успішно оновлено!",
     ru: "Профиль успешно обновлен!",
   },
+  "profile.import_nothing_found": {
+    en: "Nothing was extracted from the document. The PDF may be image-based or the format is not supported. Try the text paste mode instead.",
+    uk: "З документа нічого не вдалося витягти. PDF може бути у вигляді зображення або формат не підтримується. Спробуйте вставити текст вручну.",
+    ru: "Из документа ничего не удалось извлечь. PDF может быть в виде изображения или формат не поддерживается. Попробуйте вставить текст вручную.",
+  },
+  "profile.import_found_jobs": {
+    en: "{n} work experience entries added",
+    uk: "Додано {n} записів досвіду роботи",
+    ru: "Добавлено {n} записей опыта работы",
+  },
+  "profile.import_found_edu": {
+    en: "{n} education entries added",
+    uk: "Додано {n} записів освіти",
+    ru: "Добавлено {n} записей образования",
+  },
+  "profile.import_found_skills": {
+    en: "{n} skills added",
+    uk: "Додано {n} навичок",
+    ru: "Добавлено {n} навыков",
+  },
   "profile.import_error": {
     en: "Import error",
     uk: "Помилка імпорту",
@@ -3310,6 +3330,492 @@ export const translations: Translations = {
     uk: "Приєднуйтесь до тисяч шукачів роботи, які вже використовують наше розширення для Chrome, щоб швидше отримати роботу мрії.",
     ru: "Присоединяйтесь к тысячам соискателей, которые уже используют наше расширение для Chrome, чтобы быстрее получить работу мечты.",
   },
+
+  // ─── Onboarding (empty profile) ───────────────────────────────────────────
+  "onboarding.title": {
+    en: "Let's build your profile",
+    uk: "Давайте створимо ваш профіль",
+    ru: "Давайте создадим ваш профиль",
+  },
+  "onboarding.subtitle": {
+    en: "Choose the fastest way to get started — it takes less than 2 minutes",
+    uk: "Оберіть найшвидший спосіб — це займе менше 2 хвилин",
+    ru: "Выберите самый быстрый способ — это займёт меньше 2 минут",
+  },
+  "onboarding.recommended": {
+    en: "Recommended",
+    uk: "Рекомендовано",
+    ru: "Рекомендуется",
+  },
+  "onboarding.ai_interview": {
+    en: "AI Interview",
+    uk: "AI Інтерв'ю",
+    ru: "AI Интервью",
+  },
+  "onboarding.ai_interview_desc": {
+    en: "Answer 5 questions — AI fills your profile",
+    uk: "Відповідайте на 5 питань — AI заповнить профіль",
+    ru: "Ответьте на 5 вопросов — AI заполнит профиль",
+  },
+  "onboarding.upload_pdf": {
+    en: "Upload Resume PDF",
+    uk: "Завантажити резюме PDF",
+    ru: "Загрузить резюме PDF",
+  },
+  "onboarding.upload_pdf_desc": {
+    en: "AI extracts data from your existing resume",
+    uk: "AI витягне дані з вашого резюме",
+    ru: "AI извлечёт данные из вашего резюме",
+  },
+  "onboarding.manual": {
+    en: "Fill Manually",
+    uk: "Заповнити вручну",
+    ru: "Заполнить вручную",
+  },
+  "onboarding.manual_desc": {
+    en: "Enter your experience step by step",
+    uk: "Введіть досвід крок за кроком",
+    ru: "Введите опыт шаг за шагом",
+  },
+
+  // ─── AI Interview ──────────────────────────────────────────────────────────
+  "interview.title": {
+    en: "AI Profile Interview",
+    uk: "AI Інтерв'ю профілю",
+    ru: "AI Интервью профиля",
+  },
+  "interview.step_of": {
+    en: "Step {n} of {total}",
+    uk: "Крок {n} з {total}",
+    ru: "Шаг {n} из {total}",
+  },
+  "interview.greeting": {
+    en: "Hi! I'll ask you a few quick questions to fill your profile. You can answer in any language — keep it natural.",
+    uk: "Привіт! Я задам кілька коротких питань для заповнення профілю. Відповідайте довільно на будь-якій мові.",
+    ru: "Привет! Задам несколько коротких вопросов для заполнения профиля. Отвечайте произвольно на любом языке.",
+  },
+  "interview.q_name": {
+    en: "What's your full name and current job title?",
+    uk: "Як вас звати і яка ваша поточна посада?",
+    ru: "Как вас зовут и какова ваша текущая должность?",
+  },
+  "interview.ph_name": {
+    en: "e.g. Ivan Petrov, Senior Frontend Developer",
+    uk: "напр. Іван Петров, Senior Frontend Developer",
+    ru: "напр. Иван Петров, Senior Frontend Developer",
+  },
+  "interview.hint_name": {
+    en: "Your name and role",
+    uk: "Ваше ім'я та посада",
+    ru: "Ваше имя и должность",
+  },
+    "interview.q_contacts": {
+    en: "Where are you located, and how can employers find you? (LinkedIn, GitHub, Telegram, website — skip if you prefer)",
+    uk: "Де ви знаходитесь та як роботодавці можуть вас знайти? (LinkedIn, GitHub, Telegram, сайт — пропустіть якщо не хочете)",
+    ru: "Где вы находитесь и как работодатели могут вас найти? (LinkedIn, GitHub, Telegram, сайт — пропустите, если не хотите)",
+  },
+  "interview.ph_contacts": {
+    en: "e.g. Kyiv, Ukraine | LinkedIn: linkedin.com/in/… | GitHub: github.com/…",
+    uk: "напр. Київ, Україна | LinkedIn: linkedin.com/in/… | GitHub: github.com/…",
+    ru: "напр. Киев, Украина | LinkedIn: linkedin.com/in/… | GitHub: github.com/…",
+  },
+  "interview.hint_contacts": {
+    en: "Location and links are optional — fill in only what you want employers to see.",
+    uk: "Місцезнаходження та посилання необов'язкові — вкажіть лише те, що хочете показати роботодавцям.",
+    ru: "Местоположение и ссылки необязательны — укажите только то, что хотите показать работодателям.",
+  },
+  "interview.q_recent": {
+    en: "Tell me about your most recent job — company name, what you did there, and roughly when?",
+    uk: "Розкажіть про останнє місце роботи — компанія, чим займались, приблизні дати?",
+    ru: "Расскажите о последнем месте работы — компания, чем занимались, примерные даты?",
+  },
+  "interview.ph_recent": {
+    en: "e.g. At Acme Corp (2021–2024) I built React dashboards, led a team of 4...",
+    uk: "напр. В Acme Corp (2021–2024) розробляв React дашборди, керував командою з 4 осіб...",
+    ru: "напр. В Acme Corp (2021–2024) разрабатывал React дашборды, руководил командой из 4 человек...",
+  },
+  "interview.hint_recent": {
+    en: "Company · role · dates · key achievements",
+    uk: "Компанія · посада · дати · досягнення",
+    ru: "Компания · должность · даты · достижения",
+  },
+  "interview.q_more_exp": {
+    en: "Any other jobs worth mentioning? (skip if not)",
+    uk: "Є інші місця роботи, які варто згадати? (пропустіть, якщо ні)",
+    ru: "Есть другие места работы, которые стоит упомянуть? (пропустите, если нет)",
+  },
+  "interview.ph_more_exp": {
+    en: "Previous jobs, freelance projects, internships...",
+    uk: "Попередня робота, фріланс, стажування...",
+    ru: "Предыдущая работа, фриланс, стажировки...",
+  },
+  "interview.hint_more_exp": {
+    en: "Or press Enter / → to skip",
+    uk: "Або натисніть Enter / → щоб пропустити",
+    ru: "Или нажмите Enter / → чтобы пропустить",
+  },
+  "interview.q_education": {
+    en: "Tell me about your education and any certificates or courses you have completed.",
+    uk: "Розкажіть про вашу освіту та сертифікати або курси, які ви завершили.",
+    ru: "Расскажите о вашем образовании, сертификатах и курсах, которые вы прошли.",
+  },
+  "interview.ph_education": {
+    en: "e.g. BSc Computer Science, ITMO, 2016–2020. AWS Solutions Architect cert (2023). Udemy React course.",
+    uk: "напр. Бакалавр Комп'ютерні науки, КПІ, 2016–2020. AWS Solutions Architect (2023). Курс React на Udemy.",
+    ru: "напр. Бакалавр Компьютерные науки, ИТМО, 2016–2020. AWS Solutions Architect (2023). Курс React на Udemy.",
+  },
+  "interview.hint_education": {
+    en: "University, college, bootcamp, online courses, certificates — mention anything relevant.",
+    uk: "Університет, коледж, курси, сертифікати — вкажіть усе, що є.",
+    ru: "Университет, колледж, курсы, сертификаты — укажите всё, что есть.",
+  },
+  "interview.q_skills": {
+    en: "What are your main skills? List technologies, tools, languages you know.",
+    uk: "Які ваші основні навички? Перерахуйте технології, інструменти, мови.",
+    ru: "Какие ваши основные навыки? Перечислите технологии, инструменты, языки.",
+  },
+  "interview.ph_skills": {
+    en: "e.g. TypeScript, React, Node.js, PostgreSQL, English (fluent), Russian (native)",
+    uk: "напр. TypeScript, React, Node.js, PostgreSQL, Англійська (fluent), Українська (native)",
+    ru: "напр. TypeScript, React, Node.js, PostgreSQL, Английский (fluent), Русский (native)",
+  },
+  "interview.hint_skills": {
+    en: "Include programming languages, frameworks, soft skills, spoken languages",
+    uk: "Додайте мови програмування, фреймворки, м'які навички, розмовні мови",
+    ru: "Добавьте языки программирования, фреймворки, мягкие навыки, разговорные языки",
+  },
+  "interview.processing": {
+    en: "Analyzing your answers and building your profile...",
+    uk: "Аналізую ваші відповіді і будую профіль...",
+    ru: "Анализирую ваши ответы и строю профиль...",
+  },
+  "interview.done": {
+    en: "Done! Your profile has been filled. Click below to see it.",
+    uk: "Готово! Ваш профіль заповнено. Натисніть нижче, щоб переглянути.",
+    ru: "Готово! Ваш профиль заполнен. Нажмите ниже, чтобы посмотреть.",
+  },
+  "interview.view_profile": {
+    en: "View my profile",
+    uk: "Переглянути профіль",
+    ru: "Посмотреть профиль",
+  },
+  "interview.skip_to_manual": {
+    en: "Fill manually →",
+    uk: "Заповнити вручну →",
+    ru: "Заполнить вручную →",
+  },
+  "interview.skip_answer": {
+    en: "(skipped)",
+    uk: "(пропущено)",
+    ru: "(пропущено)",
+  },
+  "interview.optional_hint": {
+    en: "Optional",
+    uk: "Необов'язково",
+    ru: "Необязательно",
+  },
+  "interview.press_enter": {
+    en: "Press Enter to continue",
+    uk: "Натисніть Enter для продовження",
+    ru: "Нажмите Enter для продолжения",
+  },
+  "interview.error_generic": {
+    en: "Something went wrong. Please try again.",
+    uk: "Щось пішло не так. Спробуйте ще раз.",
+    ru: "Что-то пошло не так. Попробуйте ещё раз.",
+  },
+  "interview.try_again": {
+    en: "Try again",
+    uk: "Спробувати ще",
+    ru: "Попробовать снова",
+  },
+
+  // --- Job Match ---
+  "job_match.title": {
+    en: "Tailor for Job",
+    uk: "Підібрати під вакансію",
+    ru: "Подогнать под вакансию",
+  },
+  "job_match.description": {
+    en: "Paste the job description below and AI will compare it with your resume — showing what matches and what to improve.",
+    uk: "Вставте опис вакансії нижче, і AI порівняє його з вашим резюме — покаже, що збігається і що покращити.",
+    ru: "Вставьте описание вакансии ниже, и AI сравнит его с вашим резюме — покажет, что совпадает и что улучшить.",
+  },
+  "job_match.paste_label": {
+    en: "Job Description",
+    uk: "Опис вакансії",
+    ru: "Описание вакансии",
+  },
+  "job_match.paste_placeholder": {
+    en: "Paste the full job posting here — requirements, responsibilities, tech stack...",
+    uk: "Вставте повний опис вакансії — вимоги, обов\'язки, технологічний стек...",
+    ru: "Вставьте полное описание вакансии — требования, обязанности, технологии...",
+  },
+  "job_match.analyze_btn": {
+    en: "Analyze Match",
+    uk: "Аналізувати",
+    ru: "Анализировать",
+  },
+  "job_match.analyzing": {
+    en: "Analyzing...",
+    uk: "Аналізую...",
+    ru: "Анализирую...",
+  },
+  "job_match.present_keywords": {
+    en: "Keywords found",
+    uk: "Ключові слова знайдено",
+    ru: "Ключевые слова найдены",
+  },
+  "job_match.missing_keywords": {
+    en: "Missing keywords",
+    uk: "Відсутні ключові слова",
+    ru: "Отсутствующие ключевые слова",
+  },
+  "job_match.suggestions": {
+    en: "Suggestions",
+    uk: "Рекомендації",
+    ru: "Рекомендации",
+  },
+  "job_match.section_summary": {
+    en: "Summary",
+    uk: "Резюме",
+    ru: "Резюме",
+  },
+  "job_match.section_experience": {
+    en: "Experience",
+    uk: "Досвід",
+    ru: "Опыт",
+  },
+  "job_match.section_skills": {
+    en: "Skills",
+    uk: "Навички",
+    ru: "Навыки",
+  },
+  "job_match.section_education": {
+    en: "Education",
+    uk: "Освіта",
+    ru: "Образование",
+  },
+  "job_match.analyze_another": {
+    en: "Analyze another job",
+    uk: "Аналізувати іншу вакансію",
+    ru: "Анализировать другую вакансию",
+  },
+  "job_match.btn_label": {
+    en: "Match Job",
+    uk: "Вакансія",
+    ru: "Вакансия",
+  },
+  "job_match.error_generic": {
+    en: "Analysis failed. Please try again.",
+    uk: "Аналіз не вдався. Спробуйте ще раз.",
+    ru: "Анализ не удался. Попробуйте ещё раз.",
+  },
+  // --- Certificates ---
+  "cert.title": {
+    en: "Certificates & Courses",
+    uk: "Сертифікати та курси",
+    ru: "Сертификаты и курсы",
+  },
+  "cert.add": {
+    en: "Add certificate",
+    uk: "Додати сертифікат",
+    ru: "Добавить сертификат",
+  },
+  "cert.empty": {
+    en: "No certificates added yet. Add any licenses, certifications, or courses.",
+    uk: "Сертифікатів ще немає. Додайте ліцензії, сертифікати або курси.",
+    ru: "Сертификатов пока нет. Добавьте лицензии, сертификаты или курсы.",
+  },
+  "cert.name_placeholder": {
+    en: "Certificate name (e.g. AWS Solutions Architect)",
+    uk: "Назва сертифікату (напр. AWS Solutions Architect)",
+    ru: "Название сертификата (напр. AWS Solutions Architect)",
+  },
+  "cert.issuer_placeholder": {
+    en: "Issuer (e.g. Amazon, Google, Coursera)",
+    uk: "Організація (напр. Amazon, Google, Coursera)",
+    ru: "Организация (напр. Amazon, Google, Coursera)",
+  },
+  "cert.year_placeholder": {
+    en: "Year (e.g. 2023)",
+    uk: "Рік (напр. 2023)",
+    ru: "Год (напр. 2023)",
+  },
+  // --- Persistent AI Assistant Widget ---
+  "assistant.title": {
+    en: "AI Assistant",
+    uk: "AI Асистент",
+    ru: "AI Ассистент",
+  },
+  "assistant.btn_label": {
+    en: "AI Assistant",
+    uk: "AI Асистент",
+    ru: "AI Ассистент",
+  },
+  "assistant.open_label": {
+    en: "Open AI Assistant",
+    uk: "Відкрити AI Асистент",
+    ru: "Открыть AI Ассистент",
+  },
+  "assistant.greeting": {
+    en: "Hi! Tell me what to add to your profile — a new job, education, skills, or certification.",
+    uk: "Привіт! Скажіть що додати до профілю — нову компанію, освіту, навички або сертифікат.",
+    ru: "Привет! Скажите что добавить в профиль — новую компанию, образование, навыки или сертификат.",
+  },
+  "assistant.input_placeholder": {
+    en: "e.g. I joined Google as SWE in Jan 2025...",
+    uk: "напр. З січня 2025 я в Google як Software Engineer...",
+    ru: "напр. С января 2025 я в Google как Software Engineer...",
+  },
+  "assistant.suggestion_job": {
+    en: "Add a new job",
+    uk: "Додати компанію",
+    ru: "Добавить компанию",
+  },
+  "assistant.suggestion_edu": {
+    en: "Add education",
+    uk: "Додати освіту",
+    ru: "Добавить образование",
+  },
+  "assistant.suggestion_skill": {
+    en: "Add skills",
+    uk: "Додати навички",
+    ru: "Добавить навыки",
+  },
+  "assistant.added_prefix": {
+    en: "Added:",
+    uk: "Додано:",
+    ru: "Добавлено:",
+  },
+  "assistant.added_jobs": {
+    en: "{n} job(s)",
+    uk: "{n} роботу(и)",
+    ru: "{n} место(а) работы",
+  },
+  "assistant.added_edu": {
+    en: "{n} education entry",
+    uk: "{n} освіту",
+    ru: "{n} образование",
+  },
+  "assistant.added_skills": {
+    en: "{n} skill(s)",
+    uk: "{n} навичку(и)",
+    ru: "{n} навык(и)",
+  },
+  "assistant.updated": {
+    en: "Profile updated",
+    uk: "Профіль оновлено",
+    ru: "Профиль обновлён",
+  },
+  "assistant.nothing_found": {
+    en: "I couldn\'t find anything to add from that text.",
+    uk: "Не вдалося знайти нічого для додавання з цього тексту.",
+    ru: "Не удалось найти что-либо для добавления в этом тексте.",
+  },
+  "assistant.try_more_detail": {
+    en: "Try adding more details — company name, dates, role, or skills.",
+    uk: "Спробуйте додати більше деталей — назва компанії, дати, посада або навички.",
+    ru: "Попробуйте добавить больше деталей — название компании, даты, должность или навыки.",
+  },
+  "assistant.what_else": {
+    en: "Anything else to add?",
+    uk: "Що ще додати?",
+    ru: "Что-то ещё добавить?",
+  },
+  "assistant.error_generic": {
+    en: "Something went wrong. Please try again.",
+    uk: "Щось пішло не так. Спробуйте ще раз.",
+    ru: "Что-то пошло не так. Попробуйте снова.",
+  },
+
+  // --- Assistant: resume generation flow ---
+  "assistant.resume_ask": {
+    en: "Sure! Is this a general resume, or do you want to tailor it for a specific job?\n\n1. General resume\n2. For a specific job (I\'ll need the job description)",
+    uk: "Звичайно! Це загальне резюме, чи ви хочете підготувати його під конкретну вакансію?\n\n1. Загальне резюме\n2. Під конкретну вакансію (потрібен текст вакансії)",
+    ru: "Конечно! Это общее резюме или вы хотите подготовить его под конкретную вакансию?\n\n1. Общее резюме\n2. Под конкретную вакансию (нужен текст вакансии)",
+  },
+  "assistant.resume_role_ask": {
+    en: "What\'s the target role? (e.g. Senior Frontend Developer, Product Manager) — or just press Enter to generate a general resume.",
+    uk: "Яка цільова посада? (напр. Senior Frontend Developer, Product Manager) — або просто натисніть Enter для загального резюме.",
+    ru: "Какая целевая должность? (напр. Senior Frontend Developer, Product Manager) — или просто нажмите Enter для общего резюме.",
+  },
+  "assistant.resume_job_ask": {
+    en: "Paste the full job description below — I\'ll create a resume tailored to it.",
+    uk: "Вставте повний текст вакансії нижче — я створю резюме під неї.",
+    ru: "Вставьте полный текст вакансии ниже — я создам резюме под неё.",
+  },
+  "assistant.resume_creating": {
+    en: "Creating your resume for \"{role}\"… this takes a few seconds.",
+    uk: "Створюю резюме для \"{role}\"… це займе кілька секунд.",
+    ru: "Создаю резюме для \"{role}\"… это займёт несколько секунд.",
+  },
+  "assistant.resume_creating_for_job": {
+    en: "Analyzing the job description and creating a tailored resume… this takes a few seconds.",
+    uk: "Аналізую вакансію і створюю резюме під неї… це займе кілька секунд.",
+    ru: "Анализирую вакансию и создаю резюме под неё… это займёт несколько секунд.",
+  },
+  "assistant.resume_created": {
+    en: "Resume \"{title}\" created!",
+    uk: "Резюме \"{title}\" створено!",
+    ru: "Резюме \"{title}\" создано!",
+  },
+  "assistant.resume_open": {
+    en: "Open and edit resume",
+    uk: "Відкрити та редагувати резюме",
+    ru: "Открыть и редактировать резюме",
+  },
+  "assistant.resume_limit": {
+    en: "You already have 2 resumes (the maximum). Please delete one in My Resumes to create a new one.",
+    uk: "У вас вже є 2 резюме (максимум). Видаліть одне в розділі Мої резюме, щоб створити нове.",
+    ru: "У вас уже есть 2 резюме (максимум). Удалите одно в разделе Мои резюме, чтобы создать новое.",
+  },
+  "assistant.resume_general_role": {
+    en: "General",
+    uk: "Загальне",
+    ru: "Общее",
+  },
+  "assistant.resume_job_too_short": {
+    en: "The job description seems too short. Please paste the full text of the job posting.",
+    uk: "Текст вакансії здається замалим. Будь ласка, вставте повний текст вакансії.",
+    ru: "Текст вакансии слишком короткий. Пожалуйста, вставьте полный текст вакансии.",
+  },
+  "assistant.jd_detected": {
+    en: "Looks like a job description! Creating a tailored resume for it…",
+    uk: "Схоже на вакансію! Створюю резюме під неї…",
+    ru: "Похоже на вакансию! Создаю резюме под неё…",
+  },
+  "assistant.opt_general": {
+    en: "1. General resume",
+    uk: "1. Загальне резюме",
+    ru: "1. Общее резюме",
+  },
+  "assistant.opt_for_job": {
+    en: "2. For a specific job",
+    uk: "2. Під вакансію",
+    ru: "2. Под вакансию",
+  },
+  "assistant.suggestion_resume": {
+    en: "✨ Create resume",
+    uk: "✨ Створити резюме",
+    ru: "✨ Создать резюме",
+  },
+  "assistant.suggestion_resume_value": {
+    en: "Create a new resume",
+    uk: "Створи нове резюме",
+    ru: "Создай новое резюме",
+  },
+  "assistant.input_jd_placeholder": {
+    en: "Paste the full job description here (requirements, responsibilities, tech stack)…",
+    uk: "Вставте повний текст вакансії тут (вимоги, обов\'язки, технології)…",
+    ru: "Вставьте полный текст вакансии здесь (требования, обязанности, технологии)…",
+  },
+  "assistant.input_role_placeholder": {
+    en: "Target role (e.g. Senior React Developer) — or leave blank for general",
+    uk: "Цільова посада (напр. Senior React Developer) — або залиште порожнім",
+    ru: "Целевая должность (напр. Senior React Developer) — или оставьте пустым",
+  },
+
 };
 
 /** Server-side helper */

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ExperienceEditor } from "@/components/profile/experience-editor";
 import { EducationEditor } from "@/components/profile/education-editor";
+import { CertificatesEditor } from "@/components/profile/certificates-editor";
 import { SkillsForm } from "@/components/resume/skills-form";
 import { PersonalInfoForm } from "@/components/resume/personal-info-form";
 import {
@@ -23,9 +24,12 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { ResumeSuggestions } from "@/components/profile/resume-suggestions";
+import { AIProfileInterview } from "@/components/profile/ai-profile-interview";
+import { ProfileAssistantWidget } from "@/components/profile/profile-assistant-widget";
 import { extractTextFromPDF } from "@/components/resume/linkedin-import-button";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { refreshAiQuota } from "@/components/ui/ai-quota-display";
+import { Bot, FileUp, PenLine } from "lucide-react";
 
 export default function MyExperiencePage() {
   const { t } = useTranslation();
@@ -44,6 +48,7 @@ export default function MyExperiencePage() {
   } = useProfileStore();
   const [mounted, setMounted] = useState(false);
   const [importMode, setImportMode] = useState<"pdf" | "paste" | null>(null);
+  const [showInterview, setShowInterview] = useState(false);
   const [profileText, setProfileText] = useState("");
   const [isImportLoading, setIsImportLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -212,13 +217,24 @@ export default function MyExperiencePage() {
         throw new Error(data.error || t("profile.import_error"));
       }
 
-      setMessage({ type: "success", text: t("profile.import_success") });
-      loadFromDb(); // Refresh profile data into store
+      await loadFromDb();
       refreshAiQuota();
       setImportMode(null);
       setProfileText("");
       setFileName(null);
-      setTimeout(() => setMessage(null), 3000);
+
+      if (data.nothingFound) {
+        setMessage({ type: "warning", text: t("profile.import_nothing_found") });
+      } else {
+        const { workCount = 0, educationCount = 0, skillsCount = 0 } = data.extracted || {};
+        const summary = [
+          workCount > 0 ? t("profile.import_found_jobs").replace("{n}", workCount) : "",
+          educationCount > 0 ? t("profile.import_found_edu").replace("{n}", educationCount) : "",
+          skillsCount > 0 ? t("profile.import_found_skills").replace("{n}", skillsCount) : "",
+        ].filter(Boolean).join(", ");
+        setMessage({ type: "success", text: summary || t("profile.import_success") });
+      }
+      setTimeout(() => setMessage(null), 5000);
     } catch (error) {
       setMessage({
         type: "error",
@@ -240,6 +256,7 @@ export default function MyExperiencePage() {
   if (!session) return <LoadingScreen message={t("common.auth_required")} />;
 
   return (
+    <>
     <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
       <div className="max-w-full mx-auto space-y-6">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -468,6 +485,21 @@ export default function MyExperiencePage() {
               {t("profile.loading_profile")}
             </p>
           </div>
+        ) : showInterview ? (
+          <AIProfileInterview
+            onComplete={async () => {
+              setShowInterview(false);
+              await loadFromDb();
+            }}
+            onSkip={() => setShowInterview(false)}
+          />
+        ) : isProfileEmpty(profile) && !importMode ? (
+          <ProfileEmptyState
+            t={t}
+            onStartInterview={() => setShowInterview(true)}
+            onUploadPDF={() => setImportMode("pdf")}
+            onManual={() => setImportMode(null)}
+          />
         ) : (
           <Tabs defaultValue="experience" className="w-full">
             <div className="overflow-x-auto pb-2">
@@ -507,6 +539,10 @@ export default function MyExperiencePage() {
                 data={(profile.education || []) as any}
                 onChange={(val) => updateProfile("education", val)}
               />
+              <CertificatesEditor
+                data={(profile.certificates || []) as any}
+                onChange={(val) => updateProfile("certificates", val)}
+              />
             </TabsContent>
 
             <TabsContent value="skills" className="mt-6">
@@ -524,5 +560,105 @@ export default function MyExperiencePage() {
         )}
       </div>
     </AppShell>
+
+      {/* Persistent AI assistant — always visible when profile has content */}
+      {!showInterview && !isProfileEmpty(profile) && (
+        <ProfileAssistantWidget
+          onProfileUpdated={async () => { await loadFromDb(); }}
+        />
+      )}
+    </>
+  );
+}
+
+function isProfileEmpty(profile: { workExperience?: unknown[]; personalInfo?: Record<string, unknown>; education?: unknown[]; skills?: unknown[] }): boolean {
+  const hasWork = (profile.workExperience?.length ?? 0) > 0;
+  const hasEdu = (profile.education?.length ?? 0) > 0;
+  const hasSkills = (profile.skills?.length ?? 0) > 0;
+  const hasName = !!(profile.personalInfo?.firstName || profile.personalInfo?.lastName);
+  return !hasWork && !hasEdu && !hasSkills && !hasName;
+}
+
+function ProfileEmptyState({
+  t,
+  onStartInterview,
+  onUploadPDF,
+  onManual,
+}: {
+  t: (k: string) => string;
+  onStartInterview: () => void;
+  onUploadPDF: () => void;
+  onManual: () => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 p-8 sm:p-12 text-center space-y-8">
+      <div className="space-y-2">
+        <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          {t("onboarding.title")}
+        </p>
+        <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-sm sm:text-base">
+          {t("onboarding.subtitle")}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+        {/* AI Interview — primary */}
+        <button
+          onClick={onStartInterview}
+          className="group relative flex flex-col items-center gap-3 rounded-2xl border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/20 p-6 text-center hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all shadow-sm hover:shadow-md"
+        >
+          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+            {t("onboarding.recommended")}
+          </span>
+          <div className="w-12 h-12 rounded-xl bg-amber-500 flex items-center justify-center shadow">
+            <Bot className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+              {t("onboarding.ai_interview")}
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              {t("onboarding.ai_interview_desc")}
+            </p>
+          </div>
+        </button>
+
+        {/* Upload PDF */}
+        <button
+          onClick={onUploadPDF}
+          className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 text-center hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-sm transition-all"
+        >
+          <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+            <FileUp className="h-6 w-6 text-slate-600 dark:text-slate-300" />
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+              {t("onboarding.upload_pdf")}
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              {t("onboarding.upload_pdf_desc")}
+            </p>
+          </div>
+        </button>
+
+        {/* Manual */}
+        <button
+          onClick={onManual}
+          className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 text-center hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-sm transition-all"
+        >
+          <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+            <PenLine className="h-6 w-6 text-slate-600 dark:text-slate-300" />
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+              {t("onboarding.manual")}
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              {t("onboarding.manual_desc")}
+            </p>
+          </div>
+        </button>
+      </div>
+    </div>
   );
 }
