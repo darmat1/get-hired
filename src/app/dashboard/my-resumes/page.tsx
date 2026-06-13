@@ -13,10 +13,12 @@ import {
   AlertTriangle,
   Sparkles,
   Loader2,
+  BrainCog,
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { Modal } from "@/components/ui/modal";
 import { ResumeSuggestions } from "@/components/profile/resume-suggestions";
+import { JobMatchModal } from "@/components/resume/job-match-modal";
 import { useResumeListStore } from "@/stores/resume-list-store";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -40,6 +42,7 @@ export default function Dashboard() {
   }>({ isOpen: false, resumeId: null });
   const [isDeleting, setIsDeleting] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [jobMatchModal, setJobMatchModal] = useState<{ resumeId: string; resumeTitle: string } | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -207,6 +210,16 @@ export default function Dashboard() {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() => setJobMatchModal({ resumeId: resume.id, resumeTitle: resume.title })}
+                      className="text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20 border-amber-200 dark:border-amber-800"
+                    >
+                      <BrainCog className="h-3 w-3 mr-1" />
+                      {t("job_match.btn_label")}
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleDeleteClick(resume.id)}
                       className="text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
                     >
@@ -286,6 +299,14 @@ export default function Dashboard() {
 
       {showSuggestions && (
         <ResumeSuggestions onClose={() => setShowSuggestions(false)} />
+      )}
+
+      {jobMatchModal && (
+        <JobMatchModal
+          resumeId={jobMatchModal.resumeId}
+          resumeTitle={jobMatchModal.resumeTitle}
+          onClose={() => setJobMatchModal(null)}
+        />
       )}
     </>
   );

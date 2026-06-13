@@ -54,3 +54,5 @@ next-env.d.ts
 /.cursor
 
 posts.json
+# PDF.js worker (auto-copied during postinstall)
+public/pdf.worker.min.mjs
