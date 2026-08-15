@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { FREE_QUOTA_LIMIT, getFreeQuotaCount } from "@/lib/ai/server-ai";
 
 export const dynamic = "force-dynamic";
 
@@ -27,33 +28,24 @@ export async function GET() {
     }
 
     const hasOwnKey = user.aiKeys.length > 0;
-    
-    // Check if we need to reset the daily quota
-    let count = user.freeAiGenerationsCount;
-    if (user.lastFreeAiUsage) {
-      const lastUsageDate = new Date(user.lastFreeAiUsage);
-      const today = new Date();
-      
-      // Reset if the last usage was not today (UTC)
-      if (
-        lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
-        lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
-        lastUsageDate.getUTCDate() !== today.getUTCDate()
-      ) {
-        count = 0;
-        
-        // Background reset update
-        await prisma.user.update({
-          where: { id: userId },
-          data: { freeAiGenerationsCount: 0 }
-        });
-      }
+
+    const count = getFreeQuotaCount(
+      user.freeAiGenerationsCount,
+      user.lastFreeAiUsage,
+    );
+
+    if (count === 0 && user.freeAiGenerationsCount !== 0) {
+      // Background reset update
+      await prisma.user.update({
+        where: { id: userId },
+        data: { freeAiGenerationsCount: 0 },
+      });
     }
 
     return NextResponse.json({
       hasOwnKey,
       count,
-      limit: 10
+      limit: FREE_QUOTA_LIMIT,
     });
   } catch (error) {
     console.error("[API] Error fetching AI quota:", error);

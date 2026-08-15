@@ -1625,11 +1625,6 @@ export const translations: Translations = {
     uk: "Найпотужніші моделі від Google з величезними вікнами контексту.",
     ru: "Самые мощные модели от Google с огромными окнами контекста.",
   },
-  "ai_service.grok.description": {
-    en: "xAI's latest models with a focus on real-time info and reasoning.",
-    uk: "Останні моделі від xAI з фокусом на актуальну інформацію та логіку.",
-    ru: "Последние модели от xAI с фокусом на актуальную информацию и логику.",
-  },
   "ai_service.openrouter.description": {
     en: "Access multiple models (GPT-4, Claude, Llama) through a single API.",
     uk: "Доступ до безлічі моделей (GPT-4, Claude, Llama) через єдиний API.",
@@ -1729,16 +1724,6 @@ export const translations: Translations = {
     ru: "3. Быстрый и большое окно контекста",
   },
 
-  "ai_setup.grok.step1": {
-    en: "1. Go to https://console.x.ai/",
-    uk: "1. Перейдіть на https://console.x.ai/",
-    ru: "1. Перейдите на https://console.x.ai/",
-  },
-  "ai_setup.grok.step2": {
-    en: "2. Create API key",
-    uk: "2. Створіть API ключ",
-    ru: "2. Создайте API ключ",
-  },
 
   "ai_setup.openrouter.step1": {
     en: "1. Go to https://openrouter.ai/",
@@ -2881,14 +2866,14 @@ export const translations: Translations = {
     ru: "мин",
   },
   "ai_quota.daily_label": {
-    en: "Daily Free AI",
-    uk: "Щоденний AI",
-    ru: "Ежедневный AI",
+    en: "Weekly Free AI",
+    uk: "Щотижневий AI",
+    ru: "Еженедельный AI",
   },
   "ai_quota.reset_hint": {
-    en: "Daily quota resets at 00:00 UTC",
-    uk: "Квота оновлюється щодня о 00:00 UTC",
-    ru: "Квота обнуляется ежедневно в 00:00 UTC",
+    en: "Free quota resets 7 days after your first use",
+    uk: "Квота оновлюється через 7 днів після першого використання",
+    ru: "Квота обнуляется через 7 дней после первого использования",
   },
   "chrome_extension.install": {
     en: "Get Chrome Extension",

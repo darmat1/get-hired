@@ -17,9 +17,7 @@ export class ClaudeProvider implements AIProvider {
     if (!apiKey) throw new Error("[AI] Anthropic API key is missing");
 
     const model =
-      request.model ||
-      process.env.ANTHROPIC_MODEL ||
-      "claude-3-5-sonnet-20240620";
+      request.model || process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",

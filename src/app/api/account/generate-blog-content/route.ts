@@ -12,7 +12,7 @@ import { executeStructuredAI } from "@/lib/ai/structured-output";
 const TRINITY_MODEL = "arcee-ai/trinity-large-preview:free";
 const STEPFUN_MODEL = "stepfun/step-3.5-flash:free";
 const GEMINI_MODEL = "gemini-2.5-flash";
-const GEMINI_LITE_MODEL = "gemini-3.1-flash-lite-preview";
+const GEMINI_LITE_MODEL = "gemini-3.5-flash-lite";
 
 const OPENROUTER_MODELS: Record<string, string> = {
   "openrouter-trinity": TRINITY_MODEL,
@@ -78,7 +78,7 @@ async function generateWithGroq(
   try {
     const startTime = Date.now();
     const response = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "openai/gpt-oss-120b",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },

@@ -153,7 +153,7 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      submitAnswer();
+      void submitAnswer();
     }
   };
 

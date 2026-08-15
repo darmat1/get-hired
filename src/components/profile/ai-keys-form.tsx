@@ -185,12 +185,11 @@ export function AIKeysForm() {
     setMessage(null);
     try {
       const providerDefaults: Record<string, string | null> = {
-        gemini: "gemini-3.1-flash-lite-preview",
+        gemini: "gemini-3.5-flash-lite",
         groq: "openai/gpt-oss-120b",
-        openai: "gpt-4o-mini",
-        claude: "claude-3-5-sonnet-latest",
+        openai: "gpt-5.6-luna",
+        claude: "claude-sonnet-5",
         openrouter: null,
-        grok: "grok-beta",
       };
 
       const res = await fetch("/api/account/ai-keys", {
@@ -420,7 +419,7 @@ export function AIKeysForm() {
                               className="flex-1 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:border-slate-500 text-xs py-1 outline-none text-slate-900 dark:text-white"
                               value={
                                 userData.preferredAIModel ||
-                                "gemini-3.1-flash-lite-preview"
+                                "gemini-3.5-flash-lite"
                               }
                               onChange={(e) => {
                                 const val = e.target.value;
@@ -434,7 +433,7 @@ export function AIKeysForm() {
                                 });
                               }}
                             >
-                              <option value="gemini-3.1-flash-lite-preview">
+                              <option value="gemini-3.5-flash-lite">
                                 Gemini 3.1 Flash Lite Preview
                               </option>
                               <option value="gemini-2.5-flash">
@@ -475,7 +474,7 @@ export function AIKeysForm() {
                           ) : (
                             <input
                               type="text"
-                              placeholder="e.g. gpt-4o, claude-3-5-sonnet-latest"
+                              placeholder="e.g. gpt-5.6-luna, claude-sonnet-5"
                               className="flex-1 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:border-slate-500 text-xs py-1 outline-none text-slate-900 dark:text-white"
                               value={userData.preferredAIModel || ""}
                               onChange={(e) =>

@@ -18,10 +18,10 @@ import {
   mergeSkills,
 } from "@/lib/profile-parse-utils";
 
-// Groq free-tier TPM limit is 12,000 tokens (input + output combined).
+// Groq free-tier TPM limit for openai/gpt-oss-120b is 8,000 tokens (input + output combined).
 // System prompt is ~400 tokens, user prompt wrapper ~20 tokens.
 // Reserve 2048 for response + 500 safety margin.
-const GROQ_TPM_LIMIT = 12000;
+const GROQ_TPM_LIMIT = 8000;
 const RESPONSE_TOKEN_RESERVE = 2048;
 const SAFETY_MARGIN = 500;
 
