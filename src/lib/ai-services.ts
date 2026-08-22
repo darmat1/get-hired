@@ -30,9 +30,6 @@ export function getAvailableAIServices(): AIService[] {
       case "gemini":
         envKey = process.env.GOOGLE_API_KEY || "";
         break;
-      case "grok":
-        envKey = process.env.XAI_API_KEY || "";
-        break;
     }
 
     return {
@@ -100,7 +97,7 @@ export async function testAIService(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "claude-3-haiku-20240307",
+          model: "claude-haiku-4-5-20251001",
           max_tokens: 1,
           messages: [{ role: "user", content: "Hi" }],
         }),
@@ -112,7 +109,7 @@ export async function testAIService(
         service.apiKey?.slice(0, 10) + "...",
       );
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${service.apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${service.apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -121,11 +118,6 @@ export async function testAIService(
       );
       console.log("[GEMINI TEST] Response status:", res.status);
       console.log("[GEMINI TEST] Response body:", await res.text());
-      return res.ok;
-    } else if (service.id === "grok") {
-      const res = await fetch("https://api.x.ai/v1/models", {
-        headers: { Authorization: `Bearer ${service.apiKey}` },
-      });
       return res.ok;
     }
   } catch (error) {
@@ -172,10 +164,6 @@ export const AISetupInstructions: Record<string, any> = {
       "ai_setup.gemini.step2",
       "ai_setup.gemini.step3",
     ],
-  },
-  grok: {
-    name: "Grok",
-    stepKeys: ["ai_setup.grok.step1", "ai_setup.grok.step2"],
   },
   openrouter: {
     name: "OpenRouter",

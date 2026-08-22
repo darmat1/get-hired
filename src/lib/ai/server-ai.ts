@@ -3,6 +3,18 @@ import { ALL_PROVIDERS } from "./registry";
 import { AICompletionRequest, AICompletionResponse } from "./types";
 import { getAvailableProviders } from "./registry";
 
+export const FREE_QUOTA_LIMIT = 10;
+const FREE_QUOTA_WINDOW_MS = 7 * 24 * 60 * 60 * 1000; // 1 week
+
+export function getFreeQuotaCount(
+  freeAiGenerationsCount: number,
+  lastFreeAiUsage: Date | null,
+): number {
+  if (!lastFreeAiUsage) return freeAiGenerationsCount;
+  const elapsed = Date.now() - new Date(lastFreeAiUsage).getTime();
+  return elapsed >= FREE_QUOTA_WINDOW_MS ? 0 : freeAiGenerationsCount;
+}
+
 function isModelCompatibleWithProvider(
   model: string | undefined,
   providerId: string,
@@ -27,8 +39,6 @@ function isModelCompatibleWithProvider(
       return normalized.startsWith("claude-");
     case "openrouter":
       return true;
-    case "grok":
-      return normalized.startsWith("grok-") || normalized === "grok-beta";
     default:
       return true;
   }
@@ -54,15 +64,13 @@ function mapModelForProvider(
       case "groq":
         return "llama-3.1-8b-instant";
       case "gemini":
-        return "gemini-3.1-flash-lite-preview";
+        return "gemini-3.5-flash-lite";
       case "openrouter":
         return "meta-llama/llama-3.1-8b-instruct";
       case "claude":
-        return "claude-3-haiku-20240307";
+        return "claude-haiku-4-5-20251001";
       case "openai":
-        return "gpt-4o-mini";
-      case "grok":
-        return "grok-beta";
+        return "gpt-5.6-luna";
       default:
         return requestedModel;
     }
@@ -72,17 +80,15 @@ function mapModelForProvider(
   if (isLargeSmartModel) {
     switch (providerId) {
       case "groq":
-        return "llama-3.3-70b-versatile";
+        return "openai/gpt-oss-120b";
       case "gemini":
         return "gemini-2.5-flash";
       case "openrouter":
         return "meta-llama/llama-3.3-70b-instruct";
       case "claude":
-        return "claude-3-5-sonnet-latest";
+        return "claude-sonnet-5";
       case "openai":
-        return "gpt-4o";
-      case "grok":
-        return "grok-beta";
+        return "gpt-5.6-terra";
       default:
         return requestedModel;
     }
@@ -211,23 +217,14 @@ export async function aiComplete(
     });
 
     if (userForQuota) {
-      let count = userForQuota.freeAiGenerationsCount;
-      const today = new Date();
+      const count = getFreeQuotaCount(
+        userForQuota.freeAiGenerationsCount,
+        userForQuota.lastFreeAiUsage,
+      );
 
-      if (userForQuota.lastFreeAiUsage) {
-        const lastUsageDate = new Date(userForQuota.lastFreeAiUsage);
-        if (
-          lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
-          lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
-          lastUsageDate.getUTCDate() !== today.getUTCDate()
-        ) {
-          count = 0;
-        }
-      }
-
-      if (count >= 10) {
+      if (count >= FREE_QUOTA_LIMIT) {
         throw new Error(
-          "You have exhausted your 10 free AI generations for today. Please connect your own API key in settings.",
+          `You have exhausted your ${FREE_QUOTA_LIMIT} free AI generations for this week. Please connect your own API key in settings.`,
         );
       }
     }
@@ -250,19 +247,10 @@ export async function aiComplete(
 
       // 2.3 Increment Quota on Success
       if (userId && userForQuota) {
-        let count = userForQuota.freeAiGenerationsCount;
-        const today = new Date();
-
-        if (userForQuota.lastFreeAiUsage) {
-          const lastUsageDate = new Date(userForQuota.lastFreeAiUsage);
-          if (
-            lastUsageDate.getUTCFullYear() !== today.getUTCFullYear() ||
-            lastUsageDate.getUTCMonth() !== today.getUTCMonth() ||
-            lastUsageDate.getUTCDate() !== today.getUTCDate()
-          ) {
-            count = 0;
-          }
-        }
+        const count = getFreeQuotaCount(
+          userForQuota.freeAiGenerationsCount,
+          userForQuota.lastFreeAiUsage,
+        );
 
         await prisma.user.update({
           where: { id: userId },
@@ -286,7 +274,17 @@ export async function aiComplete(
     }
   }
 
-  throw new Error(
+  console.error(
     `[AI] All providers failed:\n${errors.map((e) => `  - ${e}`).join("\n")}`,
+  );
+
+  const isRateLimited = errors.some(
+    (e) => e.includes("429") || e.toLowerCase().includes("rate_limit"),
+  );
+
+  throw new Error(
+    isRateLimited
+      ? "AI service is temporarily busy. Please try again in a minute."
+      : "AI service is temporarily unavailable. Please try again shortly.",
   );
 }

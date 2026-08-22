@@ -26,7 +26,7 @@ export class GroqProvider implements AIProvider {
     if (!apiKey) throw new Error("[AI] Groq API key is missing");
 
     const model =
-      request.model || process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+      request.model || process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 
     const body: Record<string, unknown> = {
       model,

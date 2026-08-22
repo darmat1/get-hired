@@ -18,7 +18,7 @@ export class OpenAIProvider implements AIProvider {
     const apiKey = request.apiKey || process.env.OPENAI_API_KEY;
     if (!apiKey) throw new Error("[AI] OpenAI API key is missing");
 
-    const model = request.model || process.env.OPENAI_MODEL || "gpt-3.5-turbo";
+    const model = request.model || process.env.OPENAI_MODEL || "gpt-5.6-luna";
 
     const body: Record<string, unknown> = {
       model,

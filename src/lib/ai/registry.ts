@@ -5,7 +5,6 @@ import {
   OpenAIProvider,
   ClaudeProvider,
   GeminiProvider,
-  GrokProvider,
 } from "./providers";
 
 /**
@@ -14,11 +13,10 @@ import {
  */
 export const ALL_PROVIDERS: AIProvider[] = [
   new OpenRouterProvider(),
+  new GeminiProvider(),
   new GroqProvider(),
   new OpenAIProvider(),
   new ClaudeProvider(),
-  new GeminiProvider(),
-  new GrokProvider(),
 ];
 
 /**

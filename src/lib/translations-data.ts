@@ -630,6 +630,11 @@ export const translations: Translations = {
     ru: "Опыт работы",
   },
   "form.education": { en: "Education", uk: "Освіта", ru: "Образование" },
+  "form.certificates": {
+    en: "Certificates",
+    uk: "Сертифікати",
+    ru: "Сертификаты",
+  },
   "form.skills": { en: "Skills", uk: "Навички", ru: "Навыки" },
   "form.add": { en: "Add", uk: "Додати", ru: "Добавить" },
   "form.next": { en: "Next", uk: "Далі", ru: "Далее" },
@@ -1266,6 +1271,97 @@ export const translations: Translations = {
   "template.selected": { en: "Selected", uk: "Обрано", ru: "Выбрано" },
   "template.preview": { en: "Preview", uk: "Перегляд", ru: "Предпросмотр" },
 
+  "template.timeline": { en: "Timeline", uk: "Хронологія", ru: "Хронология" },
+  "template.timeline_desc": {
+    en: "Career timeline with visual markers",
+    uk: "Хронологія кар'єри з візуальними мітками",
+    ru: "Хронология карьеры с визуальными метками",
+  },
+  "template.modular": { en: "Modular", uk: "Модульний", ru: "Модульный" },
+  "template.modular_desc": {
+    en: "Structured sections with bold dividers",
+    uk: "Структуровані розділи з чіткими роздільниками",
+    ru: "Структурированные разделы с чёткими разделителями",
+  },
+  "template.contrast": { en: "Contrast", uk: "Контраст", ru: "Контраст" },
+  "template.contrast_desc": {
+    en: "Bold dark sidebar with sharp contrast",
+    uk: "Темна бічна панель з яскравим контрастом",
+    ru: "Тёмная боковая панель с ярким контрастом",
+  },
+  "template.banner": { en: "Banner", uk: "Банер", ru: "Баннер" },
+  "template.banner_desc": {
+    en: "Full-width color banner header",
+    uk: "Кольоровий банер на всю ширину",
+    ru: "Цветной баннер на всю ширину",
+  },
+  "template.centered": { en: "Centered", uk: "По центру", ru: "По центру" },
+  "template.centered_desc": {
+    en: "Centered photo and symmetric header",
+    uk: "Фото по центру та симетричний заголовок",
+    ru: "Фото по центру и симметричный заголовок",
+  },
+  "template.tinted": { en: "Tinted", uk: "Тонований", ru: "Тонированный" },
+  "template.tinted_desc": {
+    en: "Soft tinted sidebar accent",
+    uk: "М'яка тонована бічна панель",
+    ru: "Мягкая тонированная боковая панель",
+  },
+  "template.boxed": { en: "Boxed", uk: "У рамці", ru: "В рамке" },
+  "template.boxed_desc": {
+    en: "Framed contact box with clean layout",
+    uk: "Контакти у рамці та чистий макет",
+    ru: "Контакты в рамке и чистая вёрстка",
+  },
+  "template.symmetry": { en: "Symmetry", uk: "Симетрія", ru: "Симметрия" },
+  "template.symmetry_desc": {
+    en: "Centered, balanced single-column design",
+    uk: "Збалансований однокольоровий дизайн по центру",
+    ru: "Сбалансированный одноколоночный дизайн по центру",
+  },
+  "template.cards": { en: "Cards", uk: "Картки", ru: "Карточки" },
+  "template.cards_desc": {
+    en: "Sections styled as clean bordered cards",
+    uk: "Розділи у вигляді карток з рамкою",
+    ru: "Разделы в виде карточек с рамкой",
+  },
+  "template.layered": { en: "Layered", uk: "Шаруватий", ru: "Слоистый" },
+  "template.layered_desc": {
+    en: "Two-tier header with side panel",
+    uk: "Дворівневий заголовок з бічною панеллю",
+    ru: "Двухуровневый заголовок с боковой панелью",
+  },
+  "template.portrait": { en: "Portrait", uk: "Портрет", ru: "Портрет" },
+  "template.portrait_desc": {
+    en: "Photo-forward horizontal header layout",
+    uk: "Горизонтальний заголовок з акцентом на фото",
+    ru: "Горизонтальный заголовок с акцентом на фото",
+  },
+  "template.corporate": { en: "Corporate", uk: "Корпоративний", ru: "Корпоративный" },
+  "template.corporate_desc": {
+    en: "Understated, ATS-friendly sidebar layout",
+    uk: "Стриманий макет з бічною панеллю, зручний для ATS",
+    ru: "Сдержанный макет с боковой панелью, удобный для ATS",
+  },
+  "template.bold": { en: "Bold", uk: "Виразний", ru: "Выразительный" },
+  "template.bold_desc": {
+    en: "Eye-catching color banner with icons",
+    uk: "Яскравий кольоровий банер з іконками",
+    ru: "Яркий цветной баннер с иконками",
+  },
+  "template.divider": { en: "Divider", uk: "Роздільник", ru: "Разделитель" },
+  "template.divider_desc": {
+    en: "Plain, ATS-safe layout with thin dividers",
+    uk: "Простий макет з тонкими роздільниками, зручний для ATS",
+    ru: "Простой макет с тонкими разделителями, удобный для ATS",
+  },
+  "template.framed": { en: "Framed", uk: "У рамці", ru: "В рамке" },
+  "template.framed_desc": {
+    en: "Bold top frame with oversized name",
+    uk: "Яскрава верхня рамка та велике ім'я",
+    ru: "Яркая верхняя рамка и крупное имя",
+  },
+
   "theme.toggle": {
     en: "Toggle theme",
     uk: "Перемкнути тему",
@@ -1625,11 +1721,6 @@ export const translations: Translations = {
     uk: "Найпотужніші моделі від Google з величезними вікнами контексту.",
     ru: "Самые мощные модели от Google с огромными окнами контекста.",
   },
-  "ai_service.grok.description": {
-    en: "xAI's latest models with a focus on real-time info and reasoning.",
-    uk: "Останні моделі від xAI з фокусом на актуальну інформацію та логіку.",
-    ru: "Последние модели от xAI с фокусом на актуальную информацию и логику.",
-  },
   "ai_service.openrouter.description": {
     en: "Access multiple models (GPT-4, Claude, Llama) through a single API.",
     uk: "Доступ до безлічі моделей (GPT-4, Claude, Llama) через єдиний API.",
@@ -1729,16 +1820,6 @@ export const translations: Translations = {
     ru: "3. Быстрый и большое окно контекста",
   },
 
-  "ai_setup.grok.step1": {
-    en: "1. Go to https://console.x.ai/",
-    uk: "1. Перейдіть на https://console.x.ai/",
-    ru: "1. Перейдите на https://console.x.ai/",
-  },
-  "ai_setup.grok.step2": {
-    en: "2. Create API key",
-    uk: "2. Створіть API ключ",
-    ru: "2. Создайте API ключ",
-  },
 
   "ai_setup.openrouter.step1": {
     en: "1. Go to https://openrouter.ai/",
@@ -2881,14 +2962,14 @@ export const translations: Translations = {
     ru: "мин",
   },
   "ai_quota.daily_label": {
-    en: "Daily Free AI",
-    uk: "Щоденний AI",
-    ru: "Ежедневный AI",
+    en: "Weekly Free AI",
+    uk: "Щотижневий AI",
+    ru: "Еженедельный AI",
   },
   "ai_quota.reset_hint": {
-    en: "Daily quota resets at 00:00 UTC",
-    uk: "Квота оновлюється щодня о 00:00 UTC",
-    ru: "Квота обнуляется ежедневно в 00:00 UTC",
+    en: "Free quota resets 7 days after your first use",
+    uk: "Квота оновлюється через 7 днів після першого використання",
+    ru: "Квота обнуляется через 7 дней после первого использования",
   },
   "chrome_extension.install": {
     en: "Get Chrome Extension",

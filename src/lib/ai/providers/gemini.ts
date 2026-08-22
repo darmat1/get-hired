@@ -4,6 +4,11 @@ import {
   AIProvider,
 } from "../types";
 
+// Free-tier cascade: quality model first, then the much higher-RPD Gemma
+// fallback once Flash-Lite's daily quota is exhausted. Same GOOGLE_API_KEY
+// serves both — no separate signup needed.
+const DEFAULT_MODEL_CASCADE = ["gemini-3.5-flash-lite", "gemma-4-31b-it"];
+
 export class GeminiProvider implements AIProvider {
   id = "gemini";
   name = "Google Gemini";
@@ -13,7 +18,32 @@ export class GeminiProvider implements AIProvider {
   }
 
   async complete(request: AICompletionRequest): Promise<AICompletionResponse> {
-    return this._complete(request, true, true);
+    // Explicit model requested (e.g. tier mapping, user preference) — no cascade.
+    if (request.model) {
+      return this._complete(request, true, true);
+    }
+
+    const candidates = (process.env.GOOGLE_MODEL || DEFAULT_MODEL_CASCADE.join(","))
+      .split(",")
+      .map((m) => m.trim())
+      .filter(Boolean);
+
+    let lastError: unknown;
+    for (const model of candidates) {
+      try {
+        return await this._complete({ ...request, model }, true, true);
+      } catch (err) {
+        console.warn(
+          `[AI] Gemini: model "${model}" failed, trying next candidate:`,
+          err instanceof Error ? err.message : err,
+        );
+        lastError = err;
+      }
+    }
+
+    throw lastError instanceof Error
+      ? lastError
+      : new Error("[AI] Gemini: all model candidates failed");
   }
 
   private async sleep(ms: number): Promise<void> {
