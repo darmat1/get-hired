@@ -1,6 +1,6 @@
 "use client";
 
-import { Resume, WorkExperience, Education, Skill } from "@/types/resume";
+import { Resume, WorkExperience, Education, Skill, Certificate } from "@/types/resume";
 import { useState, useEffect, useRef } from "react";
 import { Bold, Italic, Type, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -299,5 +299,14 @@ export function createSkill(
     name: "New Skill",
     category,
     level: category === "language" ? "intermediate" : "expert",
+  };
+}
+
+export function createCertificate(): Certificate {
+  return {
+    id: Math.random().toString(36).substring(2, 9),
+    name: "Certificate Name",
+    issuer: "Issuing Organization",
+    date: "2024",
   };
 }

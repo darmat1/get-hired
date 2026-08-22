@@ -5,6 +5,21 @@ import { useTranslation } from "@/lib/translations";
 import { ModernPreview } from "@/components/resume/previews/modern-preview";
 import { ProfessionalPreview } from "@/components/resume/previews/professional-preview";
 import { MinimalPreview } from "@/components/resume/previews/minimal-preview";
+import { TimelinePreview } from "@/components/resume/previews/timeline-preview";
+import { ModularPreview } from "@/components/resume/previews/modular-preview";
+import { ContrastPreview } from "@/components/resume/previews/contrast-preview";
+import { BannerPreview } from "@/components/resume/previews/banner-preview";
+import { CenteredPreview } from "@/components/resume/previews/centered-preview";
+import { TintedPreview } from "@/components/resume/previews/tinted-preview";
+import { BoxedPreview } from "@/components/resume/previews/boxed-preview";
+import { SymmetryPreview } from "@/components/resume/previews/symmetry-preview";
+import { CardsPreview } from "@/components/resume/previews/cards-preview";
+import { LayeredPreview } from "@/components/resume/previews/layered-preview";
+import { PortraitPreview } from "@/components/resume/previews/portrait-preview";
+import { CorporatePreview } from "@/components/resume/previews/corporate-preview";
+import { BoldPreview } from "@/components/resume/previews/bold-preview";
+import { DividerPreview } from "@/components/resume/previews/divider-preview";
+import { FramedPreview } from "@/components/resume/previews/framed-preview";
 import { LayoutGrid } from "lucide-react";
 
 interface ResumePreviewProps {
@@ -26,35 +41,65 @@ export function ResumePreview({
   const TEMPLATES = [
     { id: "professional", label: t("template.professional"), badge: "ATS ready" },
     { id: "modern", label: t("template.modern") },
+    { id: "corporate", label: t("template.corporate") },
+    { id: "divider", label: t("template.divider"), badge: "ATS ready" },
+    { id: "timeline", label: t("template.timeline") },
+    { id: "modular", label: t("template.modular"), badge: "ATS ready" },
+    { id: "contrast", label: t("template.contrast") },
+    { id: "banner", label: t("template.banner") },
+    { id: "centered", label: t("template.centered") },
+    { id: "tinted", label: t("template.tinted") },
+    { id: "boxed", label: t("template.boxed") },
+    { id: "symmetry", label: t("template.symmetry"), badge: "ATS ready" },
+    { id: "cards", label: t("template.cards"), badge: "ATS ready" },
+    { id: "layered", label: t("template.layered") },
+    { id: "portrait", label: t("template.portrait"), badge: "ATS ready" },
+    { id: "bold", label: t("template.bold") },
+    { id: "framed", label: t("template.framed"), badge: "ATS ready" },
     // { id: "minimal", label: "Minimal" },
   ];
 
   const renderPreview = () => {
+    const props = { data, onChange, isEditing };
     switch (template) {
       case "professional":
-        return (
-          <ProfessionalPreview
-            data={data}
-            onChange={onChange}
-            isEditing={isEditing}
-          />
-        );
+        return <ProfessionalPreview {...props} />;
+      case "modern":
+        return <ModernPreview {...props} />;
       case "minimal":
-        return (
-          <MinimalPreview
-            data={data}
-            onChange={onChange}
-            isEditing={isEditing}
-          />
-        );
+        return <MinimalPreview {...props} />;
+      case "timeline":
+        return <TimelinePreview {...props} />;
+      case "modular":
+        return <ModularPreview {...props} />;
+      case "contrast":
+        return <ContrastPreview {...props} />;
+      case "banner":
+        return <BannerPreview {...props} />;
+      case "centered":
+        return <CenteredPreview {...props} />;
+      case "tinted":
+        return <TintedPreview {...props} />;
+      case "boxed":
+        return <BoxedPreview {...props} />;
+      case "symmetry":
+        return <SymmetryPreview {...props} />;
+      case "cards":
+        return <CardsPreview {...props} />;
+      case "layered":
+        return <LayeredPreview {...props} />;
+      case "portrait":
+        return <PortraitPreview {...props} />;
+      case "corporate":
+        return <CorporatePreview {...props} />;
+      case "bold":
+        return <BoldPreview {...props} />;
+      case "divider":
+        return <DividerPreview {...props} />;
+      case "framed":
+        return <FramedPreview {...props} />;
       default:
-        return (
-          <ModernPreview
-            data={data}
-            onChange={onChange}
-            isEditing={isEditing}
-          />
-        );
+        return <ProfessionalPreview {...props} />;
     }
   };
 
@@ -91,8 +136,8 @@ export function ResumePreview({
                   <span
                     className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
                       template === tmpl.id
-                        ? "bg-white/15 text-white"
-                        : "bg-emerald-50 text-emerald-700"
+                        ? "bg-white/15 text-white dark:bg-slate-900/10 dark:text-slate-900"
+                        : "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
                     }`}
                   >
                     {tmpl.badge}
