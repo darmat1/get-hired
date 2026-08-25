@@ -61,9 +61,9 @@ export default async function BlogListPage() {
   return (
     <>
       <Header />
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <div className="font-body max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <Breadcrumbs />
-        <h1 className="text-4xl font-bold mb-12">Blog</h1>
+        <h1 className="font-heading text-4xl font-bold mb-12">Blog</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {posts.map((post) => {
             const content =
@@ -85,7 +85,7 @@ export default async function BlogListPage() {
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:border-slate-300 dark:hover:border-slate-700 transition no-underline hover:no-underline"
+                className="group bg-warm-50 dark:bg-warm-900 border border-warm-200 dark:border-warm-800 p-6 rounded-xl hover:border-warm-300 dark:hover:border-warm-700 transition no-underline hover:no-underline"
               >
                 {(post as any).imageUrl && (
                   <Image
@@ -97,15 +97,15 @@ export default async function BlogListPage() {
                     loading="lazy"
                   />
                 )}
-                <h2 className="text-xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-slate-600 dark:group-hover:text-slate-400 transition">
+                <h2 className="font-heading text-xl font-bold mb-2 text-warm-900 dark:text-warm-50 group-hover:text-warm-600 dark:group-hover:text-warm-400 transition">
                   {content.title}
                 </h2>
                 {excerpt && (
-                  <p className="text-slate-500 dark:text-slate-400 text-sm mb-2">
+                  <p className="text-warm-500 dark:text-warm-400 text-sm mb-2">
                     {excerpt}
                   </p>
                 )}
-                <div className="text-slate-500 dark:text-slate-400 text-sm">
+                <div className="text-warm-500 dark:text-warm-400 text-sm">
                   {new Date(post.updatedAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "short",
@@ -117,17 +117,17 @@ export default async function BlogListPage() {
           })}
         </div>
         {posts.length === 0 && (
-          <p className="text-slate-500 dark:text-slate-400">No posts yet.</p>
+          <p className="text-warm-500 dark:text-warm-400">No posts yet.</p>
         )}
 
         {/* {totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 mt-12">
-            <span className="text-slate-500 dark:text-slate-400">
+            <span className="text-warm-500 dark:text-warm-400">
               Page 1 of {totalPages}
             </span>
             <Link
               href="/blog/page/2"
-              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              className="px-4 py-2 bg-warm-100 dark:bg-warm-800 rounded-lg hover:bg-warm-200 dark:hover:bg-warm-700 transition"
             >
               Next
             </Link>
@@ -136,7 +136,7 @@ export default async function BlogListPage() {
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 mt-12">
             {/* Previous — задизейблен на первой странице */}
-            <span className="w-10 h-10 flex items-center justify-center rounded-lg text-slate-300 dark:text-slate-600 bg-slate-100 dark:bg-slate-800 pointer-events-none">
+            <span className="w-10 h-10 flex items-center justify-center rounded-lg text-warm-300 dark:text-warm-600 bg-warm-100 dark:bg-warm-800 pointer-events-none">
               ‹
             </span>
 
@@ -165,7 +165,7 @@ export default async function BlogListPage() {
                 p === "..." ? (
                   <span
                     key={`dots-${i}`}
-                    className="w-10 h-10 flex items-center justify-center text-slate-400 dark:text-slate-500"
+                    className="w-10 h-10 flex items-center justify-center text-warm-400 dark:text-warm-500"
                   >
                     …
                   </span>
@@ -176,8 +176,8 @@ export default async function BlogListPage() {
                     className={`w-10 h-10 flex items-center justify-center rounded-lg font-medium transition
               ${
                 p === currentPage
-                  ? "bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  ? "bg-warm-800 text-white dark:bg-warm-100 dark:text-warm-900"
+                  : "text-warm-600 dark:text-warm-300 hover:bg-warm-100 dark:hover:bg-warm-800"
               }`}
                   >
                     {p}
@@ -189,7 +189,7 @@ export default async function BlogListPage() {
             {/* Next */}
             <Link
               href="/blog/page/2"
-              className="w-10 h-10 flex items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              className="w-10 h-10 flex items-center justify-center rounded-lg text-warm-500 dark:text-warm-400 bg-warm-100 dark:bg-warm-800 hover:bg-warm-200 dark:hover:bg-warm-700 transition"
             >
               ›
             </Link>
