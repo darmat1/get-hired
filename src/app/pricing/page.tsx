@@ -26,35 +26,35 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
+    <div className="min-h-screen bg-warm-50 dark:bg-warm-950 flex flex-col">
       <Header />
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative pt-32 pb-20 overflow-hidden text-center bg-gray-50/50 dark:bg-gray-900/20">
+        <section className="font-body relative pt-32 pb-20 overflow-hidden text-center bg-warm-50/50 dark:bg-warm-900/20">
           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-6xl mb-6">
+            <h1 className="font-heading text-4xl font-extrabold tracking-tight text-warm-900 dark:text-warm-50 sm:text-6xl mb-6">
               {t("pricing_landing.hero_title")}
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-warm-600 dark:text-warm-400 mb-10 max-w-2xl mx-auto leading-relaxed">
               {t("pricing_landing.hero_subtitle")}
             </p>
           </div>
         </section>
 
         {/* Pricing Cards */}
-        <section className="py-24 relative">
+        <section className="font-body py-24 relative">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {/* Starter Plan */}
-              <div className="relative group bg-white dark:bg-gray-800 p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
+              <div className="relative group bg-warm-50 dark:bg-warm-800 p-8 md:p-12 rounded-3xl border border-warm-200 dark:border-warm-700 shadow-xl hover:shadow-2xl transition-all duration-300">
                 <div className="mb-8">
-                  <h3 className="text-2xl font-bold mb-2">
+                  <h3 className="font-heading text-2xl font-bold mb-2 text-warm-900 dark:text-warm-50">
                     {t("pricing_landing.free_name")}
                   </h3>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-5xl font-extrabold">$0</span>
-                    <span className="text-gray-500">/mo</span>
+                    <span className="text-5xl font-extrabold text-warm-900 dark:text-warm-50">$0</span>
+                    <span className="text-warm-500">/mo</span>
                   </div>
                 </div>
 
@@ -62,7 +62,7 @@ export default function PricingPage() {
                   {starterFeatures.map((feature, i) => (
                     <li
                       key={i}
-                      className="flex items-center gap-3 text-gray-600 dark:text-gray-300"
+                      className="flex items-center gap-3 text-warm-600 dark:text-warm-300"
                     >
                       <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
                       <span>{feature}</span>
@@ -71,23 +71,27 @@ export default function PricingPage() {
                 </ul>
 
                 <Link href="/dashboard" className="block mt-auto">
-                  <Button size="lg" className="w-full py-6 text-lg rounded-xl">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full py-6 text-lg rounded-xl border-warm-200 dark:border-warm-700 hover:bg-warm-100 dark:hover:bg-warm-800 text-warm-900 dark:text-warm-50"
+                  >
                     {t("li_landing.start_btn")}
                   </Button>
                 </Link>
               </div>
 
               {/* Pro Plan */}
-              <div className="relative group bg-white dark:bg-black p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-2xl overflow-hidden hover:shadow-3xl transition-all duration-300">
+              <div className="relative group bg-warm-50 dark:bg-warm-900 p-8 md:p-12 rounded-3xl border border-warm-200 dark:border-warm-800 shadow-2xl overflow-hidden hover:shadow-3xl transition-all duration-300">
                 {/* Accent line */}
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-slate-600 via-purple-600 to-slate-600" />
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-warm-600 via-terracotta-500 to-warm-600" />
 
-                <div className="absolute top-8 right-8 bg-slate-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                <div className="absolute top-8 right-8 bg-terracotta-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                   {t("pricing_landing.pro_tag")}
                 </div>
 
                 <div className="mb-8">
-                  <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
+                  <h3 className="font-heading text-2xl font-bold mb-2 text-warm-900 dark:text-warm-50">
                     {t("pricing_landing.pro_name")}
                   </h3>
                   <div className="h-12" />{" "}
@@ -98,9 +102,9 @@ export default function PricingPage() {
                   {proFeatures.map((feature, i) => (
                     <li
                       key={i}
-                      className="flex items-center gap-3 text-gray-600 dark:text-gray-300"
+                      className="flex items-center gap-3 text-warm-600 dark:text-warm-300"
                     >
-                      <Star className="h-5 w-5 text-slate-400 flex-shrink-0 fill-slate-400/20" />
+                      <Star className="h-5 w-5 text-warm-400 flex-shrink-0 fill-warm-400/20" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -109,8 +113,7 @@ export default function PricingPage() {
                 <Button
                   disabled
                   size="lg"
-                  variant="outline"
-                  className="w-full py-6 text-lg rounded-xl border-gray-200 dark:border-gray-700 text-gray-400"
+                  className="w-full py-6 text-lg rounded-xl !bg-terracotta-500 hover:!bg-terracotta-600 !text-white dark:!bg-terracotta-500 dark:hover:!bg-terracotta-600 dark:!text-white"
                 >
                   {t("pricing_landing.pro_tag")}
                 </Button>
@@ -120,22 +123,22 @@ export default function PricingPage() {
         </section>
 
         {/* SEO / Value Prop Section */}
-        <section className="py-24 bg-gray-50 dark:bg-gray-900/30">
+        <section className="font-body py-24 bg-warm-50 dark:bg-warm-900/30">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl mb-8">
+                <h2 className="font-heading text-3xl font-bold text-warm-900 dark:text-warm-50 sm:text-4xl mb-8">
                   {t("pricing_landing.seo_title")}
                 </h2>
-                <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed mb-10">
+                <p className="text-xl text-warm-600 dark:text-warm-400 leading-relaxed mb-10">
                   {t("pricing_landing.seo_desc")}
                 </p>
                 <div className="space-y-6">
                   <div className="flex gap-4">
-                    <div className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-900/30 flex items-center justify-center text-slate-600 shrink-0">
+                    <div className="h-10 w-10 rounded-full bg-warm-100 dark:bg-warm-900/30 flex items-center justify-center text-warm-600 shrink-0">
                       <Zap className="h-5 w-5" />
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-warm-700 dark:text-warm-300">
                       <strong>Fast Results:</strong> Generate a full resume &
                       cover letter combo in under 5 minutes.
                     </p>
@@ -144,7 +147,7 @@ export default function PricingPage() {
                     <div className="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 shrink-0">
                       <BarChart3 className="h-5 w-5" />
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-warm-700 dark:text-warm-300">
                       <strong>ATS Compatibility:</strong> Every template is
                       engineered to pass through modern hiring software.
                     </p>
@@ -153,7 +156,7 @@ export default function PricingPage() {
                     <div className="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 shrink-0">
                       <ShieldCheck className="h-5 w-5" />
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-warm-700 dark:text-warm-300">
                       <strong>Privacy First:</strong> Your data belongs to you.
                       No hidden subscriptions or data selling.
                     </p>
@@ -161,16 +164,16 @@ export default function PricingPage() {
                 </div>
               </div>
               <div className="relative">
-                <div className="aspect-square bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-2xl p-8 flex items-center justify-center">
+                <div className="aspect-square bg-warm-50 dark:bg-warm-800 rounded-3xl border border-warm-200 dark:border-warm-700 shadow-2xl p-8 flex items-center justify-center">
                   <div className="text-center">
                     <Mail className="h-20 w-20 text-purple-600 mb-6 mx-auto animate-pulse" />
-                    <p className="text-lg font-bold">10,000+ Success Stories</p>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-lg font-bold text-warm-900 dark:text-warm-50">10,000+ Success Stories</p>
+                    <p className="text-warm-500 dark:text-warm-400 text-sm">
                       Join the community of hired pros
                     </p>
                   </div>
                 </div>
-                <div className="absolute -bottom-6 -right-6 bg-slate-600 text-white p-6 rounded-2xl shadow-xl">
+                <div className="absolute -bottom-6 -right-6 bg-warm-600 text-white p-6 rounded-2xl shadow-xl">
                   <p className="text-2xl font-bold">98%</p>
                   <p className="text-xs uppercase tracking-wider">
                     Hiring software pass rate
