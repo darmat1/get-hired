@@ -100,12 +100,6 @@ export function Header() {
                   {t("nav.pricing")}
                 </LocalizedLink>
                 <LocalizedLink
-                  href="/templates"
-                  className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
-                >
-                  {t("nav.templates")}
-                </LocalizedLink>
-                <LocalizedLink
                   href="/blog"
                   className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
                 >

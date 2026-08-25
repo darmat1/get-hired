@@ -1451,7 +1451,6 @@ export const translations: Translations = {
   },
 
   "nav.pricing": { en: "Pricing", uk: "Ціни", ru: "Цены" },
-  "nav.templates": { en: "Templates", uk: "Шаблони", ru: "Шаблоны" },
   "nav.agents": { en: "AI Agents", uk: "AI-агенти", ru: "AI-агенты" },
 
   "footer.ai_agents": { en: "AI Agents", uk: "AI-агенти", ru: "AI-агенты" },
