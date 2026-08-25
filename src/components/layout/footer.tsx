@@ -22,7 +22,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="border-t border-border bg-background/50">
+    <footer className="font-body border-t border-border bg-background/50">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="flex flex-col items-center justify-between gap-2">
@@ -32,7 +32,7 @@ export function Footer() {
             </p> */}
             <LocalizedLink
               href="/"
-              className="text-xl font-bold text-slate-900 dark:text-white"
+              className="text-xl font-bold text-warm-900 dark:text-warm-50"
               aria-label="GetHired Home"
             >
               <Logo />
@@ -42,7 +42,7 @@ export function Footer() {
 
           {/* Column 2: Product */}
           <div>
-            <h3 className="font-semibold mb-4">{t("footer.product")}</h3>
+            <h3 className="font-heading font-semibold mb-4 text-warm-900 dark:text-warm-50">{t("footer.product")}</h3>
             <ul className="space-y-2">
               <li>
                 <LocalizedLink
@@ -81,7 +81,7 @@ export function Footer() {
 
           {/* Column 3: Solutions */}
           <div>
-            <h3 className="font-semibold mb-4">{t("footer.solutions")}</h3>
+            <h3 className="font-heading font-semibold mb-4 text-warm-900 dark:text-warm-50">{t("footer.solutions")}</h3>
             <ul className="space-y-2">
               <li>
                 <LocalizedLink
@@ -120,7 +120,7 @@ export function Footer() {
 
           {/* Column 4: Legal */}
           <div>
-            <h3 className="font-semibold mb-4">{t("footer.legal")}</h3>
+            <h3 className="font-heading font-semibold mb-4 text-warm-900 dark:text-warm-50">{t("footer.legal")}</h3>
             <ul className="space-y-2">
               <li>
                 <LocalizedLink
