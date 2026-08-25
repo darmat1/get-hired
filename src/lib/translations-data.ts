@@ -2892,14 +2892,14 @@ export const translations: Translations = {
 
   // Pricing Landing Page
   "pricing_landing.hero_title": {
-    en: "Simple, Value-Driven Pricing",
-    uk: "Проста та вигідна ціна",
-    ru: "Простая и выгодная цена",
+    en: "Everything you need to apply, free to start",
+    uk: "Усе потрібне для пошуку роботи — безкоштовно на старті",
+    ru: "Всё нужное для поиска работы — бесплатно на старте",
   },
   "pricing_landing.hero_subtitle": {
-    en: "Choose the plan that's right for your career growth. Start for free and upgrade as you grow.",
-    uk: "Оберіть план, який підходить для вашого кар'єрного зростання. Почніть безкоштовно та переходьте на вищий рівень у міру зростання.",
-    ru: "Выберите план, который подходит для вашего карьерного роста. Начните бесплатно и переходите на новый уровень по мере роста.",
+    en: "Build your profile, tailor resumes, and write cover letters at no cost. Pro adds unlimited resumes and premium templates when you're ready for them.",
+    uk: "Створюйте профіль, адаптуйте резюме та пишіть супровідні листи безкоштовно. Pro додає безліміт резюме та преміум-шаблони, коли вони вам знадобляться.",
+    ru: "Создавайте профиль, адаптируйте резюме и пишите сопроводительные письма бесплатно. Pro добавляет безлимит резюме и премиум-шаблоны, когда они вам понадобятся.",
   },
   "pricing_landing.free_name": {
     en: "Starter",
