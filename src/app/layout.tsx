@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Lora, Work_Sans } from "next/font/google";
 import { headers, cookies } from "next/headers";
 import "./globals.scss";
 import { AuthProvider } from "@/components/providers/auth-provider";
@@ -18,6 +19,8 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+const lora = Lora({ variable: "--font-lora", subsets: ["latin"], weight: ["500", "600"] });
+const workSans = Work_Sans({ variable: "--font-work-sans", subsets: ["latin"], weight: ["400", "500", "600"] });
 
 const SITE_URL = getBaseUrl();
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
@@ -83,7 +86,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} ${workSans.variable} antialiased`}
       >
         <noscript>
           <iframe
