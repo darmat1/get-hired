@@ -68,6 +68,14 @@ export function Footer() {
                   {t("footer.blog")}
                 </LocalizedLink>
               </li>
+              <li>
+                <LocalizedLink
+                  href="/agents"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.ai_agents")}
+                </LocalizedLink>
+              </li>
             </ul>
           </div>
 
