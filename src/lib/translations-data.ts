@@ -3897,6 +3897,262 @@ export const translations: Translations = {
     ru: "Целевая должность (напр. Senior React Developer) — или оставьте пустым",
   },
 
+  "agent_tokens.title": {
+    en: "AI Agent Access",
+    uk: "Доступ для AI-агента",
+    ru: "Доступ для AI-агента",
+  },
+  "agent_tokens.subtitle": {
+    en: "Generate personal API tokens so your own AI agent can manage your resumes and profile on your behalf.",
+    uk: "Створюйте персональні API токени, щоб ваш AI-агент міг керувати резюме та профілем від вашого імені.",
+    ru: "Создавайте персональные API токены, чтобы ваш AI-агент мог управлять резюме и профилем от вашего имени.",
+  },
+  "agent_tokens.create_button": {
+    en: "Create new token",
+    uk: "Створити новий токен",
+    ru: "Создать новый токен",
+  },
+  "agent_tokens.empty": {
+    en: "No agent tokens yet.",
+    uk: "Токенів ще немає.",
+    ru: "Токенов пока нет.",
+  },
+  "agent_tokens.status_active": {
+    en: "Active",
+    uk: "Активний",
+    ru: "Активный",
+  },
+  "agent_tokens.status_revoked": {
+    en: "Revoked",
+    uk: "Відкликано",
+    ru: "Отозван",
+  },
+  "agent_tokens.status_expired": {
+    en: "Expired",
+    uk: "Прострочено",
+    ru: "Просрочен",
+  },
+  "agent_tokens.last_used": {
+    en: "Last used",
+    uk: "Останнє використання",
+    ru: "Последнее использование",
+  },
+  "agent_tokens.never_used": {
+    en: "Never used",
+    uk: "Ще не використовувався",
+    ru: "Ещё не использовался",
+  },
+  "agent_tokens.created": {
+    en: "Created",
+    uk: "Створено",
+    ru: "Создан",
+  },
+  "agent_tokens.revoke": {
+    en: "Revoke",
+    uk: "Відкликати",
+    ru: "Отозвать",
+  },
+  "agent_tokens.revoke_confirm_title": {
+    en: "Revoke this token?",
+    uk: "Відкликати цей токен?",
+    ru: "Отозвать этот токен?",
+  },
+  "agent_tokens.revoke_confirm_desc": {
+    en: "Any agent using this token will immediately lose access. This cannot be undone.",
+    uk: "Будь-який агент, що використовує цей токен, негайно втратить доступ. Це неможливо скасувати.",
+    ru: "Любой агент, использующий этот токен, немедленно потеряет доступ. Это действие необратимо.",
+  },
+  "agent_tokens.form_title": {
+    en: "Create a new agent token",
+    uk: "Створення нового токена агента",
+    ru: "Создание нового токена агента",
+  },
+  "agent_tokens.name_label": {
+    en: "Name",
+    uk: "Назва",
+    ru: "Название",
+  },
+  "agent_tokens.name_placeholder": {
+    en: "My AI Agent",
+    uk: "Мій ІІ-агент",
+    ru: "Мой ИИ-агент",
+  },
+  "agent_tokens.scopes_label": {
+    en: "Permissions",
+    uk: "Дозволи",
+    ru: "Разрешения",
+  },
+  "agent_tokens.select_all": {
+    en: "Select all",
+    uk: "Обрати всі",
+    ru: "Выбрать все",
+  },
+  "agent_tokens.expiry_label": {
+    en: "Expires",
+    uk: "Термін дії",
+    ru: "Срок действия",
+  },
+  "agent_tokens.expiry_never": {
+    en: "Never",
+    uk: "Ніколи",
+    ru: "Никогда",
+  },
+  "agent_tokens.expiry_30d": {
+    en: "In 30 days",
+    uk: "Через 30 днів",
+    ru: "Через 30 дней",
+  },
+  "agent_tokens.expiry_90d": {
+    en: "In 90 days",
+    uk: "Через 90 днів",
+    ru: "Через 90 дней",
+  },
+  "agent_tokens.expiry_1y": {
+    en: "In 1 year",
+    uk: "Через 1 рік",
+    ru: "Через 1 год",
+  },
+  "agent_tokens.scope.profile_read": {
+    en: "Read profile",
+    uk: "Читання профілю",
+    ru: "Чтение профиля",
+  },
+  "agent_tokens.scope.profile_read_desc": {
+    en: "View personal info, work experience, education, skills",
+    uk: "Перегляд особистих даних, досвіду роботи, освіти, навичок",
+    ru: "Просмотр личных данных, опыта работы, образования, навыков",
+  },
+  "agent_tokens.scope.profile_write": {
+    en: "Edit profile",
+    uk: "Редагування профілю",
+    ru: "Редактирование профиля",
+  },
+  "agent_tokens.scope.profile_write_desc": {
+    en: "Create or update personal info, work experience, education, skills",
+    uk: "Створення або оновлення особистих даних, досвіду роботи, освіти, навичок",
+    ru: "Создание или обновление личных данных, опыта работы, образования, навыков",
+  },
+  "agent_tokens.scope.resumes_read": {
+    en: "Read resumes",
+    uk: "Читання резюме",
+    ru: "Чтение резюме",
+  },
+  "agent_tokens.scope.resumes_read_desc": {
+    en: "List and download resumes as PDF",
+    uk: "Перегляд списку та завантаження резюме у PDF",
+    ru: "Просмотр списка и загрузка резюме в PDF",
+  },
+  "agent_tokens.scope.resumes_write": {
+    en: "Edit resumes",
+    uk: "Редагування резюме",
+    ru: "Редактирование резюме",
+  },
+  "agent_tokens.scope.resumes_write_desc": {
+    en: "Create, update, delete, change template/design",
+    uk: "Створення, оновлення, видалення, зміна шаблону/дизайну",
+    ru: "Создание, обновление, удаление, изменение шаблона/дизайна",
+  },
+  "agent_tokens.scope.cover_letters_read": {
+    en: "Read cover letters",
+    uk: "Читання супровідних листів",
+    ru: "Чтение сопроводительных писем",
+  },
+  "agent_tokens.scope.cover_letters_read_desc": {
+    en: "List and download cover letters",
+    uk: "Перегляд списку та завантаження супровідних листів",
+    ru: "Просмотр списка и загрузка сопроводительных писем",
+  },
+  "agent_tokens.scope.cover_letters_write": {
+    en: "Edit cover letters",
+    uk: "Редагування супровідних листів",
+    ru: "Редактирование сопроводительных писем",
+  },
+  "agent_tokens.scope.cover_letters_write_desc": {
+    en: "Create, update, delete",
+    uk: "Створення, оновлення, видалення",
+    ru: "Создание, обновление, удаление",
+  },
+  "agent_tokens.scope.ai_generate": {
+    en: "AI generation",
+    uk: "AI-генерація",
+    ru: "AI-генерация",
+  },
+  "agent_tokens.scope.ai_generate_desc": {
+    en: "Create a tailored resume or cover letter for a job posting (uses your AI quota)",
+    uk: "Створення адаптованого резюме чи супровідного листа під вакансію (використовує вашу AI-квоту)",
+    ru: "Создание адаптированного резюме или сопроводительного письма под вакансию (использует вашу AI-квоту)",
+  },
+  "agent_tokens.create_submit": {
+    en: "Create token",
+    uk: "Створити токен",
+    ru: "Создать токен",
+  },
+  "agent_tokens.scopes_required": {
+    en: "Select at least one permission",
+    uk: "Оберіть хоча б один дозвіл",
+    ru: "Выберите хотя бы одно разрешение",
+  },
+  "agent_tokens.reveal_title": {
+    en: "Token created",
+    uk: "Токен створено",
+    ru: "Токен создан",
+  },
+  "agent_tokens.reveal_warning": {
+    en: "Save this token now — you won't be able to see it again.",
+    uk: "Збережіть цей токен зараз — повторно побачити його буде неможливо.",
+    ru: "Сохраните этот токен сейчас — повторно увидеть его будет невозможно.",
+  },
+  "agent_tokens.connect_title": {
+    en: "How to connect",
+    uk: "Як підключити",
+    ru: "Как подключить",
+  },
+  "agent_tokens.connect_desc": {
+    en: "Never paste the token into a chat message — put it in your agent's config or environment instead, using one of these.",
+    uk: "Ніколи не вставляйте токен у повідомлення чату — додайте його в конфіг або змінні середовища агента, скориставшись одним із варіантів нижче.",
+    ru: "Никогда не вставляйте токен в сообщение чата — добавьте его в конфиг или переменные окружения агента, используя один из вариантов ниже.",
+  },
+  "agent_tokens.tab_mcp": {
+    en: "MCP (Claude, etc.)",
+    uk: "MCP (Claude тощо)",
+    ru: "MCP (Claude и др.)",
+  },
+  "agent_tokens.tab_rest": {
+    en: "REST API",
+    uk: "REST API",
+    ru: "REST API",
+  },
+  "agent_tokens.mcp_hint": {
+    en: "Add this to your MCP client's config (e.g. Claude Desktop / Claude Code settings):",
+    uk: "Додайте це в конфіг вашого MCP-клієнта (наприклад, налаштування Claude Desktop / Claude Code):",
+    ru: "Добавьте это в конфиг вашего MCP-клиента (например, настройки Claude Desktop / Claude Code):",
+  },
+  "agent_tokens.rest_hint": {
+    en: "For a custom script, ChatGPT Action, or any HTTP client — store the token as a credential/env var, then call:",
+    uk: "Для свого скрипту, ChatGPT Action чи будь-якого HTTP-клієнта — збережіть токен як credential/змінну середовища, потім викликайте:",
+    ru: "Для своего скрипта, ChatGPT Action или любого HTTP-клиента — сохраните токен как credential/переменную окружения, затем вызывайте:",
+  },
+  "agent_tokens.copy": {
+    en: "Copy",
+    uk: "Копіювати",
+    ru: "Копировать",
+  },
+  "agent_tokens.copied": {
+    en: "Copied!",
+    uk: "Скопійовано!",
+    ru: "Скопировано!",
+  },
+  "agent_tokens.done_button": {
+    en: "I've saved it, done",
+    uk: "Я зберіг, готово",
+    ru: "Я сохранил, готово",
+  },
+  "agent_tokens.fetch_error": {
+    en: "Failed to load agent tokens",
+    uk: "Не вдалося завантажити токени агента",
+    ru: "Не удалось загрузить токены агента",
+  },
+
 };
 
 /** Server-side helper */

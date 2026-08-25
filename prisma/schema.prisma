@@ -30,6 +30,7 @@ model User {
   accounts Account[]
   profile  UserProfile?
   aiKeys   AiCredential[]
+  agentTokens AgentToken[]
 
   // AI Preferences
   preferredAIProvider String?
@@ -44,6 +45,23 @@ model User {
   greenhouseApplications GreenhouseApplication[]
 
   @@map("user")
+}
+
+model AgentToken {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  tokenHash   String    @unique
+  tokenPrefix String
+  scopes      String[]
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@map("agent_token")
 }
 
 model AiCredential {
