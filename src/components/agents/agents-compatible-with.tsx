@@ -7,23 +7,23 @@ export function AgentsCompatibleWith() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900/50">
+    <section className="font-body py-24 sm:py-32 bg-warm-50 dark:bg-warm-900/50">
       <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
-        <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl mb-6">
+        <h2 className="font-heading text-4xl font-extrabold tracking-tight text-warm-900 dark:text-warm-50 sm:text-5xl mb-6">
           {t("agents.compatible.title")}
         </h2>
-        <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-10">
+        <p className="text-lg text-warm-600 dark:text-warm-400 leading-relaxed mb-10">
           {t("agents.compatible.subtitle")}
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Badge className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-200 dark:border-slate-700 px-4 py-2 text-sm">
+          <Badge className="bg-terracotta-50 dark:bg-terracotta-900/30 text-terracotta-700 dark:text-terracotta-300 border-terracotta-200 dark:border-terracotta-800 px-4 py-2 text-sm">
             Claude
           </Badge>
-          <Badge className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-200 dark:border-slate-700 px-4 py-2 text-sm">
+          <Badge className="bg-terracotta-50 dark:bg-terracotta-900/30 text-terracotta-700 dark:text-terracotta-300 border-terracotta-200 dark:border-terracotta-800 px-4 py-2 text-sm">
             ChatGPT
           </Badge>
-          <Badge className="bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 px-4 py-2 text-sm">
+          <Badge className="bg-warm-50 dark:bg-warm-800 text-warm-600 dark:text-warm-400 border-warm-200 dark:border-warm-700 px-4 py-2 text-sm">
             {t("agents.compatible.other")}
           </Badge>
         </div>
