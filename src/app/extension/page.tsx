@@ -37,13 +37,13 @@ function StepCard({
     <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-600 dark:text-slate-400">
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-warm-100 dark:bg-warm-800 flex items-center justify-center font-bold text-warm-600 dark:text-warm-400">
             {number}
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <Icon className="h-5 w-5 text-slate-600 dark:text-slate-400" />
-              <h3 className="font-semibold text-lg">{title}</h3>
+              <Icon className="h-5 w-5 text-warm-600 dark:text-warm-400" />
+              <h3 className="font-heading font-semibold text-lg">{title}</h3>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               {description}
@@ -57,10 +57,10 @@ function StepCard({
 
 function ScreenshotPlaceholder({ label }: { label: string }) {
   return (
-    <div className="relative aspect-video bg-slate-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-3 group hover:border-slate-400 dark:hover:border-slate-600 transition-colors">
-      <ImageIcon className="h-12 w-12 text-slate-400" />
-      <span className="text-sm text-slate-500 font-medium">{label}</span>
-      <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 dark:group-hover:bg-slate-100/5 transition-colors rounded-xl" />
+    <div className="relative aspect-video bg-warm-100 dark:bg-warm-800 rounded-xl border-2 border-dashed border-warm-300 dark:border-warm-700 flex flex-col items-center justify-center gap-3 group hover:border-warm-400 dark:hover:border-warm-600 transition-colors">
+      <ImageIcon className="h-12 w-12 text-warm-400" />
+      <span className="text-sm text-warm-500 font-medium">{label}</span>
+      <div className="absolute inset-0 bg-warm-900/0 group-hover:bg-warm-900/5 dark:group-hover:bg-warm-100/5 transition-colors rounded-xl" />
     </div>
   );
 }
@@ -68,7 +68,7 @@ function ScreenshotPlaceholder({ label }: { label: string }) {
 function VideoPlaceholder() {
   const { t } = useTranslation();
   return (
-    <div className="relative aspect-video bg-slate-900 rounded-xl overflow-hidden group cursor-pointer">
+    <div className="relative aspect-video bg-warm-900 rounded-xl overflow-hidden group cursor-pointer">
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
           <Play className="h-8 w-8 text-white fill-white ml-1" />
@@ -120,22 +120,22 @@ export default function ExtensionLandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
+    <div className="min-h-screen bg-warm-50 dark:bg-warm-950 flex flex-col">
       <Header />
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-gray-950" />
+        <section className="font-body relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-warm-50 to-warm-50 dark:from-warm-950 dark:to-warm-950" />
           <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-warm-100 dark:bg-warm-800 text-sm font-medium text-warm-700 dark:text-warm-300 mb-6">
                 {t("extension_landing.badge")}
               </div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-6xl mb-6">
+              <h1 className="font-heading text-4xl font-extrabold tracking-tight text-warm-900 dark:text-warm-50 sm:text-5xl lg:text-6xl mb-6">
                 {t("extension_landing.hero_title")}
               </h1>
-              <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+              <p className="text-lg sm:text-xl text-warm-600 dark:text-warm-400 mb-8 leading-relaxed">
                 {t("extension_landing.hero_subtitle")}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -145,12 +145,15 @@ export default function ExtensionLandingPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2"
                 >
-                  <Button size="lg" className="rounded-full px-8">
+                  <Button
+                    size="lg"
+                    className="rounded-full px-8 !bg-terracotta-500 hover:!bg-terracotta-600 !text-white dark:!bg-terracotta-500 dark:hover:!bg-terracotta-600 dark:!text-white"
+                  >
                     <Download className="h-5 w-5" />
                     {t("extension_landing.cta_button")}
                   </Button>
                 </a>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-warm-500">
                   {t("extension_landing.cta_subtext")}
                 </span>
               </div>
@@ -159,13 +162,13 @@ export default function ExtensionLandingPage() {
         </section>
 
         {/* Video Demo Section */}
-        <section className="py-16 lg:py-24 bg-slate-50/50 dark:bg-slate-900/20">
+        <section className="font-body py-16 lg:py-24 bg-warm-50/50 dark:bg-warm-900/20">
           <div className="mx-auto max-w-5xl px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="font-heading text-3xl font-bold text-warm-900 dark:text-warm-50 mb-4">
                 {t("extension_landing.video_title")}
               </h2>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-warm-600 dark:text-warm-400">
                 {t("extension_landing.video_subtitle")}
               </p>
             </div>
@@ -174,13 +177,13 @@ export default function ExtensionLandingPage() {
         </section>
 
         {/* How It Works - Steps */}
-        <section className="py-16 lg:py-24">
+        <section className="font-body py-16 lg:py-24">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="font-heading text-3xl font-bold text-warm-900 dark:text-warm-50 mb-4">
                 {t("extension_landing.steps_title")}
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              <p className="text-warm-600 dark:text-warm-400 max-w-2xl mx-auto">
                 {t("extension_landing.steps_subtitle")}
               </p>
             </div>
@@ -200,13 +203,13 @@ export default function ExtensionLandingPage() {
         </section>
 
         {/* Screenshots Gallery */}
-        <section className="py-16 lg:py-24 bg-slate-50/50 dark:bg-slate-900/20">
+        <section className="font-body py-16 lg:py-24 bg-warm-50/50 dark:bg-warm-900/20">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="font-heading text-3xl font-bold text-warm-900 dark:text-warm-50 mb-4">
                 {t("extension_landing.gallery_title")}
               </h2>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-warm-600 dark:text-warm-400">
                 {t("extension_landing.gallery_subtitle")}
               </p>
             </div>
@@ -229,11 +232,11 @@ export default function ExtensionLandingPage() {
         </section>
 
         {/* Features Highlight */}
-        <section className="py-16 lg:py-24">
+        <section className="font-body py-16 lg:py-24">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                <h2 className="font-heading text-3xl font-bold text-warm-900 dark:text-warm-50 mb-6">
                   {t("extension_landing.features_title")}
                 </h2>
                 <div className="space-y-6">
@@ -242,10 +245,10 @@ export default function ExtensionLandingPage() {
                       <AlignLeft className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                      <h3 className="font-heading font-semibold text-warm-900 dark:text-warm-50 mb-1">
                         {t("extension_landing.feature_1_title")}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      <p className="text-warm-600 dark:text-warm-400 text-sm">
                         {t("extension_landing.feature_1_desc")}
                       </p>
                     </div>
@@ -256,10 +259,10 @@ export default function ExtensionLandingPage() {
                       <FileText className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                      <h3 className="font-heading font-semibold text-warm-900 dark:text-warm-50 mb-1">
                         {t("extension_landing.feature_2_title")}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      <p className="text-warm-600 dark:text-warm-400 text-sm">
                         {t("extension_landing.feature_2_desc")}
                       </p>
                     </div>
@@ -270,10 +273,10 @@ export default function ExtensionLandingPage() {
                       <MousePointerClick className="h-6 w-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                      <h3 className="font-heading font-semibold text-warm-900 dark:text-warm-50 mb-1">
                         {t("extension_landing.feature_3_title")}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      <p className="text-warm-600 dark:text-warm-400 text-sm">
                         {t("extension_landing.feature_3_desc")}
                       </p>
                     </div>
@@ -289,7 +292,7 @@ export default function ExtensionLandingPage() {
         </section>
 
         {/* AI Disclaimer */}
-        <section className="py-12 lg:py-16">
+        <section className="font-body py-12 lg:py-16">
           <div className="mx-auto max-w-4xl px-6 lg:px-8">
             <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-6 lg:p-8">
               <div className="flex items-start gap-4">
@@ -297,7 +300,7 @@ export default function ExtensionLandingPage() {
                   <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-amber-900 dark:text-amber-200 mb-2">
+                  <h3 className="font-heading font-semibold text-amber-900 dark:text-amber-200 mb-2">
                     {t("extension_landing.disclaimer_title")}
                   </h3>
                   <p className="text-amber-800 dark:text-amber-300/80 text-sm leading-relaxed">
@@ -310,12 +313,12 @@ export default function ExtensionLandingPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-16 lg:py-24 bg-slate-900">
+        <section className="font-body py-16 lg:py-24 bg-warm-900">
           <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold text-white mb-6">
+            <h2 className="font-heading text-3xl font-bold text-warm-50 mb-6">
               {t("extension_landing.final_cta_title")}
             </h2>
-            <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
+            <p className="text-warm-400 mb-8 max-w-2xl mx-auto">
               {t("extension_landing.final_cta_subtitle")}
             </p>
             <a
@@ -326,7 +329,7 @@ export default function ExtensionLandingPage() {
             >
               <Button
                 size="lg"
-                className="rounded-full px-8 bg-white text-slate-900 hover:bg-slate-100"
+                className="rounded-full px-8 bg-warm-50 text-warm-900 hover:bg-warm-100"
               >
                 <Download className="h-5 w-5" />
                 {t("extension_landing.cta_button")}
