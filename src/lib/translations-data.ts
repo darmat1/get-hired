@@ -3452,9 +3452,9 @@ export const translations: Translations = {
     ru: "Расширение для Chrome",
   },
   "extension_landing.hero_title": {
-    en: "Generate Cover Letters in Seconds",
-    uk: "Генеруйте супровідні листи за секунди",
-    ru: "Генерируйте сопроводительные письма за секунды",
+    en: "Tailor Resumes & Cover Letters in Seconds",
+    uk: "Адаптуйте резюме та супровідні листи за секунди",
+    ru: "Адаптируйте резюме и сопроводительные письма за секунды",
   },
   "extension_landing.hero_subtitle": {
     en: "The fastest way to create tailored cover letters and resumes for any job posting. Install our Chrome extension and apply smarter, not harder.",
