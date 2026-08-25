@@ -2897,9 +2897,9 @@ export const translations: Translations = {
     ru: "Всё нужное для поиска работы — бесплатно на старте",
   },
   "pricing_landing.hero_subtitle": {
-    en: "Build your profile, tailor resumes, and write cover letters at no cost. Pro adds unlimited resumes and premium templates when you're ready for them.",
-    uk: "Створюйте профіль, адаптуйте резюме та пишіть супровідні листи безкоштовно. Pro додає безліміт резюме та преміум-шаблони, коли вони вам знадобляться.",
-    ru: "Создавайте профиль, адаптируйте резюме и пишите сопроводительные письма бесплатно. Pro добавляет безлимит резюме и премиум-шаблоны, когда они вам понадобятся.",
+    en: "Build your profile, tailor resumes, and write cover letters at no cost. Pro — coming soon — will add unlimited resumes and premium templates.",
+    uk: "Створюйте профіль, адаптуйте резюме та пишіть супровідні листи безкоштовно. Pro — вже скоро — додасть безліміт резюме та преміум-шаблони.",
+    ru: "Создавайте профиль, адаптируйте резюме и пишите сопроводительные письма бесплатно. Pro — уже скоро — добавит безлимит резюме и премиум-шаблоны.",
   },
   "pricing_landing.free_name": {
     en: "Starter",
