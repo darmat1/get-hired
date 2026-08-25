@@ -8,6 +8,7 @@ import { Solution } from "@/components/landing/solution";
 import { Features } from "@/components/landing/features";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FAQSEO } from "@/components/landing/faq-seo";
+import { AgentsTeaser } from "@/components/landing/agents-teaser";
 
 export function LandingPage() {
   const { isPending } = useSession();
@@ -23,6 +24,7 @@ export function LandingPage() {
         <Problem />
         <Solution />
         <Features />
+        <AgentsTeaser />
         <HowItWorks />
         <FAQSEO />
       </main>
