@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-const lora = Lora({ variable: "--font-lora", subsets: ["latin"], weight: ["500", "600"] });
-const workSans = Work_Sans({ variable: "--font-work-sans", subsets: ["latin"], weight: ["400", "500", "600"] });
+const lora = Lora({ variable: "--font-lora", subsets: ["latin"], weight: ["500", "600", "700"] });
+const workSans = Work_Sans({ variable: "--font-work-sans", subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const SITE_URL = getBaseUrl();
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0e14",
+  themeColor: "#221A15",
   width: "device-width",
   initialScale: 1,
 };
