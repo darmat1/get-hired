@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "@/lib/translations";
 import { ProfileForm } from "@/components/profile/profile-form";
+import { AgentTokensSection } from "@/components/settings/agent-tokens-section";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { LoadingScreen } from "@/components/ui/loading-screen";
@@ -40,6 +41,7 @@ export default function ProfilePage() {
 
       <div className="space-y-8">
         <ProfileForm />
+        <AgentTokensSection />
       </div>
     </div>
   );
