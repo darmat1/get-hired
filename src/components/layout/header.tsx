@@ -49,7 +49,7 @@ export function Header() {
           }
         >
           <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center">
+            <div className="flex items-center gap-8">
               {!isApplicationPage && (
                 <LocalizedLink
                   href="/"
@@ -81,7 +81,7 @@ export function Header() {
         }
       >
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center gap-8">
             {!isApplicationPage && (
               <LocalizedLink
                 href="/"
@@ -90,6 +90,34 @@ export function Header() {
               >
                 <Logo />
               </LocalizedLink>
+            )}
+            {!isApplicationPage && (
+              <nav className="hidden md:flex items-center gap-6">
+                <LocalizedLink
+                  href="/pricing"
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+                >
+                  {t("nav.pricing")}
+                </LocalizedLink>
+                <LocalizedLink
+                  href="/templates"
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+                >
+                  {t("nav.templates")}
+                </LocalizedLink>
+                <LocalizedLink
+                  href="/blog"
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+                >
+                  {t("nav.blog")}
+                </LocalizedLink>
+                <LocalizedLink
+                  href="/agents"
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+                >
+                  {t("nav.agents")}
+                </LocalizedLink>
+              </nav>
             )}
           </div>
 
