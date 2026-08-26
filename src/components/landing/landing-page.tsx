@@ -17,7 +17,7 @@ export function LandingPage() {
   // to allow logged-in users to view the landing page.
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900">
+    <div className="min-h-screen bg-warm-50 dark:bg-warm-950">
       <Header />
       <main>
         <Hero />
