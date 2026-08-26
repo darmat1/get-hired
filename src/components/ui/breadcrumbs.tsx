@@ -57,7 +57,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
         <li className="inline-flex items-center">
           <Link
             href="/"
-            className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
+            className="inline-flex items-center text-sm font-medium text-warm-500 hover:text-warm-900 dark:text-warm-400 dark:hover:text-warm-100 transition-colors"
           >
             <Home className="w-4 h-4 mr-2" />
             {t("nav.home")}
@@ -66,13 +66,13 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
         {generatedItems.map((item, index) => (
           <li key={item.href}>
             <div className="flex items-center">
-              <ChevronRight className="w-4 h-4 text-slate-400 mx-1" />
+              <ChevronRight className="w-4 h-4 text-warm-400 mx-1" />
               <Link
                 href={item.href}
                 className={`ml-1 text-sm font-medium transition-colors ${
                   index === generatedItems.length - 1
-                    ? "text-slate-900 dark:text-slate-100 cursor-default"
-                    : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                    ? "text-warm-900 dark:text-warm-100 cursor-default"
+                    : "text-warm-500 hover:text-warm-900 dark:text-warm-400 dark:hover:text-warm-100"
                 }`}
                 aria-current={
                   index === generatedItems.length - 1 ? "page" : undefined
