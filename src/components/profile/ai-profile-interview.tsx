@@ -160,19 +160,19 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
   const currentStep = steps[stepIndex];
 
   return (
-    <div className="flex flex-col h-full min-h-[520px] max-h-[700px] bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+    <div className="flex flex-col h-full min-h-[520px] max-h-[700px] bg-warm-100 dark:bg-warm-900 rounded-2xl border border-warm-200 dark:border-warm-700 shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-warm-100 dark:border-warm-800">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
             <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            <p className="text-sm font-semibold text-warm-900 dark:text-warm-100">
               {t("interview.title")}
             </p>
             {!isDone && (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-warm-400">
                 {t("interview.step_of")
                   .replace("{n}", String(Math.min(stepIndex + 1, steps.length)))
                   .replace("{total}", String(steps.length))}
@@ -182,7 +182,7 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
         </div>
         <button
           onClick={onSkip}
-          className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+          className="text-xs text-warm-400 hover:text-warm-600 dark:hover:text-warm-200 transition-colors"
         >
           {t("interview.skip_to_manual")}
         </button>
@@ -190,7 +190,7 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
 
       {/* Progress bar */}
       {!isDone && (
-        <div className="h-0.5 bg-slate-100 dark:bg-slate-800">
+        <div className="h-0.5 bg-warm-200 dark:bg-warm-800">
           <div
             className="h-full bg-amber-400 transition-all duration-500"
             style={{ width: `${((stepIndex) / steps.length) * 100}%` }}
@@ -208,7 +208,7 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
             <div
               className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                 msg.role === "assistant"
-                  ? "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm"
+                  ? "bg-warm-200 dark:bg-warm-800 text-warm-800 dark:text-warm-200 rounded-tl-sm"
                   : "bg-amber-500 text-white rounded-tr-sm"
               }`}
             >
@@ -219,8 +219,8 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
 
         {isProcessing && !isDone && (
           <div className="flex justify-start">
-            <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl rounded-tl-sm px-4 py-2.5">
-              <Loader2 className="h-4 w-4 animate-spin text-slate-500" />
+            <div className="bg-warm-200 dark:bg-warm-800 rounded-2xl rounded-tl-sm px-4 py-2.5">
+              <Loader2 className="h-4 w-4 animate-spin text-warm-500" />
             </div>
           </div>
         )}
@@ -229,7 +229,7 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
       </div>
 
       {/* Input area */}
-      <div className="border-t border-slate-100 dark:border-slate-800 px-4 py-3">
+      <div className="border-t border-warm-100 dark:border-warm-800 px-4 py-3">
         {isDone ? (
           <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white" onClick={onComplete}>
             <CheckCircle2 className="h-4 w-4 mr-2" />
@@ -246,7 +246,7 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
           <div className="flex gap-2 items-end">
             <div className="flex-1 space-y-1">
               {currentStep.hint && (
-                <p className="text-xs text-slate-400 px-1">{currentStep.hint}</p>
+                <p className="text-xs text-warm-400 px-1">{currentStep.hint}</p>
               )}
               <textarea
                 ref={inputRef}
@@ -256,7 +256,7 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
                 placeholder={currentStep.placeholder}
                 disabled={isProcessing}
                 rows={2}
-                className="w-full resize-none rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent disabled:opacity-50 transition-all"
+                className="w-full resize-none rounded-xl border border-warm-200 dark:border-warm-700 bg-warm-50 dark:bg-warm-800 px-3 py-2 text-sm text-warm-900 dark:text-warm-100 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent disabled:opacity-50 transition-all"
               />
             </div>
             <Button
@@ -273,12 +273,12 @@ export function AIProfileInterview({ onComplete, onSkip }: Props) {
           </div>
         )}
         {currentStep.optional && !isDone && !errorMsg && (
-          <p className="text-xs text-slate-400 text-center mt-1.5">
+          <p className="text-xs text-warm-400 text-center mt-1.5">
             {t("interview.optional_hint")} — {t("interview.press_enter")}
           </p>
         )}
         {!currentStep.optional && !isDone && !errorMsg && (
-          <p className="text-xs text-slate-400 text-center mt-1.5">
+          <p className="text-xs text-warm-400 text-center mt-1.5">
             {t("interview.press_enter")}
           </p>
         )}

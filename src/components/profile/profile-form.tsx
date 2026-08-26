@@ -363,12 +363,12 @@ export function ProfileForm() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+      <div className="bg-warm-100 dark:bg-warm-800 rounded-lg border border-warm-200 dark:border-warm-700 p-6">
+        <h3 className="text-lg font-semibold text-warm-900 dark:text-warm-50 mb-4">
           Avatar
         </h3>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <div className="h-24 w-24 overflow-hidden rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-700">
+          <div className="h-24 w-24 overflow-hidden rounded-full border border-warm-200 bg-warm-200 dark:border-warm-700 dark:bg-warm-700">
             {avatarPreview || avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -377,17 +377,17 @@ export function ProfileForm() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-slate-400">
+              <div className="flex h-full w-full items-center justify-center text-warm-400">
                 <User className="h-8 w-8" />
               </div>
             )}
           </div>
           <div className="flex-1 space-y-3">
-            <p className="text-sm text-slate-600 dark:text-slate-300">
+            <p className="text-sm text-warm-600 dark:text-warm-300">
               Upload JPG, PNG, or WEBP. Max size 200 KB.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700">
+              <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-warm-300 px-4 py-2 text-sm font-medium text-warm-700 transition-colors hover:bg-warm-50 dark:border-warm-600 dark:text-warm-200 dark:hover:bg-warm-700">
                 <Upload className="h-4 w-4" />
                 Choose avatar
                 <input
@@ -402,7 +402,7 @@ export function ProfileForm() {
                 type="button"
                 onClick={handleAvatarUpload}
                 disabled={!avatarFile || avatarLoading}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700 disabled:bg-slate-400"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-terracotta-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-terracotta-700 disabled:bg-terracotta-400"
               >
                 {avatarLoading && <Loader className="h-4 w-4 animate-spin" />}
                 Upload avatar
@@ -412,22 +412,22 @@ export function ProfileForm() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+      <div className="bg-warm-100 dark:bg-warm-800 rounded-lg border border-warm-200 dark:border-warm-700 p-6">
+        <h3 className="text-lg font-semibold text-warm-900 dark:text-warm-50 mb-4">
           {t("profile.social_connections")}
         </h3>
-        <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+        <div className="flex items-center justify-between p-4 bg-warm-50 dark:bg-warm-700/50 rounded-lg">
           <div className="flex items-center gap-3">
             <div
-              className={`p-2 rounded-full ${hasLinkedIn ? "bg-slate-100 dark:bg-slate-900/30 text-slate-600" : "bg-slate-100 dark:bg-slate-700 text-slate-400"}`}
+              className={`p-2 rounded-full ${hasLinkedIn ? "bg-warm-100 dark:bg-warm-900/30 text-warm-600" : "bg-warm-100 dark:bg-warm-700 text-warm-400"}`}
             >
               <LinkedinIcon className="h-5 w-5 fill-current" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-900 dark:text-white">
+              <p className="text-sm font-medium text-warm-900 dark:text-warm-50">
                 LinkedIn
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-warm-500 dark:text-warm-400">
                 {hasLinkedIn
                   ? t("profile.linkedin_connected")
                   : t("profile.linkedin_not_connected")}
@@ -446,7 +446,7 @@ export function ProfileForm() {
             <button
               onClick={handleLinkLinkedIn}
               disabled={loading}
-              className="text-sm font-medium text-slate-600 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors"
+              className="text-sm font-medium text-warm-600 hover:text-warm-700 dark:text-warm-400 dark:hover:text-warm-300 transition-colors"
             >
               {t("profile.link_linkedin")}
             </button>
@@ -478,25 +478,25 @@ export function ProfileForm() {
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-        <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">
+      <div className="bg-warm-100 dark:bg-warm-800 rounded-lg border border-warm-200 dark:border-warm-700 p-6">
+        <h3 className="text-sm font-semibold text-warm-900 dark:text-warm-50 mb-4">
           {t("profile.current_name")}
         </h3>
-        <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
-          <User className="h-5 w-5 text-slate-400" />
-          <span className="text-slate-700 dark:text-slate-300">
+        <div className="flex items-center gap-3 p-4 bg-warm-50 dark:bg-warm-700/50 rounded-lg">
+          <User className="h-5 w-5 text-warm-400" />
+          <span className="text-warm-700 dark:text-warm-300">
             {session?.user?.name || session?.user?.email}
           </span>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+      <div className="bg-warm-100 dark:bg-warm-800 rounded-lg border border-warm-200 dark:border-warm-700 p-6">
+        <h3 className="text-lg font-semibold text-warm-900 dark:text-warm-50 mb-4">
           {t("profile.change_name")}
         </h3>
         <form onSubmit={handleNameChange} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-warm-700 dark:text-warm-300 mb-2">
               {t("profile.new_name")}
             </label>
             <input
@@ -505,14 +505,14 @@ export function ProfileForm() {
               value={formData.newName}
               onChange={handleInputChange}
               placeholder="John Smith"
-              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-warm-300 dark:border-warm-600 rounded-lg bg-warm-100 dark:bg-warm-700 text-warm-900 dark:text-warm-50 placeholder-warm-500 dark:placeholder-warm-400 focus:outline-none focus:ring-2 focus:ring-warm-500 focus:border-transparent"
               disabled={loading}
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full px-4 py-2.5 bg-slate-600 hover:bg-slate-700 disabled:bg-slate-400 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+            className="w-full px-4 py-2.5 bg-terracotta-600 hover:bg-terracotta-700 disabled:bg-terracotta-400 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           >
             {loading && <Loader className="h-4 w-4 animate-spin" />}
             {t("profile.update_name")}
@@ -520,13 +520,13 @@ export function ProfileForm() {
         </form>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+      <div className="bg-warm-100 dark:bg-warm-800 rounded-lg border border-warm-200 dark:border-warm-700 p-6">
+        <h3 className="text-lg font-semibold text-warm-900 dark:text-warm-50 mb-4">
           {t("profile.change_password")}
         </h3>
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-warm-700 dark:text-warm-300 mb-2">
               {t("profile.current_password")}
             </label>
             <input
@@ -535,13 +535,13 @@ export function ProfileForm() {
               value={formData.currentPassword}
               onChange={handleInputChange}
               placeholder="••••••••"
-              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-warm-300 dark:border-warm-600 rounded-lg bg-warm-100 dark:bg-warm-700 text-warm-900 dark:text-warm-50 placeholder-warm-500 dark:placeholder-warm-400 focus:outline-none focus:ring-2 focus:ring-warm-500 focus:border-transparent"
               disabled={loading}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-warm-700 dark:text-warm-300 mb-2">
               {t("profile.new_password")}
             </label>
             <input
@@ -550,13 +550,13 @@ export function ProfileForm() {
               value={formData.newPassword}
               onChange={handleInputChange}
               placeholder="••••••••"
-              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-warm-300 dark:border-warm-600 rounded-lg bg-warm-100 dark:bg-warm-700 text-warm-900 dark:text-warm-50 placeholder-warm-500 dark:placeholder-warm-400 focus:outline-none focus:ring-2 focus:ring-warm-500 focus:border-transparent"
               disabled={loading}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-warm-700 dark:text-warm-300 mb-2">
               {t("profile.confirm_password")}
             </label>
             <input
@@ -565,7 +565,7 @@ export function ProfileForm() {
               value={formData.confirmPassword}
               onChange={handleInputChange}
               placeholder="••••••••"
-              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-warm-300 dark:border-warm-600 rounded-lg bg-warm-100 dark:bg-warm-700 text-warm-900 dark:text-warm-50 placeholder-warm-500 dark:placeholder-warm-400 focus:outline-none focus:ring-2 focus:ring-warm-500 focus:border-transparent"
               disabled={loading}
             />
           </div>
@@ -573,7 +573,7 @@ export function ProfileForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full px-4 py-2.5 bg-slate-600 hover:bg-slate-700 disabled:bg-slate-400 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+            className="w-full px-4 py-2.5 bg-terracotta-600 hover:bg-terracotta-700 disabled:bg-terracotta-400 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           >
             {loading && <Loader className="h-4 w-4 animate-spin" />}
             {t("profile.update_password")}
@@ -603,18 +603,18 @@ export function ProfileForm() {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+          <div className="bg-warm-100 dark:bg-warm-800 rounded-xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+            <h3 className="text-xl font-bold text-warm-900 dark:text-warm-50 mb-2">
               {t("profile.delete_confirm_title")}
             </h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 font-medium">
+            <p className="text-warm-600 dark:text-warm-400 mb-6 font-medium">
               {t("profile.delete_confirm_desc")}
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={loading}
-                className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-medium transition-colors"
+                className="flex-1 px-4 py-2.5 bg-warm-200 hover:bg-warm-300 dark:bg-warm-700 dark:hover:bg-warm-600 text-warm-700 dark:text-warm-200 rounded-lg font-medium transition-colors"
               >
                 {t("common.cancel")}
               </button>
@@ -639,13 +639,13 @@ export function ProfileForm() {
         footer={
           <button
             onClick={() => setShowLinkedInConflict(false)}
-            className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg text-sm font-medium"
+            className="px-4 py-2 bg-warm-600 hover:bg-warm-700 text-white rounded-lg text-sm font-medium"
           >
             {t("common.cancel")}
           </button>
         }
       >
-        <p className="text-sm text-slate-700 dark:text-slate-200">
+        <p className="text-sm text-warm-700 dark:text-warm-200">
           {t("profile.error.linkedin_already_linked")}
         </p>
       </Modal>
