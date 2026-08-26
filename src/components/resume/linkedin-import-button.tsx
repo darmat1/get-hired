@@ -147,22 +147,22 @@ export function LinkedInImportButton({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 space-y-6 shadow-sm">
+    <div className="bg-warm-100 dark:bg-warm-800 rounded-xl border border-warm-200 dark:border-warm-700 p-6 space-y-6 shadow-sm">
       <div className="flex items-center gap-3">
-        <FileText className="h-6 w-6 text-slate-600" />
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+        <FileText className="h-6 w-6 text-warm-600" />
+        <h3 className="text-lg font-semibold text-warm-900 dark:text-warm-50">
           {t("resume.import_from_linkedin")}
         </h3>
       </div>
 
       <div className="space-y-4">
-        <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-700 rounded-lg w-fit">
+        <div className="flex gap-2 p-1 bg-warm-200 dark:bg-warm-700 rounded-lg w-fit">
           <button
             onClick={() => setImportMode("pdf")}
             className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
               importMode === "pdf"
-                ? "bg-white dark:bg-slate-600 text-slate-600 dark:text-slate-300 shadow-sm"
-                : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                ? "bg-warm-100 dark:bg-warm-600 text-warm-600 dark:text-warm-300 shadow-sm"
+                : "text-warm-500 hover:text-warm-700 dark:text-warm-400 dark:hover:text-warm-200"
             }`}
           >
             {t("resume.upload_pdf")}
@@ -171,8 +171,8 @@ export function LinkedInImportButton({
             onClick={() => setImportMode("paste")}
             className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
               importMode === "paste"
-                ? "bg-white dark:bg-slate-600 text-slate-600 dark:text-slate-300 shadow-sm"
-                : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                ? "bg-warm-100 dark:bg-warm-600 text-warm-600 dark:text-warm-300 shadow-sm"
+                : "text-warm-500 hover:text-warm-700 dark:text-warm-400 dark:hover:text-warm-200"
             }`}
           >
             AI Paste
@@ -183,10 +183,10 @@ export function LinkedInImportButton({
           <div className="space-y-4">
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl p-8 text-center cursor-pointer hover:border-slate-500 dark:hover:border-slate-400 transition-colors"
+              className="border-2 border-dashed border-warm-300 dark:border-warm-600 rounded-xl p-8 text-center cursor-pointer hover:border-warm-500 dark:hover:border-warm-400 transition-colors"
             >
-              <Upload className="h-10 w-10 text-slate-400 mx-auto mb-4" />
-              <p className="text-sm text-slate-600 dark:text-slate-400">
+              <Upload className="h-10 w-10 text-warm-400 mx-auto mb-4" />
+              <p className="text-sm text-warm-600 dark:text-warm-400">
                 {fileName || t("resume.drag_drop_pdf")}
               </p>
               <input
@@ -200,7 +200,7 @@ export function LinkedInImportButton({
             {fileName && !loading && (
               <button
                 onClick={() => handleImport()}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-terracotta-600 hover:bg-terracotta-700 text-white rounded-lg font-medium transition-colors"
               >
                 <ClipboardList className="h-5 w-5" />
                 {t("resume.ai_parse")}
@@ -212,7 +212,7 @@ export function LinkedInImportButton({
         {importMode === "paste" && (
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <label className="text-sm font-medium text-warm-700 dark:text-warm-300">
                 {t("resume.paste_profile_title")}
               </label>
               <textarea
@@ -224,8 +224,8 @@ export function LinkedInImportButton({
     rounded-lg 
     text-sm 
     transition-all
-    bg-white border border-slate-300 text-slate-900
-    placeholder:text-slate-400
+    bg-warm-200 border border-warm-300 text-warm-900
+    placeholder:text-warm-400
     dark:bg-[var(--color-input)] 
     dark:border-[var(--color-border)] 
     dark:text-[var(--color-foreground)]
@@ -242,7 +242,7 @@ export function LinkedInImportButton({
             <button
               onClick={() => handleImport()}
               disabled={loading || !profileText}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-600 hover:bg-slate-700 disabled:bg-slate-400 text-white rounded-lg font-medium transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-terracotta-600 hover:bg-terracotta-700 disabled:bg-terracotta-400 text-white rounded-lg font-medium transition-colors"
             >
               {loading ? (
                 <Loader className="h-5 w-5 animate-spin" />

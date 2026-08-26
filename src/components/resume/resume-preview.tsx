@@ -127,8 +127,8 @@ export function ResumePreview({
                 onClick={() => onTemplateChange(tmpl.id)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
                   template === tmpl.id
-                    ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 shadow-sm"
-                    : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-200"
+                    ? "bg-warm-900 text-white dark:bg-warm-100 dark:text-warm-900 shadow-sm"
+                    : "bg-warm-100 dark:bg-warm-800 text-warm-600 dark:text-warm-400 border border-warm-200 dark:border-warm-700 hover:border-warm-400 dark:hover:border-warm-500 hover:text-warm-900 dark:hover:text-warm-200"
                 }`}
               >
                 <span>{tmpl.label}</span>
@@ -136,7 +136,7 @@ export function ResumePreview({
                   <span
                     className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
                       template === tmpl.id
-                        ? "bg-white/15 text-white dark:bg-slate-900/10 dark:text-slate-900"
+                        ? "bg-white/15 text-white dark:bg-warm-900/10 dark:text-warm-900"
                         : "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
                     }`}
                   >

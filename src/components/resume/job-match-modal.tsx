@@ -32,7 +32,7 @@ const scoreRingColors: Record<MatchLabel, string> = {
 const priorityIcon = (p: JobMatchSuggestion["priority"]) => {
   if (p === "high") return <ChevronUp className="h-3.5 w-3.5 text-red-500 flex-shrink-0" />;
   if (p === "medium") return <Minus className="h-3.5 w-3.5 text-yellow-500 flex-shrink-0" />;
-  return <ChevronDown className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />;
+  return <ChevronDown className="h-3.5 w-3.5 text-warm-400 flex-shrink-0" />;
 };
 
 function ScoreRing({ score, label }: { score: number; label: MatchLabel }) {
@@ -43,7 +43,7 @@ function ScoreRing({ score, label }: { score: number; label: MatchLabel }) {
   return (
     <div className="relative flex items-center justify-center">
       <svg width="108" height="108" viewBox="0 0 108 108" className="-rotate-90">
-        <circle cx="54" cy="54" r={radius} fill="none" stroke="currentColor" strokeWidth="10" className="text-slate-100 dark:text-slate-800" />
+        <circle cx="54" cy="54" r={radius} fill="none" stroke="currentColor" strokeWidth="10" className="text-warm-100 dark:text-warm-800" />
         <circle
           cx="54" cy="54" r={radius} fill="none" strokeWidth="10"
           strokeDasharray={circumference}
@@ -54,7 +54,7 @@ function ScoreRing({ score, label }: { score: number; label: MatchLabel }) {
       </svg>
       <div className="absolute flex flex-col items-center">
         <span className={`text-2xl font-extrabold ${scoreColors[label]}`}>{score}%</span>
-        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">{label}</span>
+        <span className="text-[10px] font-semibold text-warm-400 uppercase tracking-wide">{label}</span>
       </div>
     </div>
   );
@@ -89,19 +89,19 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-2xl bg-warm-100 dark:bg-warm-900 rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-warm-200 dark:border-warm-800 flex-shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
               <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("job_match.title")}</p>
-              <p className="text-xs text-slate-400 truncate max-w-[240px]">{resumeTitle}</p>
+              <p className="text-sm font-semibold text-warm-900 dark:text-warm-100">{t("job_match.title")}</p>
+              <p className="text-xs text-warm-400 truncate max-w-[240px]">{resumeTitle}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1">
+          <button onClick={onClose} className="text-warm-400 hover:text-warm-600 dark:hover:text-warm-200 transition-colors p-1">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -110,9 +110,9 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
           {!result ? (
             <>
-              <p className="text-sm text-slate-600 dark:text-slate-400">{t("job_match.description")}</p>
+              <p className="text-sm text-warm-600 dark:text-warm-400">{t("job_match.description")}</p>
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                <label className="text-xs font-medium text-warm-500 uppercase tracking-wide">
                   {t("job_match.paste_label")}
                 </label>
                 <textarea
@@ -120,7 +120,7 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
                   onChange={(e) => setJobDescription(e.target.value)}
                   placeholder={t("job_match.paste_placeholder")}
                   rows={10}
-                  className="w-full resize-none rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+                  className="w-full resize-none rounded-xl border border-warm-200 dark:border-warm-700 bg-warm-50 dark:bg-warm-800 px-4 py-3 text-sm text-warm-900 dark:text-warm-100 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
                 />
               </div>
               {error && (
@@ -132,10 +132,10 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
           ) : (
             <div className="space-y-6">
               {/* Score */}
-              <div className="flex flex-col sm:flex-row items-center gap-6 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+              <div className="flex flex-col sm:flex-row items-center gap-6 p-5 bg-warm-50 dark:bg-warm-800/50 rounded-xl">
                 <ScoreRing score={result.matchScore} label={result.matchLabel} />
                 <div className="flex-1 text-center sm:text-left">
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{result.summary}</p>
+                  <p className="text-sm text-warm-700 dark:text-warm-300 leading-relaxed">{result.summary}</p>
                 </div>
               </div>
 
@@ -145,7 +145,7 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
                   <div className="space-y-2">
                     <div className="flex items-center gap-1.5">
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                      <span className="text-xs font-semibold text-warm-700 dark:text-warm-300 uppercase tracking-wide">
                         {t("job_match.present_keywords")}
                       </span>
                     </div>
@@ -162,7 +162,7 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
                   <div className="space-y-2">
                     <div className="flex items-center gap-1.5">
                       <XCircle className="h-4 w-4 text-red-500" />
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                      <span className="text-xs font-semibold text-warm-700 dark:text-warm-300 uppercase tracking-wide">
                         {t("job_match.missing_keywords")}
                       </span>
                     </div>
@@ -180,18 +180,18 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
               {/* Suggestions */}
               {result.suggestions.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                  <p className="text-xs font-semibold text-warm-700 dark:text-warm-300 uppercase tracking-wide">
                     {t("job_match.suggestions")}
                   </p>
                   <div className="space-y-2">
                     {result.suggestions.map((s, i) => (
-                      <div key={i} className="flex gap-3 p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                      <div key={i} className="flex gap-3 p-3.5 bg-warm-50 dark:bg-warm-800/50 rounded-xl">
                         <div className="mt-0.5">{priorityIcon(s.priority)}</div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mr-2">{t(`job_match.section_${s.section}`)}</span>
-                          <p className="text-sm text-slate-700 dark:text-slate-300 mt-0.5">{s.suggestion}</p>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-warm-400 mr-2">{t(`job_match.section_${s.section}`)}</span>
+                          <p className="text-sm text-warm-700 dark:text-warm-300 mt-0.5">{s.suggestion}</p>
                           {s.example && (
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 italic border-l-2 border-amber-300 dark:border-amber-600 pl-2">
+                            <p className="text-xs text-warm-500 dark:text-warm-400 mt-1.5 italic border-l-2 border-amber-300 dark:border-amber-600 pl-2">
                               {s.example}
                             </p>
                           )}
@@ -204,7 +204,7 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
 
               <button
                 onClick={() => { setResult(null); setJobDescription(""); }}
-                className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                className="text-sm text-warm-400 hover:text-warm-600 dark:hover:text-warm-200 transition-colors"
               >
                 ← {t("job_match.analyze_another")}
               </button>
@@ -214,7 +214,7 @@ export function JobMatchModal({ resumeId, resumeTitle, onClose }: Props) {
 
         {/* Footer */}
         {!result && (
-          <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex-shrink-0 flex justify-end gap-3">
+          <div className="px-6 py-4 border-t border-warm-200 dark:border-warm-800 flex-shrink-0 flex justify-end gap-3">
             <Button variant="outline" onClick={onClose}>{t("common.cancel")}</Button>
             <Button
               onClick={analyze}
