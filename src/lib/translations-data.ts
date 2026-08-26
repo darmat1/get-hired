@@ -1337,9 +1337,9 @@ export const translations: Translations = {
     ru: "Создайте токен",
   },
   "agents.how_it_works.step1_desc": {
-    en: "In Settings → AI Agents, create a token and choose what it's allowed to access.",
-    uk: "У Налаштуваннях → AI-агенти створіть токен і оберіть, до чого він матиме доступ.",
-    ru: "В Настройках → AI-агенты создайте токен и выберите, к чему у него будет доступ.",
+    en: "In AI Settings, create a token and choose what it's allowed to access.",
+    uk: "У Налаштуваннях AI створіть токен і оберіть, до чого він матиме доступ.",
+    ru: "В Настройках AI создайте токен и выберите, к чему у него будет доступ.",
   },
   "agents.how_it_works.step2_title": {
     en: "Paste one snippet",
@@ -1393,9 +1393,9 @@ export const translations: Translations = {
     ru: "Отозвать в любой момент",
   },
   "agents.security.item3_desc": {
-    en: "Turn off access for any token from Settings in one click, no questions asked.",
-    uk: "Вимкніть доступ для будь-якого токена в Налаштуваннях в один клік.",
-    ru: "Отключите доступ для любого токена в Настройках в один клик.",
+    en: "Turn off access for any token from AI Settings in one click, no questions asked.",
+    uk: "Вимкніть доступ для будь-якого токена в Налаштуваннях AI в один клік.",
+    ru: "Отключите доступ для любого токена в Настройках AI в один клик.",
   },
 
   "agents.faq.q1": {
@@ -1404,9 +1404,9 @@ export const translations: Translations = {
     ru: "Нужно ли уметь программировать?",
   },
   "agents.faq.a1": {
-    en: "No. Creating a token is a few clicks in Settings, and connecting it is pasting one block of text into your AI tool's settings.",
-    uk: "Ні. Створення токена — кілька кліків у Налаштуваннях, а підключення — вставка одного блоку тексту в налаштування вашого AI-інструменту.",
-    ru: "Нет. Создание токена — несколько кликов в Настройках, а подключение — вставка одного блока текста в настройки вашего AI-инструмента.",
+    en: "No. Creating a token is a few clicks in AI Settings, and connecting it is pasting one block of text into your AI tool's settings.",
+    uk: "Ні. Створення токена — кілька кліків у Налаштуваннях AI, а підключення — вставка одного блоку тексту в налаштування вашого AI-інструменту.",
+    ru: "Нет. Создание токена — несколько кликов в Настройках AI, а подключение — вставка одного блока текста в настройки вашего AI-инструмента.",
   },
   "agents.faq.q2": {
     en: "Which AI assistants are supported?",
@@ -1424,9 +1424,9 @@ export const translations: Translations = {
     ru: "Это безопасно?",
   },
   "agents.faq.a3": {
-    en: "Yes. You choose exactly what each token can access, tokens are stored as a hash, and you can revoke any of them instantly from Settings.",
-    uk: "Так. Ви обираєте, до чого саме має доступ кожен токен, токени зберігаються у вигляді хешу, і ви можете миттєво відкликати будь-який з Налаштувань.",
-    ru: "Да. Вы выбираете, к чему именно имеет доступ каждый токен, токены хранятся в виде хеша, и вы можете мгновенно отозвать любой из Настроек.",
+    en: "Yes. You choose exactly what each token can access, tokens are stored as a hash, and you can revoke any of them instantly from AI Settings.",
+    uk: "Так. Ви обираєте, до чого саме має доступ кожен токен, токени зберігаються у вигляді хешу, і ви можете миттєво відкликати будь-який з Налаштувань AI.",
+    ru: "Да. Вы выбираете, к чему именно имеет доступ каждый токен, токены хранятся в виде хеша, и вы можете мгновенно отозвать любой из Настроек AI.",
   },
   "agents.faq.q4": {
     en: "Can I revoke access later?",
