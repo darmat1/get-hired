@@ -363,7 +363,7 @@ export function ProfileForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="space-y-8">
       <div className="bg-warm-100 dark:bg-warm-800 rounded-lg border border-warm-200 dark:border-warm-700 p-6">
         <h3 className="text-lg font-semibold text-warm-900 dark:text-warm-50 mb-4">
           Avatar
