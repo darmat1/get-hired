@@ -79,7 +79,7 @@ export default function NewResumePage() {
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t("common.back_to_dashboard") || "Back to Dashboard"}
           </LocalizedLink>
-          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+          <h1 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             {t("nav.create_resume")}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground sm:text-base">
@@ -88,12 +88,12 @@ export default function NewResumePage() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-8">
+        <div className="rounded-xl border border-warm-200 bg-warm-100 p-5 shadow-sm dark:border-warm-700 dark:bg-warm-800 sm:p-8">
           <form onSubmit={handleCreate} className="space-y-6">
             <div>
               <label
                 htmlFor="resume-title"
-                className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="mb-2 block text-sm font-medium text-warm-700 dark:text-warm-300"
               >
                 {t("resume_builder.resume_title") || "Resume Title"}
               </label>
@@ -107,7 +107,7 @@ export default function NewResumePage() {
                   t("resume_builder.title_placeholder") ||
                   "e.g. Software Engineer 2024"
                 }
-                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-lg border border-warm-300 bg-warm-50 px-4 py-3 text-warm-900 outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-terracotta-500 dark:border-warm-600 dark:bg-warm-950 dark:text-warm-50"
                 autoFocus
               />
               {error && (
@@ -117,7 +117,7 @@ export default function NewResumePage() {
               )}
             </div>
 
-            <div className="flex flex-col-reverse gap-3 border-t border-gray-100 pt-4 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-end">
+            <div className="flex flex-col-reverse gap-3 border-t border-warm-200 pt-4 dark:border-warm-700 sm:flex-row sm:items-center sm:justify-end">
               <LocalizedLink href="/dashboard/my-resumes">
                 <Button variant="ghost" type="button" className="w-full sm:w-auto">
                   {t("common.cancel")}
@@ -126,7 +126,7 @@ export default function NewResumePage() {
               <Button
                 type="submit"
                 disabled={!title.trim() || isCreating}
-                className="w-full bg-slate-900 px-6 text-white hover:bg-slate-800 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200 sm:w-auto"
+                className="w-full bg-terracotta-500 px-6 text-white hover:bg-terracotta-600 dark:bg-terracotta-500 dark:text-white dark:hover:bg-terracotta-600 sm:w-auto"
               >
                 {isCreating ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -139,16 +139,16 @@ export default function NewResumePage() {
           </form>
         </div>
 
-        <div className="mt-8 rounded-xl border border-slate-100 bg-slate-50 p-5 dark:border-slate-800/50 dark:bg-slate-900/40 sm:p-6">
+        <div className="mt-8 rounded-xl border border-warm-200 bg-warm-100 p-5 dark:border-warm-700/50 dark:bg-warm-900/40 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row">
-            <div className="h-fit rounded-lg bg-slate-100 p-2 dark:bg-slate-800">
-              <Plus className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+            <div className="h-fit rounded-lg bg-warm-200 p-2 dark:bg-warm-800">
+              <Plus className="h-5 w-5 text-warm-600 dark:text-warm-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+              <h3 className="font-semibold text-warm-900 dark:text-warm-100">
                 {t("resume_builder.quick_start_title") || "Quick Start"}
               </h3>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              <p className="mt-1 text-sm text-warm-600 dark:text-warm-400">
                 {t("resume_builder.quick_start_desc") ||
                   "After creating your resume, you can import data from your profile or fill in the details manually in our powerful editor."}
               </p>
