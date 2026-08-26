@@ -40,7 +40,7 @@ export function Header() {
   // Don't render session-dependent content until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
+      <header className="sticky top-0 z-50 border-b border-warm-200 bg-warm-50/80 backdrop-blur-md dark:border-warm-700 dark:bg-warm-900/80">
         <div
           className={
             isApplicationPage
@@ -49,11 +49,11 @@ export function Header() {
           }
         >
           <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center">
+            <div className="flex items-center gap-8">
               {!isApplicationPage && (
                 <LocalizedLink
                   href="/"
-                  className="text-xl font-bold text-slate-900 dark:text-white"
+                  className="text-xl font-bold text-warm-900 dark:text-warm-50"
                 >
                   <Logo />
                 </LocalizedLink>
@@ -72,7 +72,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
+    <header className="sticky top-0 z-50 border-b border-warm-200 bg-warm-50/80 backdrop-blur-md dark:border-warm-700 dark:bg-warm-900/80">
       <div
         className={
           isApplicationPage
@@ -81,15 +81,37 @@ export function Header() {
         }
       >
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center gap-8">
             {!isApplicationPage && (
               <LocalizedLink
                 href="/"
-                className="text-xl font-bold text-slate-900 dark:text-white"
+                className="text-xl font-bold text-warm-900 dark:text-warm-50"
                 aria-label="GetHired Home"
               >
                 <Logo />
               </LocalizedLink>
+            )}
+            {!isApplicationPage && (
+              <nav className="hidden md:flex items-center gap-6">
+                <LocalizedLink
+                  href="/pricing"
+                  className="text-sm font-medium text-warm-600 hover:text-warm-900 dark:text-warm-300 dark:hover:text-warm-50 transition-colors"
+                >
+                  {t("nav.pricing")}
+                </LocalizedLink>
+                <LocalizedLink
+                  href="/blog"
+                  className="text-sm font-medium text-warm-600 hover:text-warm-900 dark:text-warm-300 dark:hover:text-warm-50 transition-colors"
+                >
+                  {t("nav.blog")}
+                </LocalizedLink>
+                <LocalizedLink
+                  href="/agents"
+                  className="text-sm font-medium text-warm-600 hover:text-warm-900 dark:text-warm-300 dark:hover:text-warm-50 transition-colors"
+                >
+                  {t("nav.agents")}
+                </LocalizedLink>
+              </nav>
             )}
           </div>
 
@@ -108,7 +130,7 @@ export function Header() {
             {!isApplicationPage && (
               <>
                 {isPending ? (
-                  <div className="h-8 w-32 animate-pulse bg-slate-200 dark:bg-slate-700 rounded"></div>
+                  <div className="h-8 w-32 animate-pulse bg-warm-200 dark:bg-warm-700 rounded"></div>
                 ) : session ? (
                   <div className="flex items-center space-x-4">
                     <UserMenu
@@ -122,7 +144,7 @@ export function Header() {
                 ) : (
                   <LocalizedLink
                     href="/auth/signin"
-                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-800 transition-colors text-sm font-medium text-slate-700 dark:text-slate-200 no-underline hover:no-underline"
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-warm-300 hover:bg-warm-50 dark:border-warm-600 dark:hover:bg-warm-800 transition-colors text-sm font-medium text-warm-700 dark:text-warm-200 no-underline hover:no-underline"
                   >
                     <LogIn className="h-4 w-4" />
                     {t("nav.sign_in")}

@@ -254,7 +254,7 @@ export function ProfileAssistantWidget({ onProfileUpdated }: Props) {
 
       {isOpen && (
         <div
-          className="fixed bottom-6 right-6 z-40 w-[340px] sm:w-[380px] flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+          className="fixed bottom-6 right-6 z-40 w-[340px] sm:w-[380px] flex flex-col bg-warm-100 dark:bg-warm-900 rounded-2xl shadow-2xl border border-warm-200 dark:border-warm-700 overflow-hidden"
           style={{ maxHeight: "min(560px, calc(100vh - 80px))" }}
         >
           {/* Header */}
@@ -285,7 +285,7 @@ export function ProfileAssistantWidget({ onProfileUpdated }: Props) {
                   <div className={`max-w-[90%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
                     msg.role === "user"
                       ? "bg-amber-500 text-white rounded-tr-sm"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm"
+                      : "bg-warm-200 dark:bg-warm-800 text-warm-800 dark:text-warm-200 rounded-tl-sm"
                   }`}>
                     {msg.text}
                   </div>
@@ -306,8 +306,8 @@ export function ProfileAssistantWidget({ onProfileUpdated }: Props) {
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl rounded-tl-sm px-4 py-2.5">
-                  <Loader2 className="h-4 w-4 animate-spin text-slate-500" />
+                <div className="bg-warm-200 dark:bg-warm-800 rounded-2xl rounded-tl-sm px-4 py-2.5">
+                  <Loader2 className="h-4 w-4 animate-spin text-warm-500" />
                 </div>
               </div>
             )}
@@ -319,7 +319,7 @@ export function ProfileAssistantWidget({ onProfileUpdated }: Props) {
                   <button
                     key={q.label}
                     onClick={() => setInput(q.value)}
-                    className="text-xs px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-amber-400 hover:text-amber-600 dark:hover:border-amber-500 dark:hover:text-amber-400 transition-colors bg-white dark:bg-slate-900"
+                    className="text-xs px-2.5 py-1 rounded-full border border-warm-200 dark:border-warm-700 text-warm-600 dark:text-warm-400 hover:border-amber-400 hover:text-amber-600 dark:hover:border-amber-500 dark:hover:text-amber-400 transition-colors bg-warm-100 dark:bg-warm-900"
                   >
                     {q.label}
                   </button>
@@ -331,7 +331,7 @@ export function ProfileAssistantWidget({ onProfileUpdated }: Props) {
           </div>
 
           {/* Input */}
-          <div className="border-t border-slate-100 dark:border-slate-800 px-3 py-2.5 flex gap-2 items-end flex-shrink-0">
+          <div className="border-t border-warm-100 dark:border-warm-800 px-3 py-2.5 flex gap-2 items-end flex-shrink-0">
             <textarea
               ref={inputRef}
               value={input}
@@ -340,7 +340,7 @@ export function ProfileAssistantWidget({ onProfileUpdated }: Props) {
               placeholder={placeholder}
               rows={mode === "resume_job" ? 4 : 2}
               disabled={isLoading}
-              className="flex-1 resize-none rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent disabled:opacity-50 transition-all"
+              className="flex-1 resize-none rounded-xl border border-warm-200 dark:border-warm-700 bg-warm-50 dark:bg-warm-800 px-3 py-2 text-sm text-warm-900 dark:text-warm-100 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent disabled:opacity-50 transition-all"
             />
             <button
               onClick={send}

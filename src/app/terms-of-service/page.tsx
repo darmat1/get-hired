@@ -31,18 +31,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-warm-50 dark:bg-warm-950 text-warm-900 dark:text-warm-50">
       <Header />
 
-      <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mb-4 text-sm text-muted-foreground">
+      <main className="font-body mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-4 text-sm text-warm-500 dark:text-warm-400">
           Last Updated: January 5, 2026
         </div>
-        <h1 className="text-4xl font-bold mb-8">Terms of Service</h1>
+        <h1 className="font-heading text-4xl font-bold mb-8 text-warm-900 dark:text-warm-50">Terms of Service</h1>
 
         <div className="prose dark:prose-invert max-w-none space-y-6">
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Agreement to Terms</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Agreement to Terms</h2>
             <p>
               By accessing and using GetHired, you represent and warrant that
               you are at least 18 years of age. By accessing and using GetHired,
@@ -53,7 +53,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Use License</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Use License</h2>
             <p>
               Permission is granted to temporarily download one copy of the
               materials (information or software) on GetHired for personal,
@@ -68,7 +68,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Refund Policy</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Refund Policy</h2>
             <p>
               Since GetHired offers non-tangible, irrevocable digital goods, we
               do not provide refunds after the product is purchased, which you
@@ -79,7 +79,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">
               AI-Generated Content Disclaimer
             </h2>
             <p>
@@ -97,7 +97,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">
               No Guarantee of Employment
             </h2>
             <p>
@@ -112,7 +112,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Disclaimer</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Disclaimer</h2>
             <p>
               The materials on GetHired are provided on an &apos;as is&apos;
               basis. GetHired makes no warranties, expressed or implied, and
@@ -125,7 +125,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">
               Limitations of Liability
             </h2>
             <p>
@@ -137,7 +137,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">
               Accuracy of Materials
             </h2>
             <p>
@@ -150,7 +150,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Links</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Links</h2>
             <p>
               GetHired has not reviewed all of the sites linked to its website
               and is not responsible for the contents of any such linked site.

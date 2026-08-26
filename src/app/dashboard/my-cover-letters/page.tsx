@@ -118,7 +118,7 @@ export default function MyCoverLettersPage() {
         <div className="space-y-6 text-foreground">
           <div className="mb-6 flex flex-col gap-4 sm:mb-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0">
-              <h1 className="text-2xl font-bold sm:text-3xl">
+              <h1 className="text-2xl font-bold font-heading sm:text-3xl">
                 {t("my_cover_letters.title")}
               </h1>
               <p className="mt-2 text-sm text-muted-foreground sm:text-base">
@@ -166,7 +166,7 @@ export default function MyCoverLettersPage() {
                       <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                         <div className="flex min-w-0 items-center gap-2">
                           <FileCheck className="h-5 w-5 text-primary" />
-                          <span className="flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium capitalize text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                          <span className="flex items-center gap-1 rounded-full bg-warm-100 px-2 py-0.5 text-xs font-medium capitalize text-warm-600 dark:bg-warm-700 dark:text-warm-300">
                             <List className="h-3 w-3" />
                             {cl.format}
                           </span>
@@ -188,7 +188,7 @@ export default function MyCoverLettersPage() {
                       </div>
 
                       {/* Cover Letter Preview */}
-                      <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4 mb-3 max-h-40 overflow-y-auto">
+                      <div className="bg-warm-50 dark:bg-warm-700/50 rounded-lg p-4 mb-3 max-h-40 overflow-y-auto">
                         <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
                           {cl.coverLetterText}
                         </p>
@@ -199,7 +199,7 @@ export default function MyCoverLettersPage() {
                         <div className="mb-3 p-2 rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20 flex items-center justify-between">
                           <div className="flex items-center gap-2 min-w-0">
                             <FileText className="h-4 w-4 text-purple-600 dark:text-purple-400 flex-shrink-0" />
-                            <span className="text-xs font-medium text-slate-900 dark:text-white truncate">
+                            <span className="text-xs font-medium text-warm-900 dark:text-warm-50 truncate">
                               {cl.resume.title}
                             </span>
                           </div>
@@ -280,10 +280,10 @@ export default function MyCoverLettersPage() {
             <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
           </div>
           <div>
-            <p className="text-gray-900 dark:text-gray-100 font-medium mb-1">
+            <p className="text-warm-900 dark:text-warm-100 font-medium mb-1">
               {t("my_cover_letters.delete_confirm_title") || "Are you sure?"}
             </p>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <p className="text-warm-600 dark:text-warm-400 text-sm">
               {t("my_cover_letters.delete_confirm_desc") ||
                 "This action cannot be undone."}
             </p>

@@ -51,7 +51,7 @@ export function Pagination({ totalPages, currentPage, className }: PaginationPro
       <Link
         href={createPageURL(Math.max(1, currentPage - 1))}
         className={cn(
-          "flex h-10 w-10 items-center justify-center rounded-lg transition-colors bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700",
+          "flex h-10 w-10 items-center justify-center rounded-lg transition-colors bg-warm-100 dark:bg-warm-800 text-warm-500 dark:text-warm-400 hover:bg-warm-200 dark:hover:bg-warm-700",
           currentPage === 1 && "pointer-events-none opacity-50"
         )}
       >
@@ -64,7 +64,7 @@ export function Pagination({ totalPages, currentPage, className }: PaginationPro
             return (
               <span
                 key={`ellipsis-${index}`}
-                className="flex h-10 w-10 items-center justify-center text-slate-400 dark:text-slate-500"
+                className="flex h-10 w-10 items-center justify-center text-warm-400 dark:text-warm-500"
               >
                 <MoreHorizontal className="h-4 w-4" />
               </span>
@@ -80,8 +80,8 @@ export function Pagination({ totalPages, currentPage, className }: PaginationPro
               className={cn(
                 "w-10 h-10 flex items-center justify-center rounded-lg font-medium transition",
                 isCurrent
-                  ? "bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 shadow-sm"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  ? "bg-terracotta-500 text-white dark:bg-terracotta-500 dark:text-white shadow-sm"
+                  : "text-warm-600 dark:text-warm-300 hover:bg-warm-100 dark:hover:bg-warm-800"
               )}
             >
               {p}
@@ -93,7 +93,7 @@ export function Pagination({ totalPages, currentPage, className }: PaginationPro
       <Link
         href={createPageURL(Math.min(totalPages, currentPage + 1))}
         className={cn(
-          "flex h-10 w-10 items-center justify-center rounded-lg transition-colors bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700",
+          "flex h-10 w-10 items-center justify-center rounded-lg transition-colors bg-warm-100 dark:bg-warm-800 text-warm-500 dark:text-warm-400 hover:bg-warm-200 dark:hover:bg-warm-700",
           currentPage === totalPages && "pointer-events-none opacity-50"
         )}
       >

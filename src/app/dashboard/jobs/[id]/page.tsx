@@ -73,7 +73,7 @@ export default async function JobDetailPage({ params }: PageProps) {
                 {job.boardToken}
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-4 tracking-tight">
+            <h1 className="text-3xl font-bold font-heading text-foreground mb-4 tracking-tight">
               {job.title}
             </h1>
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">

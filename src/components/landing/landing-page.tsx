@@ -8,6 +8,7 @@ import { Solution } from "@/components/landing/solution";
 import { Features } from "@/components/landing/features";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FAQSEO } from "@/components/landing/faq-seo";
+import { AgentsTeaser } from "@/components/landing/agents-teaser";
 
 export function LandingPage() {
   const { isPending } = useSession();
@@ -16,13 +17,14 @@ export function LandingPage() {
   // to allow logged-in users to view the landing page.
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900">
+    <div className="min-h-screen bg-warm-50 dark:bg-warm-950">
       <Header />
       <main>
         <Hero />
         <Problem />
         <Solution />
         <Features />
+        <AgentsTeaser />
         <HowItWorks />
         <FAQSEO />
       </main>

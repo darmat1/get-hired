@@ -125,8 +125,8 @@ export default async function BlogPostPage({
 
   if (!content)
     return (
-      <div className="max-w-5xl mx-auto py-12 px-4">
-        <h1 className="text-2xl font-bold">Content not available</h1>
+      <div className="font-body max-w-5xl mx-auto py-12 px-4">
+        <h1 className="font-heading text-2xl font-bold">Content not available</h1>
       </div>
     );
 
@@ -160,7 +160,7 @@ export default async function BlogPostPage({
           }).replace(/</g, "\\u003c"),
         }}
       />
-      <div className="max-w-7xl mx-auto pt-12 px-4 sm:px-6 lg:px-8">
+      <div className="font-body max-w-7xl mx-auto pt-12 px-4 sm:px-6 lg:px-8">
         <Breadcrumbs
           items={[
             {
@@ -171,12 +171,12 @@ export default async function BlogPostPage({
           ]}
         />
       </div>
-      <article className="max-w-3xl mx-auto pb-12 px-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-8 tracking-tight text-slate-900 dark:text-white">
+      <article className="font-body max-w-3xl mx-auto pb-12 px-4">
+        <h1 className="font-heading text-4xl md:text-5xl font-extrabold mb-8 tracking-tight text-warm-900 dark:text-warm-50">
           {headerTitle}
         </h1>
         {post.imageUrl && (
-          <div className="relative w-full mb-12 overflow-hidden rounded-xl border border-slate-800 shadow-2xl">
+          <div className="relative w-full mb-12 overflow-hidden rounded-xl border border-warm-800 shadow-2xl">
             <Image
               src={post.imageUrl}
               alt={headerTitle}
@@ -192,8 +192,8 @@ export default async function BlogPostPage({
           dangerouslySetInnerHTML={{ __html: content.body }}
         />
         {orderedRelated.length > 0 && (
-          <section className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800">
-            <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">
+          <section className="font-body mt-16 pt-10 border-t border-warm-200 dark:border-warm-800">
+            <h2 className="font-heading text-2xl font-bold mb-6 text-warm-900 dark:text-warm-50">
               {locale === "ru"
                 ? "Читайте также"
                 : locale === "uk"
@@ -210,10 +210,10 @@ export default async function BlogPostPage({
                   <Link
                     key={relatedPost.id}
                     href={`${localeBlogPrefix}/${relatedPost.slug}`}
-                    className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition no-underline"
+                    className="group flex flex-col bg-warm-50 dark:bg-warm-900 border border-warm-200 dark:border-warm-800 rounded-xl overflow-hidden hover:shadow-md transition no-underline"
                   >
                     {relatedPost.imageUrl && (
-                      <div className="relative w-full h-40 overflow-hidden bg-slate-100">
+                      <div className="relative w-full h-40 overflow-hidden bg-warm-100">
                         <Image
                           src={relatedPost.imageUrl}
                           alt={relatedContent.title}
@@ -224,7 +224,7 @@ export default async function BlogPostPage({
                       </div>
                     )}
                     <div className="p-4 flex flex-col flex-1">
-                      <h3 className="font-semibold text-sm mb-2 line-clamp-2">
+                      <h3 className="font-heading font-semibold text-sm mb-2 line-clamp-2">
                         {relatedContent.title}
                       </h3>
                     </div>

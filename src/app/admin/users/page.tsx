@@ -203,7 +203,7 @@ export default function AdminUsersPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
         <div>
           <h1 className="text-3xl font-bold">User Management</h1>
-          <p className="text-slate-500 dark:text-slate-400">
+          <p className="text-warm-500 dark:text-warm-400">
             View and manage users. Cleanup bot registrations.
           </p>
         </div>
@@ -216,43 +216,43 @@ export default function AdminUsersPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-5">
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
-          <div className="text-2xl font-bold text-slate-900 dark:text-white">
+        <div className="bg-white dark:bg-warm-900 rounded-xl border border-warm-200 dark:border-warm-800 p-4">
+          <div className="text-2xl font-bold text-warm-900 dark:text-white">
             {totalUsers}
           </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-warm-500 dark:text-warm-400">
             Total Users
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-green-200 dark:border-green-800/50 p-4">
+        <div className="bg-white dark:bg-warm-900 rounded-xl border border-green-200 dark:border-green-800/50 p-4">
           <div className="text-2xl font-bold text-green-600 dark:text-green-400">
             {verifiedUsers}
           </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-warm-500 dark:text-warm-400">
             Verified
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-red-200 dark:border-red-800/50 p-4">
+        <div className="bg-white dark:bg-warm-900 rounded-xl border border-red-200 dark:border-red-800/50 p-4">
           <div className="text-2xl font-bold text-red-600 dark:text-red-400">
             {unverifiedUsers}
           </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-warm-500 dark:text-warm-400">
             Unverified
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-amber-200 dark:border-amber-800/50 p-4">
+        <div className="bg-white dark:bg-warm-900 rounded-xl border border-amber-200 dark:border-amber-800/50 p-4">
           <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
             {staleUnverified}
           </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-warm-500 dark:text-warm-400">
             Bot Users (&gt;24h)
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-purple-200 dark:border-purple-800/50 p-4">
+        <div className="bg-white dark:bg-warm-900 rounded-xl border border-purple-200 dark:border-purple-800/50 p-4">
           <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
             {expiredTokenCount}
           </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-warm-500 dark:text-warm-400">
             Expired Tokens
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function AdminUsersPage() {
                 </button>
                 <button
                   onClick={() => setConfirmCleanupBots(false)}
-                  className="flex-1 px-3 py-1.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg transition-colors"
+                  className="flex-1 px-3 py-1.5 bg-warm-200 dark:bg-warm-700 text-warm-700 dark:text-warm-300 text-sm font-medium rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
@@ -346,7 +346,7 @@ export default function AdminUsersPage() {
                 </button>
                 <button
                   onClick={() => setConfirmCleanupTokens(false)}
-                  className="flex-1 px-3 py-1.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg transition-colors"
+                  className="flex-1 px-3 py-1.5 bg-warm-200 dark:bg-warm-700 text-warm-700 dark:text-warm-300 text-sm font-medium rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
@@ -367,32 +367,32 @@ export default function AdminUsersPage() {
       )}
 
       {/* Users Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-warm-900 rounded-xl border border-warm-200 dark:border-warm-800 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-[880px] w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <tr className="border-b border-warm-200 dark:border-warm-800 bg-warm-50/50 dark:bg-warm-900/50">
+                <th className="px-6 py-4 text-xs font-semibold text-warm-500 dark:text-warm-400 uppercase tracking-wider">
                   User
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-warm-500 dark:text-warm-400 uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-warm-500 dark:text-warm-400 uppercase tracking-wider">
                   Verified
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-warm-500 dark:text-warm-400 uppercase tracking-wider">
                   Role
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-warm-500 dark:text-warm-400 uppercase tracking-wider">
                   Joined
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-warm-500 dark:text-warm-400 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+            <tbody className="divide-y divide-warm-200 dark:divide-warm-800">
               {users.map((user) => {
                 const isBot =
                   !user.emailVerified &&
@@ -400,7 +400,7 @@ export default function AdminUsersPage() {
                 return (
                   <tr
                     key={user.id}
-                    className={`hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors ${
+                    className={`hover:bg-warm-50/50 dark:hover:bg-warm-900/50 transition-colors ${
                       isBot
                         ? "bg-red-50/30 dark:bg-red-900/10"
                         : ""
@@ -412,25 +412,25 @@ export default function AdminUsersPage() {
                           <img
                             src={user.image}
                             alt=""
-                            className="h-8 w-8 rounded-full border border-slate-200 dark:border-slate-700"
+                            className="h-8 w-8 rounded-full border border-warm-200 dark:border-warm-700"
                           />
                         ) : (
                           <div
                             className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold ${
                               isBot
                                 ? "bg-red-100 dark:bg-red-900/30 text-red-500"
-                                : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                                : "bg-warm-100 dark:bg-warm-800 text-warm-500"
                             }`}
                           >
                             {user.name?.[0] || user.email[0].toUpperCase()}
                           </div>
                         )}
-                        <span className="font-medium text-slate-900 dark:text-slate-100">
+                        <span className="font-medium text-warm-900 dark:text-warm-100">
                           {user.name || "Unnamed User"}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
+                    <td className="px-6 py-4 text-warm-600 dark:text-warm-400 text-sm">
                       {user.email}
                     </td>
                     <td className="px-6 py-4">
@@ -475,7 +475,7 @@ export default function AdminUsersPage() {
                         disabled={
                           updatingId === user.id || !canManageRole(user)
                         }
-                        className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
+                        className="bg-white dark:bg-warm-800 border border-warm-200 dark:border-warm-700 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
                       >
                         {getAvailableRoles(user).map((role) => (
                           <option key={role} value={role}>
@@ -484,9 +484,9 @@ export default function AdminUsersPage() {
                         ))}
                       </select>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
+                    <td className="px-6 py-4 text-warm-600 dark:text-warm-400 text-sm">
                       {new Date(user.createdAt).toLocaleDateString()}{" "}
-                      <span className="text-slate-400 dark:text-slate-500">
+                      <span className="text-warm-400 dark:text-warm-500">
                         {new Date(user.createdAt).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -511,7 +511,7 @@ export default function AdminUsersPage() {
                               </button>
                               <button
                                 onClick={() => setConfirmDeleteId(null)}
-                                className="px-2 py-1 text-xs bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded transition-colors"
+                                className="px-2 py-1 text-xs bg-warm-200 dark:bg-warm-700 text-warm-700 dark:text-warm-300 rounded transition-colors"
                               >
                                 ✕
                               </button>
@@ -519,7 +519,7 @@ export default function AdminUsersPage() {
                           ) : (
                             <button
                               onClick={() => setConfirmDeleteId(user.id)}
-                              className="p-1.5 text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded hover:bg-red-50 dark:hover:bg-red-900/20"
+                              className="p-1.5 text-warm-400 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded hover:bg-red-50 dark:hover:bg-red-900/20"
                               title="Delete user"
                             >
                               <Trash2 className="h-4 w-4" />

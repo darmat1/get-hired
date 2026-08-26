@@ -30,16 +30,16 @@ export function AppShell({
   }, [isSidebarOpen]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
+    <div className="min-h-screen bg-warm-50 text-warm-900 dark:bg-warm-950 dark:text-warm-50">
       <div className="flex min-h-screen">
         <div className="hidden lg:block lg:w-64 lg:flex-shrink-0">
-          <div className="sticky top-0 h-screen overflow-hidden border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <div className="sticky top-0 h-screen overflow-hidden border-r border-warm-200 bg-warm-100 dark:border-warm-800 dark:bg-warm-900">
             {sidebar}
           </div>
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <div className="sticky top-0 z-[60] border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 lg:hidden">
+          <div className="sticky top-0 z-[60] border-b border-warm-200 bg-warm-100/95 backdrop-blur dark:border-warm-800 dark:bg-warm-900/95 lg:hidden">
             <div className="flex h-14 items-center justify-between px-4">
               <Button
                 type="button"
@@ -76,7 +76,7 @@ export function AppShell({
       >
         <div
           className={cn(
-            "absolute inset-0 bg-slate-950/50 transition-opacity",
+            "absolute inset-0 bg-warm-950/50 transition-opacity",
             isSidebarOpen ? "opacity-100" : "opacity-0",
           )}
           onClick={() => setIsSidebarOpen(false)}
@@ -84,11 +84,11 @@ export function AppShell({
 
         <div
           className={cn(
-            "absolute inset-y-0 left-0 flex w-[min(20rem,85vw)] flex-col border-r border-slate-200 bg-white shadow-2xl transition-transform dark:border-slate-800 dark:bg-slate-900",
+            "absolute inset-y-0 left-0 flex w-[min(20rem,85vw)] flex-col border-r border-warm-200 bg-warm-100 shadow-2xl transition-transform dark:border-warm-800 dark:bg-warm-900",
             isSidebarOpen ? "translate-x-0" : "-translate-x-full",
           )}
         >
-          <div className="flex h-14 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800">
+          <div className="flex h-14 items-center justify-between border-b border-warm-200 px-4 dark:border-warm-800">
             <span className="text-sm font-medium">{mobileTitle}</span>
             <Button
               type="button"

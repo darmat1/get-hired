@@ -1237,6 +1237,241 @@ export const translations: Translations = {
     ru: "Да! Вы можете мгновенно генерировать письма на основе вашего профиля и копировать текст или скачивать их прямо в дашборде.",
   },
 
+  // AGENTS PAGE
+  "agents.hero.badge": {
+    en: "AI Agents",
+    uk: "AI-агенти",
+    ru: "AI-агенты",
+  },
+  "agents.hero.title": {
+    en: "Let your AI assistant handle your job search",
+    uk: "Хай ваш AI-асистент займеться пошуком роботи",
+    ru: "Пусть ваш AI-ассистент займётся поиском работы",
+  },
+  "agents.hero.subtitle": {
+    en: "Connect Claude, ChatGPT, or any other MCP-compatible AI assistant to GetHired. It can update your profile, tailor resumes, and write cover letters — no copy-pasting between tabs.",
+    uk: "Підключіть Claude, ChatGPT або будь-який інший AI-асистент із підтримкою MCP до GetHired. Він зможе оновлювати профіль, адаптувати резюме та писати супровідні листи — без копіювання між вкладками.",
+    ru: "Подключите Claude, ChatGPT или любой другой AI-ассистент с поддержкой MCP к GetHired. Он сможет обновлять профиль, адаптировать резюме и писать сопроводительные письма — без копирования между вкладками.",
+  },
+  "agents.hero.cta": {
+    en: "Get your access token",
+    uk: "Отримати токен доступу",
+    ru: "Получить токен доступа",
+  },
+  "agents.hero.cta_secondary": {
+    en: "See how it works",
+    uk: "Подивитись, як це працює",
+    ru: "Посмотреть, как это работает",
+  },
+
+  "agents.capabilities.title": {
+    en: "What your AI assistant can do",
+    uk: "Що може ваш AI-асистент",
+    ru: "Что может ваш AI-ассистент",
+  },
+  "agents.capabilities.profile.title": {
+    en: "Keep your profile up to date",
+    uk: "Підтримувати профіль в актуальному стані",
+    ru: "Поддерживать профиль в актуальном состоянии",
+  },
+  "agents.capabilities.profile.desc": {
+    en: "Add a new job, skill, or certificate the moment you mention it — no forms to fill in.",
+    uk: "Додає нову посаду, навичку чи сертифікат одразу, як ви про це згадаєте — без заповнення форм.",
+    ru: "Добавляет новую должность, навык или сертификат, как только вы о них упомянули — без заполнения форм.",
+  },
+  "agents.capabilities.resumes.title": {
+    en: "Tailor a resume to any job post",
+    uk: "Адаптувати резюме під будь-яку вакансію",
+    ru: "Адаптировать резюме под любую вакансию",
+  },
+  "agents.capabilities.resumes.desc": {
+    en: "Paste a job link into your chat and get a resume built from your real experience, matched to that role.",
+    uk: "Вставте посилання на вакансію в чат — і отримайте резюме, зібране з вашого реального досвіду під цю роль.",
+    ru: "Вставьте ссылку на вакансию в чат — и получите резюме, собранное из вашего реального опыта под эту роль.",
+  },
+  "agents.capabilities.cover_letters.title": {
+    en: "Write a cover letter on the spot",
+    uk: "Написати супровідний лист на місці",
+    ru: "Написать сопроводительное письмо на месте",
+  },
+  "agents.capabilities.cover_letters.desc": {
+    en: "Ask for a cover letter while you're reading the job post, and get one grounded in your actual background.",
+    uk: "Попросіть супровідний лист прямо під час читання вакансії — і отримайте текст на основі вашого реального досвіду.",
+    ru: "Попросите сопроводительное письмо прямо во время чтения вакансии — и получите текст на основе вашего реального опыта.",
+  },
+  "agents.capabilities.score.title": {
+    en: "Get a second opinion on your resume",
+    uk: "Отримати другу думку щодо резюме",
+    ru: "Получить второе мнение о резюме",
+  },
+  "agents.capabilities.score.desc": {
+    en: "Have your assistant score a resume against a job description and point out what's missing.",
+    uk: "Попросіть асистента оцінити резюме відносно опису вакансії й підказати, чого бракує.",
+    ru: "Попросите ассистента оценить резюме относительно описания вакансии и подсказать, чего не хватает.",
+  },
+
+  "agents.compatible.title": {
+    en: "Works with the AI assistant you already use",
+    uk: "Працює з AI-асистентом, яким ви вже користуєтесь",
+    ru: "Работает с AI-ассистентом, которым вы уже пользуетесь",
+  },
+  "agents.compatible.subtitle": {
+    en: "Claude, ChatGPT, and any other tool that speaks MCP (Model Context Protocol) can connect — no special app to install.",
+    uk: "Claude, ChatGPT та будь-який інший інструмент, що підтримує MCP (Model Context Protocol), може підключитись — без встановлення окремого застосунку.",
+    ru: "Claude, ChatGPT и любой другой инструмент с поддержкой MCP (Model Context Protocol) может подключиться — без установки отдельного приложения.",
+  },
+  "agents.compatible.other": {
+    en: "+ any MCP-compatible AI assistant",
+    uk: "+ будь-який AI-асистент з підтримкою MCP",
+    ru: "+ любой AI-ассистент с поддержкой MCP",
+  },
+
+  "agents.how_it_works.title": {
+    en: "How to connect",
+    uk: "Як підключити",
+    ru: "Как подключить",
+  },
+  "agents.how_it_works.step1_title": {
+    en: "Create a token",
+    uk: "Створіть токен",
+    ru: "Создайте токен",
+  },
+  "agents.how_it_works.step1_desc": {
+    en: "In AI Settings, create a token and choose what it's allowed to access.",
+    uk: "У Налаштуваннях AI створіть токен і оберіть, до чого він матиме доступ.",
+    ru: "В Настройках AI создайте токен и выберите, к чему у него будет доступ.",
+  },
+  "agents.how_it_works.step2_title": {
+    en: "Paste one snippet",
+    uk: "Вставте один фрагмент",
+    ru: "Вставьте один фрагмент",
+  },
+  "agents.how_it_works.step2_desc": {
+    en: "Copy the generated config into your AI assistant's MCP settings. That's the entire setup.",
+    uk: "Скопіюйте згенерований конфіг у налаштування MCP вашого AI-асистента. Це весь процес налаштування.",
+    ru: "Скопируйте сгенерированный конфиг в настройки MCP вашего AI-ассистента. Это весь процесс настройки.",
+  },
+  "agents.how_it_works.step3_title": {
+    en: "Just ask",
+    uk: "Просто попросіть",
+    ru: "Просто попросите",
+  },
+  "agents.how_it_works.step3_desc": {
+    en: "Tell your assistant what you need — tailor a resume, draft a cover letter, update your profile.",
+    uk: "Скажіть асистенту, що потрібно — адаптувати резюме, написати лист, оновити профіль.",
+    ru: "Скажите ассистенту, что нужно — адаптировать резюме, написать письмо, обновить профиль.",
+  },
+
+  "agents.security.title": {
+    en: "You stay in control",
+    uk: "Контроль завжди у вас",
+    ru: "Контроль всегда у вас",
+  },
+  "agents.security.item1_title": {
+    en: "Scoped access",
+    uk: "Обмежений доступ",
+    ru: "Ограниченный доступ",
+  },
+  "agents.security.item1_desc": {
+    en: "Grant only what's needed — read-only profile, resume writing, or both.",
+    uk: "Надавайте лише потрібне — читання профілю, редагування резюме або і те, і те.",
+    ru: "Предоставляйте только нужное — чтение профиля, редактирование резюме или и то, и другое.",
+  },
+  "agents.security.item2_title": {
+    en: "Nothing stored in plain text",
+    uk: "Нічого не зберігається у відкритому вигляді",
+    ru: "Ничего не хранится в открытом виде",
+  },
+  "agents.security.item2_desc": {
+    en: "Your token is hashed on our side — we can't read it back, and neither can anyone else.",
+    uk: "Ваш токен зберігається у вигляді хешу — ми не можемо його прочитати, як і ніхто інший.",
+    ru: "Ваш токен хранится в виде хеша — мы не можем его прочитать, как и никто другой.",
+  },
+  "agents.security.item3_title": {
+    en: "Revoke anytime",
+    uk: "Відкликати будь-коли",
+    ru: "Отозвать в любой момент",
+  },
+  "agents.security.item3_desc": {
+    en: "Turn off access for any token from AI Settings in one click, no questions asked.",
+    uk: "Вимкніть доступ для будь-якого токена в Налаштуваннях AI в один клік.",
+    ru: "Отключите доступ для любого токена в Настройках AI в один клик.",
+  },
+
+  "agents.faq.q1": {
+    en: "Do I need to know how to code?",
+    uk: "Чи треба вміти програмувати?",
+    ru: "Нужно ли уметь программировать?",
+  },
+  "agents.faq.a1": {
+    en: "No. Creating a token is a few clicks in AI Settings, and connecting it is pasting one block of text into your AI tool's settings.",
+    uk: "Ні. Створення токена — кілька кліків у Налаштуваннях AI, а підключення — вставка одного блоку тексту в налаштування вашого AI-інструменту.",
+    ru: "Нет. Создание токена — несколько кликов в Настройках AI, а подключение — вставка одного блока текста в настройки вашего AI-инструмента.",
+  },
+  "agents.faq.q2": {
+    en: "Which AI assistants are supported?",
+    uk: "Які AI-асистенти підтримуються?",
+    ru: "Какие AI-ассистенты поддерживаются?",
+  },
+  "agents.faq.a2": {
+    en: "Claude, ChatGPT, and any other assistant or app that supports MCP (Model Context Protocol).",
+    uk: "Claude, ChatGPT та будь-який інший асистент чи застосунок з підтримкою MCP (Model Context Protocol).",
+    ru: "Claude, ChatGPT и любой другой ассистент или приложение с поддержкой MCP (Model Context Protocol).",
+  },
+  "agents.faq.q3": {
+    en: "Is this safe?",
+    uk: "Чи це безпечно?",
+    ru: "Это безопасно?",
+  },
+  "agents.faq.a3": {
+    en: "Yes. You choose exactly what each token can access, tokens are stored as a hash, and you can revoke any of them instantly from AI Settings.",
+    uk: "Так. Ви обираєте, до чого саме має доступ кожен токен, токени зберігаються у вигляді хешу, і ви можете миттєво відкликати будь-який з Налаштувань AI.",
+    ru: "Да. Вы выбираете, к чему именно имеет доступ каждый токен, токены хранятся в виде хеша, и вы можете мгновенно отозвать любой из Настроек AI.",
+  },
+  "agents.faq.q4": {
+    en: "Can I revoke access later?",
+    uk: "Чи можна відкликати доступ пізніше?",
+    ru: "Можно ли отозвать доступ позже?",
+  },
+  "agents.faq.a4": {
+    en: "Yes, anytime, with no downside — revoking a token doesn't affect your resumes or profile, it just cuts off that one connection.",
+    uk: "Так, будь-коли і без наслідків — відкликання токена не впливає на ваші резюме чи профіль, лише вимикає це одне з'єднання.",
+    ru: "Да, в любой момент и без последствий — отзыв токена не влияет на ваши резюме или профиль, а лишь отключает это одно соединение.",
+  },
+
+  "agents.cta.title": {
+    en: "Ready to connect your AI assistant?",
+    uk: "Готові підключити свого AI-асистента?",
+    ru: "Готовы подключить своего AI-ассистента?",
+  },
+  "agents.cta.button": {
+    en: "Get started free",
+    uk: "Почати безкоштовно",
+    ru: "Начать бесплатно",
+  },
+
+  "nav.pricing": { en: "Pricing", uk: "Ціни", ru: "Цены" },
+  "nav.agents": { en: "AI Agents", uk: "AI-агенти", ru: "AI-агенты" },
+
+  "footer.ai_agents": { en: "AI Agents", uk: "AI-агенти", ru: "AI-агенты" },
+
+  "landing.agents_teaser.eyebrow": { en: "New", uk: "Нове", ru: "Новое" },
+  "landing.agents_teaser.title": {
+    en: "Bring your own AI agent",
+    uk: "Підключіть свого AI-агента",
+    ru: "Подключите своего AI-агента",
+  },
+  "landing.agents_teaser.subtitle": {
+    en: "Claude, ChatGPT, or any MCP-compatible assistant can now update your profile, tailor resumes, and write cover letters for you.",
+    uk: "Claude, ChatGPT або будь-який AI-асистент з підтримкою MCP тепер можуть оновлювати ваш профіль, адаптувати резюме й писати супровідні листи.",
+    ru: "Claude, ChatGPT или любой AI-ассистент с поддержкой MCP теперь может обновлять ваш профиль, адаптировать резюме и писать сопроводительные письма.",
+  },
+  "landing.agents_teaser.cta": {
+    en: "Explore AI Agents",
+    uk: "Дізнатись про AI-агентів",
+    ru: "Узнать про AI-агентов",
+  },
+
   "template.title": {
     en: "Choose template",
     uk: "Оберіть шаблон",
@@ -2657,14 +2892,14 @@ export const translations: Translations = {
 
   // Pricing Landing Page
   "pricing_landing.hero_title": {
-    en: "Simple, Value-Driven Pricing",
-    uk: "Проста та вигідна ціна",
-    ru: "Простая и выгодная цена",
+    en: "Everything you need to apply, free to start",
+    uk: "Усе потрібне для пошуку роботи — безкоштовно на старті",
+    ru: "Всё нужное для поиска работы — бесплатно на старте",
   },
   "pricing_landing.hero_subtitle": {
-    en: "Choose the plan that's right for your career growth. Start for free and upgrade as you grow.",
-    uk: "Оберіть план, який підходить для вашого кар'єрного зростання. Почніть безкоштовно та переходьте на вищий рівень у міру зростання.",
-    ru: "Выберите план, который подходит для вашего карьерного роста. Начните бесплатно и переходите на новый уровень по мере роста.",
+    en: "Build your profile, tailor resumes, and write cover letters at no cost. Pro — coming soon — will add unlimited resumes and premium templates.",
+    uk: "Створюйте профіль, адаптуйте резюме та пишіть супровідні листи безкоштовно. Pro — вже скоро — додасть безліміт резюме та преміум-шаблони.",
+    ru: "Создавайте профиль, адаптируйте резюме и пишите сопроводительные письма бесплатно. Pro — уже скоро — добавит безлимит резюме и премиум-шаблоны.",
   },
   "pricing_landing.free_name": {
     en: "Starter",
@@ -3217,9 +3452,9 @@ export const translations: Translations = {
     ru: "Расширение для Chrome",
   },
   "extension_landing.hero_title": {
-    en: "Generate Cover Letters in Seconds",
-    uk: "Генеруйте супровідні листи за секунди",
-    ru: "Генерируйте сопроводительные письма за секунды",
+    en: "Tailor Resumes & Cover Letters in Seconds",
+    uk: "Адаптуйте резюме та супровідні листи за секунди",
+    ru: "Адаптируйте резюме и сопроводительные письма за секунды",
   },
   "extension_landing.hero_subtitle": {
     en: "The fastest way to create tailored cover letters and resumes for any job posting. Install our Chrome extension and apply smarter, not harder.",

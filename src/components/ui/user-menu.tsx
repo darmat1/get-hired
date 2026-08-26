@@ -1,14 +1,19 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { signOut } from "@/lib/auth-client";
-import { LocalizedLink } from "@/components/ui/localized-link";
-import { LogOut, Settings, LayoutDashboard, ShieldCheck, Cpu } from "lucide-react";
-import { useTranslation } from "@/lib/translations";
-import { usePathname } from "next/navigation";
-import { stripLocale } from "@/lib/i18n-config";
 import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
+import { LocalizedLink } from "@/components/ui/localized-link";
+import { stripLocale } from "@/lib/i18n-config";
+import { useTranslation } from "@/lib/translations";
+import { signOut } from "@/lib/auth-client";
+import {
+  LayoutDashboard,
+  ShieldCheck,
+  Cpu,
+  Settings,
+  LogOut,
+} from "lucide-react";
 
 interface UserMenuProps {
   userName: string;
@@ -22,7 +27,7 @@ interface UserMenuProps {
   isExpanded?: boolean;
 }
 
-export function UserMenu({
+function UserMenu({
   userName,
   userEmail,
   userImage,
@@ -83,14 +88,14 @@ export function UserMenu({
             height={32}
             src={userImage || gravatarUrl}
             alt={userName || userEmail}
-            className="h-8 w-8 rounded-full border border-slate-200 dark:border-slate-700 object-cover flex-shrink-0"
+            className="h-8 w-8 rounded-full border border-warm-200 dark:border-warm-700 object-cover flex-shrink-0"
           />
           <div className="flex-1 min-w-0 hidden sm:block">
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">
+            <p className="text-sm font-medium text-warm-700 dark:text-warm-200 truncate">
               {userName || userEmail}
             </p>
             {userName && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+              <p className="text-xs text-warm-500 dark:text-warm-400 truncate">
                 {userEmail}
               </p>
             )}
@@ -101,7 +106,7 @@ export function UserMenu({
           {["superadmin", "admin", "publisher"].includes(userRole?.toLowerCase() || "") && (
             <LocalizedLink
               href="/admin/blog"
-              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors no-underline hover:no-underline"
+              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-warm-600 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-warm-800 rounded-lg transition-colors no-underline hover:no-underline"
             >
               <ShieldCheck className="h-4 w-4" />
               Admin
@@ -112,8 +117,8 @@ export function UserMenu({
             href="/dashboard/profile/ai"
             className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors no-underline hover:no-underline ${
               isActive("/dashboard/profile/ai")
-                ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                : "text-warm-600 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-warm-800"
             }`}
           >
             <Cpu className="h-4 w-4" />
@@ -124,8 +129,8 @@ export function UserMenu({
             href="/dashboard/profile"
             className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors no-underline hover:no-underline ${
               isActive("/dashboard/profile")
-                ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                : "text-warm-600 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-warm-800"
             }`}
           >
             <Settings className="h-4 w-4" />
@@ -134,7 +139,7 @@ export function UserMenu({
 
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-left"
+            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-warm-600 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-warm-800 rounded-lg transition-colors text-left"
           >
             <LogOut className="h-4 w-4" />
             {t("nav.sign_out")}
@@ -155,14 +160,14 @@ export function UserMenu({
           height={32}
           src={userImage || gravatarUrl}
           alt={userName || userEmail}
-          className="h-8 w-8 rounded-full border border-slate-200 dark:border-slate-700 object-cover flex-shrink-0"
+          className="h-8 w-8 rounded-full border border-warm-200 dark:border-warm-700 object-cover flex-shrink-0"
         />
         <div className="flex-1 min-w-0 hidden sm:block">
-          <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">
+          <p className="text-sm font-medium text-warm-700 dark:text-warm-200 truncate">
             {userName || userEmail}
           </p>
           {userName && (
-            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+            <p className="text-xs text-warm-500 dark:text-warm-400 truncate">
               {userEmail}
             </p>
           )}
@@ -170,12 +175,12 @@ export function UserMenu({
       </button>
 
       {isOpen && (
-        <div className={`absolute ${menuPositionClasses[side]} ${alignClasses[align]} w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50`}>
-          <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700 sm:hidden">
-            <p className="text-sm font-medium text-slate-900 dark:text-white">
+        <div className={`absolute ${menuPositionClasses[side]} ${alignClasses[align]} w-48 bg-warm-100 dark:bg-warm-800 rounded-lg shadow-lg border border-warm-200 dark:border-warm-700 py-2 z-50`}>
+          <div className="px-4 py-2 border-b border-warm-200 dark:border-warm-700 sm:hidden">
+            <p className="text-sm font-medium text-warm-900 dark:text-warm-50">
               {userName}
             </p>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
+            <p className="text-xs text-warm-600 dark:text-warm-400">
               {userEmail}
             </p>
           </div>
@@ -183,7 +188,7 @@ export function UserMenu({
           <LocalizedLink
             href="/dashboard"
             onClick={() => setIsOpen(false)}
-            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors no-underline hover:no-underline"
+            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-warm-700 dark:text-warm-200 hover:bg-warm-200 dark:hover:bg-warm-700 transition-colors no-underline hover:no-underline"
           >
             <LayoutDashboard className="h-4 w-4" />
             {t("nav.dashboard")}
@@ -193,7 +198,7 @@ export function UserMenu({
             <LocalizedLink
               href="/admin/blog"
               onClick={() => setIsOpen(false)}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors no-underline hover:no-underline"
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-warm-600 dark:text-warm-400 hover:bg-warm-200 dark:hover:bg-warm-700 transition-colors no-underline hover:no-underline"
             >
               <ShieldCheck className="h-4 w-4" />
               Admin
@@ -205,8 +210,8 @@ export function UserMenu({
             onClick={() => setIsOpen(false)}
             className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors no-underline hover:no-underline ${
               isActive("/dashboard/profile/ai")
-                ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                : "text-warm-700 dark:text-warm-200 hover:bg-warm-200 dark:hover:bg-warm-700"
             }`}
           >
             <Cpu className="h-4 w-4" />
@@ -218,8 +223,8 @@ export function UserMenu({
             onClick={() => setIsOpen(false)}
             className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors no-underline hover:no-underline ${
               isActive("/dashboard/profile")
-                ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                : "text-warm-700 dark:text-warm-200 hover:bg-warm-200 dark:hover:bg-warm-700"
             }`}
           >
             <Settings className="h-4 w-4" />
@@ -228,7 +233,7 @@ export function UserMenu({
 
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-left"
+            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-warm-700 dark:text-warm-200 hover:bg-warm-200 dark:hover:bg-warm-700 transition-colors text-left"
           >
             <LogOut className="h-4 w-4" />
             {t("nav.sign_out")}
@@ -238,3 +243,5 @@ export function UserMenu({
     </div>
   );
 }
+
+export { UserMenu };

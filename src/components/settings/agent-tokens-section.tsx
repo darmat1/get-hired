@@ -216,7 +216,7 @@ export function AgentTokensSection() {
     const styles: Record<string, string> = {
       active:
         "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-      revoked: "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-400",
+      revoked: "bg-warm-200 text-warm-600 dark:bg-warm-700 dark:text-warm-400",
       expired:
         "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
     };
@@ -235,24 +235,24 @@ export function AgentTokensSection() {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+    <div className="bg-white dark:bg-warm-800 rounded-lg border border-warm-200 dark:border-warm-700 p-6 shadow-sm">
       <div className="flex items-center justify-between gap-3 mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-slate-100 dark:bg-slate-900/30 rounded-lg text-slate-600">
+          <div className="p-2 bg-warm-100 dark:bg-warm-900/30 rounded-lg text-warm-600">
             <Bot className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+            <h3 className="text-lg font-semibold text-warm-900 dark:text-white">
               {t("agent_tokens.title")}
             </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-warm-500 dark:text-warm-400">
               {t("agent_tokens.subtitle")}
             </p>
           </div>
         </div>
         <button
           onClick={openCreate}
-          className="text-xs px-3 py-2 bg-slate-600 text-white rounded-md font-medium hover:bg-slate-700 transition-colors shadow-sm flex items-center gap-1.5 flex-shrink-0"
+          className="text-xs px-3 py-2 bg-warm-600 text-white rounded-md font-medium hover:bg-warm-700 transition-colors shadow-sm flex items-center gap-1.5 flex-shrink-0"
         >
           <Plus className="h-3.5 w-3.5" />
           {t("agent_tokens.create_button")}
@@ -268,10 +268,10 @@ export function AgentTokensSection() {
 
       {fetching ? (
         <div className="flex justify-center py-8">
-          <Loader className="h-5 w-5 animate-spin text-slate-400" />
+          <Loader className="h-5 w-5 animate-spin text-warm-400" />
         </div>
       ) : tokens.length === 0 ? (
-        <p className="text-sm text-slate-500 dark:text-slate-400 py-4">
+        <p className="text-sm text-warm-500 dark:text-warm-400 py-4">
           {t("agent_tokens.empty")}
         </p>
       ) : (
@@ -284,24 +284,24 @@ export function AgentTokensSection() {
                 key={tok.id}
                 className={`p-4 rounded-lg border transition-all ${
                   isActive
-                    ? "bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600"
-                    : "bg-slate-50/50 dark:bg-slate-900/20 border-slate-200 dark:border-slate-800 opacity-60"
+                    ? "bg-warm-50 dark:bg-warm-700/50 border-warm-200 dark:border-warm-600"
+                    : "bg-warm-50/50 dark:bg-warm-900/20 border-warm-200 dark:border-warm-800 opacity-60"
                 }`}
               >
                 <div className="flex items-center justify-between gap-3 mb-2">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-medium text-slate-900 dark:text-white">
+                    <span className="font-medium text-warm-900 dark:text-white">
                       {tok.name}
                     </span>
                     {statusBadge(status)}
-                    <span className="font-mono text-xs text-slate-400">
+                    <span className="font-mono text-xs text-warm-400">
                       {tok.tokenPrefix}••••••••
                     </span>
                   </div>
                   {isActive && (
                     <button
                       onClick={() => setRevokeTarget(tok)}
-                      className="p-1.5 text-slate-400 hover:text-red-600 transition-colors flex-shrink-0"
+                      className="p-1.5 text-warm-400 hover:text-red-600 transition-colors flex-shrink-0"
                       title={t("agent_tokens.revoke")}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -312,13 +312,13 @@ export function AgentTokensSection() {
                   {tok.scopes.map((scope) => (
                     <span
                       key={scope}
-                      className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-900/40 dark:text-slate-400"
+                      className="px-2 py-0.5 rounded text-[10px] font-medium bg-warm-100 text-warm-600 dark:bg-warm-900/40 dark:text-warm-400"
                     >
                       {scope}
                     </span>
                   ))}
                 </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-warm-500 dark:text-warm-400">
                   <span>
                     {t("agent_tokens.last_used")}: {formatDate(tok.lastUsedAt)}
                   </span>
@@ -342,14 +342,14 @@ export function AgentTokensSection() {
           <>
             <button
               onClick={() => setShowCreate(false)}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-200 rounded-md transition-colors"
+              className="px-4 py-2 bg-warm-100 hover:bg-warm-200 text-warm-700 dark:bg-warm-700 dark:hover:bg-warm-600 dark:text-warm-200 rounded-md transition-colors"
             >
               {t("common.cancel")}
             </button>
             <button
               onClick={handleCreate}
               disabled={creating || !name.trim() || scopes.size === 0}
-              className="px-4 py-2 bg-slate-600 hover:bg-slate-700 disabled:opacity-50 text-white rounded-md transition-colors flex items-center justify-center gap-2"
+              className="px-4 py-2 bg-warm-600 hover:bg-warm-700 disabled:opacity-50 text-white rounded-md transition-colors flex items-center justify-center gap-2"
             >
               {creating && <Loader className="h-4 w-4 animate-spin" />}
               {t("agent_tokens.create_submit")}
@@ -366,7 +366,7 @@ export function AgentTokensSection() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-warm-700 dark:text-warm-300 mb-2">
               {t("agent_tokens.name_label")}
             </label>
             <input
@@ -374,19 +374,19 @@ export function AgentTokensSection() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={t("agent_tokens.name_placeholder")}
-              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-warm-300 dark:border-warm-600 rounded-lg bg-white dark:bg-warm-700 text-warm-900 dark:text-white placeholder-warm-500 dark:placeholder-warm-400 focus:outline-none focus:ring-2 focus:ring-warm-500 focus:border-transparent"
             />
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              <label className="block text-sm font-medium text-warm-700 dark:text-warm-300">
                 {t("agent_tokens.scopes_label")}
               </label>
               <button
                 type="button"
                 onClick={toggleSelectAll}
-                className="text-xs text-slate-600 dark:text-slate-400 hover:underline"
+                className="text-xs text-warm-600 dark:text-warm-400 hover:underline"
               >
                 {t("agent_tokens.select_all")}
               </button>
@@ -397,19 +397,19 @@ export function AgentTokensSection() {
                 return (
                   <label
                     key={scope}
-                    className="flex items-start gap-2.5 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer"
+                    className="flex items-start gap-2.5 p-2 rounded-lg hover:bg-warm-50 dark:hover:bg-warm-700/50 cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={scopes.has(scope)}
                       onChange={() => toggleScope(scope)}
-                      className="mt-0.5 h-4 w-4 rounded border-slate-300 text-slate-600 focus:ring-slate-500"
+                      className="mt-0.5 h-4 w-4 rounded border-warm-300 text-warm-600 focus:ring-warm-500"
                     />
                     <span>
-                      <span className="block text-sm font-medium text-slate-900 dark:text-white">
+                      <span className="block text-sm font-medium text-warm-900 dark:text-white">
                         {t(`agent_tokens.scope.${key}`)}
                       </span>
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block text-xs text-warm-500 dark:text-warm-400">
                         {t(`agent_tokens.scope.${key}_desc`)}
                       </span>
                     </span>
@@ -420,13 +420,13 @@ export function AgentTokensSection() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-warm-700 dark:text-warm-300 mb-2">
               {t("agent_tokens.expiry_label")}
             </label>
             <select
               value={expiresInDays}
               onChange={(e) => setExpiresInDays(e.target.value as typeof expiresInDays)}
-              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-warm-300 dark:border-warm-600 rounded-lg bg-white dark:bg-warm-700 text-warm-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-warm-500 focus:border-transparent"
             >
               {EXPIRY_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -448,7 +448,7 @@ export function AgentTokensSection() {
           <>
             <button
               onClick={() => setRevokeTarget(null)}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-200 rounded-md transition-colors"
+              className="px-4 py-2 bg-warm-100 hover:bg-warm-200 text-warm-700 dark:bg-warm-700 dark:hover:bg-warm-600 dark:text-warm-200 rounded-md transition-colors"
             >
               {t("common.cancel")}
             </button>
@@ -467,7 +467,7 @@ export function AgentTokensSection() {
           </>
         }
       >
-        <div className="flex flex-col gap-2 text-slate-600 dark:text-slate-400">
+        <div className="flex flex-col gap-2 text-warm-600 dark:text-warm-400">
           <p>
             {t("agent_tokens.revoke_confirm_desc")} <strong>{revokeTarget?.name}</strong>
           </p>
@@ -483,7 +483,7 @@ export function AgentTokensSection() {
         footer={
           <button
             onClick={dismissReveal}
-            className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-md transition-colors"
+            className="px-4 py-2 bg-warm-600 hover:bg-warm-700 text-white rounded-md transition-colors"
           >
             {t("agent_tokens.done_button")}
           </button>
@@ -497,18 +497,18 @@ export function AgentTokensSection() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <code className="flex-1 px-3 py-2.5 bg-slate-100 dark:bg-slate-900 rounded-lg text-sm font-mono text-slate-900 dark:text-white break-all">
+            <code className="flex-1 px-3 py-2.5 bg-warm-100 dark:bg-warm-900 rounded-lg text-sm font-mono text-warm-900 dark:text-white break-all">
               {revealedToken}
             </code>
             <button
               onClick={handleCopy}
-              className="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex-shrink-0"
+              className="p-2.5 rounded-lg bg-warm-100 dark:bg-warm-900 hover:bg-warm-200 dark:hover:bg-warm-700 transition-colors flex-shrink-0"
               title={t("agent_tokens.copy")}
             >
               {copied ? (
                 <Check className="h-4 w-4 text-green-600" />
               ) : (
-                <Copy className="h-4 w-4 text-slate-500" />
+                <Copy className="h-4 w-4 text-warm-500" />
               )}
             </button>
           </div>
@@ -519,11 +519,11 @@ export function AgentTokensSection() {
             </p>
           )}
 
-          <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
-            <p className="text-sm font-medium text-slate-900 dark:text-white mb-1">
+          <div className="pt-2 border-t border-warm-200 dark:border-warm-700">
+            <p className="text-sm font-medium text-warm-900 dark:text-white mb-1">
               {t("agent_tokens.connect_title")}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+            <p className="text-xs text-warm-500 dark:text-warm-400 mb-3">
               {t("agent_tokens.connect_desc")}
             </p>
 
@@ -532,8 +532,8 @@ export function AgentTokensSection() {
                 onClick={() => setSnippetTab("mcp")}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                   snippetTab === "mcp"
-                    ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                    ? "bg-warm-900 text-white dark:bg-warm-100 dark:text-warm-900"
+                    : "bg-warm-100 dark:bg-warm-800 text-warm-600 dark:text-warm-400"
                 }`}
               >
                 {t("agent_tokens.tab_mcp")}
@@ -542,33 +542,33 @@ export function AgentTokensSection() {
                 onClick={() => setSnippetTab("rest")}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                   snippetTab === "rest"
-                    ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                    ? "bg-warm-900 text-white dark:bg-warm-100 dark:text-warm-900"
+                    : "bg-warm-100 dark:bg-warm-800 text-warm-600 dark:text-warm-400"
                 }`}
               >
                 {t("agent_tokens.tab_rest")}
               </button>
             </div>
 
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
+            <p className="text-xs text-warm-500 dark:text-warm-400 mb-2">
               {snippetTab === "mcp"
                 ? t("agent_tokens.mcp_hint")
                 : t("agent_tokens.rest_hint")}
             </p>
 
             <div className="relative">
-              <pre className="px-3 py-2.5 pr-10 bg-slate-100 dark:bg-slate-900 rounded-lg text-xs font-mono text-slate-900 dark:text-white overflow-x-auto whitespace-pre-wrap break-all">
+              <pre className="px-3 py-2.5 pr-10 bg-warm-100 dark:bg-warm-900 rounded-lg text-xs font-mono text-warm-900 dark:text-white overflow-x-auto whitespace-pre-wrap break-all">
                 {snippetTab === "mcp" ? buildMcpSnippet() : buildCurlSnippet()}
               </pre>
               <button
                 onClick={handleCopySnippet}
-                className="absolute top-2 right-2 p-1.5 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                className="absolute top-2 right-2 p-1.5 rounded-md bg-warm-200 dark:bg-warm-700 hover:bg-warm-300 dark:hover:bg-warm-600 transition-colors"
                 title={t("agent_tokens.copy")}
               >
                 {snippetCopied ? (
                   <Check className="h-3.5 w-3.5 text-green-600" />
                 ) : (
-                  <Copy className="h-3.5 w-3.5 text-slate-500" />
+                  <Copy className="h-3.5 w-3.5 text-warm-500" />
                 )}
               </button>
             </div>

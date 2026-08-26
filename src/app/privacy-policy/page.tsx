@@ -30,18 +30,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-warm-50 dark:bg-warm-950 text-warm-900 dark:text-warm-50">
       <Header />
 
-      <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mb-4 text-sm text-muted-foreground">
+      <main className="font-body mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-4 text-sm text-warm-500 dark:text-warm-400">
           Last Updated: January 5, 2026
         </div>
-        <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
+        <h1 className="font-heading text-4xl font-bold mb-8 text-warm-900 dark:text-warm-50">Privacy Policy</h1>
 
         <div className="prose dark:prose-invert max-w-none space-y-6">
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Introduction</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Introduction</h2>
             <p>
               We are committed to protecting your privacy. This Privacy Policy
               explains how we collect, use, disclose, and safeguard your
@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">
               Information We Collect
             </h2>
             <p>
@@ -62,7 +62,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">AI Processing</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">AI Processing</h2>
             <p>
               To provide resume generation and improvement features, we send the
               text data you provide to third-party AI providers (e.g., OpenAI,
@@ -73,7 +73,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">LinkedIn Data</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">LinkedIn Data</h2>
             <p>
               Data imported from LinkedIn is used solely to populate your
               resume. You can request the deletion of your imported LinkedIn
@@ -84,7 +84,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">
               How We Use Your Information
             </h2>
             <p>
@@ -95,7 +95,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Data Security</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Data Security</h2>
             <p>
               We implement appropriate technical and organizational measures to
               protect your personal information against unauthorized access,
@@ -105,7 +105,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Your Rights</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Your Rights</h2>
             <p>
               You have the right to access, correct, or delete your personal
               information. You can manage your preferences in your account
@@ -114,7 +114,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
+            <h2 className="font-heading text-2xl font-semibold mb-4 text-warm-900 dark:text-warm-50">Contact Us</h2>
             <p>
               If you have questions about this Privacy Policy or our privacy
               practices, please contact us at support@gethired.work.

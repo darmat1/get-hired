@@ -33,10 +33,10 @@ export default function CoverLetterPage() {
     <AppShell sidebar={<Sidebar />} mobileTitle="Dashboard">
       <div className="mx-auto max-w-full">
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+          <h1 className="text-2xl font-bold font-heading text-warm-900 dark:text-warm-50 sm:text-3xl">
             {t("cover_letter.title")}
           </h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 sm:text-base">
+          <p className="mt-2 text-sm text-warm-600 dark:text-warm-400 sm:text-base">
             {t("cover_letter.subtitle")}
           </p>
         </div>

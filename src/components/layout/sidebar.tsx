@@ -37,11 +37,11 @@ export function Sidebar({ className }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "flex h-full min-h-full flex-col bg-white dark:bg-slate-900",
+        "flex h-full min-h-full flex-col bg-warm-100 dark:bg-warm-900",
         className,
       )}
     >
-      <div className="bg-white px-4 border-b border-slate-200 dark:border-slate-700 dark:bg-slate-900 flex-shrink-0">
+      <div className="bg-warm-50 px-4 border-b border-warm-200 dark:border-warm-700 dark:bg-warm-900 flex-shrink-0">
         <LocalizedLink
           href="/"
           className="h-16 flex items-center justify-center"
@@ -56,8 +56,8 @@ export function Sidebar({ className }: SidebarProps) {
               href="/resume/new"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group ${
                 isActive("/resume/new")
-                  ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                  : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
               }`}
             >
               <PlusCircle className="mr-3 h-5 w-5 flex-shrink-0" />
@@ -69,8 +69,8 @@ export function Sidebar({ className }: SidebarProps) {
               href="/dashboard"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard")
-                  ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                  : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
               }`}
             >
               <Briefcase className="mr-3 h-5 w-5 flex-shrink-0" />
@@ -82,8 +82,8 @@ export function Sidebar({ className }: SidebarProps) {
               href="/dashboard/my-resumes"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard/my-resumes")
-                  ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                  : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
               }`}
             >
               <FileText className="mr-3 h-5 w-5 flex-shrink-0" />
@@ -95,8 +95,8 @@ export function Sidebar({ className }: SidebarProps) {
               href="/dashboard/cover-letter"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard/cover-letter")
-                  ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                  : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
               }`}
             >
               <FileCheck className="mr-3 h-5 w-5 flex-shrink-0" />
@@ -108,8 +108,8 @@ export function Sidebar({ className }: SidebarProps) {
               href="/dashboard/my-cover-letters"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/dashboard/my-cover-letters")
-                  ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                  : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
               }`}
             >
               <FileText className="mr-3 h-5 w-5 flex-shrink-0" />
@@ -122,8 +122,8 @@ export function Sidebar({ className }: SidebarProps) {
                 href="/dashboard/jobs"
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                   isActive("/dashboard/jobs")
-                    ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                    : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                    ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                    : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
                 }`}
               >
                 <Search className="mr-3 h-5 w-5 flex-shrink-0" />
@@ -143,7 +143,7 @@ export function Sidebar({ className }: SidebarProps) {
           </div>
         
         {mounted && session && (
-          <div className="px-4 pt-2 border-t border-slate-200 dark:border-slate-700">
+          <div className="px-4 pt-2 border-t border-warm-200 dark:border-warm-700">
             <UserMenu
               userName={session.user?.name || ""}
               userEmail={session.user?.email || ""}

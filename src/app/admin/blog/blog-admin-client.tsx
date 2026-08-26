@@ -403,7 +403,7 @@ export default function BlogAdminClient({
                     href={result.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="block p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white transition break-all"
+                    className="block p-3 bg-warm-50 dark:bg-warm-900 border border-warm-200 dark:border-warm-700 rounded-lg text-sm text-warm-500 hover:text-warm-900 dark:hover:text-white transition break-all"
                   >
                     {result.url}
                   </a>
@@ -462,7 +462,7 @@ export default function BlogAdminClient({
   return (
     <div className="flex flex-col gap-6 items-start xl:flex-row xl:gap-8">
       {/* Main Content Area: Editor */}
-      <div className="flex-1 w-full max-w-7xl bg-white dark:bg-slate-900 p-4 sm:p-6 lg:p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div className="flex-1 w-full max-w-7xl bg-white dark:bg-warm-900 p-4 sm:p-6 lg:p-8 rounded-xl border border-warm-200 dark:border-warm-800 shadow-sm">
         <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <h2 className="text-2xl font-bold">
             {editingPostId ? "Edit Post" : "Create New Post"}
@@ -471,7 +471,7 @@ export default function BlogAdminClient({
             {editingPostId && (
               <button
                 onClick={clearForm}
-                className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-lg transition"
+                className="px-4 py-2 text-sm font-medium text-warm-600 dark:text-warm-400 hover:text-warm-900 dark:hover:text-white bg-warm-100 dark:bg-warm-800 rounded-lg transition"
               >
                 Cancel Edit
               </button>
@@ -497,11 +497,11 @@ export default function BlogAdminClient({
         <form onSubmit={handleSubmit} onPaste={handlePaste} className="space-y-6">
           {/* Cover Image */}
           <div>
-            <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
+            <label className="block text-sm font-medium mb-2 text-warm-700 dark:text-warm-300">
               Cover Image
             </label>
             {imagePreview ? (
-              <div className="relative w-full max-w-2xl h-64 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+              <div className="relative w-full max-w-2xl h-64 bg-warm-100 dark:bg-warm-800 rounded-lg overflow-hidden border border-warm-200 dark:border-warm-700">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imagePreview}
@@ -517,8 +517,8 @@ export default function BlogAdminClient({
                 </button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full max-w-2xl h-40 border-2 border-slate-300 dark:border-slate-700 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition group">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6 text-slate-500 dark:text-slate-400 group-hover:text-slate-500 transition">
+              <label className="flex flex-col items-center justify-center w-full max-w-2xl h-40 border-2 border-warm-300 dark:border-warm-700 border-dashed rounded-lg cursor-pointer bg-warm-50 dark:bg-warm-800 hover:bg-warm-100 dark:hover:bg-warm-800/80 transition group">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6 text-warm-500 dark:text-warm-400 group-hover:text-warm-500 transition">
                   <ImageIcon className="w-10 h-10 mb-3" />
                   <p className="text-sm font-medium">Click to upload image</p>
                 </div>
@@ -534,13 +534,13 @@ export default function BlogAdminClient({
 
           {/* Slug */}
           <div>
-            <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
+            <label className="block text-sm font-medium mb-2 text-warm-700 dark:text-warm-300">
               Slug (URL path)
             </label>
             <input
               type="text"
               required
-              className="w-full max-w-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition"
+              className="w-full max-w-2xl bg-warm-50 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 rounded-lg p-3 text-warm-900 dark:text-white focus:ring-2 focus:ring-warm-500 focus:border-transparent transition"
               value={formData.slug}
               onChange={(e) =>
                 setFormData({ ...formData, slug: e.target.value })
@@ -551,7 +551,7 @@ export default function BlogAdminClient({
 
           {/* Published Toggle */}
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+            <label className="text-sm font-medium text-warm-700 dark:text-warm-300">
               Published
             </label>
             <button
@@ -562,20 +562,20 @@ export default function BlogAdminClient({
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 formData.published
                   ? "bg-emerald-500"
-                  : "bg-slate-300 dark:bg-slate-600"
+                  : "bg-warm-300 dark:bg-warm-600"
               }`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  formData.published ? "translate-x-6" : "translate-x-1"
+                  formData.published ? "tranwarm-x-6" : "tranwarm-x-1"
                 }`}
               />
             </button>
           </div>
 
           {/* AI Generation */}
-          <div className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-800">
-            <h3 className="font-bold text-lg text-slate-800 dark:text-slate-200">
+          <div className="space-y-4 pt-6 border-t border-warm-200 dark:border-warm-800">
+            <h3 className="font-bold text-lg text-warm-800 dark:text-warm-200">
               AI Content Generation
             </h3>
 
@@ -590,7 +590,7 @@ export default function BlogAdminClient({
               <input
                 type="text"
                 placeholder="Topic"
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full bg-warm-50 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 rounded-lg p-3 text-warm-900 dark:text-white"
                 value={formData.topic}
                 onChange={(e) =>
                   setFormData({ ...formData, topic: e.target.value })
@@ -599,7 +599,7 @@ export default function BlogAdminClient({
               <textarea
                 placeholder="Requirements (AI prompts)"
                 rows={2}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full bg-warm-50 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 rounded-lg p-3 text-warm-900 dark:text-white"
                 value={formData.requirements}
                 onChange={(e) =>
                   setFormData({ ...formData, requirements: e.target.value })
@@ -613,7 +613,7 @@ export default function BlogAdminClient({
                 onChange={(e) =>
                   setFormData({ ...formData, provider: e.target.value })
                 }
-                className="w-full md:w-auto bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full md:w-auto bg-warm-50 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 rounded-lg p-3 text-warm-900 dark:text-white"
               >
                 {hasGeminiKey && (
                   <>
@@ -658,21 +658,21 @@ export default function BlogAdminClient({
           </div>
 
           {/* Related Posts */}
-          <div className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+          <div className="space-y-4 pt-6 border-t border-warm-200 dark:border-warm-800">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Link2 className="w-5 h-5 text-slate-500" />
-                <h3 className="font-bold text-lg text-slate-800 dark:text-slate-200">
+                <Link2 className="w-5 h-5 text-warm-500" />
+                <h3 className="font-bold text-lg text-warm-800 dark:text-warm-200">
                   Related Posts
                 </h3>
               </div>
-              <span className="text-sm text-slate-500 dark:text-slate-400">
+              <span className="text-sm text-warm-500 dark:text-warm-400">
                 {relatedPostIds.length}/6 selected
               </span>
             </div>
 
             {availableForRelated.length === 0 ? (
-              <p className="text-sm text-slate-500 dark:text-slate-400 py-4 text-center border border-dashed border-slate-200 dark:border-slate-700 rounded-lg">
+              <p className="text-sm text-warm-500 dark:text-warm-400 py-4 text-center border border-dashed border-warm-200 dark:border-warm-700 rounded-lg">
                 No other posts available yet
               </p>
             ) : (
@@ -694,10 +694,10 @@ export default function BlogAdminClient({
                       onClick={() => toggleRelatedPost(post.id)}
                       className={`flex items-center gap-3 p-3 rounded-lg border text-left transition ${
                         isSelected
-                          ? "bg-slate-50 dark:bg-slate-900/20 border-slate-300 dark:border-slate-700 ring-1 ring-slate-400"
+                          ? "bg-warm-50 dark:bg-warm-900/20 border-warm-300 dark:border-warm-700 ring-1 ring-warm-400"
                           : isDisabled
-                            ? "opacity-40 cursor-not-allowed bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
-                            : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-900/10"
+                            ? "opacity-40 cursor-not-allowed bg-warm-50 dark:bg-warm-800 border-warm-200 dark:border-warm-700"
+                            : "bg-warm-50 dark:bg-warm-800 border-warm-200 dark:border-warm-700 hover:border-warm-300 dark:hover:border-warm-700 hover:bg-warm-50/50 dark:hover:bg-warm-900/10"
                       }`}
                     >
                       {post.imageUrl ? (
@@ -708,23 +708,23 @@ export default function BlogAdminClient({
                           className="w-10 h-10 rounded object-cover flex-shrink-0"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded bg-slate-200 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">
-                          <ImageIcon className="w-4 h-4 text-slate-400" />
+                        <div className="w-10 h-10 rounded bg-warm-200 dark:bg-warm-700 flex items-center justify-center flex-shrink-0">
+                          <ImageIcon className="w-4 h-4 text-warm-400" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-medium truncate text-slate-800 dark:text-slate-200">
+                        <div className="text-xs font-medium truncate text-warm-800 dark:text-warm-200">
                           {title}
                         </div>
-                        <div className="text-xs text-slate-400 truncate mt-0.5">
+                        <div className="text-xs text-warm-400 truncate mt-0.5">
                           /{post.slug}
                         </div>
                       </div>
                       <div
                         className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition ${
                           isSelected
-                            ? "bg-slate-500 border-slate-500"
-                            : "border-slate-300 dark:border-slate-600"
+                            ? "bg-warm-500 border-warm-500"
+                            : "border-warm-300 dark:border-warm-600"
                         }`}
                       >
                         {isSelected && (
@@ -753,7 +753,7 @@ export default function BlogAdminClient({
               <button
                 type="button"
                 onClick={() => setRelatedPostIds([])}
-                className="text-xs text-slate-400 hover:text-red-500 transition"
+                className="text-xs text-warm-400 hover:text-red-500 transition"
               >
                 Clear selection
               </button>
@@ -761,8 +761,8 @@ export default function BlogAdminClient({
           </div>
 
           {/* Language Tabs */}
-          <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
-            <div className="flex space-x-2 border-b border-slate-200 dark:border-slate-700 mb-6">
+          <div className="pt-6 border-t border-warm-200 dark:border-warm-800">
+            <div className="flex space-x-2 border-b border-warm-200 dark:border-warm-700 mb-6">
               {[
                 { id: "en", label: "English" },
                 { id: "ru", label: "Russian" },
@@ -774,8 +774,8 @@ export default function BlogAdminClient({
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`py-3 px-6 text-sm font-medium border-b-2 transition-colors ${
                     activeTab === tab.id
-                      ? "border-slate-500 text-slate-600 dark:text-slate-400"
-                      : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600"
+                      ? "border-warm-500 text-warm-600 dark:text-warm-400"
+                      : "border-transparent text-warm-500 hover:text-warm-700 dark:text-warm-400 dark:hover:text-warm-300 hover:border-warm-300 dark:hover:border-warm-600"
                   }`}
                 >
                   {tab.label}
@@ -788,7 +788,7 @@ export default function BlogAdminClient({
                 type="text"
                 placeholder={`Title (${activeTab.toUpperCase()})`}
                 required={activeTab === "en"}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full bg-warm-50 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 rounded-lg p-3 text-warm-900 dark:text-white"
                 value={(formData as any)[`title_${activeTab}`]}
                 onChange={(e) =>
                   setFormData({
@@ -800,7 +800,7 @@ export default function BlogAdminClient({
               <textarea
                 placeholder={`Excerpt (${activeTab.toUpperCase()})`}
                 rows={3}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white"
+                className="w-full bg-warm-50 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 rounded-lg p-3 text-warm-900 dark:text-white"
                 value={(formData as any)[`excerpt_${activeTab}`]}
                 onChange={(e) =>
                   setFormData({
@@ -810,7 +810,7 @@ export default function BlogAdminClient({
                 }
               />
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                <label className="block text-sm font-medium text-warm-700 dark:text-warm-300">
                   Body ({activeTab.toUpperCase()}) - HTML supported
                 </label>
                 <BlogContentEditor
@@ -827,11 +827,11 @@ export default function BlogAdminClient({
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+          <div className="pt-6 border-t border-warm-200 dark:border-warm-800 flex justify-end">
             <button
               type="submit"
               disabled={isCreating}
-              className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-lg transition flex items-center gap-2 shadow-md disabled:opacity-50"
+              className="bg-warm-600 hover:bg-warm-700 text-white font-bold py-3 px-8 rounded-lg transition flex items-center gap-2 shadow-md disabled:opacity-50"
             >
               {isCreating ? <Loader className="h-5 w-5 animate-spin" /> : null}
               {editingPostId ? "Save Changes" : "Publish Post"}
@@ -841,20 +841,20 @@ export default function BlogAdminClient({
       </div>
 
       {/* Right Sidebar: Posts List */}
-      <div className="w-full lg:w-96 flex-shrink-0 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm sticky top-8">
+      <div className="w-full lg:w-96 flex-shrink-0 bg-white dark:bg-warm-900 p-6 rounded-xl border border-warm-200 dark:border-warm-800 shadow-sm sticky top-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Posts ({posts.length})</h2>
           <div className="flex gap-2">
             <button
               onClick={copyAllSlugs}
-              className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 rounded-lg transition"
+              className="p-2 bg-warm-100 dark:bg-warm-800 hover:bg-warm-100 hover:text-warm-600 dark:hover:bg-warm-700 rounded-lg transition"
               title="Copy all slugs"
             >
               <Copy className="w-4 h-4" />
             </button>
             <button
               onClick={clearForm}
-              className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 rounded-lg transition"
+              className="p-2 bg-warm-100 dark:bg-warm-800 hover:bg-warm-100 hover:text-warm-600 dark:hover:bg-warm-700 rounded-lg transition"
               title="New Post"
             >
               <Plus className="w-4 h-4" />
@@ -869,8 +869,8 @@ export default function BlogAdminClient({
               onClick={() => handleEdit(post)}
               className={`group flex items-center gap-4 p-3 rounded-lg border transition cursor-pointer ${
                 editingPostId === post.id
-                  ? "bg-slate-50 dark:bg-slate-900/20 border-slate-200 dark:border-slate-800 ring-1 ring-slate-500"
-                  : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
+                  ? "bg-warm-50 dark:bg-warm-900/20 border-warm-200 dark:border-warm-800 ring-1 ring-warm-500"
+                  : "bg-warm-50 dark:bg-warm-800/50 border-warm-200 dark:border-warm-700 hover:border-warm-300 dark:hover:border-warm-600"
               }`}
             >
               {post.imageUrl ? (
@@ -878,16 +878,16 @@ export default function BlogAdminClient({
                 <img
                   src={post.imageUrl}
                   alt=""
-                  className="w-12 h-12 object-cover rounded-md bg-slate-200 dark:bg-slate-700 flex-shrink-0 border border-slate-200 dark:border-slate-700"
+                  className="w-12 h-12 object-cover rounded-md bg-warm-200 dark:bg-warm-700 flex-shrink-0 border border-warm-200 dark:border-warm-700"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-md bg-slate-200 dark:bg-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200 dark:border-slate-700">
-                  <ImageIcon className="w-5 h-5 text-slate-400" />
+                <div className="w-12 h-12 rounded-md bg-warm-200 dark:bg-warm-700 flex items-center justify-center flex-shrink-0 border border-warm-200 dark:border-warm-700">
+                  <ImageIcon className="w-5 h-5 text-warm-400" />
                 </div>
               )}
 
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-sm truncate text-slate-900 dark:text-slate-100 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition">
+                <div className="font-semibold text-sm truncate text-warm-900 dark:text-warm-100 group-hover:text-warm-600 dark:group-hover:text-warm-400 transition">
                   {post.slug}
                 </div>
                 <div className="flex items-center gap-2 mt-1">
@@ -895,19 +895,19 @@ export default function BlogAdminClient({
                     className={`text-xs px-1.5 py-0.5 rounded ${
                       post.published
                         ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
-                        : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                        : "bg-warm-200 dark:bg-warm-700 text-warm-500 dark:text-warm-400"
                     }`}
                   >
                     {post.published ? "Published" : "Draft"}
                   </div>
                   <div
-                    className="text-xs text-slate-500 dark:text-slate-400"
+                    className="text-xs text-warm-500 dark:text-warm-400"
                     suppressHydrationWarning
                   >
                     {new Date(post.createdAt).toLocaleDateString()}
                   </div>
                   {post.relatedPostIds?.length > 0 && (
-                    <div className="flex items-center gap-1 text-xs text-slate-500">
+                    <div className="flex items-center gap-1 text-xs text-warm-500">
                       <Link2 className="w-3 h-3" />
                       {post.relatedPostIds.length}
                     </div>
@@ -920,7 +920,7 @@ export default function BlogAdminClient({
                   <button
                     onClick={(e) => handlePublishToBlogger(e, post.id)}
                     disabled={isPublishing === post.id}
-                    className="p-2 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-md transition"
+                    className="p-2 text-warm-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-md transition"
                     title="Publish to Blogspot"
                   >
                     {isPublishing === post.id ? (
@@ -933,7 +933,7 @@ export default function BlogAdminClient({
 
                 <button
                   onClick={(e) => handleDelete(post.id, e)}
-                  className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition"
+                  className="opacity-0 group-hover:opacity-100 p-2 text-warm-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition"
                   title="Delete Post"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -942,7 +942,7 @@ export default function BlogAdminClient({
             </div>
           ))}
           {posts.length === 0 && (
-            <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+            <div className="text-center py-8 text-warm-500 dark:text-warm-400">
               No posts found.
             </div>
           )}
@@ -957,14 +957,14 @@ export default function BlogAdminClient({
           <div className="flex gap-2">
             <button
               onClick={() => setModal((prev) => ({ ...prev, isOpen: false }))}
-              className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700 transition"
+              className="px-4 py-2 text-sm font-medium text-warm-700 bg-white border border-warm-300 rounded-lg hover:bg-warm-50 dark:bg-warm-800 dark:text-warm-300 dark:border-warm-600 dark:hover:bg-warm-700 transition"
             >
               Cancel
             </button>
             {modal.type === "confirm" && (
               <button
                 onClick={modal.onConfirm}
-                className="px-4 py-2 text-sm font-medium text-white bg-slate-600 rounded-lg hover:bg-slate-700 transition shadow-sm"
+                className="px-4 py-2 text-sm font-medium text-white bg-warm-600 rounded-lg hover:bg-warm-700 transition shadow-sm"
               >
                 Confirm
               </button>
@@ -976,13 +976,13 @@ export default function BlogAdminClient({
           <div className={`p-2 rounded-full flex-shrink-0 ${
             modal.type === "success" ? "bg-emerald-100 text-emerald-600" :
             modal.type === "error" ? "bg-red-100 text-red-600" :
-            "bg-slate-100 text-slate-600"
+            "bg-warm-100 text-warm-600"
           }`}>
             {modal.type === "success" ? <CheckCircle2 className="w-6 h-6" /> :
              modal.type === "error" ? <AlertCircle className="w-6 h-6" /> :
              <Share2 className="w-6 h-6" />}
           </div>
-          <div className="flex-1 text-sm text-slate-600 dark:text-slate-400">
+          <div className="flex-1 text-sm text-warm-600 dark:text-warm-400">
             {modal.message}
           </div>
         </div>
