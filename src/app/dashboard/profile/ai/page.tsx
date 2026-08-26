@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "@/lib/translations";
 import { AIKeysForm } from "@/components/profile/ai-keys-form";
+import { AgentTokensSection } from "@/components/settings/agent-tokens-section";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { LoadingScreen } from "@/components/ui/loading-screen";
@@ -40,6 +41,7 @@ export default function AISettingsPage() {
 
       <div className="space-y-8">
         <AIKeysForm />
+        <AgentTokensSection />
       </div>
     </div>
   );

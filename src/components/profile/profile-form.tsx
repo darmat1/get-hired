@@ -20,7 +20,6 @@ import {
 import { LinkedinIcon } from "@/components/ui/icons/linkedin";
 import { useTranslation } from "@/lib/translations";
 import { Modal } from "@/components/ui/modal";
-import { AgentTokensSection } from "@/components/settings/agent-tokens-section";
 
 export function ProfileForm() {
   const { data: session, refetch } = useSession();
@@ -582,7 +581,6 @@ export function ProfileForm() {
         </form>
       </div>
 
-      <AgentTokensSection />
 
       {/* Danger Zone */}
       <div className="bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-900/50 p-6">
