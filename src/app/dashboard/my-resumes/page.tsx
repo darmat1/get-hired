@@ -122,7 +122,7 @@ export default function Dashboard() {
         <div className="space-y-6 text-foreground">
           <div className="mb-6 flex flex-col gap-4 sm:mb-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0">
-              <h1 className="text-2xl font-bold sm:text-3xl">{t("dashboard.title")}</h1>
+              <h1 className="text-2xl font-bold font-heading sm:text-3xl">{t("dashboard.title")}</h1>
               <p className="mt-2 text-sm text-muted-foreground sm:text-base">
                 {t("dashboard.subtitle")}
               </p>
@@ -286,10 +286,10 @@ export default function Dashboard() {
             <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
           </div>
           <div>
-            <p className="text-gray-900 dark:text-gray-100 font-medium mb-1">
+            <p className="text-warm-900 dark:text-warm-100 font-medium mb-1">
               {t("dashboard.delete_confirm_title") || "Are you sure?"}
             </p>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <p className="text-warm-600 dark:text-warm-400 text-sm">
               {t("dashboard.delete_confirm_desc") ||
                 "This action cannot be undone."}
             </p>
