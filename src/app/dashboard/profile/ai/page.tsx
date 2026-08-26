@@ -30,10 +30,10 @@ export default function AISettingsPage() {
   return (
     <div className="max-w-full mx-auto space-y-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-bold font-heading text-warm-900 dark:text-warm-50">
           {t("ai_settings.title")}
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-warm-600 dark:text-warm-400">
           {t("ai_settings.subtitle")}
         </p>
       </div>
