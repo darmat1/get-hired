@@ -38,11 +38,11 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
   return (
     <aside
       className={cn(
-        "flex h-full min-h-full flex-col bg-white dark:bg-slate-900",
+        "flex h-full min-h-full flex-col bg-warm-100 dark:bg-warm-900",
         className,
       )}
     >
-      <div className="px-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex-shrink-0">
+      <div className="px-4 border-b border-warm-200 dark:border-warm-700 bg-warm-50 dark:bg-warm-900 flex-shrink-0">
         <LocalizedLink
           href="/"
           className="h-16 flex items-center justify-center"
@@ -55,7 +55,7 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
           <li>
             <LocalizedLink
               href="/dashboard"
-              className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50 no-underline hover:no-underline mb-4 border border-slate-200 dark:border-slate-700"
+              className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50 no-underline hover:no-underline mb-4 border border-warm-200 dark:border-warm-700"
             >
               <Briefcase className="mr-3 h-5 w-5 flex-shrink-0" />
               {t("nav.dashboard")}
@@ -66,8 +66,8 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
               href="/admin/blog"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                 isActive("/admin/blog")
-                  ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                  : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
               }`}
             >
               <FileText className="mr-3 h-5 w-5 flex-shrink-0" />
@@ -80,8 +80,8 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
                 href="/admin/users"
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
                   isActive("/admin/users")
-                    ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50"
-                    : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                    ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                    : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
                 }`}
               >
                 <Users className="mr-3 h-5 w-5 flex-shrink-0" />
@@ -93,7 +93,7 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
       </nav>
       <div className="py-4 mt-auto">
         {isMounted && session && (
-          <div className="px-4 pt-2 border-t border-slate-200 dark:border-slate-700">
+          <div className="px-4 pt-2 border-t border-warm-200 dark:border-warm-700">
             <UserMenu
               userName={session.user?.name || ""}
               userEmail={session.user?.email || ""}
