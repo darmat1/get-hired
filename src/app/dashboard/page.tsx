@@ -261,7 +261,7 @@ export default function MyExperiencePage() {
       <div className="max-w-full mx-auto space-y-6">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="min-w-0">
-            <h1 className="text-2xl font-bold sm:text-3xl">{t("nav.my_experience")}</h1>
+            <h1 className="text-2xl font-bold font-heading sm:text-3xl">{t("nav.my_experience")}</h1>
             <p className="text-sm text-muted-foreground sm:text-base">
               {t("profile.unified_desc")}
             </p>
@@ -288,7 +288,7 @@ export default function MyExperiencePage() {
                     disabled={isSaving}
                     className={`w-full transition-all duration-500 sm:w-auto ${
                       isSaving
-                        ? "bg-slate-50 dark:bg-slate-900/50 border-slate-300 dark:border-slate-700 opacity-80"
+                        ? "bg-warm-50 dark:bg-warm-900/50 border-warm-300 dark:border-warm-700 opacity-80"
                         : ""
                     }`}
                   >
@@ -311,10 +311,10 @@ export default function MyExperiencePage() {
         </div>
 
         {/* Import Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm space-y-4">
+        <div className="bg-warm-100 dark:bg-warm-800 rounded-xl border border-warm-200 dark:border-warm-700 p-4 sm:p-6 shadow-sm space-y-4">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-3">
-                  <Upload className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+                  <Upload className="h-5 w-5 text-warm-600 dark:text-warm-400" />
               <h3 className="text-lg font-semibold">{t("profile.import_data")}</h3>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row">
@@ -347,20 +347,20 @@ export default function MyExperiencePage() {
                     onDrop={handleDrop}
                     className={`border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer transition-colors ${
                       isDragging
-                        ? "border-slate-500 bg-slate-50 dark:bg-slate-900/20"
-                        : "border-gray-300 dark:border-gray-600 hover:border-slate-500 dark:hover:border-slate-400"
+                        ? "border-warm-500 bg-warm-50 dark:bg-warm-900/20"
+                        : "border-warm-300 dark:border-warm-600 hover:border-warm-500 dark:hover:border-warm-400"
                     }`}
                   >
                     <Upload
                       className={`h-8 w-8 mx-auto mb-2 transition-colors ${
-                        isDragging ? "text-slate-600" : "text-slate-400"
+                        isDragging ? "text-warm-600" : "text-warm-400"
                       }`}
                     />
                     <p
                       className={`text-sm transition-colors ${
                         isDragging
-                          ? "text-slate-700 dark:text-slate-300 font-medium"
-                          : "text-gray-600 dark:text-gray-400"
+                          ? "text-warm-700 dark:text-warm-300 font-medium"
+                          : "text-warm-600 dark:text-warm-400"
                       }`}
                     >
                       {fileName ||
@@ -392,8 +392,8 @@ export default function MyExperiencePage() {
     text-sm 
     transition-all
     
-    bg-white border border-gray-300 text-gray-900 
-    placeholder:text-gray-400
+    bg-warm-100 border border-warm-300 text-warm-900
+    placeholder:text-warm-400
 
     dark:bg-[var(--color-input)] 
     dark:border-[var(--color-border)] 
@@ -449,21 +449,21 @@ export default function MyExperiencePage() {
               )}
 
               {isAiProcessing && (
-                <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50 p-5 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-slate-800 dark:bg-slate-900/50 sm:flex-row sm:items-center">
+                <div className="flex flex-col gap-4 rounded-xl border border-warm-200 bg-warm-50 p-5 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-warm-800 dark:bg-warm-900/50 sm:flex-row sm:items-center">
                   <div className="relative">
-                    <Loader2 className="h-8 w-8 text-slate-600 dark:text-slate-400 animate-spin" />
-                    <Sparkles className="h-4 w-4 text-slate-400 absolute -top-1 -right-1 animate-pulse" />
+                    <Loader2 className="h-8 w-8 text-warm-600 dark:text-warm-400 animate-spin" />
+                    <Sparkles className="h-4 w-4 text-warm-400 absolute -top-1 -right-1 animate-pulse" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                    <p className="text-sm font-semibold text-warm-800 dark:text-warm-200">
                       {t("profile.ai_analyzing").replace(
                         "{seconds}",
                         String(aiTimer),
                       )}
                     </p>
-                    <div className="mt-2 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div className="mt-2 h-1.5 w-full bg-warm-100 dark:bg-warm-800 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-slate-900 dark:bg-slate-50 transition-all duration-300"
+                        className="h-full bg-warm-900 dark:bg-warm-50 transition-all duration-300"
                         style={{
                           width: `${Math.min(95, aiTimer * 3)}%`,
                           transition: "width 1s ease",
@@ -471,7 +471,7 @@ export default function MyExperiencePage() {
                       />
                     </div>
                   </div>
-                  <span className="text-2xl font-bold text-slate-900 dark:text-slate-100 tabular-nums">
+                  <span className="text-2xl font-bold text-warm-900 dark:text-warm-100 tabular-nums">
                     {aiTimer}s
                   </span>
                 </div>
@@ -591,12 +591,12 @@ function ProfileEmptyState({
   onManual: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 p-8 sm:p-12 text-center space-y-8">
+    <div className="rounded-2xl border border-dashed border-warm-200 dark:border-warm-700 bg-warm-50/50 dark:bg-warm-900/30 p-8 sm:p-12 text-center space-y-8">
       <div className="space-y-2">
-        <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+        <p className="text-2xl font-bold text-warm-900 dark:text-warm-100">
           {t("onboarding.title")}
         </p>
-        <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-sm sm:text-base">
+        <p className="text-warm-500 dark:text-warm-400 max-w-md mx-auto text-sm sm:text-base">
           {t("onboarding.subtitle")}
         </p>
       </div>
@@ -614,10 +614,10 @@ function ProfileEmptyState({
             <Bot className="h-6 w-6 text-white" />
           </div>
           <div>
-            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+            <p className="font-semibold text-warm-900 dark:text-warm-100 text-sm">
               {t("onboarding.ai_interview")}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-warm-500 dark:text-warm-400 mt-1">
               {t("onboarding.ai_interview_desc")}
             </p>
           </div>
@@ -626,16 +626,16 @@ function ProfileEmptyState({
         {/* Upload PDF */}
         <button
           onClick={onUploadPDF}
-          className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 text-center hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-sm transition-all"
+          className="flex flex-col items-center gap-3 rounded-2xl border border-warm-200 dark:border-warm-700 bg-warm-100 dark:bg-warm-800 p-6 text-center hover:border-warm-400 dark:hover:border-warm-500 hover:shadow-sm transition-all"
         >
-          <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-            <FileUp className="h-6 w-6 text-slate-600 dark:text-slate-300" />
+          <div className="w-12 h-12 rounded-xl bg-warm-200 dark:bg-warm-700 flex items-center justify-center">
+            <FileUp className="h-6 w-6 text-warm-600 dark:text-warm-300" />
           </div>
           <div>
-            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+            <p className="font-semibold text-warm-900 dark:text-warm-100 text-sm">
               {t("onboarding.upload_pdf")}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-warm-500 dark:text-warm-400 mt-1">
               {t("onboarding.upload_pdf_desc")}
             </p>
           </div>
@@ -644,16 +644,16 @@ function ProfileEmptyState({
         {/* Manual */}
         <button
           onClick={onManual}
-          className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 text-center hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-sm transition-all"
+          className="flex flex-col items-center gap-3 rounded-2xl border border-warm-200 dark:border-warm-700 bg-warm-100 dark:bg-warm-800 p-6 text-center hover:border-warm-400 dark:hover:border-warm-500 hover:shadow-sm transition-all"
         >
-          <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-            <PenLine className="h-6 w-6 text-slate-600 dark:text-slate-300" />
+          <div className="w-12 h-12 rounded-xl bg-warm-200 dark:bg-warm-700 flex items-center justify-center">
+            <PenLine className="h-6 w-6 text-warm-600 dark:text-warm-300" />
           </div>
           <div>
-            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+            <p className="font-semibold text-warm-900 dark:text-warm-100 text-sm">
               {t("onboarding.manual")}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-warm-500 dark:text-warm-400 mt-1">
               {t("onboarding.manual_desc")}
             </p>
           </div>
