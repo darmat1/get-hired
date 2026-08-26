@@ -70,13 +70,13 @@ function Hero() {
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
             <Link
               href="/auth/signin"
-              className="w-full sm:w-auto px-10 py-4 text-lg bg-terracotta-500 hover:bg-terracotta-600 text-white dark:bg-terracotta-500 dark:hover:bg-terracotta-600 dark:text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-10 py-4 text-lg bg-terracotta-500 hover:bg-terracotta-600 text-white dark:bg-terracotta-500 dark:hover:bg-terracotta-600 dark:text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2 whitespace-nowrap"
             >
               {t("landing.hero.cta")} <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               href="/auth/signin?method=linkedin"
-              className="w-full sm:w-auto px-10 py-4 text-lg bg-warm-50 dark:bg-warm-50/5 hover:bg-warm-100 dark:hover:bg-warm-50/10 text-warm-700 dark:text-warm-50 font-bold rounded-full border border-warm-200 dark:border-warm-50/10 transition-all duration-300 shadow-sm flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-10 py-4 text-lg bg-warm-50 dark:bg-warm-50/5 hover:bg-warm-100 dark:hover:bg-warm-50/10 text-warm-700 dark:text-warm-50 font-bold rounded-full border border-warm-200 dark:border-warm-50/10 transition-all duration-300 shadow-sm flex items-center justify-center gap-2 whitespace-nowrap"
             >
               <LinkedinIcon className="w-5 h-5 fill-current stroke-current" />
               {t("landing.hero.cta_secondary")}
