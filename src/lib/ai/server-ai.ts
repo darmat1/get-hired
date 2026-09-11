@@ -160,6 +160,11 @@ export async function aiComplete(
               console.log(
                 `[AI] Success (User Key): ${provider.name}, model: ${response.model}`,
               );
+              prisma.aiUsageEvent
+                .create({
+                  data: { userId, provider: provider.id, model: response.model },
+                })
+                .catch(() => {});
               return response;
             } catch (err) {
               const msg = err instanceof Error ? err.message : String(err);
@@ -264,6 +269,11 @@ export async function aiComplete(
       console.log(
         `[AI] Success (System): ${provider.name}, model: ${response.model}`,
       );
+      prisma.aiUsageEvent
+        .create({
+          data: { userId, provider: provider.id, model: response.model },
+        })
+        .catch(() => {});
       return response;
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
