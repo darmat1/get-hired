@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Header } from "@/components/layout/header";
+import { HeartbeatPing } from "@/components/layout/heartbeat-ping";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +32,7 @@ export function AppShell({
 
   return (
     <div className="min-h-screen bg-warm-50 text-warm-900 dark:bg-warm-950 dark:text-warm-50">
+      <HeartbeatPing />
       <div className="flex min-h-screen">
         <div className="hidden lg:block lg:w-64 lg:flex-shrink-0">
           <div className="sticky top-0 h-screen overflow-hidden border-r border-warm-200 bg-warm-100 dark:border-warm-800 dark:bg-warm-900">
