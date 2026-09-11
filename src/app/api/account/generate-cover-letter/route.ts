@@ -562,6 +562,7 @@ export async function POST(request: Request) {
         language: language || "en",
         userId: session.user.id,
         resumeId: result.resumeId || null,
+        source: "ai_ui",
       },
     });
 

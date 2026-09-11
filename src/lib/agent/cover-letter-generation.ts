@@ -23,6 +23,7 @@ export async function generateCoverLetterForUser(
     format?: string;
     language?: string;
     resumeId?: string;
+    source?: "ai_ui" | "agent";
   },
 ): Promise<GenerateCoverLetterResult> {
   const jobDescription = (opts.jobDescription || "").trim();
@@ -65,6 +66,7 @@ export async function generateCoverLetterForUser(
         format,
         language,
         resumeId: opts.resumeId || null,
+        source: opts.source || "ai_ui",
       },
     });
 

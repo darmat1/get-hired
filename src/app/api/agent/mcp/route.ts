@@ -420,6 +420,7 @@ function buildServer(ctx: AgentAuthContext): McpServer {
           language: args.language || "en",
           userId: ctx.userId,
           resumeId: args.resumeId || null,
+          source: "agent",
         },
       });
       return textResult(coverLetter);
@@ -484,7 +485,7 @@ function buildServer(ctx: AgentAuthContext): McpServer {
       const deniedWrite = require("cover_letters:write");
       if (deniedWrite) return deniedWrite;
 
-      const result = await generateCoverLetterForUser(ctx.userId, args);
+      const result = await generateCoverLetterForUser(ctx.userId, { ...args, source: "agent" });
       if (!result.ok) return errorResult(result.error);
       return textResult({ coverLetterId: result.coverLetterId, coverLetterText: result.coverLetterText });
     },
