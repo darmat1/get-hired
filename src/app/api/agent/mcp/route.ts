@@ -226,6 +226,7 @@ function buildServer(ctx: AgentAuthContext): McpServer {
           targetPosition: args.targetPosition,
           targetCompany: args.targetCompany,
           userId: ctx.userId,
+          source: "agent",
         },
       });
       return textResult(resume);
@@ -336,7 +337,7 @@ function buildServer(ctx: AgentAuthContext): McpServer {
       const deniedWrite = require("resumes:write");
       if (deniedWrite) return deniedWrite;
 
-      const result = await generateResumeForUser(ctx.userId, args);
+      const result = await generateResumeForUser(ctx.userId, { ...args, source: "agent" });
       if (!result.ok) return errorResult(result.error);
       return textResult({ resumeId: result.resumeId, title: result.title, url: `/resume/${result.resumeId}/edit` });
     },

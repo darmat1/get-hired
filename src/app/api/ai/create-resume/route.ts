@@ -17,6 +17,7 @@ export async function POST(req: Request) {
       targetRole,
       jobDescription,
       template,
+      source: "ai_ui",
     });
 
     if (!result.ok) {

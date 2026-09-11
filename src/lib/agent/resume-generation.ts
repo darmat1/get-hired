@@ -58,7 +58,12 @@ export type GenerateResumeResult =
  */
 export async function generateResumeForUser(
   userId: string,
-  opts: { targetRole?: string; jobDescription?: string; template?: string },
+  opts: {
+    targetRole?: string;
+    jobDescription?: string;
+    template?: string;
+    source?: "ai_ui" | "agent";
+  },
 ): Promise<GenerateResumeResult> {
   const targetRole = opts.targetRole || "";
   const jobDescription = opts.jobDescription || "";
@@ -101,6 +106,7 @@ export async function generateResumeForUser(
         workExperience: [],
         education: [],
         skills: [],
+        source: opts.source || "ai_ui",
       },
     });
 

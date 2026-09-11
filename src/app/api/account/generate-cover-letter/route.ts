@@ -532,6 +532,7 @@ export async function POST(request: Request) {
           targetPosition: resumeJson.targetPosition || null,
           targetCompany: resumeJson.targetCompany || null,
           userId: session.user.id,
+          source: "ai_ui",
         },
       });
 
