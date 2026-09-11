@@ -160,11 +160,12 @@ export async function aiComplete(
               console.log(
                 `[AI] Success (User Key): ${provider.name}, model: ${response.model}`,
               );
+              // Fire-and-forget: best-effort analytics, never block or fail the AI response.
               prisma.aiUsageEvent
                 .create({
                   data: { userId, provider: provider.id, model: response.model },
                 })
-                .catch(() => {});
+                .catch((err) => console.warn("[AI] Failed to log usage event:", err));
               return response;
             } catch (err) {
               const msg = err instanceof Error ? err.message : String(err);
@@ -269,11 +270,12 @@ export async function aiComplete(
       console.log(
         `[AI] Success (System): ${provider.name}, model: ${response.model}`,
       );
+      // Fire-and-forget: best-effort analytics, never block or fail the AI response.
       prisma.aiUsageEvent
         .create({
           data: { userId, provider: provider.id, model: response.model },
         })
-        .catch(() => {});
+        .catch((err) => console.warn("[AI] Failed to log usage event:", err));
       return response;
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
