@@ -87,6 +87,7 @@ model UserVisit {
 
   @@index([userId, lastSeenAt])
   @@index([lastSeenAt])
+  @@index([startedAt])
   @@map("user_visit")
 }
 
@@ -96,11 +97,12 @@ model AgentRequestEvent {
   token     AgentToken @relation(fields: [tokenId], references: [id], onDelete: Cascade)
   userId    String
   transport String     // "mcp" | "rest"
-  route     String
+  route     String     // MCP tool name, or REST path
   createdAt DateTime   @default(now())
 
   @@index([tokenId, createdAt])
   @@index([userId, createdAt])
+  @@index([createdAt])
   @@map("agent_request_event")
 }
 
