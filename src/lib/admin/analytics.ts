@@ -150,7 +150,7 @@ export async function getAnalyticsSummary(range: AnalyticsRange) {
     activity: {
       onlineNow,
       visitTrend,
-      uniqueVisitDays: visitTrend.length,
+      uniqueVisitDays: visitTrend.filter((d) => d.count > 0).length,
       avgVisitDurationMs,
     },
     agentTokens: {
