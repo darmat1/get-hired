@@ -532,6 +532,7 @@ export async function POST(request: Request) {
           targetPosition: resumeJson.targetPosition || null,
           targetCompany: resumeJson.targetCompany || null,
           userId: session.user.id,
+          source: "ai_ui",
         },
       });
 
@@ -561,6 +562,7 @@ export async function POST(request: Request) {
         language: language || "en",
         userId: session.user.id,
         resumeId: result.resumeId || null,
+        source: "ai_ui",
       },
     });
 

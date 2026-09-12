@@ -127,8 +127,8 @@ function VerifyEmailContent() {
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
         <div className="mb-4 flex justify-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-            <Mail className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-terracotta-50 dark:bg-terracotta-500/20">
+            <Mail className="h-6 w-6 text-terracotta-600 dark:text-terracotta-400" />
           </div>
         </div>
         <CardTitle className="text-2xl font-bold font-heading">
@@ -212,7 +212,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 dark:bg-slate-950">
+    <div className="flex min-h-screen items-center justify-center bg-warm-50 px-4 py-12 dark:bg-warm-950">
       <Suspense
         fallback={
           <Card className="w-full max-w-md p-8 flex flex-col items-center justify-center space-y-4">

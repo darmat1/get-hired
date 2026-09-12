@@ -31,6 +31,7 @@ model User {
   profile  UserProfile?
   aiKeys   AiCredential[]
   agentTokens AgentToken[]
+  visits      UserVisit[]
 
   // AI Preferences
   preferredAIProvider String?
@@ -59,9 +60,50 @@ model AgentToken {
   expiresAt   DateTime?
   revokedAt   DateTime?
   createdAt   DateTime  @default(now())
+  requests    AgentRequestEvent[]
 
   @@index([userId])
   @@map("agent_token")
+}
+
+model AiUsageEvent {
+  id        String   @id @default(cuid())
+  userId    String?
+  provider  String
+  model     String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([provider, createdAt])
+  @@map("ai_usage_event")
+}
+
+model UserVisit {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startedAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+
+  @@index([userId, lastSeenAt])
+  @@index([lastSeenAt])
+  @@index([startedAt])
+  @@map("user_visit")
+}
+
+model AgentRequestEvent {
+  id        String     @id @default(cuid())
+  tokenId   String
+  token     AgentToken @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+  userId    String
+  transport String     // "mcp" | "rest"
+  route     String     // MCP tool name, or REST path
+  createdAt DateTime   @default(now())
+
+  @@index([tokenId, createdAt])
+  @@index([userId, createdAt])
+  @@index([createdAt])
+  @@map("agent_request_event")
 }
 
 model AiCredential {
@@ -135,6 +177,7 @@ model Resume {
   skills         Json?
   certificates   Json?
   customization  Json?
+  source         String   @default("manual") // "manual" | "ai_ui" | "agent"
   language       String   @default("en")
   targetPosition String?
   targetCompany  String?
@@ -155,6 +198,7 @@ model CoverLetter {
   coverLetterText String
   format          String   @default("bullet")
   language        String   @default("en")
+  source          String   @default("manual") // "manual" | "ai_ui" | "agent"
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

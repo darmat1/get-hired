@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     targetRole,
     jobDescription,
     template,
+    source: "agent",
   });
 
   if (!result.ok) {

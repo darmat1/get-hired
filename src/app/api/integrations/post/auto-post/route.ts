@@ -22,76 +22,61 @@ function cleanSolution(val: any): string | null {
   return num.toFixed(2);
 }
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer "))
+    const cronSecret = process.env.CRON_SECRET;
+    
+    // Auth validation - support CRON_SECRET or bearer token
+    let token = "";
+    let userId: string | undefined;
+
+    if (authHeader?.startsWith("Bearer ")) {
+      const authValue = authHeader.split(" ")[1];
+      if (cronSecret && authValue === cronSecret) {
+        // Authenticated via CRON_SECRET, valid
+      } else {
+        token = authValue;
+        try {
+          const session = await auth.api.getSession({ headers: await headers() });
+          userId = session?.user?.id;
+        } catch {
+          userId = undefined;
+        }
+      }
+    } else {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const token = authHeader.split(" ")[1];
+    }
 
     // 1. Конфигурация режима
-    const mode = process.env.AUTO_POST_MODE || "ai";
-    const mintCurrRaw = process.env.MINT_CURR || "GPT";
-    const mintAmtRaw = process.env.MINT_AMT || "100";
+    const subj = submolts[Math.floor(Math.random() * submolts.length)];
+    
+    const generationPrompt = buildAutoPostGenerationPrompt(subj.display_name);
+    const genResponse = await executeStructuredAI<{
+      title: string;
+      hook: string;
+      body: string;
+      conclusion: string;
+    }>(
+      {
+        systemPrompt: generationPrompt.systemPrompt,
+        userPrompt: generationPrompt.userPrompt,
+        temperature: 0.7,
+      },
+      userId,
+    );
 
-    const tickers = mintCurrRaw.split(",").map((t) => t.trim());
-    const amounts = mintAmtRaw.split(",").map((a) => a.trim());
+    const genPost = genResponse.parsed;
 
-    const inscriptions = tickers
-      .map((tick, i) => {
-        const amt = amounts[i] || amounts[amounts.length - 1];
-        return `{"p":"mbc-20","op":"mint","tick":"${tick}","amt":"${amt}"}`;
-      })
-      .join(" ");
-
-    let subj;
-    let postTitle;
-    let finalContent;
-
-    if (mode === "mint") {
-      // Режим минта: строго в general
-      subj = submolts.find((s) => s.name === "general") || submolts[0];
-      postTitle = `${mintCurrRaw} minting`;
-      finalContent = `${inscriptions} mbc20.xyz`;
-    } else {
-      // Режим AI (как сейчас): рандомная ветка + генерация
-      subj = submolts[Math.floor(Math.random() * submolts.length)];
-      // Получаем userId активного пользователя (если есть)
-      let userId: string | undefined;
-      try {
-        const session = await auth.api.getSession({ headers: await headers() });
-        userId = session?.user?.id;
-      } catch {
-        userId = undefined;
-      }
-      const generationPrompt = buildAutoPostGenerationPrompt(subj.display_name);
-      const genResponse = await executeStructuredAI<{
-        title: string;
-        hook: string;
-        body: string;
-        conclusion: string;
-      }>(
-        {
-          systemPrompt: generationPrompt.systemPrompt,
-          userPrompt: generationPrompt.userPrompt,
-          temperature: 0.7,
-        },
-        userId,
-      );
-
-      const genPost = genResponse.parsed;
-
-      // Сборка финального текста с МИНТ-ПРЕФИКСОМ
-      const mintPrefix = `${inscriptions}mbc20.xyz\n\n`;
-      finalContent =
-        genPost.hook +
-        "\n\n" +
-        genPost.body +
-        "\n\n" +
-        mintPrefix +
-        genPost.conclusion;
-      postTitle = genPost.title;
-    }
+    // Сборка финального текста
+    const finalContent =
+      genPost.hook +
+      "\n\n" +
+      genPost.body +
+      "\n\n" +
+      genPost.conclusion;
+      
+    const postTitle = genPost.title;
 
     console.log("finalContent", finalContent);
 
@@ -100,7 +85,7 @@ export async function GET(req: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: token ? `Bearer ${token}` : "",
       },
       body: JSON.stringify({
         submolt: subj.name,
@@ -153,7 +138,7 @@ export async function GET(req: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: token ? `Bearer ${token}` : "",
         },
         body: JSON.stringify({
           verification_code: v.code,

@@ -105,6 +105,7 @@ export async function POST(request: NextRequest) {
         targetPosition: body.targetPosition,
         targetCompany: body.targetCompany,
         userId: ctx.userId,
+        source: "agent",
       },
     });
 

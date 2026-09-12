@@ -58,10 +58,10 @@ export default function SignInPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-warm-50 dark:bg-warm-950">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-warm-900 dark:text-warm-50">
               Sign in to your account
             </h2>
           </div>
@@ -79,7 +79,7 @@ export default function SignInPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-warm-300 placeholder-warm-400 text-warm-900 rounded-t-md focus:outline-none focus:ring-terracotta-500 focus:border-terracotta-500 focus:z-10 sm:text-sm dark:bg-warm-800 dark:border-warm-600 dark:placeholder-warm-500 dark:text-warm-50"
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -92,7 +92,7 @@ export default function SignInPage() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-warm-300 placeholder-warm-400 text-warm-900 rounded-b-md focus:outline-none focus:ring-terracotta-500 focus:border-terracotta-500 focus:z-10 sm:text-sm dark:bg-warm-800 dark:border-warm-600 dark:placeholder-warm-500 dark:text-warm-50"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -104,7 +104,7 @@ export default function SignInPage() {
               <div className="text-sm">
                 <Link
                   href="/auth/forgot-password"
-                  className="font-medium text-slate-900 dark:text-slate-100 hover:text-slate-700"
+                  className="font-medium text-terracotta-600 dark:text-terracotta-400 hover:text-terracotta-700 dark:hover:text-terracotta-500"
                 >
                   Forgot your password?
                 </Link>
@@ -115,7 +115,7 @@ export default function SignInPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 disabled:opacity-50 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-terracotta-600 hover:bg-terracotta-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-terracotta-500 disabled:opacity-50 dark:bg-terracotta-600 dark:hover:bg-terracotta-500"
               >
                 {isLoading ? "Signing in..." : "Sign in"}
               </button>
@@ -123,10 +123,10 @@ export default function SignInPage() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                <div className="w-full border-t border-warm-200 dark:border-warm-700"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500">
+                <span className="px-2 bg-warm-50 dark:bg-warm-950 text-warm-500 dark:text-warm-400">
                   Or continue with
                 </span>
               </div>
@@ -141,7 +141,7 @@ export default function SignInPage() {
                     callbackURL: "/dashboard",
                   });
                 }}
-                className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+                className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-warm-300 dark:border-warm-600 rounded-md shadow-sm text-sm font-medium text-warm-700 dark:text-warm-50 bg-white dark:bg-warm-800 hover:bg-warm-50 dark:hover:bg-warm-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-terracotta-500"
               >
                 <GoogleIcon />
                 Sign in with Google
@@ -156,7 +156,7 @@ export default function SignInPage() {
                     callbackURL: "/dashboard",
                   });
                 }}
-                className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+                className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-warm-300 dark:border-warm-600 rounded-md shadow-sm text-sm font-medium text-warm-700 dark:text-warm-50 bg-white dark:bg-warm-800 hover:bg-warm-50 dark:hover:bg-warm-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-terracotta-500"
               >
                 <LinkedinIcon brand />
                 Sign in with LinkedIn
@@ -166,7 +166,7 @@ export default function SignInPage() {
             <div className="text-center">
               <Link
                 href="/auth/signup"
-                className="text-slate-900 dark:text-slate-100 font-medium hover:underline"
+                className="text-terracotta-600 dark:text-terracotta-400 font-medium hover:underline"
               >
                 Don&apos;t have an account? Sign up
               </Link>

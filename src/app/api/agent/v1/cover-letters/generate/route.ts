@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
     format,
     language,
     resumeId,
+    source: "agent",
   });
 
   if (!result.ok) {

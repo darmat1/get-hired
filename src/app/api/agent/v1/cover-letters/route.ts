@@ -81,6 +81,7 @@ export async function POST(request: NextRequest) {
       language: language || "en",
       userId: ctx.userId,
       resumeId: resumeId || null,
+      source: "agent",
     },
   });
 

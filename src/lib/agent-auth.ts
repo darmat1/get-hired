@@ -70,6 +70,18 @@ export async function authenticateAgentRequest(
     });
   }
 
+  const url = new URL(request.url);
+  prisma.agentRequestEvent
+    .create({
+      data: {
+        tokenId: record.id,
+        userId: record.userId,
+        transport: url.pathname.startsWith("/api/agent/mcp") ? "mcp" : "rest",
+        route: url.pathname,
+      },
+    })
+    .catch((err) => console.warn("[agent-auth] Failed to log agent request event:", err));
+
   return {
     userId: record.userId,
     tokenId: record.id,

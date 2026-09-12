@@ -52,7 +52,11 @@ next-env.d.ts
 /chrome-extension
 /ideas
 /.cursor
+/memory
 
 posts.json
 # PDF.js worker (auto-copied during postinstall)
 public/pdf.worker.min.mjs
+
+mb.json
+reply.*
