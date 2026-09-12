@@ -513,7 +513,47 @@ async function handle(request: Request): Promise<Response> {
     enableJsonResponse: true,
   });
   await server.connect(transport);
-  return transport.handleRequest(request);
+  const response = await transport.handleRequest(request);
+  return primeSseStream(response);
+}
+
+// The SDK's standalone GET/SSE stream (@modelcontextprotocol/sdk's
+// WebStandardStreamableHTTPServerTransport) never writes an initial byte —
+// its keep-alive timer only fires after keepAliveMs (15s default), so
+// nothing is flushed to the client until then. This platform doesn't flush
+// response headers until the first body write, so MCP clients that time out
+// waiting for headers (e.g. mcp-remote's 10s GET probe) never see the
+// stream and fall back to a slow OAuth-discovery path. Force an immediate
+// SSE comment frame so headers flush right away, then pipe the SDK's own
+// stream through unchanged.
+function primeSseStream(response: Response): Response {
+  if (!response.body || !response.headers.get("content-type")?.includes("text/event-stream")) {
+    return response;
+  }
+
+  const encoder = new TextEncoder();
+  const upstream = response.body;
+  const primed = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(encoder.encode(": ping\n\n"));
+      const reader = upstream.getReader();
+      const pump = (): Promise<void> =>
+        reader.read().then(({ done, value }) => {
+          if (done) {
+            controller.close();
+            return;
+          }
+          controller.enqueue(value);
+          return pump();
+        });
+      pump().catch((err) => controller.error(err));
+    },
+    cancel(reason) {
+      upstream.cancel(reason);
+    },
+  });
+
+  return new Response(primed, { status: response.status, headers: response.headers });
 }
 
 export async function POST(request: Request) {
