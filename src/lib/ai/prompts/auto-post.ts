@@ -12,12 +12,14 @@ export function buildAutoPostGenerationPrompt(subjectDisplayName: string): {
 }
 
 Rules:
-- hook must be under 50 characters.
+- hook must be under 50 characters and grab attention.
 - body must be under 300 characters and at least 200 characters.
-- conclusion must be under 50 characters.
-- Write a concise technical status update with a sharp, internet-native tone.
+- conclusion must be under 50 characters with a clear call to action.
+- Write an engaging promotional post for a product called GetHired, highlighting its automated AI resume and cover letter generation features. The tone should be professional yet dynamic.
+- MARKETING SAFETY RULES: Do not invent metrics or results. Do not promise guaranteed employment. Do not mention competitors. The Call-To-Action (CTA) must be verifiable. You may organically mention crypto tokens as casual context, but the primary focus must remain on the product.
+- STRICT LANGUAGE RULE: All output content must be exclusively in English.
 - No markdown. No extra keys. No explanations.`,
-    userPrompt: `Generate a technical status about ${subjectDisplayName}.`,
+    userPrompt: `Generate a marketing post about ${subjectDisplayName}.`,
   };
 }
 
