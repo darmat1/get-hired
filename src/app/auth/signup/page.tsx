@@ -76,12 +76,12 @@ export default function SignUpPage() {
 
   if (registerSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-        <div className="max-w-md w-full p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg text-center space-y-6">
+      <div className="min-h-screen flex items-center justify-center bg-warm-50 dark:bg-warm-950 px-4">
+        <div className="max-w-md w-full p-8 bg-white dark:bg-warm-900 rounded-xl shadow-lg text-center space-y-6">
           <div className="flex justify-center">
-            <div className="h-16 w-16 bg-slate-100 dark:bg-slate-900/30 rounded-full flex items-center justify-center">
+            <div className="h-16 w-16 bg-terracotta-50 dark:bg-terracotta-500/20 rounded-full flex items-center justify-center">
               <svg
-                className="h-10 w-10 text-slate-600"
+                className="h-10 w-10 text-terracotta-600 dark:text-terracotta-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -95,12 +95,12 @@ export default function SignUpPage() {
               </svg>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h2 className="text-3xl font-bold text-warm-900 dark:text-warm-50">
             Check your email
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-warm-600 dark:text-warm-400">
             We've sent a 6-digit verification code to{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
+            <span className="font-semibold text-warm-900 dark:text-warm-50">
               {email}
             </span>
             .
@@ -116,7 +116,7 @@ export default function SignUpPage() {
               <input
                 type="text"
                 placeholder="000000"
-                className="w-full px-4 py-3 text-center text-3xl tracking-[0.5em] font-mono border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="w-full px-4 py-3 text-center text-3xl tracking-[0.5em] font-mono border border-warm-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 dark:bg-warm-800 dark:border-warm-600 dark:text-warm-50"
                 maxLength={6}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
@@ -126,7 +126,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isVerifying}
-              className="w-full py-3 px-4 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-md transition-colors disabled:opacity-50"
+              className="w-full py-3 px-4 bg-terracotta-600 hover:bg-terracotta-700 text-white font-medium rounded-md transition-colors disabled:opacity-50"
             >
               {isVerifying ? "Verifying..." : "Verify & Continue"}
             </button>
@@ -140,7 +140,7 @@ export default function SignUpPage() {
                   type: "email-verification",
                 });
               }}
-              className="text-slate-600 hover:text-slate-500 font-medium"
+              className="text-terracotta-600 dark:text-terracotta-400 hover:text-terracotta-700 dark:hover:text-terracotta-500 font-medium"
             >
               Didn't receive the code? Resend
             </button>
@@ -153,10 +153,10 @@ export default function SignUpPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-warm-50 dark:bg-warm-950 px-4">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-warm-900 dark:text-warm-50">
               Create your account
             </h2>
           </div>
@@ -174,7 +174,7 @@ export default function SignUpPage() {
                   type="text"
                   autoComplete="name"
                   required
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  className="appearance-none relative block w-full px-3 py-2 border border-warm-300 placeholder-warm-400 text-warm-900 rounded-md focus:outline-none focus:ring-terracotta-500 focus:border-terracotta-500 focus:z-10 sm:text-sm dark:bg-warm-800 dark:border-warm-600 dark:placeholder-warm-500 dark:text-warm-50"
                   placeholder="Full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -187,7 +187,7 @@ export default function SignUpPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  className="appearance-none relative block w-full px-3 py-2 border border-warm-300 placeholder-warm-400 text-warm-900 rounded-md focus:outline-none focus:ring-terracotta-500 focus:border-terracotta-500 focus:z-10 sm:text-sm dark:bg-warm-800 dark:border-warm-600 dark:placeholder-warm-500 dark:text-warm-50"
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -200,7 +200,7 @@ export default function SignUpPage() {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  className="appearance-none relative block w-full px-3 py-2 border border-warm-300 placeholder-warm-400 text-warm-900 rounded-md focus:outline-none focus:ring-terracotta-500 focus:border-terracotta-500 focus:z-10 sm:text-sm dark:bg-warm-800 dark:border-warm-600 dark:placeholder-warm-500 dark:text-warm-50"
                   placeholder="Password (min 8 characters)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -212,7 +212,7 @@ export default function SignUpPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 disabled:opacity-50"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-terracotta-600 hover:bg-terracotta-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-terracotta-500 disabled:opacity-50"
               >
                 {isLoading ? "Creating account..." : "Sign up"}
               </button>
@@ -220,10 +220,10 @@ export default function SignUpPage() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                <div className="w-full border-t border-warm-200 dark:border-warm-700"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500">
+                <span className="px-2 bg-warm-50 dark:bg-warm-950 text-warm-500 dark:text-warm-400">
                   Or continue with
                 </span>
               </div>
@@ -238,7 +238,7 @@ export default function SignUpPage() {
                     callbackURL: "/dashboard",
                   });
                 }}
-                className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+                className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-warm-300 dark:border-warm-600 rounded-md shadow-sm text-sm font-medium text-warm-700 dark:text-warm-50 bg-white dark:bg-warm-800 hover:bg-warm-50 dark:hover:bg-warm-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-terracotta-500"
               >
                 <GoogleIcon />
                 Google
@@ -251,7 +251,7 @@ export default function SignUpPage() {
                     callbackURL: "/dashboard",
                   });
                 }}
-                className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+                className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-warm-300 dark:border-warm-600 rounded-md shadow-sm text-sm font-medium text-warm-700 dark:text-warm-50 bg-white dark:bg-warm-800 hover:bg-warm-50 dark:hover:bg-warm-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-terracotta-500"
               >
                 <LinkedinIcon brand />
                 LinkedIn
@@ -261,7 +261,7 @@ export default function SignUpPage() {
             <div className="text-center">
               <Link
                 href="/auth/signin"
-                className="text-slate-600 hover:text-slate-500"
+                className="text-terracotta-600 dark:text-terracotta-400 hover:text-terracotta-700 dark:hover:text-terracotta-500"
               >
                 Already have an account? Sign in
               </Link>
