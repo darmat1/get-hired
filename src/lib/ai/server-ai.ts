@@ -161,7 +161,7 @@ export async function aiComplete(
                 `[AI] Success (User Key): ${provider.name}, model: ${response.model}`,
               );
               // Fire-and-forget: best-effort analytics, never block or fail the AI response.
-              prisma.aiUsageEvent
+              void prisma.aiUsageEvent
                 .create({
                   data: { userId, provider: provider.id, model: response.model },
                 })
@@ -271,7 +271,7 @@ export async function aiComplete(
         `[AI] Success (System): ${provider.name}, model: ${response.model}`,
       );
       // Fire-and-forget: best-effort analytics, never block or fail the AI response.
-      prisma.aiUsageEvent
+      void prisma.aiUsageEvent
         .create({
           data: { userId, provider: provider.id, model: response.model },
         })
