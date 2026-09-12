@@ -31,7 +31,21 @@ async function dailyCounts(
      ORDER BY 1`,
     since,
   );
-  return rows.map((r) => ({ day: r.day.toISOString().slice(0, 10), count: Number(r.count) }));
+  const byDay = new Map(rows.map((r) => [r.day.toISOString().slice(0, 10), Number(r.count)]));
+
+  // Zero-fill every calendar day in range so TrendLineChart's index-based x-spacing
+  // corresponds to evenly-spaced days — a plain GROUP BY silently drops zero-activity days.
+  const result: DailyCount[] = [];
+  const cursor = new Date(since);
+  cursor.setUTCHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  while (cursor <= today) {
+    const key = cursor.toISOString().slice(0, 10);
+    result.push({ day: key, count: byDay.get(key) || 0 });
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return result;
 }
 
 export async function getAnalyticsSummary(range: AnalyticsRange) {

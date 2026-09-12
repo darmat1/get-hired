@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 // Type-only import — erased at compile time, so this client component never
 // bundles `@/lib/admin/analytics` (which imports the server-only Prisma
 // client) into browser JS. Keep this a `import type`, never a value import.
@@ -28,17 +28,23 @@ export function AnalyticsDashboard({ initialSummary, initialRange }: AnalyticsDa
   const [range, setRange] = useState<AnalyticsRange>(initialRange);
   const [summary, setSummary] = useState<AnalyticsSummary>(initialSummary);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const requestIdRef = useRef(0);
 
   const handleRangeChange = async (next: AnalyticsRange) => {
+    const requestId = ++requestIdRef.current;
     setRange(next);
     setLoading(true);
+    setError(false);
     try {
       const res = await fetch(`/api/admin/analytics?range=${next}`);
-      if (res.ok) {
-        setSummary(await res.json());
-      }
+      if (requestId !== requestIdRef.current) return; // a newer request has since started; discard this stale response
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      setSummary(await res.json());
+    } catch {
+      if (requestId === requestIdRef.current) setError(true);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   };
 
@@ -64,6 +70,11 @@ export function AnalyticsDashboard({ initialSummary, initialRange }: AnalyticsDa
           </button>
         ))}
         {loading && <span className="self-center text-xs text-warm-400">Loading…</span>}
+        {error && (
+          <span className="self-center text-xs text-red-600 dark:text-red-400">
+            Failed to load — showing previous data
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
