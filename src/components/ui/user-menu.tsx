@@ -45,6 +45,9 @@ function UserMenu({
   const { t } = useTranslation();
 
   const isActive = (path: string) => stripLocale(pathname || "") === path;
+  const adminHref = ["superadmin", "admin"].includes(userRole?.toLowerCase() || "")
+    ? "/admin/dashboard"
+    : "/admin/blog";
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -105,7 +108,7 @@ function UserMenu({
         <div className="space-y-1">
           {["superadmin", "admin", "publisher"].includes(userRole?.toLowerCase() || "") && (
             <LocalizedLink
-              href="/admin/blog"
+              href={adminHref}
               className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-warm-600 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-warm-800 rounded-lg transition-colors no-underline hover:no-underline"
             >
               <ShieldCheck className="h-4 w-4" />
@@ -196,7 +199,7 @@ function UserMenu({
 
           {["superadmin", "admin", "publisher"].includes(userRole?.toLowerCase() || "") && (
             <LocalizedLink
-              href="/admin/blog"
+              href={adminHref}
               onClick={() => setIsOpen(false)}
               className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-warm-600 dark:text-warm-400 hover:bg-warm-200 dark:hover:bg-warm-700 transition-colors no-underline hover:no-underline"
             >

@@ -61,6 +61,21 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
               {t("nav.dashboard")}
             </LocalizedLink>
           </li>
+          {isMounted && ["superadmin", "admin"].includes(userRole) && (
+            <li>
+              <LocalizedLink
+                href="/admin/dashboard"
+                className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
+                  isActive("/admin/dashboard")
+                    ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
+                    : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
+                }`}
+              >
+                <LayoutDashboard className="mr-3 h-5 w-5 flex-shrink-0" />
+                Dashboard
+              </LocalizedLink>
+            </li>
+          )}
           <li>
             <LocalizedLink
               href="/admin/blog"
@@ -86,21 +101,6 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
               >
                 <Users className="mr-3 h-5 w-5 flex-shrink-0" />
                 Users
-              </LocalizedLink>
-            </li>
-          )}
-          {isMounted && ["superadmin", "admin"].includes(userRole) && (
-            <li>
-              <LocalizedLink
-                href="/admin/dashboard"
-                className={`flex items-center px-4 py-2 text-sm font-medium rounded-md group no-underline hover:no-underline ${
-                  isActive("/admin/dashboard")
-                    ? "bg-terracotta-50 text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400"
-                    : "text-warm-600 hover:bg-warm-50 dark:text-warm-400 dark:hover:bg-warm-800/50"
-                }`}
-              >
-                <LayoutDashboard className="mr-3 h-5 w-5 flex-shrink-0" />
-                Dashboard
               </LocalizedLink>
             </li>
           )}
