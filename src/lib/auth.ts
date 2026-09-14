@@ -97,7 +97,7 @@ export const auth = betterAuth({
     user: {
       create: {
         before: async (user) => {
-          if (isE2E) return { data: { isTestUser: true } };
+          if (isE2E) return { data: { isTestUser: true, emailVerified: true } };
         },
         after: async (user) => {
           if (isE2E) return;
