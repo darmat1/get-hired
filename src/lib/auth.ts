@@ -7,6 +7,8 @@ import { emailOTP } from "better-auth/plugins";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { isAvatarUrlExpired } from "@/lib/avatar-utils";
 
+const isE2E = process.env.E2E === "1";
+
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   database: prismaAdapter(prisma, {
@@ -22,6 +24,10 @@ export const auth = betterAuth({
         if (type === "forget-password") {
           subject = "Reset Password Code";
           message = "Your password reset code is:";
+        }
+
+        if (isE2E) {
+          return;
         }
 
         await sendEmail({
@@ -41,12 +47,12 @@ export const auth = betterAuth({
           `,
         });
       },
-      sendVerificationOnSignUp: true,
+      sendVerificationOnSignUp: !isE2E,
     }),
   ],
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: !isE2E,
   },
   socialProviders: {
     linkedin: {
@@ -85,6 +91,7 @@ export const auth = betterAuth({
     user: {
       create: {
         after: async (user) => {
+          if (isE2E) return;
           await sendTelegramNotification(
             `🚀 <b>New User Registered!</b>\n\n` +
               `📧 <b>Email:</b> ${user.email}\n` +
