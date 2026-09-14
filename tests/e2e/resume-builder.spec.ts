@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { signupViaApi, teardownUsers, type TrackedUser } from './helpers';
 
 async function signInAs(page: Page, email: string, password: string) {
   await page.goto('/auth/signin');
@@ -8,14 +9,18 @@ async function signInAs(page: Page, email: string, password: string) {
   await expect(page).toHaveURL(/dashboard|resume-builder/i, { timeout: 15_000 });
 }
 
+const createdUsers: TrackedUser[] = [];
+
+test.afterAll(async ({ playwright }) => {
+  await teardownUsers(playwright, createdUsers);
+});
+
 test.describe('resume builder smoke', () => {
   test('create resume → redirected to editor → visible in dashboard', async ({ page, request }) => {
     const email = `e2e-builder-${Date.now()}@example.test`;
     const password = 'E2e-Strong-Pass!2026';
-    const signup = await request.post('/api/auth/sign-up/email', {
-      data: { email, password, name: 'E2E Builder' },
-    });
-    expect(signup.ok()).toBeTruthy();
+    createdUsers.push({ email, password });
+    await signupViaApi(request, { email, password, name: 'E2E Builder' });
     await signInAs(page, email, password);
 
     // Dashboard CTA → the resume is created with a bare title, then we land on the editor.

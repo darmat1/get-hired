@@ -1,21 +1,25 @@
 import { test, expect } from '@playwright/test';
+import {
+  signInViaApi,
+  signupViaApi,
+  teardownUsers,
+  type TrackedUser,
+} from './helpers';
+
+const createdUsers: TrackedUser[] = [];
+
+test.afterAll(async ({ playwright }) => {
+  await teardownUsers(playwright, createdUsers);
+});
 
 test.describe('PDF export smoke', () => {
   test('created resume returns application/pdf via /api/resumes/[id]/pdf', async ({ request }) => {
     const email = `e2e-pdf-${Date.now()}@example.test`;
     const password = 'E2e-Strong-Pass!2026';
+    createdUsers.push({ email, password });
 
-    const signup = await request.post('/api/auth/sign-up/email', {
-      data: { email, password, name: 'E2E PDF' },
-    });
-    expect(signup.ok()).toBeTruthy();
-
-    // better-auth enforces CSRF on sign-in: a non-browser request must send Origin.
-    const signin = await request.post('/api/auth/sign-in/email', {
-      headers: { Origin: 'http://localhost:3000' },
-      data: { email, password },
-    });
-    expect(signin.ok()).toBeTruthy();
+    await signupViaApi(request, { email, password, name: 'E2E PDF' });
+    expect(await signInViaApi(request, { email, password })).toBeTruthy();
 
     const created = await request.post('/api/resumes', {
       data: {
