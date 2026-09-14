@@ -30,25 +30,19 @@ export async function signInViaApi(request: APIRequestContext, user: TrackedUser
   return res.ok();
 }
 
-export async function deleteUserResumeData(request: APIRequestContext, user: TrackedUser): Promise<void> {
-  if (!user.email.startsWith('e2e-')) return;
-  const signedIn = await signInViaApi(request, user);
-  if (!signedIn) return;
-  const list = await request.get('/api/resumes');
-  expect(list.ok()).toBeTruthy();
-  const resumes = (await list.json()) as { id: string }[];
-  for (const resume of resumes) {
-    const del = await request.delete(`/api/resumes/${resume.id}`);
-    expect(del.ok()).toBeTruthy();
-  }
+export async function deleteUsersViaApi(request: APIRequestContext, users: TrackedUser[]): Promise<void> {
+  const emails = users
+    .filter((u) => u.email.startsWith('e2e-'))
+    .map((u) => u.email);
+  if (emails.length === 0) return;
+  const res = await request.delete('/api/e2e/users', { data: { emails } });
+  expect(res.ok()).toBeTruthy();
 }
 
 export async function teardownUsers(playwright: PlaywrightLike, users: TrackedUser[]): Promise<void> {
   const request = await playwright.request.newContext({ baseURL: E2E_BASE_URL });
   try {
-    for (const user of users) {
-      await deleteUserResumeData(request, user);
-    }
+    await deleteUsersViaApi(request, users);
   } finally {
     await request.dispose();
   }
