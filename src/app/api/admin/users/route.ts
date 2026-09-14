@@ -31,6 +31,7 @@ export async function GET() {
           role: true,
           emailVerified: true,
           createdAt: true,
+          isTestUser: true,
         },
         orderBy: {
           createdAt: "desc",

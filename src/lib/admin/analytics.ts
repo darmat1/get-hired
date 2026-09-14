@@ -21,18 +21,25 @@ async function dailyCounts(
   // defaults to the model name verbatim), the others do have @@map to snake_case.
   table: "Resume" | "cover_letter" | "user_visit" | "agent_request_event",
   since: Date,
+  // Excludes rows belonging to E2E test users (see isTestUser on User).
+  excludeUserIds: string[],
   // UserVisit has no createdAt column — a visit is dated by when it started.
   dateColumn: "createdAt" | "startedAt" = "createdAt",
 ): Promise<DailyCount[]> {
   // table/dateColumn are restricted to the hardcoded literal unions above
   // (never derived from request input), so Prisma.raw() is safe here — the
-  // only externally-influenced value (`since`) goes through normal $queryRaw
-  // parameter binding, not raw interpolation.
+  // only externally-influenced values (`since`, `excludeUserIds`) go through
+  // normal $queryRaw parameter binding, not raw interpolation.
   const dateColumnIdent = Prisma.raw(`"${dateColumn}"`);
+  const excludeClause =
+    excludeUserIds.length > 0
+      ? Prisma.sql`AND "userId" <> ALL(${excludeUserIds})`
+      : Prisma.empty;
   const rows = await prisma.$queryRaw<{ day: Date; count: bigint }[]>(
     Prisma.sql`SELECT date_trunc('day', ${dateColumnIdent}) AS day, COUNT(*) AS count
      FROM ${Prisma.raw(`"${table}"`)}
      WHERE ${dateColumnIdent} >= ${since}
+     ${excludeClause}
      GROUP BY 1
      ORDER BY 1`,
   );
@@ -57,6 +64,21 @@ export async function getAnalyticsSummary(range: AnalyticsRange) {
   const since = rangeStart(range);
   const onlineSince = new Date(Date.now() - ONLINE_THRESHOLD_MS);
 
+  // Test users (E2E suite, see isTestUser on User / src/lib/auth.ts) are
+  // excluded from every metric below so they never skew real usage numbers.
+  const testUsers = await prisma.user.findMany({
+    where: { isTestUser: true },
+    select: { id: true },
+  });
+  const testUserIds = testUsers.map((u) => u.id);
+  // Safe for every model here except AiUsageEvent: their userId is always a
+  // real string, so `notIn` (-> SQL `userId NOT IN (...)`) can't hit SQL's
+  // NULL-comparison pitfall. AiUsageEvent.userId IS nullable (anonymous/
+  // system-key calls) — `userId NOT IN (...)` evaluates to NULL, not TRUE,
+  // for those rows, silently dropping them, so that one query below adds an
+  // explicit `OR userId IS NULL` instead of reusing this filter.
+  const notTestUser = { userId: { notIn: testUserIds } };
+
   const [
     totalUsers,
     profiles,
@@ -78,38 +100,42 @@ export async function getAnalyticsSummary(range: AnalyticsRange) {
     agentTransportSplit,
     providerBreakdown,
   ] = await Promise.all([
-    prisma.user.count(),
+    prisma.user.count({ where: { isTestUser: false } }),
     prisma.userProfile.findMany({
+      where: notTestUser,
       select: { workExperience: true, education: true, skills: true },
     }),
-    prisma.resume.count(),
-    prisma.resume.count({ where: { createdAt: { gte: since } } }),
-    prisma.resume.groupBy({ by: ["source"], _count: { _all: true } }),
-    dailyCounts("Resume", since),
-    prisma.coverLetter.count(),
-    prisma.coverLetter.count({ where: { createdAt: { gte: since } } }),
-    prisma.coverLetter.groupBy({ by: ["source"], _count: { _all: true } }),
-    dailyCounts("cover_letter", since),
-    prisma.userVisit.count({ where: { lastSeenAt: { gte: onlineSince } } }),
-    dailyCounts("user_visit", since, "startedAt"),
+    prisma.resume.count({ where: notTestUser }),
+    prisma.resume.count({ where: { ...notTestUser, createdAt: { gte: since } } }),
+    prisma.resume.groupBy({ by: ["source"], where: notTestUser, _count: { _all: true } }),
+    dailyCounts("Resume", since, testUserIds),
+    prisma.coverLetter.count({ where: notTestUser }),
+    prisma.coverLetter.count({ where: { ...notTestUser, createdAt: { gte: since } } }),
+    prisma.coverLetter.groupBy({ by: ["source"], where: notTestUser, _count: { _all: true } }),
+    dailyCounts("cover_letter", since, testUserIds),
+    prisma.userVisit.count({ where: { ...notTestUser, lastSeenAt: { gte: onlineSince } } }),
+    dailyCounts("user_visit", since, testUserIds, "startedAt"),
     prisma.userVisit.findMany({
-      where: { startedAt: { gte: since } },
+      where: { ...notTestUser, startedAt: { gte: since } },
       select: { startedAt: true, lastSeenAt: true },
     }),
-    prisma.agentToken.count(),
-    prisma.agentToken.count({ where: { revokedAt: null } }),
+    prisma.agentToken.count({ where: notTestUser }),
+    prisma.agentToken.count({ where: { ...notTestUser, revokedAt: null } }),
     prisma.agentToken.count({
-      where: { revokedAt: null, lastUsedAt: { gte: since } },
+      where: { ...notTestUser, revokedAt: null, lastUsedAt: { gte: since } },
     }),
-    dailyCounts("agent_request_event", since),
+    dailyCounts("agent_request_event", since, testUserIds),
     prisma.agentRequestEvent.groupBy({
       by: ["transport"],
-      where: { createdAt: { gte: since } },
+      where: { ...notTestUser, createdAt: { gte: since } },
       _count: { _all: true },
     }),
     prisma.aiUsageEvent.groupBy({
       by: ["provider"],
-      where: { createdAt: { gte: since } },
+      where: {
+        createdAt: { gte: since },
+        OR: [{ userId: null }, { userId: { notIn: testUserIds } }],
+      },
       _count: { _all: true },
     }),
   ]);

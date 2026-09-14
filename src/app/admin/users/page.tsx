@@ -23,6 +23,7 @@ interface User {
   role: string | null;
   emailVerified: boolean;
   createdAt: string;
+  isTestUser: boolean;
 }
 
 export default function AdminUsersPage() {
@@ -428,6 +429,11 @@ export default function AdminUsersPage() {
                         <span className="font-medium text-warm-900 dark:text-warm-100">
                           {user.name || "Unnamed User"}
                         </span>
+                        {user.isTestUser && (
+                          <span className="rounded-full bg-terracotta-50 px-2 py-0.5 text-xs font-medium text-terracotta-700 dark:bg-terracotta-500/20 dark:text-terracotta-400">
+                            Test
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-warm-600 dark:text-warm-400 text-sm">

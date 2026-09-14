@@ -23,6 +23,10 @@ model User {
   emailVerified Boolean @default(false)
   image         String?
 
+  // Set by the E2E test suite (see src/lib/auth.ts) so ephemeral test
+  // accounts can be excluded from admin analytics and identified for cleanup.
+  isTestUser Boolean @default(false)
+
   // Relations
   resumes      Resume[]
   coverLetters CoverLetter[]

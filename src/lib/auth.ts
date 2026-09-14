@@ -72,6 +72,12 @@ export const auth = betterAuth({
         required: false,
         defaultValue: "user",
       },
+      isTestUser: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+        input: false,
+      },
     },
   },
   session: {
@@ -90,6 +96,9 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
+        before: async (user) => {
+          if (isE2E) return { data: { isTestUser: true } };
+        },
         after: async (user) => {
           if (isE2E) return;
           await sendTelegramNotification(

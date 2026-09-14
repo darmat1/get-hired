@@ -7,6 +7,10 @@ export default defineConfig({
   test: {
     environment: "node",
     globals: true,
+    // Playwright specs live under tests/e2e and use @playwright/test's own
+    // `test`/`test.describe`, which vitest's default include glob would
+    // otherwise try to run as unit tests.
+    exclude: ["**/node_modules/**", "**/dist/**", "tests/e2e/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
