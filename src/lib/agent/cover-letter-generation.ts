@@ -138,7 +138,9 @@ export async function generateCoverLetterForUser(
     return { ok: true, coverLetterId: stub.id, coverLetterText };
   } catch (error: any) {
     // Clean up draft on failure
-    await prisma.coverLetter.delete({ where: { id: stub.id } }).catch(() => {});
+    await prisma.coverLetter
+      .delete({ where: { id: stub.id } })
+      .catch((err) => console.warn("[cover-letter-generation] Failed to clean up draft stub:", err));
     return { ok: false, status: error.message.includes("not found") ? 400 : 500, error: error.message || "Failed to generate cover letter" };
   }
 }

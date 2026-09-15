@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
+  authClient,
   useSession,
   linkSocial,
   unlinkAccount,
@@ -306,8 +307,17 @@ export function ProfileForm() {
   const handleUnlinkLinkedIn = async () => {
     try {
       setLoading(true);
+      const accounts = await authClient.listAccounts();
+      if (accounts.error) {
+        throw new Error(accounts.error.message || "Error unlinking account");
+      }
+      const linkedinAccount = accounts.data.find((a) => a.providerId === "linkedin");
+      if (!linkedinAccount) {
+        throw new Error("Error unlinking account");
+      }
+
       const result = await unlinkAccount({
-        providerId: "linkedin",
+        accountId: linkedinAccount.id,
       });
 
       if (result.error) {

@@ -502,6 +502,13 @@ function buildServer(ctx: AgentAuthContext): McpServer {
 }
 
 async function handle(request: Request): Promise<Response> {
+  if (process.env.AGENT_MCP_DISABLED === "true") {
+    return Response.json(
+      { error: "MCP agent access is temporarily disabled" },
+      { status: 503 },
+    );
+  }
+
   const ctx = await authenticateAgentRequest(request);
   if (!ctx) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });

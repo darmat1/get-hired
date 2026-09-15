@@ -192,7 +192,9 @@ export async function generateResumeForUser(
     return { ok: true, resumeId: stub.id, title: finalTitle };
   } catch (error) {
     // Clean up the draft slot if generation fails
-    await prisma.resume.delete({ where: { id: stub.id } }).catch(() => {});
+    await prisma.resume
+      .delete({ where: { id: stub.id } })
+      .catch((err) => console.warn("[resume-generation] Failed to clean up draft stub:", err));
     return { ok: false, status: 500, error: "Failed to generate resume" };
   }
 }
