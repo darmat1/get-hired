@@ -76,7 +76,15 @@ export async function authenticateAgentRequest(
       data: {
         tokenId: record.id,
         userId: record.userId,
-        transport: url.pathname.startsWith("/api/agent/mcp") ? "mcp" : "rest",
+        // The Go MCP gateway proxies MCP tool calls to this same REST API,
+        // so a path-only check would misreport those as "rest" — it sets
+        // this header to say otherwise. Untrusted, but harmless: it only
+        // affects an analytics label, never auth/scopes.
+        transport:
+          request.headers.get("x-agent-transport") === "mcp" ||
+          url.pathname.startsWith("/api/agent/mcp")
+            ? "mcp"
+            : "rest",
         route: url.pathname,
       },
     })

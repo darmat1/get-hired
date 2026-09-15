@@ -1,0 +1,10 @@
+# Add this block to the VPS's /etc/caddy/Caddyfile (or merge into an
+# existing one — Caddy supports multiple site blocks in one file).
+# Replace mcp.gethired.work with whatever subdomain you point at this VPS.
+# Caddy handles the Let's Encrypt certificate automatically — nothing else
+# to configure as long as the DNS A/AAAA record for this subdomain already
+# points at the VPS's IP before Caddy (re)starts.
+
+mcp.gethired.work {
+	reverse_proxy localhost:8080
+}
