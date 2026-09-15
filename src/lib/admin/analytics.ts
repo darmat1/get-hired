@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client";
 import { isProfileComplete } from "@/lib/admin/profile-completion";
 
 export type AnalyticsRange = "7d" | "30d" | "90d";
@@ -23,13 +24,17 @@ async function dailyCounts(
   // UserVisit has no createdAt column — a visit is dated by when it started.
   dateColumn: "createdAt" | "startedAt" = "createdAt",
 ): Promise<DailyCount[]> {
-  const rows = await prisma.$queryRawUnsafe<{ day: Date; count: bigint }[]>(
-    `SELECT date_trunc('day', "${dateColumn}") AS day, COUNT(*) AS count
-     FROM "${table}"
-     WHERE "${dateColumn}" >= $1
+  // table/dateColumn are restricted to the hardcoded literal unions above
+  // (never derived from request input), so Prisma.raw() is safe here — the
+  // only externally-influenced value (`since`) goes through normal $queryRaw
+  // parameter binding, not raw interpolation.
+  const dateColumnIdent = Prisma.raw(`"${dateColumn}"`);
+  const rows = await prisma.$queryRaw<{ day: Date; count: bigint }[]>(
+    Prisma.sql`SELECT date_trunc('day', ${dateColumnIdent}) AS day, COUNT(*) AS count
+     FROM ${Prisma.raw(`"${table}"`)}
+     WHERE ${dateColumnIdent} >= ${since}
      GROUP BY 1
      ORDER BY 1`,
-    since,
   );
   const byDay = new Map(rows.map((r) => [r.day.toISOString().slice(0, 10), Number(r.count)]));
 

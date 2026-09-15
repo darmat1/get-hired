@@ -71,7 +71,8 @@ export async function authenticateAgentRequest(
   }
 
   const url = new URL(request.url);
-  prisma.agentRequestEvent
+  // Fire-and-forget: best-effort analytics, never block or fail the request.
+  void prisma.agentRequestEvent
     .create({
       data: {
         tokenId: record.id,
