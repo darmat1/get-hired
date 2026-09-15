@@ -36,27 +36,34 @@ Then point an MCP client at `http://localhost:8080/mcp`.
 ## Deploying to the VPS
 
 You'll need to do this part yourself — SSH access and DNS aren't
-something this session has.
+something this session has. Pick one of the two options below for step
+1-3, then continue with step 4 either way.
 
-### 1. Build a Linux binary
+One tradeoff worth knowing before choosing: Docker Engine's own daemon
+sits at roughly 20-50MB RAM just running, on top of whatever the
+container itself uses. This process idles at a few MB either way, so on
+a genuinely tiny VPS the bare-binary/systemd path is the leaner choice;
+Docker is here because it's easier to build and update consistently, not
+because it's cheaper.
 
-Check the VPS architecture first (`ssh you@vps uname -m` — `x86_64` means
-`amd64`, `aarch64`/`arm64` means `arm64`):
+### Option A — bare binary + systemd (leanest)
+
+**1. Build a Linux binary.** Check the VPS architecture first
+(`ssh you@vps uname -m` — `x86_64` means `amd64`, `aarch64`/`arm64` means
+`arm64`):
 
 ```bash
 cd mcp-gateway
 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o mcp-gateway-linux-amd64 .
 ```
 
-### 2. Copy it over
+**2. Copy it over:**
 
 ```bash
 scp mcp-gateway-linux-amd64 you@your-vps:/tmp/mcp-gateway
 ```
 
-### 3. Install it as a systemd service
-
-On the VPS:
+**3. Install it as a systemd service.** On the VPS:
 
 ```bash
 sudo useradd --system --no-create-home --shell /usr/sbin/nologin mcp-gateway
@@ -84,6 +91,42 @@ process idles well under a few MB and only briefly allocates more while
 proxying a request/response body, so this is a generous ceiling on a
 2-euro VPS, not a tight one; raise it only if `systemctl status` shows
 OOM kills.
+
+**Updating later:** rebuild, `scp` over the old binary, then
+`sudo systemctl restart mcp-gateway`. No DB migration, no env var
+changes needed unless `GETHIRED_BASE_URL` itself changes.
+
+### Option B — Docker
+
+The image is a multi-stage build: `golang:1.25-alpine` to compile, then
+a `FROM scratch` final stage with just the static binary and CA certs
+(needed for the HTTPS calls this makes to `GETHIRED_BASE_URL`) — no
+shell, no package manager, nothing else. Built and ran it locally to
+confirm: **8.2MB image**, healthy, proxies real tool calls correctly.
+
+**1. Get the code onto the VPS** (git clone, or `scp -r mcp-gateway/
+you@your-vps:~/mcp-gateway`).
+
+**2. Edit `docker-compose.yml`** if `GETHIRED_BASE_URL` needs to change
+from the default (`https://gethired.work`).
+
+**3. Build and start:**
+
+```bash
+cd mcp-gateway
+docker compose up -d --build
+docker compose logs -f   # should print "mcp-gateway listening on :8080 ..."
+```
+
+`docker-compose.yml` already sets `mem_limit: 64m` and
+`restart: unless-stopped`.
+
+**Updating later:**
+
+```bash
+git pull   # or re-copy the updated source
+docker compose up -d --build
+```
 
 ### 4. Point a subdomain at it
 
@@ -130,14 +173,3 @@ claude mcp remove get-hired-prod   # or whatever the existing entry is named
 claude mcp add --transport http get-hired-prod https://mcp.gethired.work/mcp \
   --header "Authorization: Bearer <the existing token>"
 ```
-
-### Updating later
-
-Rebuild, `scp` over the old binary, then:
-
-```bash
-sudo systemctl restart mcp-gateway
-```
-
-No DB migration, no env var changes needed unless `GETHIRED_BASE_URL`
-itself changes.

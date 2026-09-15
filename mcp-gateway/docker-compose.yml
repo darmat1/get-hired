@@ -1,0 +1,10 @@
+services:
+  mcp-gateway:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      GETHIRED_BASE_URL: https://gethired.work
+      PORT: "8080"
+    mem_limit: 64m
