@@ -131,9 +131,10 @@ docker compose up -d --build
 ### 4. Point a subdomain at it
 
 Add a DNS **A** record (and **AAAA** if the VPS has IPv6) for whatever
-subdomain you want — `mcp.gethired.work` is a clearer name than `app`
-now that this is specifically the agent/MCP piece, not the whole app —
-pointing at the VPS's IP. Wait for it to propagate (`dig mcp.gethired.work`).
+subdomain you want — `agents.gethired.work` matches the existing public
+`/agents` page, so it's recognizable to people who've seen that page
+already, unlike the more technical `mcp.gethired.work` — pointing at the
+VPS's IP. Wait for it to propagate (`dig agents.gethired.work`).
 
 If Caddy isn't already installed on the VPS:
 
@@ -155,11 +156,11 @@ the cert.
 ### 5. Verify
 
 ```bash
-curl https://mcp.gethired.work/healthz    # -> ok
+curl https://agents.gethired.work/healthz    # -> ok
 curl -sS -o /dev/null -w '%{http_code} %{time_starttransfer}s\n' \
   -H "Authorization: Bearer <a real agent token>" \
   -H "Accept: application/json, text/event-stream" \
-  https://mcp.gethired.work/mcp
+  https://agents.gethired.work/mcp
 # -> 200, headers well under 1s
 ```
 
@@ -170,6 +171,6 @@ connect to changes. For Claude Code:
 
 ```bash
 claude mcp remove get-hired-prod   # or whatever the existing entry is named
-claude mcp add --transport http get-hired-prod https://mcp.gethired.work/mcp \
+claude mcp add --transport http get-hired-prod https://agents.gethired.work/mcp \
   --header "Authorization: Bearer <the existing token>"
 ```
