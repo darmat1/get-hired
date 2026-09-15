@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -31,6 +32,11 @@ func main() {
 		server.WithStateLess(true), // mirrors the Vercel MCP route: no server-side session state
 		server.WithHTTPContextFunc(injectAuthHeader),
 		server.WithEndpointPath("/mcp"),
+		// mcp-go sends no keep-alive by default. Reverse proxies (Cloudflare
+		// included — free/pro plans close a connection after ~100s with no
+		// bytes flowing) will silently sever an idle SSE stream without
+		// this. 15s matches the interval the old TS/Vercel MCP route used.
+		server.WithHeartbeatInterval(15*time.Second),
 		// This process sits behind a reverse proxy (Caddy) reached over
 		// loopback, which forwards the real external Host header — the
 		// library's DNS-rebinding guard would otherwise reject that as a

@@ -24,6 +24,15 @@ enforcement — stays on Vercel exactly as it is today. This process holds
 worst it can do is proxy requests using tokens callers already gave it —
 the real REST API still checks and enforces those tokens' scopes itself.
 
+**If anything sits between clients and this service** — Cloudflare
+proxying the DNS record (the orange cloud), a reverse proxy, a corporate
+NAT — it likely closes a connection after some idle period with no bytes
+flowing (Cloudflare's free/pro plans: ~100s). `mcp-go` sends no keep-alive
+by default, so `main.go` sets `WithHeartbeatInterval(15 * time.Second)`
+explicitly — verified live that a real `ping` message goes out on that
+schedule. Keep it there; without it, an MCP client's long-idle GET
+connection gets silently severed by whatever's in front of this.
+
 ## Local development
 
 ```bash
