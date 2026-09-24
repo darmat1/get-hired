@@ -13,7 +13,9 @@ export function HeartbeatPing() {
 
     const ping = () => {
       if (document.visibilityState === "visible") {
-        fetch("/api/heartbeat", { method: "POST" }).catch(() => {});
+        void fetch("/api/heartbeat", { method: "POST" }).catch((err) =>
+          console.warn("[heartbeat] Failed to ping:", err),
+        );
       }
     };
 
