@@ -771,7 +771,7 @@ plus (DB) one call of `list_resumes` with a token lacking `resumes:read` → res
 
 `main.go`: `config.Load` → `db.Open` → build `ai.Client`, `store.Store`, `gen.Gen` → mux:
 - `/api/agent/mcp` and `/mcp` → MCP streamable HTTP handler (keep `WithStateLess(true)`, `WithHeartbeatInterval(15*time.Second)`, `WithDisableLocalhostProtection(true)` and their comments from the current `main.go`).
-- `/api/agent/v1/…` → rest.
+- `/api/agent/v1/…` → rest; `GET /api/agent/v1/resumes/{id}/pdf` → `pdfproxy.Proxy{BaseURL: cfg.BaseURL, Transport: "rest"}` (not registered by `rest.RegisterHandlers`).
 - `/healthz` → `ok` (never behind kill switch).
 - Kill switch: when `AgentsDisabled`, every agent route returns the same status and JSON body as the Next kill switch in `src/app/api/agent/mcp/route.ts` (commit `dda7aea`).
 
