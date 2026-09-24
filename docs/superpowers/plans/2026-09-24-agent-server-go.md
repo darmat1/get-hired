@@ -255,7 +255,7 @@ func (c *Context) Has(s Scope) bool
 func Authenticate(ctx context.Context, pool *pgxpool.Pool, authHeader, transport, route string) (*Context, error)
 ```
 
-Match TS behavior exactly for: prefix check, which errors are swallowed, the 5-minute throttle, and whether the event insert is awaited. Transport is `"mcp"` or `"rest"`; route is the MCP tool name or the REST path (same values TS logs).
+Match TS behavior exactly for: prefix check, which errors are swallowed, the 5-minute throttle, and whether the event insert is awaited. Transport is `"mcp"` or `"rest"`; route is the request URL path (TS logs `url.pathname`).
 
 - [ ] **Step 1: Write failing tests** — `auth_test.go`
 
@@ -737,7 +737,7 @@ Use Go 1.22+ `http.ServeMux` patterns (`"GET /api/agent/v1/resumes/{id}"`).
 
 ### Task 9: MCP tools
 
-Rewrite tool registration to call `store`/`gen`/`pdfproxy` directly instead of `restCall`. Tool names, descriptions, input schemas, scope checks, error texts and result formatting must match `src/app/api/agent/mcp/route.ts` (`buildServer`, `textResult`, `errorResult`, `scopeError`). `download_resume_pdf` returns an MCP embedded resource `{uri, mimeType: "application/pdf", blob: base64}` exactly like TS. Auth: `auth.Authenticate(…, "mcp", <tool name>)` per tool call (same granularity TS logs).
+Rewrite tool registration to call `store`/`gen`/`pdfproxy` directly instead of `restCall`. Tool names, descriptions, input schemas, scope checks, error texts and result formatting must match `src/app/api/agent/mcp/route.ts` (`buildServer`, `textResult`, `errorResult`, `scopeError`). `download_resume_pdf` returns an MCP embedded resource `{uri, mimeType: "application/pdf", blob: base64}` exactly like TS. Auth: once per HTTP request to the MCP endpoint, `auth.Authenticate(…, "mcp", r.URL.Path)` — TS logs `route = url.pathname` (e.g. `/api/agent/mcp`), not the tool name; REST logs its path with transport `rest`.
 
 **Files:**
 - Create: `mcp-gateway/internal/mcp/tools.go`, `tools_test.go`

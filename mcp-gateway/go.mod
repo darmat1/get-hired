@@ -4,6 +4,7 @@ go 1.25.5
 
 require (
 	github.com/jackc/pgx/v5 v5.11.0
+	github.com/lucsky/cuid v1.2.1
 	github.com/mark3labs/mcp-go v1.0.0
 )
 
