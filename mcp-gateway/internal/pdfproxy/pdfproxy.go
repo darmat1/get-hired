@@ -1,6 +1,7 @@
 package pdfproxy
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/url"
@@ -46,4 +47,31 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(resp.StatusCode)
 	io.Copy(w, resp.Body)
+}
+
+func Fetch(ctx context.Context, baseURL, authHeader, resumeID string) (body []byte, contentType string, status int, err error) {
+	targetURL, err := url.Parse(baseURL + "/api/agent/v1/resumes/" + resumeID + "/pdf")
+	if err != nil {
+		return nil, "", 0, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, targetURL.String(), nil)
+	if err != nil {
+		return nil, "", 0, err
+	}
+
+	req.Header.Set("Authorization", authHeader)
+	req.Header.Set("X-Agent-Transport", "mcp")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, "", 0, err
+	}
+	defer resp.Body.Close()
+
+	body, err = io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "", resp.StatusCode, err
+	}
+	return body, resp.Header.Get("Content-Type"), resp.StatusCode, nil
 }
