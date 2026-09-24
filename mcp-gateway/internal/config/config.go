@@ -33,6 +33,12 @@ func Load() (Config, error) {
 			c.ProviderOrder = append(c.ProviderOrder, id)
 		}
 	}
+
+	c.ProviderKeys["openrouter"] = getenv("OPENROUTER_API_KEY", "")
+	c.ProviderKeys["gemini"] = getenv("GOOGLE_API_KEY", "")
+	c.ProviderKeys["groq"] = getenv("GROQ_API_KEY", getenv("GH_GROQ_API_KEY", ""))
+	c.ProviderKeys["openai"] = getenv("OPENAI_API_KEY", "")
+	c.ProviderKeys["claude"] = getenv("ANTHROPIC_API_KEY", "")
 	return c, nil
 }
 

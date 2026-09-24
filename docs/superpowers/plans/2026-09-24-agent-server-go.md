@@ -453,8 +453,8 @@ func TestFreeQuotaWindow(t *testing.T) {
 	if FreeQuotaCount(7, &recent, now) != 7 {
 		t.Fatal("recent usage must count")
 	}
-	if FreeQuotaCount(3, nil, now) != 0 {
-		t.Fatal("nil last usage = 0, same as TS")
+	if FreeQuotaCount(3, nil, now) != 3 {
+		t.Fatal("nil last usage keeps the stored count, same as TS")
 	}
 }
 
