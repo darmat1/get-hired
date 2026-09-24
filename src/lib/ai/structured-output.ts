@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/ai/jsonparse.go — keep in sync, see mcp-gateway/PARITY.md
 import { aiComplete } from "./server-ai";
 import type { AICompletionRequest, AICompletionResponse } from "./types";
 import { parseAIJsonResponse } from "./parse-json-response";

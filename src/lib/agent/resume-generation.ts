@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/gen/resume.go, mcp-gateway/internal/prompts/selection.go — keep in sync, see mcp-gateway/PARITY.md
 import { prisma } from "@/lib/prisma";
 import { executeStructuredAI } from "@/lib/ai/structured-output";
 

@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/auth/auth.go — keep in sync, see mcp-gateway/PARITY.md
 // Client-safe: no server-only imports (no prisma, no node:crypto). Anything
 // a client component needs (scope list/type/validator for the token-creation
 // UI) lives here, separate from agent-auth.ts which pulls in Prisma and is

@@ -1,3 +1,4 @@
+// PARITY: src/lib/agent/cover-letter-generation.ts — keep in sync, see mcp-gateway/PARITY.md
 package gen
 
 import (

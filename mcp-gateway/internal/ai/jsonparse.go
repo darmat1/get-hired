@@ -1,3 +1,4 @@
+// PARITY: src/lib/ai/parse-json-response.ts, src/lib/ai/structured-output.ts — keep in sync, see mcp-gateway/PARITY.md
 package ai
 
 import (

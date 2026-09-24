@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/gen/coverletter.go — keep in sync, see mcp-gateway/PARITY.md
 import { encode } from "@toon-format/toon";
 import { prisma } from "@/lib/prisma";
 import { aiComplete } from "@/lib/ai/server-ai";

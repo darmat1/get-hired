@@ -1,3 +1,4 @@
+// PARITY: src/lib/agent-auth.ts, src/lib/agent-scopes.ts — keep in sync, see mcp-gateway/PARITY.md
 package auth
 
 import (

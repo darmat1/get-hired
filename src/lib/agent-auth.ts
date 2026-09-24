@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/auth/auth.go — keep in sync, see mcp-gateway/PARITY.md
 import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { isAgentScope, type AgentScope } from "@/lib/agent-scopes";

@@ -1,3 +1,4 @@
+// PARITY: src/app/api/agent/v1/profile/route.ts — keep in sync, see mcp-gateway/PARITY.md
 package rest
 
 import (

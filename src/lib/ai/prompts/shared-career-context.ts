@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/prompts/career.go — keep in sync, see mcp-gateway/PARITY.md
 import { renderJobArchetypesForPrompt } from "./job-archetypes";
 
 export const CAREER_SOURCES_OF_TRUTH = `### SOURCES OF TRUTH

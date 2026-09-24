@@ -1,3 +1,4 @@
+// PARITY: src/app/api/agent/v1/cover-letters/route.ts, src/app/api/agent/v1/cover-letters/[id]/route.ts — keep in sync, see mcp-gateway/PARITY.md
 package rest
 
 import (

@@ -1,3 +1,4 @@
+// PARITY: src/lib/ai/server-ai.ts — keep in sync, see mcp-gateway/PARITY.md
 package ai
 
 import (

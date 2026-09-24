@@ -1,3 +1,4 @@
+// PARITY: src/app/api/agent/v1/* — keep in sync, see mcp-gateway/PARITY.md
 package rest
 
 import (

@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/pdfproxy/pdfproxy.go — keep in sync, see mcp-gateway/PARITY.md
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateAgentRequest, hasScope } from "@/lib/agent-auth";
 import { generatePDF } from "@/lib/pdf-generator";

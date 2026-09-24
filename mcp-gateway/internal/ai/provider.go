@@ -1,3 +1,4 @@
+// PARITY: src/lib/ai/types.ts, src/lib/ai/registry.ts — keep in sync, see mcp-gateway/PARITY.md
 package ai
 
 import "context"
