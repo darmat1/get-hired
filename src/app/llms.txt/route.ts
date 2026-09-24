@@ -46,8 +46,8 @@ GetHired is an AI-powered career tool designed to help job seekers tailor their 
 GetHired exposes a Model Context Protocol (MCP) server so an AI assistant (Claude, ChatGPT, or any other MCP-compatible agent) can act on a user's behalf directly, without the user copy-pasting between tools.
 
 - Human-facing overview: ${SITE_URL}/agents
-- MCP endpoint: ${SITE_URL}/api/agent/mcp (requires a per-user bearer token, created by the user at ${SITE_URL}/dashboard/profile under AI Agents)
-- REST equivalents for agents that prefer plain HTTP: ${SITE_URL}/api/agent/v1/profile, /api/agent/v1/resumes, /api/agent/v1/cover-letters, /api/agent/v1/templates
+- MCP endpoint: https://agents.gethired.work/api/agent/mcp (requires a per-user bearer token, created by the user at ${SITE_URL}/dashboard/profile under AI Agents)
+- REST equivalents for agents that prefer plain HTTP: https://agents.gethired.work/api/agent/v1/profile, /api/agent/v1/resumes, /api/agent/v1/cover-letters, /api/agent/v1/templates
 - Scopes available: profile:read, profile:write, resumes:read, resumes:write, cover_letters:read, cover_letters:write, ai:generate — a user grants only the scopes a token needs, and can revoke any token at any time.
 - What an agent can do once connected: read and update the user's profile, generate or update resumes tailored to a job description, generate or update cover letters, and score a resume against a job description.
 

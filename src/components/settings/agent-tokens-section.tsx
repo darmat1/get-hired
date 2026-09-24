@@ -26,6 +26,10 @@ interface AgentTokenRecord {
   createdAt: string;
 }
 
+// Agent API is served by the Go server (mcp-gateway/), not this Next app.
+const AGENT_API_ORIGIN =
+  process.env.NEXT_PUBLIC_AGENT_API_ORIGIN || "https://agents.gethired.work";
+
 const SCOPE_KEY: Record<AgentScope, string> = {
   "profile:read": "profile_read",
   "profile:write": "profile_write",
@@ -180,15 +184,12 @@ export function AgentTokensSection() {
     fetchTokens();
   };
 
-  const getOrigin = () =>
-    typeof window !== "undefined" ? window.location.origin : "https://gethired.work";
-
   const buildMcpSnippet = () =>
     JSON.stringify(
       {
         mcpServers: {
           "get-hired": {
-            url: `${getOrigin()}/api/agent/mcp`,
+            url: `${AGENT_API_ORIGIN}/api/agent/mcp`,
             headers: { Authorization: `Bearer ${revealedToken}` },
           },
         },
@@ -198,7 +199,7 @@ export function AgentTokensSection() {
     );
 
   const buildCurlSnippet = () =>
-    `curl ${getOrigin()}/api/agent/v1/profile \\\n  -H "Authorization: Bearer ${revealedToken}"`;
+    `curl ${AGENT_API_ORIGIN}/api/agent/v1/profile \\\n  -H "Authorization: Bearer ${revealedToken}"`;
 
   const handleCopySnippet = async () => {
     const text = snippetTab === "mcp" ? buildMcpSnippet() : buildCurlSnippet();
