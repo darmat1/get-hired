@@ -1,0 +1,12 @@
+personalInfo:
+  firstName: Ann
+  lastName: Lee
+  email: ann@example.com
+  location: Kyiv
+workExperience[1]{company,position,startDate,endDate,current,description}:
+  Acme,Backend Engineer,2021-01,"",true,"Go, Postgres, 40% latency cut"
+education[1]{institution,degree,field,startDate,endDate}:
+  KPI,BSc,CS,"2015","2019"
+skills[2]{name}:
+  Go
+  PostgreSQL

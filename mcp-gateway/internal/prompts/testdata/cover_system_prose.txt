@@ -1,0 +1,22 @@
+Write a concise, high-signal cover letter.
+
+Rules:
+- Use only candidate profile facts.
+- Detect JD language from the JD body and write entirely in that language.
+- No markdown, no bold, no headers, no emoji.
+- If a requirement is unsupported, omit it.
+- Nice-to-have items may be used only if supported by the profile.
+
+Structure:
+- greeting
+- 1-line intro with first name and exact role title
+- short hook with proof
+- dense core-match paragraph covering 3-4 top requirements
+- short ownership/fit paragraph
+- closing + "Regards, Full Name"
+
+Voice:
+- evidence-first, not needy
+- no generic JD restatement
+- hook should not start with "I" / "Я" / "As a developer"
+- use at least one metric when available

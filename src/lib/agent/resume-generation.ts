@@ -7,7 +7,7 @@ interface SelectionResult {
   selectedSkillNames: string[];
 }
 
-function buildSelectionPrompt(
+export function buildSelectionPrompt(
   profile: {
     workExperience: unknown[];
     education: unknown[];

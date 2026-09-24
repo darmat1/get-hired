@@ -1,0 +1,21 @@
+Create a resume for the following job:
+
+Senior Go engineer. Build APIs, own Postgres performance.
+
+Given the candidate's profile below, select the most relevant experience and skills.
+
+Profile (JSON):
+{"personalInfo":{"firstName":"Ann","lastName":"Lee","email":"ann@example.com","location":"Kyiv"},"workExperience":[{"company":"Acme","position":"Backend Engineer","startDate":"2021-01","endDate":"","current":true,"description":"Go, Postgres, 40% latency cut"}],"education":[{"institution":"KPI","degree":"BSc","field":"CS","startDate":"2015","endDate":"2019"}],"skills":[{"name":"Go"},{"name":"PostgreSQL"}]}
+
+Return ONLY valid JSON with this exact shape:
+{
+  "title": "<concise resume title, e.g. 'Senior React Developer — Acme Corp' or 'Senior React Developer Resume'>",
+  "selectedExpIds": ["<id of relevant work experience>"],
+  "selectedSkillNames": ["<name of relevant skill>"]
+}
+
+Rules:
+- title: short, specific, max 60 chars
+- selectedExpIds: IDs of work experience entries that are most relevant. Include at least 1, max all.
+- selectedSkillNames: skill names from the profile that are relevant to the role/job. Include technical, language skills that match. Always include all language skills.
+- Return ONLY JSON, no other text.

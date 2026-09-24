@@ -665,6 +665,8 @@ Returned maps must have exactly the keys the TS route returns (Prisma `select`s 
 
 Port `generateResumeForUser` (`src/lib/agent/resume-generation.ts`) and `generateCoverLetterForUser` (`src/lib/agent/cover-letter-generation.ts`) for `source: "agent"`. Same steps, same limits/errors/status codes, same result shapes, same DB writes.
 
+**Key order trap:** TS objects keep insertion order, and values read from `jsonb` come in Postgres's jsonb key order. Build prompt inputs in the same order as the TS code: objects the TS code constructs literally → same key order as the literal; values passed through from DB `jsonb` → decode the raw jsonb bytes order-preservingly (`prompts.EncodeTOONFromJSON`, or the same ordered decoder for `Selection`). Never rely on `map[string]any` iteration or the canonical key lists in `prompts/toon.go` for DB data.
+
 **Files:**
 - Create: `mcp-gateway/internal/gen/{resume,coverletter}.go`, `gen_test.go`
 

@@ -1,0 +1,35 @@
+{
+  "personalInfo": {
+    "firstName": "Ann",
+    "lastName": "Lee",
+    "email": "ann@example.com",
+    "location": "Kyiv"
+  },
+  "workExperience": [
+    {
+      "company": "Acme",
+      "position": "Backend Engineer",
+      "startDate": "2021-01",
+      "endDate": "",
+      "current": true,
+      "description": "Go, Postgres, 40% latency cut"
+    }
+  ],
+  "education": [
+    {
+      "institution": "KPI",
+      "degree": "BSc",
+      "field": "CS",
+      "startDate": "2015",
+      "endDate": "2019"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Go"
+    },
+    {
+      "name": "PostgreSQL"
+    }
+  ]
+}
