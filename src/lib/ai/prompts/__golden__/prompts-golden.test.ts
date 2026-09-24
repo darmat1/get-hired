@@ -1,5 +1,6 @@
 // PARITY: writes golden files for mcp-gateway/internal/prompts. Re-run after
 // changing any prompt: npx vitest run src/lib/ai/prompts/__golden__
+import { test } from "vitest";
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
 import { encode } from "@toon-format/toon";
