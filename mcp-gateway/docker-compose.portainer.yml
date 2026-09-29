@@ -1,30 +1,14 @@
 # Portainer stack "mcp-gateway". Import gethired-mcp-gateway:latest first
-# (Images → Import), then set these variables in the stack's
-# "Environment variables" section — same values as in Vercel.
+# (Images → Import, tag gethired-mcp-gateway:latest). Put the variables from
+# .env.example (values from Vercel) into the stack's "Environment variables"
+# section — Portainer writes them to stack.env, which is passed as-is.
 services:
   mcp-gateway:
     image: gethired-mcp-gateway:latest
-    pull_policy: never # imported via Portainer → Images → Import, not on any registry
+    pull_policy: never # local image, not on any registry
     restart: unless-stopped
     ports:
       - "8080:8080" # nginx-proxy-manager → agents.gethired.work
     mem_limit: 128m
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
-      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
-      GROQ_API_KEY: ${GROQ_API_KEY:-}
-      GH_GROQ_API_KEY: ${GH_GROQ_API_KEY:-}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      AI_PROVIDER_ORDER: ${AI_PROVIDER_ORDER:-}
-      GOOGLE_MODEL: ${GOOGLE_MODEL:-}
-      GROQ_MODEL: ${GROQ_MODEL:-}
-      OPENAI_MODEL: ${OPENAI_MODEL:-}
-      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
-      NEXT_PUBLIC_OPENROUTER_FREE_MODEL: ${NEXT_PUBLIC_OPENROUTER_FREE_MODEL:-}
-      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://gethired.work}
-      GETHIRED_BASE_URL: ${GETHIRED_BASE_URL:-https://gethired.work}
-      PORT: "8080"
-      AGENTS_DISABLED: ${AGENTS_DISABLED:-}
+    env_file:
+      - stack.env
