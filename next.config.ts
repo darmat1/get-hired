@@ -7,18 +7,25 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["lucide-react"],
   },
   async rewrites() {
-    return [
-      {
-        source: "/storage/:path*",
-        destination: "https://nqxpyxpqgdzpoasqexcm.supabase.co/storage/:path*",
-      },
-      // Agent API lives on the Go server (mcp-gateway/). Default rewrites run
-      // after filesystem routes, so the kept PDF route still renders here.
-      {
-        source: "/api/agent/:path*",
-        destination: "https://agents.gethired.work/api/agent/:path*",
-      },
-    ];
+    return {
+      beforeFiles: [],
+      afterFiles: [
+        {
+          source: "/storage/:path*",
+          destination: "https://nqxpyxpqgdzpoasqexcm.supabase.co/storage/:path*",
+        },
+      ],
+      // Agent API lives on the Go server (mcp-gateway/). Must be `fallback`:
+      // afterFiles run BEFORE dynamic routes, which would send the kept
+      // /api/agent/v1/resumes/[id]/pdf route to the Go server, which proxies
+      // PDF back here → infinite loop.
+      fallback: [
+        {
+          source: "/api/agent/:path*",
+          destination: "https://agents.gethired.work/api/agent/:path*",
+        },
+      ],
+    };
   },
   images: {
     remotePatterns: [
