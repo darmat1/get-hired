@@ -4347,22 +4347,42 @@ export const translations: Translations = {
     uk: "Ніколи не вставляйте токен у повідомлення чату — додайте його в конфіг або змінні середовища агента, скориставшись одним із варіантів нижче.",
     ru: "Никогда не вставляйте токен в сообщение чата — добавьте его в конфиг или переменные окружения агента, используя один из вариантов ниже.",
   },
-  "agent_tokens.tab_mcp": {
-    en: "MCP (Claude, etc.)",
-    uk: "MCP (Claude тощо)",
-    ru: "MCP (Claude и др.)",
+  "agent_tokens.tab_claude_code": {
+    en: "Claude Code",
+    uk: "Claude Code",
+    ru: "Claude Code",
+  },
+  "agent_tokens.tab_claude_desktop": {
+    en: "Claude Desktop",
+    uk: "Claude Desktop",
+    ru: "Claude Desktop",
+  },
+  "agent_tokens.tab_json": {
+    en: "Cursor & others",
+    uk: "Cursor та інші",
+    ru: "Cursor и другие",
   },
   "agent_tokens.tab_rest": {
     en: "REST API",
     uk: "REST API",
     ru: "REST API",
   },
-  "agent_tokens.mcp_hint": {
-    en: "Add this to your MCP client's config (e.g. Claude Desktop / Claude Code settings):",
-    uk: "Додайте це в конфіг вашого MCP-клієнта (наприклад, налаштування Claude Desktop / Claude Code):",
-    ru: "Добавьте это в конфиг вашего MCP-клиента (например, настройки Claude Desktop / Claude Code):",
+  "agent_tokens.hint_claude_code": {
+    en: "Run this in your terminal once. Then start a new Claude Code session:",
+    uk: "Виконайте це один раз у терміналі. Потім почніть нову сесію Claude Code:",
+    ru: "Выполните это один раз в терминале. Затем начните новую сессию Claude Code:",
   },
-  "agent_tokens.rest_hint": {
+  "agent_tokens.hint_claude_desktop": {
+    en: "Settings → Developer → Edit Config, add this to claude_desktop_config.json and restart Claude Desktop (requires Node.js):",
+    uk: "Settings → Developer → Edit Config, додайте це в claude_desktop_config.json і перезапустіть Claude Desktop (потрібен Node.js):",
+    ru: "Settings → Developer → Edit Config, добавьте это в claude_desktop_config.json и перезапустите Claude Desktop (нужен Node.js):",
+  },
+  "agent_tokens.hint_json": {
+    en: "For clients that support remote MCP servers with headers (Cursor, Windsurf, VS Code, etc.) — add to their MCP config:",
+    uk: "Для клієнтів, що підтримують віддалені MCP-сервери із заголовками (Cursor, Windsurf, VS Code тощо) — додайте в їхній MCP-конфіг:",
+    ru: "Для клиентов, поддерживающих удалённые MCP-серверы с заголовками (Cursor, Windsurf, VS Code и др.) — добавьте в их MCP-конфиг:",
+  },
+  "agent_tokens.hint_rest": {
     en: "For a custom script, ChatGPT Action, or any HTTP client — store the token as a credential/env var, then call:",
     uk: "Для свого скрипту, ChatGPT Action чи будь-якого HTTP-клієнта — збережіть токен як credential/змінну середовища, потім викликайте:",
     ru: "Для своего скрипта, ChatGPT Action или любого HTTP-клиента — сохраните токен как credential/переменную окружения, затем вызывайте:",

@@ -71,7 +71,9 @@ export function AgentTokensSection() {
 
   const [revealedToken, setRevealedToken] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [snippetTab, setSnippetTab] = useState<"mcp" | "rest">("mcp");
+  const [snippetTab, setSnippetTab] = useState<
+    "claude_code" | "claude_desktop" | "json" | "rest"
+  >("claude_code");
   const [snippetCopied, setSnippetCopied] = useState(false);
 
   useEffect(() => {
@@ -179,30 +181,62 @@ export function AgentTokensSection() {
   const dismissReveal = () => {
     setRevealedToken(null);
     setCopied(false);
-    setSnippetTab("mcp");
+    setSnippetTab("claude_code");
     setSnippetCopied(false);
     fetchTokens();
   };
 
-  const buildMcpSnippet = () =>
-    JSON.stringify(
-      {
-        mcpServers: {
-          "get-hired": {
-            url: `${AGENT_API_ORIGIN}/api/agent/mcp`,
-            headers: { Authorization: `Bearer ${revealedToken}` },
+  const buildSnippet = (
+    tab: "claude_code" | "claude_desktop" | "json" | "rest",
+  ) => {
+    const url = `${AGENT_API_ORIGIN}/api/agent/mcp`;
+    if (tab === "claude_code") {
+      return `claude mcp add --transport http get-hired ${url} --header "Authorization: Bearer ${revealedToken}"`;
+    }
+    if (tab === "claude_desktop") {
+      return JSON.stringify(
+        {
+          mcpServers: {
+            "get-hired": {
+              command: "npx",
+              args: [
+                "-y",
+                "mcp-remote",
+                url,
+                "--header",
+                "Authorization:" + "${GETHIRED_AUTH}",
+              ],
+              env: {
+                GETHIRED_AUTH: `Bearer ${revealedToken}`,
+              },
+            },
           },
         },
-      },
-      null,
-      2,
-    );
-
-  const buildCurlSnippet = () =>
-    `curl ${AGENT_API_ORIGIN}/api/agent/v1/profile \\\n  -H "Authorization: Bearer ${revealedToken}"`;
+        null,
+        2,
+      );
+    }
+    if (tab === "json") {
+      return JSON.stringify(
+        {
+          mcpServers: {
+            "get-hired": {
+              url,
+              headers: {
+                Authorization: `Bearer ${revealedToken}`,
+              },
+            },
+          },
+        },
+        null,
+        2,
+      );
+    }
+    return `curl ${AGENT_API_ORIGIN}/api/agent/v1/profile \\\n  -H "Authorization: Bearer ${revealedToken}"`;
+  };
 
   const handleCopySnippet = async () => {
-    const text = snippetTab === "mcp" ? buildMcpSnippet() : buildCurlSnippet();
+    const text = buildSnippet(snippetTab);
     await navigator.clipboard.writeText(text);
     setSnippetCopied(true);
     setTimeout(() => setSnippetCopied(false), 2000);
@@ -528,16 +562,36 @@ export function AgentTokensSection() {
               {t("agent_tokens.connect_desc")}
             </p>
 
-            <div className="flex gap-1 mb-2">
+            <div className="flex flex-wrap gap-1 mb-2">
               <button
-                onClick={() => setSnippetTab("mcp")}
+                onClick={() => setSnippetTab("claude_code")}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-                  snippetTab === "mcp"
+                  snippetTab === "claude_code"
                     ? "bg-warm-900 text-white dark:bg-warm-100 dark:text-warm-900"
                     : "bg-warm-100 dark:bg-warm-800 text-warm-600 dark:text-warm-400"
                 }`}
               >
-                {t("agent_tokens.tab_mcp")}
+                {t("agent_tokens.tab_claude_code")}
+              </button>
+              <button
+                onClick={() => setSnippetTab("claude_desktop")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                  snippetTab === "claude_desktop"
+                    ? "bg-warm-900 text-white dark:bg-warm-100 dark:text-warm-900"
+                    : "bg-warm-100 dark:bg-warm-800 text-warm-600 dark:text-warm-400"
+                }`}
+              >
+                {t("agent_tokens.tab_claude_desktop")}
+              </button>
+              <button
+                onClick={() => setSnippetTab("json")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                  snippetTab === "json"
+                    ? "bg-warm-900 text-white dark:bg-warm-100 dark:text-warm-900"
+                    : "bg-warm-100 dark:bg-warm-800 text-warm-600 dark:text-warm-400"
+                }`}
+              >
+                {t("agent_tokens.tab_json")}
               </button>
               <button
                 onClick={() => setSnippetTab("rest")}
@@ -552,14 +606,12 @@ export function AgentTokensSection() {
             </div>
 
             <p className="text-xs text-warm-500 dark:text-warm-400 mb-2">
-              {snippetTab === "mcp"
-                ? t("agent_tokens.mcp_hint")
-                : t("agent_tokens.rest_hint")}
+              {t("agent_tokens.hint_" + snippetTab)}
             </p>
 
             <div className="relative">
               <pre className="px-3 py-2.5 pr-10 bg-warm-100 dark:bg-warm-900 rounded-lg text-xs font-mono text-warm-900 dark:text-white overflow-x-auto whitespace-pre-wrap break-all">
-                {snippetTab === "mcp" ? buildMcpSnippet() : buildCurlSnippet()}
+                {buildSnippet(snippetTab)}
               </pre>
               <button
                 onClick={handleCopySnippet}
