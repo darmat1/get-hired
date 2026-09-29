@@ -61,8 +61,18 @@ No test calls a real AI provider.
 
 ```bash
 cd mcp-gateway
-docker buildx build --platform linux/amd64 -t mcp-gateway:latest --output type=docker,dest=mcp-gateway-amd64.tar .
+# Docker Desktop's credential helper must be on PATH for buildx
+export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+docker buildx build --platform linux/amd64 -t gethired-mcp-gateway:latest --load .
+docker save gethired-mcp-gateway:latest -o mcp-gateway-amd64.tar
 ```
+
+**Portainer (current VPS setup):** Images → Import → upload the tar
+(tag `gethired-mcp-gateway:latest`) → Stacks → `mcp-gateway` → Editor:
+paste `docker-compose.portainer.yml`, fill its variables in the stack's
+"Environment variables" section (values from Vercel) → Update the stack.
+TLS for `agents.gethired.work` is done by nginx-proxy-manager (proxy host →
+`<vps>:8080`), not Caddy.
 
 **2. Copy** `mcp-gateway-amd64.tar`, `docker-compose.yml` and a filled
 `.env` (from `.env.example`, same values as Vercel) to the VPS.
