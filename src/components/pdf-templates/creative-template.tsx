@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 22,
+    lineHeight: 1.2, // own line box: react-pdf children inherit the page lineHeight as absolute pt
     marginTop: 0,
     marginBottom: 5,
     color: "#111827",

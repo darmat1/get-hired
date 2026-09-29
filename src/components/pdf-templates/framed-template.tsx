@@ -52,6 +52,7 @@ export function FramedTemplate({ resume }: TemplateProps) {
     },
     name: {
       fontSize: 26,
+      lineHeight: 1.2, // own line box: react-pdf children inherit the page lineHeight as absolute pt
       fontFamily: "Helvetica-Bold",
       color: "#111827",
     },

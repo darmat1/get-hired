@@ -60,6 +60,7 @@ export function TimelineTemplate({ resume }: TemplateProps) {
     },
     name: {
       fontSize: 16,
+      lineHeight: 1.2, // own line box: react-pdf children inherit the page lineHeight as absolute pt
       fontFamily: "Helvetica-Bold",
       color: "#1f2937",
       textAlign: "center",

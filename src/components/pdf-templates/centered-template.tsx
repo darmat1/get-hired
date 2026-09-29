@@ -54,6 +54,7 @@ export function CenteredTemplate({ resume }: TemplateProps) {
     },
     name: {
       fontSize: 20,
+      lineHeight: 1.2, // own line box: react-pdf children inherit the page lineHeight as absolute pt
       fontFamily: "Helvetica-Bold",
       color: "#ffffff",
       textAlign: "center",
