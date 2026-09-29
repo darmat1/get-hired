@@ -10,6 +10,7 @@ import {
   Copy,
   Check,
   Plus,
+  Ban,
 } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { Modal } from "@/components/ui/modal";
@@ -68,6 +69,8 @@ export function AgentTokensSection() {
 
   const [revokeTarget, setRevokeTarget] = useState<AgentTokenRecord | null>(null);
   const [revoking, setRevoking] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<AgentTokenRecord | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const [revealedToken, setRevealedToken] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -168,6 +171,23 @@ export function AgentTokensSection() {
     } finally {
       setRevoking(false);
       setRevokeTarget(null);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/account/agent-tokens/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setTokens((prev) => prev.filter((tok) => tok.id !== id));
+      }
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -333,13 +353,21 @@ export function AgentTokensSection() {
                       {tok.tokenPrefix}••••••••
                     </span>
                   </div>
-                  {isActive && (
+                  {isActive ? (
                     <button
                       onClick={() => setRevokeTarget(tok)}
-                      className="p-1.5 text-warm-400 hover:text-red-600 transition-colors flex-shrink-0"
-                      title={t("agent_tokens.revoke")}
+                      className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md text-warm-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Ban className="h-3.5 w-3.5" />
+                      {t("agent_tokens.revoke")}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setDeleteTarget(tok)}
+                      className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md text-warm-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      {t("agent_tokens.delete")}
                     </button>
                   )}
                 </div>
@@ -506,6 +534,40 @@ export function AgentTokensSection() {
           <p>
             {t("agent_tokens.revoke_confirm_desc")} <strong>{revokeTarget?.name}</strong>
           </p>
+        </div>
+      </Modal>
+
+      {/* Delete confirmation modal */}
+      <Modal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title={t("agent_tokens.delete_confirm_title")}
+        maxWidth="sm"
+        footer={
+          <>
+            <button
+              onClick={() => setDeleteTarget(null)}
+              className="px-4 py-2 bg-warm-100 hover:bg-warm-200 text-warm-700 dark:bg-warm-700 dark:hover:bg-warm-600 dark:text-warm-200 rounded-md transition-colors"
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white rounded-md transition-colors flex items-center justify-center gap-2"
+            >
+              {deleting ? (
+                <Loader className="w-4 h-4 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4" />
+              )}
+              {t("agent_tokens.delete")}
+            </button>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-2 text-warm-600 dark:text-warm-400">
+          <p>{t("agent_tokens.delete_confirm_desc")}</p>
         </div>
       </Modal>
 

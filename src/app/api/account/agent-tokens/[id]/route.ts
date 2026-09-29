@@ -4,8 +4,9 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 /**
- * Revoke an agent token. Soft-delete via revokedAt so usage history/audit
- * trail (lastUsedAt, createdAt) is preserved.
+ * Revoke or permanently delete an agent token.
+ * - Active tokens are revoked (revokedAt set to now) to preserve usage history/audit trail.
+ * - Revoked or expired tokens are permanently deleted from the database (cascading request events).
  */
 export async function DELETE(
   req: Request,
@@ -24,12 +25,23 @@ export async function DELETE(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    await prisma.agentToken.update({
-      where: { id },
-      data: { revokedAt: new Date() },
-    });
+    const now = new Date();
+    const isActive =
+      token.revokedAt === null &&
+      (token.expiresAt === null || token.expiresAt > now);
 
-    return NextResponse.json({ success: true });
+    if (isActive) {
+      await prisma.agentToken.update({
+        where: { id },
+        data: { revokedAt: now },
+      });
+
+      return NextResponse.json({ success: true, revoked: true });
+    }
+
+    await prisma.agentToken.delete({ where: { id } });
+
+    return NextResponse.json({ success: true, deleted: true });
   } catch (error) {
     console.error("[agent-tokens DELETE]:", error);
     return NextResponse.json(
