@@ -4197,6 +4197,21 @@ export const translations: Translations = {
     uk: "Будь-який агент, що використовує цей токен, негайно втратить доступ. Це неможливо скасувати.",
     ru: "Любой агент, использующий этот токен, немедленно потеряет доступ. Это действие необратимо.",
   },
+  "agent_tokens.delete": {
+    en: "Delete",
+    uk: "Видалити",
+    ru: "Удалить",
+  },
+  "agent_tokens.delete_confirm_title": {
+    en: "Delete this token?",
+    uk: "Видалити цей токен?",
+    ru: "Удалить этот токен?",
+  },
+  "agent_tokens.delete_confirm_desc": {
+    en: "The token and its usage history will be removed permanently.",
+    uk: "Токен і його історія використання будуть видалені назавжди.",
+    ru: "Токен и его история использования будут удалены навсегда.",
+  },
   "agent_tokens.form_title": {
     en: "Create a new agent token",
     uk: "Створення нового токена агента",
