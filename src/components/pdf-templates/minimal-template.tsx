@@ -34,6 +34,10 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 28,
+    // react-pdf turns the page's unitless lineHeight into an absolute value
+    // (9pt × 1.4) and children inherit it, so a 28pt name would get a 12.6pt
+    // line box and the subtitle would be drawn over it.
+    lineHeight: 1.2,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
     letterSpacing: 2,
