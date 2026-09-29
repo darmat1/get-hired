@@ -1,0 +1,23 @@
+[Unit]
+Description=get-hired MCP gateway
+After=network.target
+
+[Service]
+Type=simple
+User=mcp-gateway
+Group=mcp-gateway
+WorkingDirectory=/opt/mcp-gateway
+EnvironmentFile=/opt/mcp-gateway/.env
+ExecStart=/opt/mcp-gateway/mcp-gateway
+Restart=on-failure
+RestartSec=2
+
+# Minimal footprint on a tiny VPS: no shell, no extra fds, small stack.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+MemoryMax=128M
+
+[Install]
+WantedBy=multi-user.target

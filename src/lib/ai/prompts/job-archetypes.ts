@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/prompts/archetypes.go — keep in sync, see mcp-gateway/PARITY.md
 export interface JobArchetypeDefinition {
   id: string;
   title: string;

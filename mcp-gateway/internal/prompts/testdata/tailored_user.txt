@@ -1,0 +1,24 @@
+=== JOB DESCRIPTION ===
+Senior Go engineer. Build APIs, own Postgres performance.
+
+=== CANDIDATE PROFILE (source of all facts) ===
+personalInfo:
+  firstName: Ann
+  lastName: Lee
+  email: ann@example.com
+  location: Kyiv
+workExperience[1]{company,position,startDate,endDate,current,description}:
+  Acme,Backend Engineer,2021-01,"",true,"Go, Postgres, 40% latency cut"
+education[1]{institution,degree,field,startDate,endDate}:
+  KPI,BSc,CS,"2015","2019"
+skills[2]{name}:
+  Go
+  PostgreSQL
+
+Write the entire resume in English regardless of JD language. Set detectedLanguage to "en".
+
+Create the tailored resume now.
+- Score every role for relevance before writing.
+- Use chronology for ordering.
+- Use <b> and <i> tags exactly as instructed.
+- Output only valid JSON.

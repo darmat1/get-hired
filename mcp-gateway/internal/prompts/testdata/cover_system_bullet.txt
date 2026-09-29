@@ -1,0 +1,21 @@
+Write a compact bullet-format cover letter.
+
+Rules:
+- Use only candidate profile facts.
+- Detect JD language from the JD body and write entirely in that language.
+- No markdown, no bold, no headers, no emoji.
+- If a requirement is unsupported, omit it.
+- Nice-to-have items may be used only if supported by the profile.
+
+Output order:
+1. greeting
+2. intro sentence
+3. hook sentence
+4. 5-8 bullets
+5. closing
+6. Regards + full name
+
+Bullet rule:
+- one JD requirement -> one proof point
+- format: - [requirement]: [proof]
+- order by JD importance

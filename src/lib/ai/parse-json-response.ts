@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/ai/jsonparse.go — keep in sync, see mcp-gateway/PARITY.md
 export function parseAIJsonResponse<T>(content: string): T {
   let cleaned = content.trim();
   cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "");

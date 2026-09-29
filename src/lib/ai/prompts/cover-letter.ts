@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/prompts/coverletter.go — keep in sync, see mcp-gateway/PARITY.md
 const COVER_LETTER_SHARED_RULES = `Rules:
 - Use only candidate profile facts.
 - Detect JD language from the JD body and write entirely in that language.

@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
         source: "/storage/:path*",
         destination: "https://nqxpyxpqgdzpoasqexcm.supabase.co/storage/:path*",
       },
+      // Agent API lives on the Go server (mcp-gateway/). Default rewrites run
+      // after filesystem routes, so the kept PDF route still renders here.
+      {
+        source: "/api/agent/:path*",
+        destination: "https://agents.gethired.work/api/agent/:path*",
+      },
     ];
   },
   images: {

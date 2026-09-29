@@ -1,0 +1,22 @@
+=== JOB DESCRIPTION ===
+Senior Go engineer. Build APIs, own Postgres performance.
+
+=== CANDIDATE PROFILE (source of all facts) ===
+personalInfo:
+  firstName: Ann
+  lastName: Lee
+  email: ann@example.com
+  location: Kyiv
+workExperience[1]{company,position,startDate,endDate,current,description}:
+  Acme,Backend Engineer,2021-01,"",true,"Go, Postgres, 40% latency cut"
+education[1]{institution,degree,field,startDate,endDate}:
+  KPI,BSc,CS,"2015","2019"
+skills[2]{name}:
+  Go
+  PostgreSQL
+
+Write the cover letter now.
+- Detect the JD language from the JD body.
+- Use only facts from the candidate profile.
+- If a requirement is unsupported, omit it.
+- Output a complete letter from greeting through closing.

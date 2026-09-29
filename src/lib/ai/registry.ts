@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/ai/provider.go, mcp-gateway/internal/ai/providers.go — keep in sync, see mcp-gateway/PARITY.md
 import { AIProvider } from "./types";
 import {
   GroqProvider,

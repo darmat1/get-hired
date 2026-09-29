@@ -1,3 +1,4 @@
+// PARITY: mcp-gateway/internal/ai/complete.go — keep in sync, see mcp-gateway/PARITY.md
 import { prisma } from "@/lib/prisma";
 import { ALL_PROVIDERS } from "./registry";
 import { AICompletionRequest, AICompletionResponse } from "./types";

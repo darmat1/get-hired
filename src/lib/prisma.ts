@@ -9,6 +9,8 @@ const prismaBase = new PrismaClient({
 });
 
 // Configuration for fields that need transparent encryption
+// PARITY: aiCredential.key read semantics (decrypt only values containing ":", keep raw on
+// failure) are mirrored in mcp-gateway/internal/ai/complete.go — see mcp-gateway/PARITY.md
 const ENCRYPTED_FIELDS_BY_MODEL: Record<string, string[]> = {
   user: ["accessToken", "refreshToken"],
   aiCredential: ["key"],

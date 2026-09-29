@@ -1,0 +1,14 @@
+# Portainer stack "mcp-gateway". Import gethired-mcp-gateway:latest first
+# (Images → Import, tag gethired-mcp-gateway:latest). Put the variables from
+# .env.example (values from Vercel) into the stack's "Environment variables"
+# section — Portainer writes them to stack.env, which is passed as-is.
+services:
+  mcp-gateway:
+    image: gethired-mcp-gateway:latest
+    pull_policy: never # local image, not on any registry
+    restart: unless-stopped
+    ports:
+      - "8080:8080" # nginx-proxy-manager → agents.gethired.work
+    mem_limit: 128m
+    env_file:
+      - stack.env
